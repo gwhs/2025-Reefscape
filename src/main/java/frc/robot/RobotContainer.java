@@ -37,6 +37,10 @@ public class RobotContainer {
   private void configureBindings() {
   }
 
+  public void periodic() {
+    
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
