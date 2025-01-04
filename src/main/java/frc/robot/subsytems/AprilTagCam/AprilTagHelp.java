@@ -1,7 +1,4 @@
-package frc.robot.subsystems.AprilTagCam;
-
-
-
+package frc.robot.subsytems.AprilTagCam;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -10,18 +7,17 @@ import edu.wpi.first.math.numbers.N3;
 
 public class AprilTagHelp {
 
-    public Matrix<N3, N1> sd;
-    public Pose2d pos;
-    public double timestamp;
+  public Matrix<N3, N1> sd;
+  public Pose2d pos;
+  public double timestamp;
 
-    public AprilTagHelp(Pose2d pos, double timestamp, Matrix<N3, N1> sd) {
-        this.sd = sd;
-        this.pos = pos;
-        this.timestamp = timestamp;
-    }
+  public AprilTagHelp(Pose2d pos, double timestamp, Matrix<N3, N1> sd) {
+    this.sd = sd;
+    this.pos = pos;
+    this.timestamp = timestamp;
+  }
 
-    public Matrix<N3, N1> getSD(){
-        return sd; 
-    }
-
+  public Matrix<N3, N1> getSD() {
+    return sd;
+  }
 }
