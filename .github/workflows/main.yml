@@ -28,4 +28,16 @@ jobs:
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
- 
+
+  check:
+    runs-on: ubuntu-22.04
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: 17
+    - run: ./gradlew spotlessCheck
