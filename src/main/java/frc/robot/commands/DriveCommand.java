@@ -6,18 +6,15 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import dev.doglog.DogLog;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsytems.CommandSwerveDrivetrain;
 
   
-public class DriveCommands extends  Command{
+public class DriveCommand extends  Command{
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate = 3.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
@@ -34,7 +31,7 @@ public class DriveCommands extends  Command{
                                                                // driving in open loop
             
 
-  public DriveCommands(CommandXboxController driverController, CommandSwerveDrivetrain drivetrain) {
+  public DriveCommand(CommandXboxController driverController, CommandSwerveDrivetrain drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driverController = driverController;
     this.drivetrain = drivetrain;

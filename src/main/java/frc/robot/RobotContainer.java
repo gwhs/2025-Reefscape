@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import frc.robot.commands.DriveCommands;
+import frc.robot.commands.DriveCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsytems.CommandSwerveDrivetrain;
 import dev.doglog.DogLog;
@@ -28,7 +28,7 @@ public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-  private final DriveCommands drive = new DriveCommands(m_driverController, drivetrain);
+  private final DriveCommand driveCommand = new DriveCommand(m_driverController, drivetrain);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -36,6 +36,7 @@ public class RobotContainer {
         new DogLogOptions().withNtPublish(true).withCaptureNt(true).withCaptureDs(true));
     DogLog.setPdh(new PowerDistribution());
     // Configure the trigger bindings
+    drivetrain.setDefaultCommand(driveCommand);
     configureBindings();
   }
 
