@@ -4,16 +4,21 @@
 
 package frc.robot;
 
+import dev.doglog.DogLog;
+import dev.doglog.DogLogOptions;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+<<<<<<< HEAD
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsytems.CommandSwerveDrivetrain;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
+=======
+>>>>>>> dev
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,11 +34,11 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    DogLog.setOptions(new DogLogOptions().withNtPublish(true).withCaptureNt(true).withCaptureDs(true));
+    DogLog.setOptions(
+        new DogLogOptions().withNtPublish(true).withCaptureNt(true).withCaptureDs(true));
     DogLog.setPdh(new PowerDistribution());
     // Configure the trigger bindings
     configureBindings();
-    
   }
 
   /**
@@ -45,12 +50,9 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {
-  }
+  private void configureBindings() {}
 
-  public void periodic() {
-    
-  }
+  public void periodic() {}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
