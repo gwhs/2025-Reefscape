@@ -2,7 +2,6 @@ package frc.robot;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -138,11 +137,11 @@ public class Telemetry {
       m_moduleDirections[i].setAngle(state.ModuleStates[i].angle);
       m_moduleSpeeds[i].setLength(state.ModuleStates[i].speedMetersPerSecond / (2 * MaxSpeed));
 
-            SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
-        }
-        //log robot pose
-        DogLog.log("Robot Pose", state.Pose);
-        DogLog.log("Swerve/Target States", state.ModuleTargets);
-        DogLog.log("Swerve/Actual States", state.ModuleStates);
+      SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
     }
+    // log robot pose
+    DogLog.log("Robot Pose", state.Pose);
+    DogLog.log("Swerve/Target States", state.ModuleTargets);
+    DogLog.log("Swerve/Actual States", state.ModuleStates);
+  }
 }
