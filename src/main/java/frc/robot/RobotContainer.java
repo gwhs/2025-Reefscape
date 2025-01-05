@@ -11,12 +11,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import frc.robot.commands.DriveCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsytems.CommandSwerveDrivetrain;
-import dev.doglog.DogLog;
-import dev.doglog.DogLogOptions;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
