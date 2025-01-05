@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -27,8 +28,6 @@ public class DriveCommands extends  Command{
   private CommandXboxController driverController;
   private Pose2d currPose;
   public boolean isSlow = false;
-  public boolean XYSlow = false;
-
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
@@ -37,7 +36,7 @@ public class DriveCommands extends  Command{
 
   public DriveCommands(CommandXboxController driverController, CommandSwerveDrivetrain drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
-    driverController = driverController;
+    this.driverController = driverController;
     this.drivetrain = drivetrain;
 
     this.PID = new PIDController(0.02, 0, 0);
@@ -51,28 +50,9 @@ public class DriveCommands extends  Command{
     double xVelocity = -driverController.getLeftY();
     double yVelocity = -driverController.getLeftX();
     double angularVelocity = -driverController.getRightX();
-    // double angularVelocity =
-    // (MathUtil.applyDeadband(driverController.getLeftTriggerAxis(),
-    // OperatorConstants.ROTATION_DEADBAND) -
-    // MathUtil.applyDeadband(driverController.getRightTriggerAxis(),
-    // OperatorConstants.ROTATION_DEADBAND));
-
-    // if (DriverStation.getAlliance().isPresent() &&
-    //     DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-    //   xVelocity *= -1;
-    //   yVelocity *= -1;
-    // }
 
     currPose = drivetrain.getState().Pose;
     double currTheta = currPose.getRotation().getDegrees();
-    SmartDashboard.putNumber("Robot Rotation", currTheta);
-
-    if (XYSlow) {
-      double slowFactor = 0.25;
-      xVelocity *= slowFactor;
-      yVelocity *= slowFactor;
-
-    }
 
     if (isSlow) {
       double slowFactor = 0.25;
@@ -85,9 +65,9 @@ public class DriveCommands extends  Command{
     yVelocity = yVelocity * MaxSpeed;
     angularVelocity = angularVelocity * MaxAngularRate;
 
-    SmartDashboard.putNumber("xVelocity", xVelocity);
-    SmartDashboard.putNumber("yVelocity", yVelocity);
-    SmartDashboard.putNumber("angularVelocity", angularVelocity);
+    DogLog.log("Drive Command/xVelocity", xVelocity);
+    DogLog.log("Drive Command/yVelocity", yVelocity);
+    DogLog.log("Drive Command/angularVelocity", angularVelocity);
 
     drivetrain.setControl(drive.withVelocityX(xVelocity) // Drive forward with negative Y (forward)
         .withVelocityY(yVelocity) // Drive left with negative X (left)
