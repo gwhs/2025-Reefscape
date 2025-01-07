@@ -1,4 +1,4 @@
-package frc.robot.subsytems;
+package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -24,7 +24,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
-import frc.robot.subsytems.AprilTagCam.AprilTagHelp;
+import frc.robot.subsystems.AprilTagCam.AprilTagHelp;
+
 import java.util.function.Supplier;
 
 /**
