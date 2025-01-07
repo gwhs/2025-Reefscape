@@ -7,12 +7,15 @@ package frc.robot;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.autonomous.Templete;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -28,6 +31,8 @@ public class RobotContainer {
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
   private final DriveCommand driveCommand = new DriveCommand(m_driverController, drivetrain);
 
+  private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     DogLog.setOptions(
@@ -36,6 +41,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     drivetrain.setDefaultCommand(driveCommand);
     configureBindings();
+    configureAutonomous();
   }
 
   /**
@@ -63,5 +69,15 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return Commands.none();
+  }
+
+  private void configureAutonomous() {
+    autoChooser.setDefaultOption("S3-Leave", new Templete(this));
+
+    autoChooser.addOption("S1-Leave", new Templete(this));
+
+    // TODO: add more autonomous routines
+
+    SmartDashboard.putData("autonomous", autoChooser);
   }
 }
