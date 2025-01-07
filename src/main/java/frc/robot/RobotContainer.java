@@ -11,6 +11,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.DriveCommand;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsytems.CommandSwerveDrivetrain;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
+  private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  private final DriveCommand driveCommand = new DriveCommand(m_driverController, drivetrain);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -28,6 +34,7 @@ public class RobotContainer {
         new DogLogOptions().withNtPublish(true).withCaptureNt(true).withCaptureDs(true));
     DogLog.setPdh(new PowerDistribution());
     // Configure the trigger bindings
+    drivetrain.setDefaultCommand(driveCommand);
     configureBindings();
   }
 
@@ -40,7 +47,12 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {}
+  private void configureBindings() {
+    m_driverController.a().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    m_driverController.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    m_driverController.x().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    m_driverController.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+  }
 
   public void periodic() {}
 
