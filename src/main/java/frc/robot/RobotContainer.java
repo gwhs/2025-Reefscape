@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -27,6 +29,7 @@ public class RobotContainer {
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
   private final DriveCommand driveCommand = new DriveCommand(m_driverController, drivetrain);
+  private final Telemetry logger = new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -36,6 +39,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     drivetrain.setDefaultCommand(driveCommand);
     configureBindings();
+    drivetrain.registerTelemetry(logger::telemeterize);
   }
 
   /**
