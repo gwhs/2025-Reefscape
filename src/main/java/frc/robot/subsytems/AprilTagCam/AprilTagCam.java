@@ -99,6 +99,9 @@ public class AprilTagCam {
       DogLog.log(ntKey + "Accepted Stdev/", sd);
 
       addVisionMeasurement.accept(helper);
+      System.out.println(
+          "X: " + estimPose3d.getX() + ", Y:" + estimPose3d.getY() + ", Z:" + estimPose3d.getZ());
+      System.out.println("TImestamp: " + timestamp);
     }
   }
 
