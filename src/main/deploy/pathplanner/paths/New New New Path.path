@@ -16,12 +16,53 @@
     },
     {
       "anchor": {
+<<<<<<< Updated upstream:src/main/deploy/pathplanner/paths/Example Path.path
         "x": 7.1566598360655735,
         "y": 0.9321721311475392
       },
       "prevControl": {
         "x": 6.1566598360655735,
         "y": 0.9321721311475392
+=======
+        "x": 3.6695454545454544,
+        "y": 5.7500852272777125
+      },
+      "prevControl": {
+        "x": 3.7197514204545454,
+        "y": 6.085000000003739
+      },
+      "nextControl": {
+        "x": 3.6193394886363635,
+        "y": 5.415170454551686
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.7073375355113636,
+        "y": 5.016225142050907
+      },
+      "prevControl": {
+        "x": 3.1310795454545453,
+        "y": 5.062045454550439
+      },
+      "nextControl": {
+        "x": 2.212501065889571,
+        "y": 4.96271720292239
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.0,
+        "y": 7.0
+      },
+      "prevControl": {
+        "x": 1.0,
+        "y": 7.0
+>>>>>>> Stashed changes:src/main/deploy/pathplanner/paths/New New New Path.path
       },
       "nextControl": null,
       "isLocked": false,
