@@ -59,7 +59,7 @@ public class RobotContainer {
     return Commands.none();
   }
 
-   private void configureAutonomous() {
+  private void configureAutonomous() {
     autoChooser.setDefaultOption("S3-Leave", new Templete(this));
 
     autoChooser.addOption("S1-Leave", new Templete(this));
@@ -69,5 +69,3 @@ public class RobotContainer {
     SmartDashboard.putData("autonomous", autoChooser);
   }
 }
-
-

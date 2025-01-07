@@ -7,7 +7,6 @@ package frc.robot.commands.autonomous;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -15,8 +14,7 @@ import frc.robot.RobotContainer;
 
 public class Templete extends PathPlannerAuto {
   public Templete(RobotContainer robotContainer) {
-    super(Commands.run(() -> {
-    }));
+    super(Commands.run(() -> {}));
 
     /* All your code should go inside this try-catch block */
     try {
@@ -24,14 +22,11 @@ public class Templete extends PathPlannerAuto {
       PathPlannerPath S3Leave = PathPlannerPath.fromPathFile("S3-C5");
 
       /* TODO: Get starting position of starting path */
-      Pose2d startingPose = new Pose2d(
-          S3Leave.getPoint(0).position,
-          S3Leave.getIdealStartingState().rotation());
+      Pose2d startingPose =
+          new Pose2d(S3Leave.getPoint(0).position, S3Leave.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
-      isRunning().onTrue(
-          Commands.sequence(
-              AutoBuilder.resetOdom(startingPose)));
+      isRunning().onTrue(Commands.sequence(AutoBuilder.resetOdom(startingPose)));
 
       /* TODO: Other triggers */
 
