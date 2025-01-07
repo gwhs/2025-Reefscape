@@ -33,7 +33,6 @@ public class DriveCommand extends Command {
   public boolean isFaceIJ = false;
   public boolean isFaceKL = false;
 
-
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * 0.1)

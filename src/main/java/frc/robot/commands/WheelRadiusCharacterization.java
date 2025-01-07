@@ -1,24 +1,21 @@
 package frc.robot.commands;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsytems.CommandSwerveDrivetrain;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
-public class WheelRadiusCharacterization{
-  
-private static final double WHEEL_RADIUS_RAMP_RATE = 0.05;
-private static final double WHEEL_RADIUS_MAX_VELOCITY = 0;
+public class WheelRadiusCharacterization {
 
+  private static final double WHEEL_RADIUS_RAMP_RATE = 0.05;
+  private static final double WHEEL_RADIUS_MAX_VELOCITY = 0;
 
-public static Command wheelRadiusCharacterization(CommandSwerveDrivetrain drive) {
+  public static Command wheelRadiusCharacterization(CommandSwerveDrivetrain drive) {
     SlewRateLimiter limiter = new SlewRateLimiter(WHEEL_RADIUS_RAMP_RATE);
     WheelRadiusCharacterizationState state = new WheelRadiusCharacterizationState();
 
@@ -68,7 +65,7 @@ public static Command wheelRadiusCharacterization(CommandSwerveDrivetrain drive)
                       for (int i = 0; i < 4; i++) {
                         wheelDelta += Math.abs(positions[i] - state.positions[i]) / 4.0;
                       }
-                      double wheelRadius = (state.gyroDelta * Drive.DRIVE_BASE_RADIUS) / wheelDelta;
+                      double wheelRadius = (state.gyroDelta * drive.DRIVE_BASE_RADIUS) / wheelDelta;
 
                       NumberFormat formatter = new DecimalFormat("#0.000");
                       System.out.println(
@@ -85,7 +82,8 @@ public static Command wheelRadiusCharacterization(CommandSwerveDrivetrain drive)
                               + " inches");
                     })));
   }
-   private static class WheelRadiusCharacterizationState {
+
+  private static class WheelRadiusCharacterizationState {
     double[] positions = new double[4];
     Rotation2d lastAngle = new Rotation2d();
     double gyroDelta = 0.0;
