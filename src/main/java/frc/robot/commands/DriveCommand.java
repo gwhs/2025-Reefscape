@@ -24,7 +24,16 @@ public class DriveCommand extends Command {
   private CommandSwerveDrivetrain drivetrain;
   private CommandXboxController driverController;
   private Pose2d currPose;
+
   public boolean isSlow = false;
+  public boolean isFaceAB = false;
+  public boolean isFaceCD = false;
+  public boolean isFaceEF = false;
+  public boolean isFaceGH = false;
+  public boolean isFaceIJ = false;
+  public boolean isFaceKL = false;
+
+
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * 0.1)

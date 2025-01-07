@@ -289,4 +289,22 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     super.addVisionMeasurement(pos, timestamp, sd);
   }
+
+  public Pose2d getPose() {
+    return getState().Pose;
+  }
+
+  public Rotation2d getRotation() {
+    return getPose().getRotation();
+  }
+
+    /** Returns the position of each module in radians. */
+    public double[] getWheelRadiusCharacterizationPositions() {
+      double[] values = new double[4];
+      for (int i = 0; i < 4; i++) {
+        values[i] = modules[i].getWheelRadiusCharacterizationPosition();
+      }
+      return values;
+    }
+  
 }
