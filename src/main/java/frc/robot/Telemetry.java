@@ -139,9 +139,5 @@ public class Telemetry {
 
       SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
     }
-    // log robot pose
-    DogLog.log("Robot Pose", state.Pose);
-    DogLog.log("Swerve/Target States", state.ModuleTargets);
-    DogLog.log("Swerve/Actual States", state.ModuleStates);
   }
 }
