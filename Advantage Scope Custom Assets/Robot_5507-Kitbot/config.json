@@ -21,9 +21,9 @@
       "name": "Left Camera",
       "rotations": [
         {
-      "axis": "z",
-      "degrees": -30
-    }
+          "axis": "z",
+          "degrees": -30
+        }
       ],
       "position": [
         0.35,
@@ -39,10 +39,11 @@
     {
       "name": "Right Camera",
       "rotations": [
-      {
-      "axis": "z",
-      "degrees": 30
-    }],
+        {
+          "axis": "z",
+          "degrees": 30
+        }
+      ],
       "position": [
         0.35,
         -0.35,
