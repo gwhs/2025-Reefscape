@@ -63,9 +63,11 @@ public class RobotContainer {
     m_driverController.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     m_driverController.x().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     m_driverController.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+
+    m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
   }
 
-  public void periodic() {}
+  public void periodic() {} 
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
