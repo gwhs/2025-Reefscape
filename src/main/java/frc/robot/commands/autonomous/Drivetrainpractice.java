@@ -26,16 +26,15 @@ public class Drivetrainpractice extends PathPlannerAuto {
           new Pose2d(TestPath.getPoint(0).position, TestPath.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
-      isRunning().onTrue(Commands.sequence(
-        AutoBuilder.resetOdom(startingPose),
-        AutoBuilder.followPath(TestPath)
-        ));
+      isRunning()
+          .onTrue(
+              Commands.sequence(
+                  AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(TestPath)));
 
       /* TODO: Other triggers */
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
     }
-
   }
 }
