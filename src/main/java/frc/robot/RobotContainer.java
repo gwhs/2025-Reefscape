@@ -17,11 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.autonomous.Templete;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.DriveCommand;
+import frc.robot.commands.autonomous.Template;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -40,8 +36,6 @@ public class RobotContainer {
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-  private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-  private final DriveCommand driveCommand = new DriveCommand(m_driverController, drivetrain);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -84,9 +78,9 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("S3-Leave", new Templete(this));
+    autoChooser.setDefaultOption("S3-Leave", new Template(this));
 
-    autoChooser.addOption("S1-Leave", new Templete(this));
+    autoChooser.addOption("S1-Leave", new Template(this));
 
     // TODO: add more autonomous routines
 

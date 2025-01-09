@@ -10,11 +10,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
-
-import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class DriveCommand extends Command {
+
   private double MaxSpeed =
       TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate =
@@ -23,10 +22,14 @@ public class DriveCommand extends Command {
   public static final double PID_MAX = 0.35;
 
   private PIDController PID;
+  private PIDController PIDX;
+  private PIDController PIDY;
+  private PIDController PIDRotation;
   private CommandSwerveDrivetrain drivetrain;
   private CommandXboxController driverController;
   private Pose2d currPose;
   public boolean isSlow = false;
+  public boolean isAligningToPose = false;
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * 0.1)
@@ -43,17 +46,27 @@ public class DriveCommand extends Command {
     this.PID = new PIDController(0.02, 0, 0);
     this.PID.setTolerance(0.1);
     this.PID.enableContinuousInput(-180, 180);
-
+    this.PIDX = new PIDController(0.02, 0, 0); // same for now tune later
+    this.PIDX.setTolerance(0.1);
+    this.PIDY = new PIDController(0.02, 0, 0);
+    this.PIDY.setTolerance(0.1);
+    this.PIDRotation = new PIDController(0.002, 0, 0);
+    this.PIDRotation.setTolerance(0.1);
     addRequirements(drivetrain);
+  }
+
+  public void goToPoseWithPID(Pose2d targetPose) {
+    PIDX.setSetpoint(targetPose.getX());
+    PIDY.setSetpoint(targetPose.getY());
+    PIDRotation.setSetpoint(targetPose.getRotation().getDegrees());
   }
 
   public void execute() {
     double xVelocity = -driverController.getLeftY();
     double yVelocity = -driverController.getLeftX();
-    double angularVelocity = -driverController.getRightX();
 
+    double angularVelocity = -driverController.getRightX();
     currPose = drivetrain.getState().Pose;
-    double currTheta = currPose.getRotation().getDegrees();
 
     if (isSlow) {
       double slowFactor = 0.25;
@@ -61,7 +74,14 @@ public class DriveCommand extends Command {
       yVelocity *= slowFactor;
       angularVelocity *= slowFactor;
     }
-
+    if (isAligningToPose) {
+      double currX = currPose.getX();
+      double currY = currPose.getY();
+      Double currRotation = currPose.getRotation().getDegrees();
+      xVelocity += PIDX.calculate(currX);
+      yVelocity += PIDY.calculate(currY);
+      angularVelocity += PIDRotation.calculate(currRotation);
+    }
     xVelocity = xVelocity * MaxSpeed;
     yVelocity = yVelocity * MaxSpeed;
     angularVelocity = angularVelocity * MaxAngularRate;
