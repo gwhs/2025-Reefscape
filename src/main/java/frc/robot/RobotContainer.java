@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.autonomous.Templete;
+import frc.robot.commands.autonomous.startLnLeave;
+import frc.robot.commands.autonomous.startLnLeave2;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -84,13 +86,14 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return Commands.none();
+    return autoChooser.getSelected();
   }
 
   private void configureAutonomous() {
     autoChooser.setDefaultOption("S3-Leave", new Templete(this));
 
-    autoChooser.addOption("S1-Leave", new Templete(this));
+    autoChooser.addOption("startLnLeave", new startLnLeave(this));
+    autoChooser.addOption("startLnLeave2", new startLnLeave2(this));
 
     // TODO: add more autonomous routines
 
