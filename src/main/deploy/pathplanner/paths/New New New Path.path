@@ -16,15 +16,6 @@
     },
     {
       "anchor": {
-<<<<<<< Updated upstream:src/main/deploy/pathplanner/paths/Example Path.path
-        "x": 7.1566598360655735,
-        "y": 0.9321721311475392
-      },
-      "prevControl": {
-        "x": 6.1566598360655735,
-<<<<<<< HEAD:src/main/deploy/pathplanner/paths/New New New Path.path
-        "y": 0.9321721311475392
-=======
         "x": 3.6695454545454544,
         "y": 5.7500852272777125
       },
@@ -63,10 +54,6 @@
       "prevControl": {
         "x": 1.0,
         "y": 7.0
->>>>>>> Stashed changes:src/main/deploy/pathplanner/paths/New New New Path.path
-=======
-        "y": 0.9321721311475393
->>>>>>> dev:src/main/deploy/pathplanner/paths/Example Path.path
       },
       "nextControl": null,
       "isLocked": false,
