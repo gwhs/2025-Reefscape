@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.autonomous.Templete;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.AprilTagCam.AprilTagCam;
+import frc.robot.subsystems.AprilTagCam.AprilTagCamConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 /**
@@ -28,6 +30,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -36,6 +39,7 @@ public class RobotContainer {
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+  private AprilTagCam cam1;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -47,6 +51,13 @@ public class RobotContainer {
     configureBindings();
     drivetrain.registerTelemetry(logger::telemeterize);
     configureAutonomous();
+
+    cam1 =
+        new AprilTagCam(
+            "cam1",
+            AprilTagCamConstants.BackLeftCamLocation,
+            drivetrain::addVisionMeasurent,
+            () -> drivetrain.getState().Pose);
   }
 
   /**
@@ -65,7 +76,10 @@ public class RobotContainer {
     m_driverController.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
   }
 
-  public void periodic() {}
+  public void periodic() {
+
+    cam1.updatePoseEstim();
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
