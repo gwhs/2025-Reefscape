@@ -6,12 +6,15 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -40,14 +43,23 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Setup DogLog
     DogLog.setOptions(
         new DogLogOptions().withNtPublish(true).withCaptureNt(true).withCaptureDs(true));
     DogLog.setPdh(new PowerDistribution());
-    // Configure the trigger bindings
-    drivetrain.setDefaultCommand(driveCommand);
+
     configureBindings();
-    drivetrain.registerTelemetry(logger::telemeterize);
+
     configureAutonomous();
+
+    // Default Commands
+    drivetrain.setDefaultCommand(driveCommand);
+
+    drivetrain.registerTelemetry(logger::telemeterize);
+
+    PathfindingCommand.warmupCommand().schedule();
+
+    SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
   }
 
   /**
