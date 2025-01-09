@@ -2,11 +2,15 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
@@ -19,6 +23,7 @@ public class DriveCommand extends Command {
       3.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   public static final double PID_MAX = 0.35;
+  public boolean isBackCoralStation = false;
 
   private PIDController PID;
   private CommandSwerveDrivetrain drivetrain;
@@ -59,6 +64,14 @@ public class DriveCommand extends Command {
       yVelocity *= slowFactor;
       angularVelocity *= slowFactor;
     }
+    
+    if (isBackCoralStation) {
+      double ang = backCoralTheta(currPose);
+      PID.setSetpoint(ang);
+      angularVelocity = MathUtil.clamp(PID.calculate(currTheta), -PID_MAX, PID_MAX);
+      SmartDashboard.putNumber("isBackSpeaker Goal", ang);
+      SmartDashboard.putNumber("isBackSpeaker Result", angularVelocity);
+      }
 
     xVelocity = xVelocity * MaxSpeed;
     yVelocity = yVelocity * MaxSpeed;
@@ -74,9 +87,51 @@ public class DriveCommand extends Command {
             .withVelocityY(yVelocity) // Drive left with negative X (left)
             .withRotationalRate(angularVelocity)); // Drive counterclockwise with negative X (left)
   }
+  public static double caclucateRotateTheta(Pose2d pose, double targetX, double targetY){
+    double calucatedRad = Math.atan((targetY-pose.getY())/ (targetX-pose.getX()));
+    
+    return  Math.abs(Math.toDegrees(calucatedRad));
+  }
+  public double backCoralTheta(Pose2d pose)
+  {
+    double halfWidthField = 4.0359;
+    double leftCoralTargetX = 1.27;
+    double leftCoralTargetY = 6.80;
+    double rightCoralTargetX = 1.27;
+    double rightCoralTargetY = 1.27;
+    
+      if(DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)
+      {
+           if(pose.getY() >= halfWidthField)
+      {
+          return caclucateRotateTheta(pose, leftCoralTargetX, leftCoralTargetY);
+      }
+      else 
+      {
+          return caclucateRotateTheta(pose, rightCoralTargetX, rightCoralTargetY);
+      }
+      }
+      else
+      {
+        if(pose.getY() >= halfWidthField)
+        {
+            return caclucateRotateTheta(pose, rightCoralTargetX, rightCoralTargetY);
+        }
+        else 
+        {
+          return caclucateRotateTheta(pose, leftCoralTargetX, leftCoralTargetY);
+        }
+      }
+    }
 
   @Override
   public void end(boolean interrupted) {}
+
+  @Override
+  public void initialize()
+  {
+    isBackCoralStation=!isBackCoralStation;
+  }
 
   // Returns true when the command should end.
   @Override
