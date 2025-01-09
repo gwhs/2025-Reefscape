@@ -7,7 +7,10 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -46,13 +49,20 @@ public class DriveCommand extends Command {
     this.PID = new PIDController(0.02, 0, 0);
     this.PID.setTolerance(0.1);
     this.PID.enableContinuousInput(-180, 180);
-    this.PIDX = new PIDController(0.02, 0, 0); // same for now tune later
+    this.PIDX = new PIDController(2.7, 0, 0); // same for now tune later
     this.PIDX.setTolerance(0.1);
-    this.PIDY = new PIDController(0.02, 0, 0);
+    this.PIDY = new PIDController(2.7, 0, 0);
     this.PIDY.setTolerance(0.1);
     this.PIDRotation = new PIDController(0.002, 0, 0);
     this.PIDRotation.setTolerance(0.1);
     addRequirements(drivetrain);
+    SmartDashboard.putData(
+        "goto420",
+        Commands.runOnce(
+            () -> {
+              isAligningToPose = true;
+              goToPoseWithPID(new Pose2d(4.00, 2.00, new Rotation2d(3.00)));
+            }));
   }
 
   public void goToPoseWithPID(Pose2d targetPose) {
@@ -78,9 +88,15 @@ public class DriveCommand extends Command {
       double currX = currPose.getX();
       double currY = currPose.getY();
       Double currRotation = currPose.getRotation().getDegrees();
-      xVelocity += PIDX.calculate(currX);
-      yVelocity += PIDY.calculate(currY);
-      angularVelocity += PIDRotation.calculate(currRotation);
+      double PIDXOutput = PIDX.calculate(currX);
+      xVelocity -= PIDXOutput;
+      DogLog.log("PIDXOutput", PIDXOutput);
+      double PIDYOutput = PIDY.calculate(currY);
+      yVelocity -= PIDYOutput;
+      DogLog.log("PIDYoutput", PIDYOutput);
+      double PIDRotationOutput = PIDRotation.calculate(currRotation);
+      angularVelocity += PIDRotationOutput;
+      DogLog.log("PIDRotationoutput", PIDRotationOutput);
     }
     xVelocity = xVelocity * MaxSpeed;
     yVelocity = yVelocity * MaxSpeed;
