@@ -23,18 +23,16 @@ public class startLnLeave extends PathPlannerAuto {
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
-          new Pose2d(startLnLeave.getPoint(0).position, 
-          startLnLeave.getIdealStartingState().rotation());
+          new Pose2d(
+              startLnLeave.getPoint(0).position, startLnLeave.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
-      isRunning().onTrue(Commands.sequence(
-        AutoBuilder.resetOdom(startingPose),
-        AutoBuilder.followPath(startLnLeave)
-        )
-        // TODO: Name of command
-        .withName("Leave Starting Line"));
-      
-    
+      isRunning()
+          .onTrue(
+              Commands.sequence(
+                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(startLnLeave))
+                  // TODO: Name of command
+                  .withName("Leave Starting Line"));
 
       /* TODO: Other triggers */
 
