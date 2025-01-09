@@ -22,6 +22,8 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import com.ctre.phoenix6.Utils;
+
 /** Add your docs here. */
 public class AprilTagCam {
   AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
@@ -74,22 +76,18 @@ public class AprilTagCam {
       return;
     }
     for (PhotonPipelineResult targetPose : results) {
-
-      System.out.println(targetPose);
-      System.out.println(targetPose);
-
       optionalEstimPose = photonEstimator.update(targetPose);
 
       if (optionalEstimPose.isEmpty()) {
         return;
       }
 
-      Pose3d estimPose3d;
-      estimPose3d = optionalEstimPose.get().estimatedPose;
+      Pose3d estimPose3d = optionalEstimPose.get().estimatedPose;
 
       Pose2d pos = estimPose3d.toPose2d(); // yay :0 im so happy
       double timestamp = targetPose.getTimestampSeconds();
       Matrix<N3, N1> sd = findSD(optionalEstimPose, null);
+      Utils.fpgaToCurrentTime(timestamp);
 
       helper = new AprilTagHelp(pos, timestamp, sd);
 
@@ -98,9 +96,6 @@ public class AprilTagCam {
       DogLog.log(ntKey + "Accepted Stdev/", sd);
 
       addVisionMeasurement.accept(helper);
-      System.out.println(
-          "X: " + estimPose3d.getX() + ", Y:" + estimPose3d.getY() + ", Z:" + estimPose3d.getZ());
-      System.out.println("TImestamp: " + timestamp);
     }
   }
 
