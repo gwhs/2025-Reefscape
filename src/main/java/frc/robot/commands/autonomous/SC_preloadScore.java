@@ -26,16 +26,13 @@ public class SC_preloadScore extends PathPlannerAuto {
           new Pose2d(SCpreloadScore.getPoint(0).position, SCpreloadScore.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
-      isRunning().onTrue(Commands.sequence(AutoBuilder.resetOdom(startingPose)));
+      isRunning().onTrue(
+            Commands.sequence(
+                AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SCpreloadScore))            
+                .withName("Leave and score preload coral"));
 
       /* TODO: Other triggers */
 
-      event("atReef").onTrue(
-        Commands.sequence(            
-            AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SCpreloadScore))
-            // TODO: Name of command
-            .withName("Leave and acore preload coral")
-            );
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
