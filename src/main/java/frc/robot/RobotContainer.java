@@ -44,7 +44,6 @@ public class RobotContainer {
     DogLog.setPdh(new PowerDistribution());
     // Configure the trigger bindings
     drivetrain.setDefaultCommand(driveCommand);
-    drivetrain.setDefaultCommand(driveCommand);
     configureBindings();
     drivetrain.registerTelemetry(logger::telemeterize);
     configureAutonomous();
