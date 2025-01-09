@@ -30,6 +30,9 @@ public class SC_preloadScore extends PathPlannerAuto {
 
       /* TODO: Other triggers */
 
+      event("atReef").onTrue(
+        Commands.sequence());
+
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
     }
