@@ -31,7 +31,11 @@ public class SC_preloadScore extends PathPlannerAuto {
       /* TODO: Other triggers */
 
       event("atReef").onTrue(
-        Commands.sequence());
+        Commands.sequence(            
+            AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SCpreloadScore))
+            // TODO: Name of command
+            .withName("Leave and acore preload coral")
+            );
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
