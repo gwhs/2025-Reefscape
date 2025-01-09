@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.autonomous.Drivetrainpractice;
 import frc.robot.commands.autonomous.Templete;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -80,6 +81,7 @@ public class RobotContainer {
     autoChooser.setDefaultOption("S3-Leave", new Templete(this));
 
     autoChooser.addOption("S1-Leave", new Templete(this));
+    autoChooser.addOption("TestPath", new Drivetrainpractice(this));
 
     // TODO: add more autonomous routines
 
