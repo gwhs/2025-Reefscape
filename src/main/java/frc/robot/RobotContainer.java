@@ -18,10 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.autonomous.Drivetrainpractice;
-import frc.robot.commands.autonomous.Templete;
-import frc.robot.commands.autonomous.startLnLeave;
-import frc.robot.commands.autonomous.startLnLeave2;
+import frc.robot.commands.autonomous.*;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
