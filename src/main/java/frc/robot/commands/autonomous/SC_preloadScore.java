@@ -23,7 +23,9 @@ public class SC_preloadScore extends PathPlannerAuto {
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
-          new Pose2d(SCpreloadScore.getPoint(0).position, SCpreloadScore.getIdealStartingState().rotation());
+          new Pose2d(
+              SCpreloadScore.getPoint(0).position,
+              SCpreloadScore.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
       isRunning().onTrue(Commands.sequence(AutoBuilder.resetOdom(startingPose)));
