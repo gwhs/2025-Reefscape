@@ -13,7 +13,7 @@ import java.text.NumberFormat;
 public class WheelRadiusCharacterization {
 
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05;
-  private static final double WHEEL_RADIUS_MAX_VELOCITY = 0;
+  private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25;
 
   public static Command wheelRadiusCharacterization(CommandSwerveDrivetrain drive) {
     SlewRateLimiter limiter = new SlewRateLimiter(WHEEL_RADIUS_RAMP_RATE);
