@@ -10,6 +10,10 @@ public interface ElevatorIO {
     public void setLeftMotorSpeed(double speed);
   
     public void setRightMotorSpeed(double speed);
+
+    public void setPositionRight(double speed);
+
+    public void setPositionLeft(double speed);
   
     public void update();
   
