@@ -1,8 +1,9 @@
 package frc.robot.commands;
 
+
 import static edu.wpi.first.units.Units.*;
 
-import com.ctre.phoenix6.Utils;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+
 
 public class DriveCommand extends Command {
   private static final double PID_MAX = 0.35;
@@ -34,18 +36,24 @@ public class DriveCommand extends Command {
   private double MaxAngularRate = 3.5 * Math.PI;
 
 
+  private final double LEFTSTATIONANGLE = 127;
+  private final double RIGHTSTATIONANGLE = -127;
+
+
   private static final double halfWidthField = 4.0359;
-  private static final double blueLeftCoralTargetX = 1.27;
-  private static final double blueLeftCoralTargetY = 1.27;
-  private static final double blueRightCoralTargetX = 1.27;
-  private static final double blueRightCoralTargetY = 6.80;
-  private static final double redLeftCoralTargetX = 16.5;
-  private static final double redLeftCoralTargetY = 1.27;
-  private static final double redRightCoralTargetX = 16.5;
-  private static final double redRightCoralTargetY = 6.80;
 
 
-  private final SwerveRequest.FieldCentric drive = 
+  enum coralStationDesiredAngle {
+    redAllianceLeftStation,
+    redAllianceRightStation,
+    blueAllianceLeftStation,
+    blueAllianceRightStation
+  }
+  
+  coralStationDesiredAngle desiredStationAngle = coralStationDesiredAngle.redAllianceLeftStation;
+
+
+  private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * 0.1)
           .withRotationalDeadband(MaxAngularRate * 0.1)
@@ -59,7 +67,6 @@ public class DriveCommand extends Command {
 
     this.PID = new PIDController(0.02, 0, 0);
     this.PID.setTolerance(0.1);
-  
     this.PID.enableContinuousInput(-180, 180);
 
 
@@ -69,7 +76,7 @@ public class DriveCommand extends Command {
 
   @Override
   public void initialize() {
-
+    // We will start with the "back coral station" feature on by default
     isBackCoralStation = true;
   }
 
@@ -93,57 +100,71 @@ public class DriveCommand extends Command {
     }
 
 
-  
     if (isBackCoralStation) {
-
-      double coralX, coralY;
-      if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        // Blue Alliance
         if (currPose.getY() <= halfWidthField) {
-          coralX = blueLeftCoralTargetX;
-          coralY = blueLeftCoralTargetY;
+          // Low Y => "Right" station for Blue
+          desiredStationAngle = coralStationDesiredAngle.blueAllianceRightStation;
         } else {
-          coralX = blueRightCoralTargetX;
-          coralY = blueRightCoralTargetY;
+          // High Y => "Left" station for Blue
+          desiredStationAngle = coralStationDesiredAngle.blueAllianceLeftStation;
         }
       } else {
-        // Red or invalid
+        // Red Alliance or invalid
         if (currPose.getY() <= halfWidthField) {
-          coralX = redLeftCoralTargetX;
-          coralY = redLeftCoralTargetY;
+          desiredStationAngle = coralStationDesiredAngle.redAllianceLeftStation;
         } else {
-          coralX = redRightCoralTargetX;
-          coralY = redRightCoralTargetY;
+          desiredStationAngle = coralStationDesiredAngle.redAllianceRightStation;
         }
       }
 
 
-      double desiredAngle = calculateBackAngleToTarget(currPose, coralX, coralY);
+      double desiredAngle;
+      switch (desiredStationAngle) {
+        case redAllianceLeftStation:
+          desiredAngle = LEFTSTATIONANGLE;
+          break;
+        case redAllianceRightStation:
+          desiredAngle = RIGHTSTATIONANGLE;
+          break;
+        case blueAllianceLeftStation:
+          desiredAngle = LEFTSTATIONANGLE;
+          break;
+        case blueAllianceRightStation:
+          desiredAngle = RIGHTSTATIONANGLE;
+          break;
+        default:
+          desiredAngle = 0; 
+          break;
+      }
+
+
+      // Feed the fixed angle into the PID
       PID.setSetpoint(desiredAngle);
-
-
       double pidOutput = PID.calculate(currTheta);
       pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
 
 
+      // Override the user's rotation with the PID result
       angularVelocity = pidOutput;
 
 
-      SmartDashboard.putNumber("CoralTrackingDesiredAngle", desiredAngle);
+      SmartDashboard.putNumber("FixedCoralDesiredAngle", desiredAngle);
       SmartDashboard.putNumber("CoralTrackingPIDOutput", pidOutput);
     }
 
 
-
+    // Multiply by our maximum speeds/rates
     xVelocity *= MaxSpeed;
     yVelocity *= MaxSpeed;
     angularVelocity *= MaxAngularRate;
 
 
-
     DogLog.log("Drive Command/xVelocity", xVelocity);
     DogLog.log("Drive Command/yVelocity", yVelocity);
     DogLog.log("Drive Command/angularVelocity", angularVelocity);
-
 
 
     drivetrain.setControl(
@@ -164,22 +185,14 @@ public class DriveCommand extends Command {
   public static double calculateBackAngleToTarget(Pose2d pose, double targetX, double targetY) {
     double dx = targetX - pose.getX();
     double dy = targetY - pose.getY();
-
-
-    double angleToTargetRad = Math.atan2(dy, dx);  // angle from -π to π
-    double angleToTargetDeg = Math.toDegrees(angleToTargetRad); // -180 to 180
-
-
+    double angleToTargetRad = Math.atan2(dy, dx);
+    double angleToTargetDeg = Math.toDegrees(angleToTargetRad);
     double backAngle = angleToTargetDeg + 180;
-
-
     return wrapDegrees(backAngle);
   }
 
 
-  /**
-   * Wrap angle to [-180, 180].
-   */
+  /** Wrap angle to [-180, 180]. */
   public static double wrapDegrees(double angleDeg) {
     double wrapped = angleDeg % 360.0;
     if (wrapped > 180.0) {
@@ -190,6 +203,7 @@ public class DriveCommand extends Command {
     return wrapped;
   }
 }
+
 
 
 
