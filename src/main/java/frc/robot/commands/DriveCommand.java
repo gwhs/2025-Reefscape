@@ -31,8 +31,8 @@ public class DriveCommand extends Command {
   private CommandSwerveDrivetrain drivetrain;
   private CommandXboxController driverController;
   private Pose2d currPose;
-  public boolean isSlow = false;
-  public boolean isAligningToPose = false;
+  private boolean isSlow = false;
+  private boolean isAligningToPose = false;
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * 0.1)
@@ -42,7 +42,6 @@ public class DriveCommand extends Command {
   // driving in open loop
 
   public DriveCommand(CommandXboxController driverController, CommandSwerveDrivetrain drivetrain) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.driverController = driverController;
     this.drivetrain = drivetrain;
 
@@ -63,6 +62,24 @@ public class DriveCommand extends Command {
               isAligningToPose = true;
               goToPoseWithPID(new Pose2d(4.00, 2.00, new Rotation2d(3.00)));
             }));
+  }
+
+  public boolean getIsAligningToPose() {
+    return isAligningToPose;
+  }
+
+  public void setIsAligningToPose(boolean isAligning) {
+    isAligningToPose = isAligning;
+  }
+
+  public boolean isAtTargetPose() {
+    if (isAligningToPose == false) {
+      return true;
+    }
+    if (PIDX.atSetpoint() && PIDY.atSetpoint() && PIDRotation.atSetpoint()) {
+      return true;
+    }
+    return false;
   }
 
   public void goToPoseWithPID(Pose2d targetPose) {
@@ -116,7 +133,6 @@ public class DriveCommand extends Command {
   @Override
   public void end(boolean interrupted) {}
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;
