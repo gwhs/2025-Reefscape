@@ -36,14 +36,15 @@ public class DriveCommand extends Command {
   private double MaxAngularRate = 3.5 * Math.PI;
 
 
-  private final double REDLEFTSTATIONANGLE = 54;
-  private final double REDRIGHTSTATIONANGLE = -54;
+  private final double REDLEFTSTATIONANGLE = 126;
+  private final double REDRIGHTSTATIONANGLE = -126;
   private final double BLUELEFTSTATIONANGLE = -54;
   private final double BLUERIGHTSTATIONANGLE = 54;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
-  private static final double xValueThreshold = 3.6576;
+  private static final double leftXValueThreshold = 3.6576;
+  private static final double rightXValueThreshold = 12.8778;
 
 
   enum coralStationDesiredAngle {
@@ -79,6 +80,7 @@ public class DriveCommand extends Command {
 
   @Override
   public void initialize() {
+    isBackCoralStation = true;
   }
 
 
@@ -91,14 +93,6 @@ public class DriveCommand extends Command {
 
     currPose = drivetrain.getState().Pose;
     double currTheta = currPose.getRotation().getDegrees();
-
-      // We will start with the "back coral station" feature on by default
-      if (currPose.getX() < xValueThreshold) {
-        isBackCoralStation = true;
-      }
-      else {
-        isBackCoralStation = false;
-      }
 
 
     if (isSlow) {
@@ -113,7 +107,7 @@ public class DriveCommand extends Command {
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
         // Blue Alliance
-        if (currPose.getY() <= halfWidthField) {
+        if (currPose.getY() <= halfWidthField && currPose.getX() < leftXValueThreshold) {
           // Low Y => "Right" station for Blue
           desiredStationAngle = coralStationDesiredAngle.blueAllianceRightStation;
         } else {
@@ -122,7 +116,7 @@ public class DriveCommand extends Command {
         }
       } else {
         // Red Alliance or invalid
-        if (currPose.getY() <= halfWidthField) {
+        if (currPose.getY() <= halfWidthField && currPose.getX() > rightXValueThreshold) {
           desiredStationAngle = coralStationDesiredAngle.redAllianceLeftStation;
         } else {
           desiredStationAngle = coralStationDesiredAngle.redAllianceRightStation;
