@@ -1,9 +1,9 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.*;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -24,7 +24,7 @@ public class DriveCommand extends Command {
   private CommandSwerveDrivetrain drivetrain;
   private CommandXboxController driverController;
   private boolean isSlow = false;
- 
+
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * 0.1)
@@ -40,9 +40,8 @@ public class DriveCommand extends Command {
     this.PID = new PIDController(0.02, 0, 0);
     this.PID.setTolerance(0.1);
     this.PID.enableContinuousInput(-180, 180);
-    
+
     addRequirements(drivetrain);
-  
   }
 
   public void execute() {
@@ -57,12 +56,10 @@ public class DriveCommand extends Command {
       yVelocity *= slowFactor;
       angularVelocity *= slowFactor;
     }
-    
+
     xVelocity = xVelocity * MaxSpeed;
     yVelocity = yVelocity * MaxSpeed;
     angularVelocity = angularVelocity * MaxAngularRate;
-
-    
 
     drivetrain.setControl(
         drive

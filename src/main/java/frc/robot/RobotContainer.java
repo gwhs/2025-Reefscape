@@ -78,7 +78,8 @@ public class RobotContainer {
   private void configureBindings() {
     SmartDashboard.putData(
         "AlignToPose", alignToPose(() -> new Pose2d(1.00, 3.00, new Rotation2d(3.00))));
-    SmartDashboard.putData("AlignToStart", alignToPose(() -> new Pose2d(0.00,0.00, new Rotation2d(0.00))));
+    SmartDashboard.putData(
+        "AlignToStart", alignToPose(() -> new Pose2d(0.00, 0.00, new Rotation2d(0.00))));
     m_driverController
         .rightTrigger()
         .onTrue(

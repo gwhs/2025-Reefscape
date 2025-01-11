@@ -1,19 +1,17 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Radians;
+
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Radians;
 import java.util.function.Supplier;
-
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.swerve.SwerveRequest;
-
-import dev.doglog.DogLog;
 
 public class AlignToPose extends Command {
   Pose2d currPose;
@@ -33,9 +31,6 @@ public class AlignToPose extends Command {
           .withDeadband(MaxSpeed * 0.1)
           .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
-  
-
-      
 
   public AlignToPose(Supplier<Pose2d> Pose, CommandSwerveDrivetrain drivetrain) {
     addRequirements(drivetrain);
@@ -48,7 +43,6 @@ public class AlignToPose extends Command {
     PIDRotation.setTolerance(0.1);
     PIDRotation.enableContinuousInput(Radians.fromBaseUnits(-180), Radians.fromBaseUnits(180));
     this.drivetrain = drivetrain;
-    
   }
 
   public void goToPoseWithPID(Pose2d targetPose) {
@@ -56,8 +50,6 @@ public class AlignToPose extends Command {
     PIDY.setSetpoint(targetPose.getY());
     PIDRotation.setSetpoint(targetPose.getRotation().getRadians());
   }
-
-
 
   public boolean isAtTargetPose() {
     if (PIDX.atSetpoint() && PIDY.atSetpoint() && PIDRotation.atSetpoint()) {
@@ -70,8 +62,6 @@ public class AlignToPose extends Command {
   public void initialize() {
     goToPoseWithPID(targetPose.get());
   }
-
-  
 
   @Override
   public void execute() {
@@ -97,19 +87,16 @@ public class AlignToPose extends Command {
     DogLog.log("Drive Command/xVelocity", xVelocity);
     DogLog.log("Drive Command/yVelocity", yVelocity);
     DogLog.log("Drive Command/angularVelocity", angularVelocity);
-    drivetrain.setControl(drive
+    drivetrain.setControl(
+        drive
             .withVelocityX(xVelocity) // Drive forward with negative Y (forward)
             .withVelocityY(yVelocity) // Drive left with negative X (left)
             .withRotationalRate(angularVelocity)); // Drive counterclockwise with negative X (left)
-    
   }
 
   @Override
   public void end(boolean interrupted) {
-    drivetrain.setControl(drive
-      .withVelocityX(0.00)
-      .withVelocityY(0.00)
-      .withRotationalRate(0.00));
+    drivetrain.setControl(drive.withVelocityX(0.00).withVelocityY(0.00).withRotationalRate(0.00));
   }
 
   @Override
