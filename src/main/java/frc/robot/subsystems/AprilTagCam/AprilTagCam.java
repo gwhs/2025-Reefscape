@@ -52,7 +52,7 @@ public class AprilTagCam {
     photonEstimator =
         new PhotonPoseEstimator(
             aprilTagFieldLayout,
-            PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+            PhotonPoseEstimator.PoseStrategy.AVERAGE_BEST_TARGETS,
             robotToCam);
 
     ntKey = "/Vision/" + str + "/";

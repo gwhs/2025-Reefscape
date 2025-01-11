@@ -42,9 +42,9 @@ public class RobotContainer {
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-  private AprilTagCam cam1 =
+  private AprilTagCam cam2 =
       new AprilTagCam(
-          "cam1",
+          "cam2",
           AprilTagCamConstants.BackLeftCamLocation,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose);
@@ -89,7 +89,7 @@ public class RobotContainer {
 
   public void periodic() {
 
-    cam1.updatePoseEstim();
+    cam2.updatePoseEstim();
   }
 
   /**
