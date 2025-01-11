@@ -13,11 +13,11 @@ public class ElevatorIOSim implements ElevatorIO {
   private DCMotorSim leftMotorSim = new DCMotorSim(
       LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500(1), 0.0001, 1),
       DCMotor.getFalcon500(1));
-  private Constraints constraints = new Constraints(ElevatorConstant.MAX_VELOCITY, ElevatorConstant.MAX_ACCELERATION);
-  private ProfiledPIDController leftpidController = new ProfiledPIDController(ElevatorConstant.ELEVATOR_PID_KP,
-      ElevatorConstant.ELEVATOR_PID_KI, ElevatorConstant.ELEVATOR_PID_KD, constraints);
-  private ProfiledPIDController rightpidController = new ProfiledPIDController(ElevatorConstant.ELEVATOR_PID_KP,
-      ElevatorConstant.ELEVATOR_PID_KI, ElevatorConstant.ELEVATOR_PID_KD, constraints);
+  private Constraints constraints = new Constraints(ElevatorConstants.MAX_VELOCITY, ElevatorConstants.MAX_ACCELERATION);
+  private ProfiledPIDController leftpidController = new ProfiledPIDController(ElevatorConstants.ELEVATOR_PID_KP,
+      ElevatorConstants.ELEVATOR_PID_KI, ElevatorConstants.ELEVATOR_PID_KD, constraints);
+  private ProfiledPIDController rightpidController = new ProfiledPIDController(ElevatorConstants.ELEVATOR_PID_KP,
+      ElevatorConstants.ELEVATOR_PID_KI, ElevatorConstants.ELEVATOR_PID_KD, constraints);
 
   @Override
   public void setPositionLeft(double position) {
