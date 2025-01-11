@@ -51,7 +51,9 @@ public class AprilTagCam {
 
     photonEstimator =
         new PhotonPoseEstimator(
-            aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.AVERAGE_BEST_TARGETS, robotToCam);
+            aprilTagFieldLayout,
+            PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+            robotToCam);
 
     ntKey = "/Vision/" + str + "/";
   }
@@ -71,6 +73,7 @@ public class AprilTagCam {
     // we need to give the info of where the robot is to the drive train so it knows where to move
 
     List<PhotonPipelineResult> results = cam.getAllUnreadResults();
+    DogLog.log(ntKey + "Number of Results/", results.size());
     if (results.isEmpty()) {
       return;
     }
