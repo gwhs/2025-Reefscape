@@ -36,10 +36,12 @@ public class DriveCommand extends Command {
   private double MaxAngularRate = 3.5 * Math.PI;
 
 
-  private final double LEFTSTATIONANGLE = 127;
-  private final double RIGHTSTATIONANGLE = -127;
+  private final double REDLEFTSTATIONANGLE = 127;
+  private final double REDRIGHTSTATIONANGLE = -127;
+  private final double BLUELEFTSTATIONANGLE = -54;
+  private final double BLUERIGHTSTATIONANGLE = 54;
 
-
+  // Unit is meters
   private static final double halfWidthField = 4.0359;
 
 
@@ -124,16 +126,16 @@ public class DriveCommand extends Command {
       double desiredAngle;
       switch (desiredStationAngle) {
         case redAllianceLeftStation:
-          desiredAngle = LEFTSTATIONANGLE;
+          desiredAngle = REDLEFTSTATIONANGLE;
           break;
         case redAllianceRightStation:
-          desiredAngle = RIGHTSTATIONANGLE;
+          desiredAngle = REDRIGHTSTATIONANGLE;
           break;
         case blueAllianceLeftStation:
-          desiredAngle = LEFTSTATIONANGLE;
+          desiredAngle = BLUELEFTSTATIONANGLE;
           break;
         case blueAllianceRightStation:
-          desiredAngle = RIGHTSTATIONANGLE;
+          desiredAngle = BLUERIGHTSTATIONANGLE;
           break;
         default:
           desiredAngle = 0; 
