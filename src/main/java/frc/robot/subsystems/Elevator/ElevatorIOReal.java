@@ -43,8 +43,8 @@ public class ElevatorIOReal implements ElevatorIO {
     leftElevatorConfigurator.apply(talonFXConfigs);
 
 
-    TalonFXConfigurator rightClimbConfigurator = m_rightElevatorMotor.getConfigurator();
-    rightClimbConfigurator.apply(talonFXConfigs);
+    TalonFXConfigurator rightElevatorConfigurator = m_rightElevatorMotor.getConfigurator();
+    rightElevatorConfigurator.apply(talonFXConfigs);
 
   }
 
