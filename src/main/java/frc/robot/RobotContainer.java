@@ -74,7 +74,6 @@ public class RobotContainer {
    */
   private void configureBindings() {
     m_driverController.a().whileTrue(WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
-    m_driverController.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
   }
