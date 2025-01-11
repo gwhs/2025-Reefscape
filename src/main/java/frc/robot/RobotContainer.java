@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.commands.autonomous.Templete;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -59,10 +60,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.a().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    m_driverController.a().whileTrue(WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
     m_driverController.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    m_driverController.x().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    m_driverController.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
   }
 
   public void periodic() {}
