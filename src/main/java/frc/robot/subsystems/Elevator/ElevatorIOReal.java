@@ -1,4 +1,4 @@
-package frc.robot.subsystems.ClimbSubsystem;
+package frc.robot.subsystems.ElevatorSubsystem;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -11,13 +11,13 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-public class ClimbIOReal implements ClimbIO {
-  private TalonFX m_leftClimbMotor = new TalonFX(ClimbConstants.LEFT_CLIMB_MOTOR_ID, "rio");
-  private TalonFX m_rightClimbMotor = new TalonFX(ClimbConstants.RIGHT_CLIMB_MOTOR_ID, "rio");
+public class ElevatorIOReal implements ElevatorIO {
+  private TalonFX m_leftElevatorMotor = new TalonFX(ElevatorConstant.LEFT_ELEVATOR_MOTOR_ID, "rio");
+  private TalonFX m_rightElevatorMotor = new TalonFX(ElevatorConstant.RIGHT_ELEVATOR_MOTOR_ID, "rio");
   private final MotionMagicVoltage m_requestLeft = new MotionMagicVoltage(0);
   private final MotionMagicVoltage m_requestRight = new MotionMagicVoltage(0);
 
-  public ClimbIOReal() {
+  public ElevatorIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
     MotorOutputConfigs motorOutput = talonFXConfigs.MotorOutput;
     CurrentLimitsConfigs currentConfig = talonFXConfigs.CurrentLimits;
@@ -39,36 +39,36 @@ public class ClimbIOReal implements ClimbIO {
     motorOutput.NeutralMode = NeutralModeValue.Brake;
     motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-    TalonFXConfigurator leftClimbConfigurator = m_leftClimbMotor.getConfigurator();
-    leftClimbConfigurator.apply(talonFXConfigs);
+    TalonFXConfigurator leftElevatorConfigurator = m_leftElevatorMotor.getConfigurator();
+    leftElevatorConfigurator.apply(talonFXConfigs);
 
 
-    TalonFXConfigurator rightClimbConfigurator = m_rightClimbMotor.getConfigurator();
+    TalonFXConfigurator rightClimbConfigurator = m_rightElevatorMotor.getConfigurator();
     rightClimbConfigurator.apply(talonFXConfigs);
 
   }
 
   public void setPositionLeft(double position) {
-    m_leftClimbMotor.setControl(m_requestLeft.withPosition(position));
+    m_leftElevatorMotor.setControl(m_requestLeft.withPosition(position));
   }
   public void setPositionRight(double position) {
-    m_rightClimbMotor.setControl(m_requestRight.withPosition(position));
+    m_rightElevatorMotor.setControl(m_requestRight.withPosition(position));
   }
 
   public double getRightMotorPosition() {
-    return m_rightClimbMotor.getPosition().getValueAsDouble();
+    return m_rightElevatorMotor.getPosition().getValueAsDouble();
   }
 
   public double getLeftMotorPosition() {
-    return m_leftClimbMotor.getPosition().getValueAsDouble();
+    return m_leftElevatorMotor.getPosition().getValueAsDouble();
   }
 
   public void setLeftMotorSpeed(double speed) {
-    m_leftClimbMotor.set(speed);
+    m_leftElevatorMotor.set(speed);
   }
 
   public void setRightMotorSpeed(double speed) {
-    m_rightClimbMotor.set(speed);
+    m_rightElevatorMotor.set(speed);
   }
 
   @Override
