@@ -115,6 +115,6 @@ public class RobotContainer {
   }
 
   public Command alignToPose(Supplier<Pose2d> Pose) {
-    return new AlignToPose(Pose, driveCommand);
+    return new AlignToPose(Pose, drivetrain).withTimeout(1);
   }
 }
