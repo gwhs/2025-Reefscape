@@ -2,12 +2,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import java.util.function.Supplier;
 
 public class AlignToPose extends Command {
   DriveCommand driveCommand;
-  Pose2d targetPose;
+  Supplier<Pose2d> targetPose;
 
-  public AlignToPose(Pose2d Pose, DriveCommand driveCommand) {
+  public AlignToPose(Supplier<Pose2d> Pose, DriveCommand driveCommand) {
     targetPose = Pose;
     this.driveCommand = driveCommand;
   }
@@ -15,7 +16,7 @@ public class AlignToPose extends Command {
   @Override
   public void initialize() {
     driveCommand.setIsAligningToPose(true);
-    driveCommand.goToPoseWithPID(targetPose);
+    driveCommand.goToPoseWithPID(targetPose.get());
   }
 
   @Override

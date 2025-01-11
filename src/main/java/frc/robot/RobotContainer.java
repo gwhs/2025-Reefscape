@@ -23,6 +23,7 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.autonomous.Template;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import java.util.function.Supplier;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -62,10 +63,14 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    SmartDashboard.putData("AlignToPose", alignToPose());
+    SmartDashboard.putData(
+        "AlignToPose", alignToPose(() -> new Pose2d(1.00, 3.00, new Rotation2d(3.00))));
     m_driverController
         .rightTrigger()
-        .onTrue(alignToPose().withTimeout(1).andThen(Commands.print("YAY")));
+        .onTrue(
+            alignToPose(() -> new Pose2d(1.00, 3.00, new Rotation2d(3.00)))
+                .withTimeout(1)
+                .andThen(Commands.print("YAY")));
     m_driverController.a().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
     m_driverController.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     m_driverController.x().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
@@ -93,7 +98,7 @@ public class RobotContainer {
     SmartDashboard.putData("autonomous", autoChooser);
   }
 
-  public Command alignToPose() {
-    return new AlignToPose(new Pose2d(3.00, 2.00, new Rotation2d(1.00)), driveCommand);
+  public Command alignToPose(Supplier<Pose2d> Pose) {
+    return new AlignToPose(Pose, driveCommand);
   }
 }
