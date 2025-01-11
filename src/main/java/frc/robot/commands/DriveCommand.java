@@ -36,13 +36,14 @@ public class DriveCommand extends Command {
   private double MaxAngularRate = 3.5 * Math.PI;
 
 
-  private final double REDLEFTSTATIONANGLE = 127;
-  private final double REDRIGHTSTATIONANGLE = -127;
+  private final double REDLEFTSTATIONANGLE = 54;
+  private final double REDRIGHTSTATIONANGLE = -54;
   private final double BLUELEFTSTATIONANGLE = -54;
   private final double BLUERIGHTSTATIONANGLE = 54;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
+  private static final double xValueThreshold = 3.6576;
 
 
   enum coralStationDesiredAngle {
@@ -78,8 +79,6 @@ public class DriveCommand extends Command {
 
   @Override
   public void initialize() {
-    // We will start with the "back coral station" feature on by default
-    isBackCoralStation = true;
   }
 
 
@@ -92,6 +91,14 @@ public class DriveCommand extends Command {
 
     currPose = drivetrain.getState().Pose;
     double currTheta = currPose.getRotation().getDegrees();
+
+      // We will start with the "back coral station" feature on by default
+      if (currPose.getX() < xValueThreshold) {
+        isBackCoralStation = true;
+      }
+      else {
+        isBackCoralStation = false;
+      }
 
 
     if (isSlow) {
