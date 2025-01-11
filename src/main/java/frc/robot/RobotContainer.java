@@ -81,7 +81,7 @@ public class RobotContainer {
         alignToPose(
             () -> {
               Pose2d curPose = drivetrain.getState().Pose;
-              return new Pose2d(curPose.getX(), curPose.getY(), curPose.getRotation());
+              return new Pose2d(curPose.getX()+2, curPose.getY(), curPose.getRotation());
             }));
     SmartDashboard.putData(
         "AlignToStart", alignToPose(() -> new Pose2d(0.00, 0.00, new Rotation2d(0.00))));
