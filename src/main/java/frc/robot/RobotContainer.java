@@ -62,6 +62,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    SmartDashboard.putData("AlignToPose", alignToPose());
     m_driverController
         .rightTrigger()
         .onTrue(alignToPose().withTimeout(1).andThen(Commands.print("YAY")));
@@ -93,6 +94,6 @@ public class RobotContainer {
   }
 
   public Command alignToPose() {
-    return new AlignToPose(new Pose2d(3.00, 2.00, new Rotation2d(4.00)), driveCommand);
+    return new AlignToPose(new Pose2d(3.00, 2.00, new Rotation2d(1.00)), driveCommand);
   }
 }

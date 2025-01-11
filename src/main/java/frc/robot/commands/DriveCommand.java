@@ -3,6 +3,7 @@ package frc.robot.commands;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.fasterxml.jackson.databind.util.TokenBufferReadContext;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.PIDController;
@@ -54,6 +55,7 @@ public class DriveCommand extends Command {
     this.PIDY.setTolerance(0.1);
     this.PIDRotation = new PIDController(0.002, 0, 0);
     this.PIDRotation.setTolerance(0.1);
+    this.PIDRotation.enableContinuousInput(Radians.fromBaseUnits(-180), Radians.fromBaseUnits(180));
     addRequirements(drivetrain);
     SmartDashboard.putData(
         "goto420",
