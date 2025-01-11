@@ -33,6 +33,7 @@ public class AprilTagCam {
   private final Transform3d robotToCam;
   private final Supplier<Pose2d> currRobotPose;
   private AprilTagHelp helper;
+  private int counter;
 
   private final String ntKey;
 
@@ -52,13 +53,17 @@ public class AprilTagCam {
     photonEstimator =
         new PhotonPoseEstimator(
             aprilTagFieldLayout,
-            PhotonPoseEstimator.PoseStrategy.AVERAGE_BEST_TARGETS,
+            PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
             robotToCam);
 
     ntKey = "/Vision/" + str + "/";
+
+    counter = 0;
   }
 
   public void updatePoseEstim() {
+
+    counter++;
 
     Pose2d robotPose = currRobotPose.get();
     Pose3d robotPose3d = new Pose3d(robotPose);
@@ -74,6 +79,7 @@ public class AprilTagCam {
 
     List<PhotonPipelineResult> results = cam.getAllUnreadResults();
     DogLog.log(ntKey + "Number of Results/", results.size());
+    DogLog.log(ntKey + "counter", counter);
     if (results.isEmpty()) {
       return;
     }
@@ -112,8 +118,8 @@ public class AprilTagCam {
     // }
 
     // If vision’s pose estimation is above/below the ground
-    double upperZBound = 2.0;
-    double lowerZBound = -2.0;
+    double upperZBound = AprilTagCamConstants.zTolerence;
+    double lowerZBound = -(AprilTagCamConstants.zTolerence);
     if (estimPose3d.getZ() > upperZBound
         || estimPose3d.getZ()
             < lowerZBound) { // change if we find out that z starts from camera height

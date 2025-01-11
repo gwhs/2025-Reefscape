@@ -20,4 +20,6 @@ public class AprilTagCamConstants {
               Units.degreesToRadians(0),
               Units.degreesToRadians(-45),
               Units.degreesToRadians(-135)));
+
+  public static final double zTolerence = 2.0;
 }
