@@ -1,4 +1,4 @@
-package frc.robot.subsystems.ElevatorSubsystem;
+package frc.robot.subsystems.Elevator;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -12,8 +12,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class ElevatorIOReal implements ElevatorIO {
-  private TalonFX m_leftElevatorMotor = new TalonFX(ElevatorConstant.LEFT_ELEVATOR_MOTOR_ID, "rio");
-  private TalonFX m_rightElevatorMotor = new TalonFX(ElevatorConstant.RIGHT_ELEVATOR_MOTOR_ID, "rio");
+  private TalonFX m_leftElevatorMotor = new TalonFX(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, "rio");
+  private TalonFX m_rightElevatorMotor = new TalonFX(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, "rio");
   private final MotionMagicVoltage m_requestLeft = new MotionMagicVoltage(0);
   private final MotionMagicVoltage m_requestRight = new MotionMagicVoltage(0);
 
