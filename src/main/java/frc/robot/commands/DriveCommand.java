@@ -1,8 +1,6 @@
 package frc.robot.commands;
 
-
 import static edu.wpi.first.units.Units.*;
-
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -17,24 +15,19 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
-
 public class DriveCommand extends Command {
   private static final double PID_MAX = 0.35;
-
 
   private final CommandSwerveDrivetrain drivetrain;
   private final CommandXboxController driverController;
   private final PIDController PID;
   private Pose2d currPose;
 
-
   public boolean isBackCoralStation = false;
   public boolean isSlow = false;
 
-
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double MaxAngularRate = 3.5 * Math.PI;
-
 
   private final double REDLEFTSTATIONANGLE = 126;
   private final double REDRIGHTSTATIONANGLE = -126;
@@ -46,16 +39,14 @@ public class DriveCommand extends Command {
   private static final double leftXValueThreshold = 3.6576;
   private static final double rightXValueThreshold = 12.8778;
 
-
   enum coralStationDesiredAngle {
     redAllianceLeftStation,
     redAllianceRightStation,
     blueAllianceLeftStation,
     blueAllianceRightStation
   }
-  
-  coralStationDesiredAngle desiredStationAngle = coralStationDesiredAngle.redAllianceLeftStation;
 
+  coralStationDesiredAngle desiredStationAngle = coralStationDesiredAngle.redAllianceLeftStation;
 
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
@@ -63,25 +54,19 @@ public class DriveCommand extends Command {
           .withRotationalDeadband(MaxAngularRate * 0.1)
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-
   public DriveCommand(CommandXboxController driverController, CommandSwerveDrivetrain drivetrain) {
     this.driverController = driverController;
     this.drivetrain = drivetrain;
-
 
     this.PID = new PIDController(0.02, 0, 0);
     this.PID.setTolerance(0.1);
     this.PID.enableContinuousInput(-180, 180);
 
-
     addRequirements(drivetrain);
   }
 
-
   @Override
-  public void initialize() {
-  }
-
+  public void initialize() {}
 
   @Override
   public void execute() {
@@ -89,10 +74,8 @@ public class DriveCommand extends Command {
     double yVelocity = -driverController.getLeftX();
     double angularVelocity = -driverController.getRightX();
 
-
     currPose = drivetrain.getState().Pose;
     double currTheta = currPose.getRotation().getDegrees();
-
 
     if (isSlow) {
       double slowFactor = 0.25;
@@ -100,7 +83,6 @@ public class DriveCommand extends Command {
       yVelocity *= slowFactor;
       angularVelocity *= slowFactor;
     }
-
 
     if (isBackCoralStation) {
       if (DriverStation.getAlliance().isPresent()
@@ -122,7 +104,6 @@ public class DriveCommand extends Command {
         }
       }
 
-
       double desiredAngle;
       switch (desiredStationAngle) {
         case redAllianceLeftStation:
@@ -138,51 +119,42 @@ public class DriveCommand extends Command {
           desiredAngle = BLUERIGHTSTATIONANGLE;
           break;
         default:
-          desiredAngle = 0; 
+          desiredAngle = 0;
           break;
       }
-
 
       // Feed the fixed angle into the PID
       PID.setSetpoint(desiredAngle);
       double pidOutput = PID.calculate(currTheta);
       pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
 
-
       // Override the user's rotation with the PID result
       angularVelocity = pidOutput;
-
 
       SmartDashboard.putNumber("FixedCoralDesiredAngle", desiredAngle);
       SmartDashboard.putNumber("CoralTrackingPIDOutput", pidOutput);
     }
-
 
     // Multiply by our maximum speeds/rates
     xVelocity *= MaxSpeed;
     yVelocity *= MaxSpeed;
     angularVelocity *= MaxAngularRate;
 
-
     DogLog.log("Drive Command/xVelocity", xVelocity);
     DogLog.log("Drive Command/yVelocity", yVelocity);
     DogLog.log("Drive Command/angularVelocity", angularVelocity);
-
 
     drivetrain.setControl(
         drive
             .withVelocityX(xVelocity)
             .withVelocityY(yVelocity)
-            .withRotationalRate(angularVelocity)
-    );
+            .withRotationalRate(angularVelocity));
   }
-
 
   @Override
   public boolean isFinished() {
     return false;
   }
-
 
   public static double calculateBackAngleToTarget(Pose2d pose, double targetX, double targetY) {
     double dx = targetX - pose.getX();
@@ -192,7 +164,6 @@ public class DriveCommand extends Command {
     double backAngle = angleToTargetDeg + 180;
     return wrapDegrees(backAngle);
   }
-
 
   /** Wrap angle to [-180, 180]. */
   public static double wrapDegrees(double angleDeg) {
@@ -205,9 +176,3 @@ public class DriveCommand extends Command {
     return wrapped;
   }
 }
-
-
-
-
-
-
