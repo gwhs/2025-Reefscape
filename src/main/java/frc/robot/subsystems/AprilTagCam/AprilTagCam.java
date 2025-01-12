@@ -114,8 +114,8 @@ public class AprilTagCam {
   public boolean filterResults(Pose3d estimPose3d, EstimatedRobotPose optionalEstimPose) {
 
     // If vision’s pose estimation is above/below the ground
-    double upperZBound = AprilTagCamConstants.zTolerence;
-    double lowerZBound = -(AprilTagCamConstants.zTolerence);
+    double upperZBound = AprilTagCamConstants.Z_TOLERANCE;
+    double lowerZBound = -(AprilTagCamConstants.Z_TOLERANCE);
     if (estimPose3d.getZ() > upperZBound
         || estimPose3d.getZ()
             < lowerZBound) { // change if we find out that z starts from camera height
@@ -126,9 +126,9 @@ public class AprilTagCam {
     }
 
     //If vision's pose estimation is outside the field
-    double upperXBound = AprilTagCamConstants.maxXValue + AprilTagCamConstants.xyTolerance;
-    double upperYBound = AprilTagCamConstants.maxYValue + AprilTagCamConstants.xyTolerance;
-    double lowerXYBound = -(AprilTagCamConstants.xyTolerance);
+    double upperXBound = AprilTagCamConstants.MAX_X_VALUE + AprilTagCamConstants.XY_TOLERANCE;
+    double upperYBound = AprilTagCamConstants.MAX_Y_VALUE + AprilTagCamConstants.XY_TOLERANCE;
+    double lowerXYBound = -(AprilTagCamConstants.XY_TOLERANCE);
     if(estimPose3d.getX()< lowerXYBound  || estimPose3d.getY()< lowerXYBound ) {
       DogLog.log(
           ntKey + "Filtered because Y or X is less than 0",
@@ -152,7 +152,7 @@ public class AprilTagCam {
         closestTag = currentTarget.getBestCameraToTarget(); 
       } 
     }
-    if (min > AprilTagCamConstants.aprilTagMaxDistance){
+    if (min > AprilTagCamConstants.APRILTAG_MAX_DISTANCE){
       return false ; 
     }
   
@@ -162,7 +162,7 @@ public class AprilTagCam {
     double vel = Math.sqrt(Math.pow(yVel, 2) + Math.pow(xVel, 2)); 
     double rotation = currRobotSpeed.get().omegaRadiansPerSecond; 
 
-    if(vel > AprilTagCamConstants.maxVelocity || rotation > AprilTagCamConstants.MAX_ROTATION ){
+    if(vel > AprilTagCamConstants.MAX_VELOCITY || rotation > AprilTagCamConstants.MAX_ROTATION ){
       return false; 
     }
 
