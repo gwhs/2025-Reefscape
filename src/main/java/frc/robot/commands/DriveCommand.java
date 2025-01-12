@@ -80,7 +80,6 @@ public class DriveCommand extends Command {
 
   @Override
   public void initialize() {
-    isBackCoralStation = true;
   }
 
 
