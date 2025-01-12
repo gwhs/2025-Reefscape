@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.commands.autonomous.Templete;
@@ -73,7 +72,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.a().whileTrue(WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
+    m_driverController
+        .a()
+        .whileTrue(WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
   }
