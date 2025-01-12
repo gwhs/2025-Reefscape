@@ -76,20 +76,33 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    SmartDashboard.putData(
-        "AlignToPose",
-        alignToPose(
-            () -> {
-              Pose2d curPose = drivetrain.getState().Pose;
-              return new Pose2d(curPose.getX()+2, curPose.getY(), curPose.getRotation());
-            }));
+    // SmartDashboard.putData(
+    //     "AlignToPose",
+    //    ));
     SmartDashboard.putData(
         "AlignToStart", alignToPose(() -> new Pose2d(0.00, 0.00, new Rotation2d(0.00))));
     m_driverController
+        .leftTrigger()
+        .onTrue(
+            alignToPose(
+                    () -> {
+                      Pose2d curPose = drivetrain.getState().Pose;
+                      return new Pose2d(
+                          curPose.getX(),
+                          curPose.getY(),
+                          new Rotation2d(curPose.getRotation().getRadians() + 2));
+                    })
+                .andThen(Commands.print("NAY")));
+
+    m_driverController
         .rightTrigger()
         .onTrue(
-            alignToPose(() -> new Pose2d(1.00, 3.00, new Rotation2d(3.00)))
-                .withTimeout(1)
+            alignToPose(
+                    () -> {
+                      Pose2d curPose = drivetrain.getState().Pose;
+                      return new Pose2d(
+                          curPose.getX() + 0.2, curPose.getY(), curPose.getRotation());
+                    })
                 .andThen(Commands.print("YAY")));
     m_driverController.a().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
     m_driverController.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
@@ -123,6 +136,6 @@ public class RobotContainer {
   }
 
   public Command alignToPose(Supplier<Pose2d> Pose) {
-    return new AlignToPose(Pose, drivetrain).withTimeout(1);
+    return new AlignToPose(Pose, drivetrain);
   }
 }
