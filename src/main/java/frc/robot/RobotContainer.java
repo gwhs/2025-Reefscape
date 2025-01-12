@@ -47,8 +47,8 @@ public class RobotContainer {
           "cam2",
           AprilTagCamConstants.BackLeftCamLocation,
           drivetrain::addVisionMeasurent,
-          () -> drivetrain.getState().Pose);
-  ;
+          () -> drivetrain.getState().Pose,
+          () -> drivetrain.getState().Speeds);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

@@ -11,6 +11,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import java.util.List;
@@ -32,6 +33,7 @@ public class AprilTagCam {
   private final PhotonPoseEstimator photonEstimator;
   private final Transform3d robotToCam;
   private final Supplier<Pose2d> currRobotPose;
+  private final Supplier<ChassisSpeeds> currRobotSpeed;
   private AprilTagHelp helper;
   private int counter;
 
@@ -44,11 +46,14 @@ public class AprilTagCam {
       String str,
       Transform3d robotToCam,
       Consumer<AprilTagHelp> addVisionMeasurement,
-      Supplier<Pose2d> currRobotPose) {
+      Supplier<Pose2d> currRobotPose,
+      Supplier<ChassisSpeeds> currRobotSpeed) {
     cam = new PhotonCamera(str);
     this.addVisionMeasurement = addVisionMeasurement;
     this.robotToCam = robotToCam;
     this.currRobotPose = currRobotPose;
+    this.currRobotSpeed = currRobotSpeed;
+
 
     photonEstimator =
         new PhotonPoseEstimator(
@@ -106,16 +111,7 @@ public class AprilTagCam {
     }
   }
 
-  public boolean filterResults(Pose3d estimPose3d) {
-
-    // If vision’s pose estimation is outside of the field
-
-    // if(estimPose3d.getX()>upperZBound||estimPose3d.getZ()<lowerZBound){ //change if we find out
-    // that z starts from camera height
-    //     DogLog.log(ntKey + "Filtered because Z is out of bounds: (" + upperZBound + "," +
-    // lowerZBound + ")", estimPose3d);
-    //     return false;
-    // }
+  public boolean filterResults(Pose3d estimPose3d, EstimatedRobotPose optionalEstimPose) {
 
     // If vision’s pose estimation is above/below the ground
     double upperZBound = AprilTagCamConstants.zTolerence;
@@ -128,6 +124,48 @@ public class AprilTagCam {
           estimPose3d);
       return false;
     }
+
+    //If vision's pose estimation is outside the field
+    double upperXBound = AprilTagCamConstants.maxXValue + AprilTagCamConstants.xyTolerance;
+    double upperYBound = AprilTagCamConstants.maxYValue + AprilTagCamConstants.xyTolerance;
+    double lowerXYBound = -(AprilTagCamConstants.xyTolerance);
+    if(estimPose3d.getX()< lowerXYBound  || estimPose3d.getY()< lowerXYBound ) {
+      DogLog.log(
+          ntKey + "Filtered because Y or X is less than 0",
+          estimPose3d);
+      return false; 
+    }
+    if(estimPose3d.getX() > upperXBound  || estimPose3d.getY()> upperYBound){
+      DogLog.log(
+        ntKey + "Filtered because Y or X is out of bounds : (" + upperXBound + "," + upperYBound + "," + lowerXYBound + ")",
+        estimPose3d);
+    return false; 
+    }
+
+    //If the tags are too far away 
+    List<PhotonTrackedTarget> trackedTargets = optionalEstimPose.targetsUsed; 
+    Transform3d closestTag;
+    double min = Double.MAX_VALUE; 
+    for(PhotonTrackedTarget currentTarget: trackedTargets){
+      if(currentTarget.getBestCameraToTarget().getTranslation().getNorm()< min){
+        min = currentTarget.getBestCameraToTarget().getTranslation().getNorm();
+        closestTag = currentTarget.getBestCameraToTarget(); 
+      } 
+    }
+    if (min > AprilTagCamConstants.aprilTagMaxDistance){
+      return false ; 
+    }
+  
+    // if velocity or rotaion is too high
+    double xVel = currRobotSpeed.get().vxMetersPerSecond; 
+    double yVel = currRobotSpeed.get().vyMetersPerSecond;
+    double vel = Math.sqrt(Math.pow(yVel, 2) + Math.pow(xVel, 2)); 
+    double rotation = currRobotSpeed.get().omegaRadiansPerSecond; 
+
+    if(vel > AprilTagCamConstants.maxVelocity || rotation > AprilTagCamConstants.MAX_ROTATION ){
+      return false; 
+    }
+
 
     return true;
   }
