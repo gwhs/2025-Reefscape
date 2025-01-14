@@ -47,6 +47,7 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   private final ElevatorSubsytem m_ElevatorSubsystem = new ElevatorSubsytem();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Setup DogLog
