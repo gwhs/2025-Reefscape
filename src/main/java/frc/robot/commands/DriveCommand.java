@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-
+import dev.doglog.DogLog;
 public class DriveCommand extends Command {
 
   private double MaxSpeed =
@@ -60,6 +60,9 @@ public class DriveCommand extends Command {
     xVelocity = xVelocity * MaxSpeed;
     yVelocity = yVelocity * MaxSpeed;
     angularVelocity = angularVelocity * MaxAngularRate;
+    DogLog.log("Drive Command/Xvelocity", xVelocity);
+    DogLog.log("Drive Command/Yvelocity", yVelocity);
+    DogLog.log("Drive Command/Rotationvelocity", angularVelocity);
 
     drivetrain.setControl(
         drive
