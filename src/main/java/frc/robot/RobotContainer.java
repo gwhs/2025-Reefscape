@@ -19,12 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.autonomous.SC_preloadScore;
-import frc.robot.commands.autonomous.Templete;
-import frc.robot.commands.autonomous.auton_2_cycle;
-import frc.robot.commands.autonomous.auton_2_cycle2;
-import frc.robot.commands.autonomous.startLnLeave;
-import frc.robot.commands.autonomous.startLnLeave2;
+import frc.robot.commands.autonomous.*;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -100,6 +95,7 @@ public class RobotContainer {
     autoChooser.setDefaultOption("auton_2_cycle2", new auton_2_cycle2(this));
 
     autoChooser.addOption("startLnLeave", new startLnLeave(this));
+    autoChooser.addOption("TestPath", new Drivetrainpractice(this));
     autoChooser.addOption("startLnLeave2", new startLnLeave2(this));
 
     // TODO: add more autonomous routines
