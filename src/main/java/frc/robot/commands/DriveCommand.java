@@ -9,7 +9,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
@@ -36,8 +35,6 @@ public class DriveCommand extends Command {
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
-  private static final double leftXValueThreshold = 3.6576;
-  private static final double rightXValueThreshold = 12.8778;
 
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
@@ -56,8 +53,6 @@ public class DriveCommand extends Command {
     addRequirements(drivetrain);
   }
 
-  @Override
-  public void initialize() {}
 
   @Override
   public void execute() {
@@ -102,7 +97,7 @@ public class DriveCommand extends Command {
       // Override the user's rotation with the PID result
       angularVelocity = pidOutput;
 
-      SmartDashboard.putNumber("CoralTrackingPIDOutput", pidOutput);
+      DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
     }
 
     // Multiply by our maximum speeds/rates
@@ -119,10 +114,5 @@ public class DriveCommand extends Command {
             .withVelocityX(xVelocity)
             .withVelocityY(yVelocity)
             .withRotationalRate(angularVelocity));
-  }
-
-  @Override
-  public boolean isFinished() {
-    return false;
   }
 }
