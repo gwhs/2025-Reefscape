@@ -15,9 +15,6 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.Supplier;
 
 public class AlignToPose extends Command {
-  Pose2d currPose;
-  double angularVelocity;
-  DriveCommand driveCommand;
   Supplier<Pose2d> targetPose;
   private PIDController PIDX;
   private PIDController PIDY;
@@ -68,21 +65,19 @@ public class AlignToPose extends Command {
 
   @Override
   public void execute() {
-    double xVelocity = 0;
-    double yVelocity = 0;
-    double angularVelocity = 0;
+    Pose2d currPose;
     currPose = drivetrain.getState().Pose;
     double currX = currPose.getX();
     double currY = currPose.getY();
     Double currRotation = currPose.getRotation().getDegrees();
     double PIDXOutput = PIDX.calculate(currX);
-    xVelocity -= PIDXOutput;
+    double xVelocity = -PIDXOutput;
     DogLog.log("PIDXOutput", PIDXOutput);
     double PIDYOutput = PIDY.calculate(currY);
-    yVelocity -= PIDYOutput;
+    double yVelocity = -PIDYOutput;
     DogLog.log("PIDYoutput", PIDYOutput);
     double PIDRotationOutput = PIDRotation.calculate(currRotation);
-    angularVelocity += PIDRotationOutput;
+    double angularVelocity = PIDRotationOutput;
     DogLog.log("PIDRotationoutput", PIDRotationOutput);
     xVelocity = xVelocity * MaxSpeed;
     yVelocity = yVelocity * MaxSpeed;
