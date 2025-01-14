@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.Elevator;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,6 +31,7 @@ public class ElevatorSubsytem extends SubsystemBase {
   @Override
   public void periodic() {
     elevatorIO.update();
+    DogLog.log("Elevator/position",elevatorIO.getPosition());
   }
 
   public Command goTo(double position) {
