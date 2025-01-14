@@ -31,22 +31,13 @@ public class DriveCommand extends Command {
 
   private final double REDLEFTSTATIONANGLE = 126;
   private final double REDRIGHTSTATIONANGLE = -126;
-  private final double BLUELEFTSTATIONANGLE = -54;
-  private final double BLUERIGHTSTATIONANGLE = 54;
+  private final double BLUELEFTSTATIONANGLE = 54;
+  private final double BLUERIGHTSTATIONANGLE = -54;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
   private static final double leftXValueThreshold = 3.6576;
   private static final double rightXValueThreshold = 12.8778;
-
-  enum coralStationDesiredAngle {
-    redAllianceLeftStation,
-    redAllianceRightStation,
-    blueAllianceLeftStation,
-    blueAllianceRightStation
-  }
-
-  coralStationDesiredAngle desiredStationAngle = coralStationDesiredAngle.redAllianceLeftStation;
 
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
@@ -88,50 +79,29 @@ public class DriveCommand extends Command {
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
         // Blue Alliance
-        if (currPose.getY() <= halfWidthField && currPose.getX() < leftXValueThreshold) {
+        if (currPose.getY() <= halfWidthField) {
           // Low Y => "Right" station for Blue
-          desiredStationAngle = coralStationDesiredAngle.blueAllianceRightStation;
+          PID.setSetpoint(BLUELEFTSTATIONANGLE);
         } else {
           // High Y => "Left" station for Blue
-          desiredStationAngle = coralStationDesiredAngle.blueAllianceLeftStation;
+          PID.setSetpoint(BLUERIGHTSTATIONANGLE);
         }
       } else {
         // Red Alliance or invalid
-        if (currPose.getY() <= halfWidthField && currPose.getX() > rightXValueThreshold) {
-          desiredStationAngle = coralStationDesiredAngle.redAllianceLeftStation;
+        if (currPose.getY() <= halfWidthField) {
+          PID.setSetpoint(REDLEFTSTATIONANGLE);
         } else {
-          desiredStationAngle = coralStationDesiredAngle.redAllianceRightStation;
+          PID.setSetpoint(REDRIGHTSTATIONANGLE);
         }
       }
 
-      double desiredAngle;
-      switch (desiredStationAngle) {
-        case redAllianceLeftStation:
-          desiredAngle = REDLEFTSTATIONANGLE;
-          break;
-        case redAllianceRightStation:
-          desiredAngle = REDRIGHTSTATIONANGLE;
-          break;
-        case blueAllianceLeftStation:
-          desiredAngle = BLUELEFTSTATIONANGLE;
-          break;
-        case blueAllianceRightStation:
-          desiredAngle = BLUERIGHTSTATIONANGLE;
-          break;
-        default:
-          desiredAngle = 0;
-          break;
-      }
-
       // Feed the fixed angle into the PID
-      PID.setSetpoint(desiredAngle);
       double pidOutput = PID.calculate(currTheta);
       pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
 
       // Override the user's rotation with the PID result
       angularVelocity = pidOutput;
 
-      SmartDashboard.putNumber("FixedCoralDesiredAngle", desiredAngle);
       SmartDashboard.putNumber("CoralTrackingPIDOutput", pidOutput);
     }
 
@@ -154,25 +124,5 @@ public class DriveCommand extends Command {
   @Override
   public boolean isFinished() {
     return false;
-  }
-
-  public static double calculateBackAngleToTarget(Pose2d pose, double targetX, double targetY) {
-    double dx = targetX - pose.getX();
-    double dy = targetY - pose.getY();
-    double angleToTargetRad = Math.atan2(dy, dx);
-    double angleToTargetDeg = Math.toDegrees(angleToTargetRad);
-    double backAngle = angleToTargetDeg + 180;
-    return wrapDegrees(backAngle);
-  }
-
-  /** Wrap angle to [-180, 180]. */
-  public static double wrapDegrees(double angleDeg) {
-    double wrapped = angleDeg % 360.0;
-    if (wrapped > 180.0) {
-      wrapped -= 360.0;
-    } else if (wrapped <= -180.0) {
-      wrapped += 360.0;
-    }
-    return wrapped;
   }
 }
