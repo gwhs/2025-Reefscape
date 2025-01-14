@@ -70,7 +70,9 @@ public class ElevatorIOReal implements ElevatorIO {
   public void setRightMotorSpeed(double speed) {
     m_rightElevatorMotor.set(speed);
   }
-
+  public void setPosition(double speed) {
+    m_leftElevatorMotor.set(speed);
+  }
   @Override
   public void update() {
   }
