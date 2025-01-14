@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Elevator;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -18,20 +19,22 @@ public class ElevatorIOSim implements ElevatorIO {
           ElevatorConstants.ELEVATOR_PID_KD,
           constraints);
 
-  public void setPosition(double position) {}
+  public void setPosition(double position) {
+    pidController.setGoal(position);
+  }
 
+  // TODO: units are in meters, but we might want rotations
   public double getPosition() {
-    return 0;
+    return elevatorSim.getPositionMeters();
   }
 
   public void update() {
     elevatorSim.update(.020);
 
-    // double pidOutputLeft = leftpidController.calculate(getLeftMotorPosition());
-    // double pidOutputRight = rightpidController.calculate(getRightMotorPosition());
+    double pidOutput = pidController.calculate(getPosition());
 
-    // setLeftMotorSpeed(pidOutputLeft);
-    // setRightMotorSpeed(pidOutputRight);
+    DogLog.log("Elevator/Simulation/PID Output", pidOutput);
 
+    elevatorSim.setInputVoltage(pidOutput);
   }
 }
