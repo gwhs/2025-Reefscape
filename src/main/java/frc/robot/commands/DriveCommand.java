@@ -4,15 +4,14 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class DriveCommand extends Command {
+
   private double MaxSpeed =
       TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate =
@@ -21,10 +20,11 @@ public class DriveCommand extends Command {
   public static final double PID_MAX = 0.35;
 
   private PIDController PID;
+
   private CommandSwerveDrivetrain drivetrain;
   private CommandXboxController driverController;
-  private Pose2d currPose;
-  public boolean isSlow = false;
+  private boolean isSlow = false;
+
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * 0.1)
@@ -34,7 +34,6 @@ public class DriveCommand extends Command {
   // driving in open loop
 
   public DriveCommand(CommandXboxController driverController, CommandSwerveDrivetrain drivetrain) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.driverController = driverController;
     this.drivetrain = drivetrain;
 
@@ -48,10 +47,8 @@ public class DriveCommand extends Command {
   public void execute() {
     double xVelocity = -driverController.getLeftY();
     double yVelocity = -driverController.getLeftX();
-    double angularVelocity = -driverController.getRightX();
 
-    currPose = drivetrain.getState().Pose;
-    double currTheta = currPose.getRotation().getDegrees();
+    double angularVelocity = -driverController.getRightX();
 
     if (isSlow) {
       double slowFactor = 0.25;
@@ -64,10 +61,6 @@ public class DriveCommand extends Command {
     yVelocity = yVelocity * MaxSpeed;
     angularVelocity = angularVelocity * MaxAngularRate;
 
-    DogLog.log("Drive Command/xVelocity", xVelocity);
-    DogLog.log("Drive Command/yVelocity", yVelocity);
-    DogLog.log("Drive Command/angularVelocity", angularVelocity);
-
     drivetrain.setControl(
         drive
             .withVelocityX(xVelocity) // Drive forward with negative Y (forward)
@@ -78,7 +71,6 @@ public class DriveCommand extends Command {
   @Override
   public void end(boolean interrupted) {}
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;
