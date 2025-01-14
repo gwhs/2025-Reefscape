@@ -13,26 +13,31 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class auton_2_cycle extends PathPlannerAuto {
-  public auton_2_cycle(RobotContainer robotContainer) {
+public class auton_2_cycle2 extends PathPlannerAuto {
+  public auton_2_cycle2(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     /* All your code should go inside this try-catch block */
     try {
       /* TODO: Load all paths needed */
-      PathPlannerPath SP_F = PathPlannerPath.fromPathFile("SP-F");
+      PathPlannerPath F_CSP = PathPlannerPath.fromPathFile("F-CSP");
+      PathPlannerPath CSP_E = PathPlannerPath.fromPathFile("CSP-E");
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
-          new Pose2d(SP_F.getPoint(0).position, SP_F.getIdealStartingState().rotation());
+          new Pose2d(F_CSP.getPoint(0).position, F_CSP.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
       isRunning().onTrue(Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SP_F))
+                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(F_CSP))
                   // TODO: Name of command
-                  .withName("Leave SP to score preload at F"));
+                  .withName("F to CSP"));
 
       /* TODO: Other triggers */
+    event("atCSP").onTrue(
+        Commands.sequence(
+        AutoBuilder.followPath(CSP_E)
+        .withName("CSP to E")));
 
 
     } catch (Exception e) {

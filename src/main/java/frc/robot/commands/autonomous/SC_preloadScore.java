@@ -7,30 +7,31 @@ package frc.robot.commands.autonomous;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class auton_2_cycle extends PathPlannerAuto {
-  public auton_2_cycle(RobotContainer robotContainer) {
+public class SC_preloadScore extends PathPlannerAuto {
+  public SC_preloadScore(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     /* All your code should go inside this try-catch block */
     try {
       /* TODO: Load all paths needed */
-      PathPlannerPath SP_F = PathPlannerPath.fromPathFile("SP-F");
+      PathPlannerPath SCpreloadScore = PathPlannerPath.fromPathFile("SC-preload");
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
-          new Pose2d(SP_F.getPoint(0).position, SP_F.getIdealStartingState().rotation());
+          new Pose2d(
+              SCpreloadScore.getPoint(0).position,
+              SCpreloadScore.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
-      isRunning().onTrue(Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SP_F))
-                  // TODO: Name of command
-                  .withName("Leave SP to score preload at F"));
+      isRunning().onTrue(
+            Commands.sequence(
+                AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SCpreloadScore))            
+                .withName("Leave and score preload coral"));
 
       /* TODO: Other triggers */
 

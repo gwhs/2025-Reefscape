@@ -19,7 +19,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.autonomous.SC_preloadScore;
 import frc.robot.commands.autonomous.Templete;
+import frc.robot.commands.autonomous.auton_2_cycle;
+import frc.robot.commands.autonomous.auton_2_cycle2;
 import frc.robot.commands.autonomous.startLnLeave;
 import frc.robot.commands.autonomous.startLnLeave2;
 import frc.robot.generated.TunerConstants;
@@ -76,6 +79,8 @@ public class RobotContainer {
     m_driverController.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     m_driverController.x().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     m_driverController.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+
+    m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
   }
 
   public void periodic() {}
@@ -90,7 +95,9 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("S3-Leave", new Templete(this));
+    autoChooser.setDefaultOption("SC_preloadScore", new SC_preloadScore(this));
+    autoChooser.setDefaultOption("auton_2_cycle", new auton_2_cycle(this));
+    autoChooser.setDefaultOption("auton_2_cycle2", new auton_2_cycle2(this));
 
     autoChooser.addOption("startLnLeave", new startLnLeave(this));
     autoChooser.addOption("startLnLeave2", new startLnLeave2(this));
