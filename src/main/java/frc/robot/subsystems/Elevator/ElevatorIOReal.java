@@ -1,8 +1,6 @@
 package frc.robot.subsystems.Elevator;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.FeedbackConfigs;
-import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -15,11 +13,14 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class ElevatorIOReal implements ElevatorIO {
-  private TalonFX m_leftElevatorMotor = new TalonFX(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, "rio");
-  private TalonFX m_rightElevatorMotor = new TalonFX(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, "rio");
+  private TalonFX m_leftElevatorMotor =
+      new TalonFX(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, "rio");
+  private TalonFX m_rightElevatorMotor =
+      new TalonFX(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, "rio");
 
   private final MotionMagicVoltage m_requestLeft = new MotionMagicVoltage(0);
-  private final Follower m_requestRight = new Follower(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, true);
+  private final Follower m_requestRight =
+      new Follower(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, true);
 
   public ElevatorIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
@@ -35,9 +36,10 @@ public class ElevatorIOReal implements ElevatorIO {
     slot0Configs.kI = 0; // no output for integrated error
     slot0Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
     motionMagicConfigs.MotionMagicCruiseVelocity = 80; // Target cruise velocity of 80 rps
-    motionMagicConfigs.MotionMagicAcceleration = 160; // Target acceleration of 160 rps/s (0.5 seconds)
+    motionMagicConfigs.MotionMagicAcceleration =
+        160; // Target acceleration of 160 rps/s (0.5 seconds)
     motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
-    
+
     currentConfig.withStatorCurrentLimitEnable(true);
     currentConfig.withStatorCurrentLimit(60);
     motorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -76,6 +78,5 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   @Override
-  public void update() {
-  }
-}  
+  public void update() {}
+}

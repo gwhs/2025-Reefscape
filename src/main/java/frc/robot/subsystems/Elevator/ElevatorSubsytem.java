@@ -5,9 +5,7 @@
 package frc.robot.subsystems.Elevator;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,11 +28,12 @@ public class ElevatorSubsytem extends SubsystemBase {
   }
 
   public Command goTo(double position) {
-    return this.runOnce(() -> {
-      elevatorIO.setPosition(position);
-    }).andThen(
-      Commands.waitUntil(()-> MathUtil.isNear(position, elevatorIO.getPosition(), 0.1))
-      );
+    return this.runOnce(
+            () -> {
+              elevatorIO.setPosition(position);
+            })
+        .andThen(
+            Commands.waitUntil(() -> MathUtil.isNear(position, elevatorIO.getPosition(), 0.1)));
   }
 
   // homming command
