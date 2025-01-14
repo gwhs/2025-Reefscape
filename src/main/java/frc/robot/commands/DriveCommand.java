@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -60,6 +61,9 @@ public class DriveCommand extends Command {
     xVelocity = xVelocity * MaxSpeed;
     yVelocity = yVelocity * MaxSpeed;
     angularVelocity = angularVelocity * MaxAngularRate;
+    DogLog.log("Drive Command/Xvelocity", xVelocity);
+    DogLog.log("Drive Command/Yvelocity", yVelocity);
+    DogLog.log("Drive Command/Rotationvelocity", angularVelocity);
 
     drivetrain.setControl(
         drive
