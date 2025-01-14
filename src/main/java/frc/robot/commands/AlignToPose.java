@@ -28,8 +28,8 @@ public class AlignToPose extends Command {
       3.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
-          .withDeadband(MaxSpeed * 0.1)
-          .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+          .withDeadband(MaxSpeed * 0.0)
+          .withRotationalDeadband(MaxAngularRate * 0.0) // Add a 10% deadband
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
 
   public AlignToPose(Supplier<Pose2d> Pose, CommandSwerveDrivetrain drivetrain) {
@@ -38,23 +38,28 @@ public class AlignToPose extends Command {
     PIDX = new PIDController(2.7, 0, 0); // same for now tune later
     PIDX.setTolerance(0.1);
     PIDY = new PIDController(2.7, 0, 0);
-    PIDY.setTolerance(0.1);
-    PIDRotation = new PIDController(0.002, 0, 0);
+    PIDY.setTolerance(0.12);
+    PIDRotation = new PIDController(0.05, 0, 0);
     PIDRotation.setTolerance(0.1);
-    PIDRotation.enableContinuousInput(Radians.fromBaseUnits(-180), Radians.fromBaseUnits(180));
+    PIDRotation.enableContinuousInput(-180, 180);
     this.drivetrain = drivetrain;
   }
 
   public void goToPoseWithPID(Pose2d targetPose) {
     PIDX.setSetpoint(targetPose.getX());
     PIDY.setSetpoint(targetPose.getY());
-    PIDRotation.setSetpoint(targetPose.getRotation().getRadians());
+    PIDRotation.setSetpoint(targetPose.getRotation().getDegrees());
   }
 
   public boolean isAtTargetPose() {
-    if (PIDX.atSetpoint() && PIDY.atSetpoint() && PIDRotation.atSetpoint()) {
-      return true;
-    }
+    boolean isatX = PIDX.atSetpoint();
+    boolean isatY = PIDY.atSetpoint();
+    boolean isatRotation = PIDRotation.atSetpoint();
+    DogLog.log("atX", isatX);
+    DogLog.log("atY", isatY);
+    DogLog.log("atRotation", isatRotation);
+
+    if (isatX && isatY && isatRotation) {return true;}
     return false;
   }
 
@@ -71,7 +76,7 @@ public class AlignToPose extends Command {
     currPose = drivetrain.getState().Pose;
     double currX = currPose.getX();
     double currY = currPose.getY();
-    Double currRotation = currPose.getRotation().getRadians();
+    Double currRotation = currPose.getRotation().getDegrees();
     double PIDXOutput = PIDX.calculate(currX);
     xVelocity -= PIDXOutput;
     DogLog.log("PIDXOutput", PIDXOutput);
