@@ -126,6 +126,8 @@ public class AprilTagCam {
       DogLog.log(ntKey + "Accepted Pose/", pos);
       DogLog.log(ntKey + "Accepted Time Stamp/", timestamp);
       DogLog.log(ntKey + "Accepted Stdev/", sd);
+      DogLog.log(ntKey + "Unfiltered April Tags/", (Pose3d[]) tagListUnfiltered.toArray());
+      DogLog.log(ntKey + "Filtered April Tags/", (Pose3d[]) tagListFiltered.toArray());
 
       addVisionMeasurement.accept(helper);
     }
