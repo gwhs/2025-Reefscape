@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Radians;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,15 +23,12 @@ public class AlignToPose extends Command {
   private PIDController PIDY;
   private PIDController PIDRotation;
   private CommandSwerveDrivetrain drivetrain;
-  private double MaxSpeed =
-      TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12VoltsMps desired top speed
-  private double MaxAngularRate =
-      3.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
-  private final SwerveRequest.FieldCentric drive =
-      new SwerveRequest.FieldCentric()
-          .withDeadband(MaxSpeed * 0.0)
-          .withRotationalDeadband(MaxAngularRate * 0.0) // Add a 10% deadband
-          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  private double MaxAngularRate = 360;
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+                                                       .withDeadband(MaxSpeed * 0.0)
+                                                       .withRotationalDeadband(MaxAngularRate * 0.0)
+                                                       .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
   public AlignToPose(Supplier<Pose2d> Pose, CommandSwerveDrivetrain drivetrain) {
     addRequirements(drivetrain);
@@ -40,7 +38,7 @@ public class AlignToPose extends Command {
     PIDY = new PIDController(2.7, 0, 0);
     PIDY.setTolerance(0.12);
     PIDRotation = new PIDController(0.05, 0, 0);
-    PIDRotation.setTolerance(0.1);
+    PIDRotation.setTolerance(5);
     PIDRotation.enableContinuousInput(-180, 180);
     this.drivetrain = drivetrain;
   }
@@ -89,6 +87,7 @@ public class AlignToPose extends Command {
     xVelocity = xVelocity * MaxSpeed;
     yVelocity = yVelocity * MaxSpeed;
     angularVelocity = angularVelocity * MaxAngularRate;
+    angularVelocity = MathUtil.clamp(angularVelocity,  -MaxAngularRate, MaxAngularRate);
     DogLog.log("Drive Command/xVelocity", xVelocity);
     DogLog.log("Drive Command/yVelocity", yVelocity);
     DogLog.log("Drive Command/angularVelocity", angularVelocity);
@@ -96,7 +95,7 @@ public class AlignToPose extends Command {
         drive
             .withVelocityX(xVelocity) // Drive forward with negative Y (forward)
             .withVelocityY(yVelocity) // Drive left with negative X (left)
-            .withRotationalRate(angularVelocity)); // Drive counterclockwise with negative X (left)
+            .withRotationalRate(Radians.fromBaseUnits(angularVelocity))); // Drive counterclockwise with negative X (left)
   }
 
   @Override
