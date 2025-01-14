@@ -25,11 +25,16 @@ public class DriveCommand extends Command {
   private CommandXboxController driverController;
   private Pose2d currPose;
   public boolean isSlow = false;
-  private final SwerveRequest.FieldCentric drive =
+  private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * 0.1)
           .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+  private final SwerveRequest.RobotCentric robotCentricDrive =
+      new SwerveRequest.RobotCentric()
+          .withDeadband(MaxSpeed * 0.1)
+          .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want robot-centric
 
   // driving in open loop
 
@@ -68,11 +73,22 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/yVelocity", yVelocity);
     DogLog.log("Drive Command/angularVelocity", angularVelocity);
 
-    drivetrain.setControl(
-        drive
-            .withVelocityX(xVelocity) // Drive forward with negative Y (forward)
-            .withVelocityY(yVelocity) // Drive left with negative X (left)
-            .withRotationalRate(angularVelocity)); // Drive counterclockwise with negative X (left)
+    boolean robotCentric = false;
+
+    if (robotCentric) {
+      drivetrain.setControl(
+          robotCentricDrive
+              .withVelocityX(xVelocity) // Drive forward with negative Y (forward)
+              .withVelocityY(yVelocity) // Drive left with negative X (left)
+              .withRotationalRate(
+                  angularVelocity)); // Drive counterclockwise with negative X (left)
+    } else {
+      drivetrain.setControl(
+          fieldCentricDrive
+              .withVelocityX(xVelocity)
+              .withVelocityY(yVelocity)
+              .withRotationalRate(angularVelocity));
+    }
   }
 
   @Override
