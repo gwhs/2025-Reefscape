@@ -25,8 +25,8 @@ public class DriveCommand extends Command {
   public boolean isBackCoralStation = false;
   public boolean isSlow = false;
 
-  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-  private double MaxAngularRate = 3.5 * Math.PI;
+  private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  private double maxAngularRate = 3.5 * Math.PI;
 
   private final double REDLEFTSTATIONANGLE = 126;
   private final double REDRIGHTSTATIONANGLE = -126;
@@ -38,8 +38,8 @@ public class DriveCommand extends Command {
 
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
-          .withDeadband(MaxSpeed * 0.1)
-          .withRotationalDeadband(MaxAngularRate * 0.1)
+          .withDeadband(maxSpeed * 0.1)
+          .withRotationalDeadband(maxAngularRate * 0.1)
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
   public DriveCommand(CommandXboxController driverController, CommandSwerveDrivetrain drivetrain) {
@@ -101,9 +101,9 @@ public class DriveCommand extends Command {
     }
 
     // Multiply by our maximum speeds/rates
-    xVelocity *= MaxSpeed;
-    yVelocity *= MaxSpeed;
-    angularVelocity *= MaxAngularRate;
+    xVelocity *= maxSpeed;
+    yVelocity *= maxSpeed;
+    angularVelocity *= maxAngularRate;
 
     DogLog.log("Drive Command/xVelocity", xVelocity);
     DogLog.log("Drive Command/yVelocity", yVelocity);
