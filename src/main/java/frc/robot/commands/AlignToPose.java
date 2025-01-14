@@ -37,7 +37,7 @@ public class AlignToPose extends Command {
     PIDX.setTolerance(0.1);
     PIDY = new PIDController(2.7, 0, 0);
     PIDY.setTolerance(0.12);
-    PIDRotation = new PIDController(0.05, 0, 0);
+    PIDRotation = new PIDController(0.001, 0, 0);
     PIDRotation.setTolerance(5);
     PIDRotation.enableContinuousInput(-180, 180);
     this.drivetrain = drivetrain;

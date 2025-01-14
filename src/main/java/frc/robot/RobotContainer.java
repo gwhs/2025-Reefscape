@@ -76,8 +76,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-   SmartDashboard.putData("LockIn", alignToPose(() -> new Pose2d(2.00,4.00, Rotation2d.fromDegrees(20))));
-   SmartDashboard.putData("LockOut", alignToPose(() -> new Pose2d(2.00, 4.00, Rotation2d.fromDegrees(40))));
+   SmartDashboard.putData("LockIn", alignToPose(() -> new Pose2d(2.00,4.00, Rotation2d.fromDegrees(0))));
+   SmartDashboard.putData("LockOut", alignToPose(() -> new Pose2d(2.00, 4.00, Rotation2d.fromDegrees(180))));
 
     m_driverController
         .rightTrigger()
