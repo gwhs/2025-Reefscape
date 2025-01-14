@@ -3,17 +3,9 @@ package frc.robot.subsystems.Elevator;
 
 public interface ElevatorIO {
 
-    public double getRightMotorPosition();
-  
-    public double getLeftMotorPosition();
-  
-    public void setLeftMotorSpeed(double speed);
-  
-    public void setRightMotorSpeed(double speed);
+    public void setPosition(double position);
 
-    public void setPositionRight(double speed);
-
-    public void setPositionLeft(double speed);
+    public double getPosition();
   
     public void update();
   

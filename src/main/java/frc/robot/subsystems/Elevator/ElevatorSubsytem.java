@@ -22,7 +22,6 @@ public class ElevatorSubsytem extends SubsystemBase {
     } else {
       elevatorIO = new ElevatorIOReal();
     }
-
   }
 
   @Override
@@ -30,17 +29,14 @@ public class ElevatorSubsytem extends SubsystemBase {
     elevatorIO.update();
   }
 
-  public Command motorUp() {
+  public Command goTo(double position) {
     return this.runOnce(() -> {
-      elevatorIO.setPositionLeft(ElevatorConstants.LEFT_UP_POSITION);
-      elevatorIO.setPositionRight(ElevatorConstants.RIGHT_UP_POSITION);
-    }).andThen(Commands.waitUntil(() -> isMotorAtGoal(ElevatorConstants.LEFT_UP_POSITION, ElevatorConstants.RIGHT_UP_POSITION)))
-        .withName("Motor Up");
+      elevatorIO.setPosition(position);
+    }).andThen(
+      Commands.waitUntil(()-> MathUtil.isNear(position, elevatorIO.getPosition(), 0.1))
+      );
   }
 
-  public Command goTo(double meters) {
-    // spin the motor
-
-  }
+  // homming command
 
 }
