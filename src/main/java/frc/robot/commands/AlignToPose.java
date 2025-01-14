@@ -22,10 +22,11 @@ public class AlignToPose extends Command {
   private CommandSwerveDrivetrain drivetrain;
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double MaxAngularRate = 360;
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-                                                       .withDeadband(MaxSpeed * 0.0)
-                                                       .withRotationalDeadband(MaxAngularRate * 0.0)
-                                                       .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+  private final SwerveRequest.FieldCentric drive =
+      new SwerveRequest.FieldCentric()
+          .withDeadband(MaxSpeed * 0.0)
+          .withRotationalDeadband(MaxAngularRate * 0.0)
+          .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
   public AlignToPose(Supplier<Pose2d> Pose, CommandSwerveDrivetrain drivetrain) {
     addRequirements(drivetrain);
@@ -54,7 +55,9 @@ public class AlignToPose extends Command {
     DogLog.log("atY", isatY);
     DogLog.log("atRotation", isatRotation);
 
-    if (isatX && isatY && isatRotation) {return true;}
+    if (isatX && isatY && isatRotation) {
+      return true;
+    }
     return false;
   }
 
@@ -82,7 +85,7 @@ public class AlignToPose extends Command {
     xVelocity = xVelocity * MaxSpeed;
     yVelocity = yVelocity * MaxSpeed;
     angularVelocity = angularVelocity * MaxAngularRate;
-    angularVelocity = MathUtil.clamp(angularVelocity,  -MaxAngularRate, MaxAngularRate);
+    angularVelocity = MathUtil.clamp(angularVelocity, -MaxAngularRate, MaxAngularRate);
     DogLog.log("Drive Command/xVelocity", xVelocity);
     DogLog.log("Drive Command/yVelocity", yVelocity);
     DogLog.log("Drive Command/angularVelocity", angularVelocity);
@@ -90,7 +93,9 @@ public class AlignToPose extends Command {
         drive
             .withVelocityX(xVelocity) // Drive forward with negative Y (forward)
             .withVelocityY(yVelocity) // Drive left with negative X (left)
-            .withRotationalRate(Radians.fromBaseUnits(angularVelocity))); // Drive counterclockwise with negative X (left)
+            .withRotationalRate(
+                Radians.fromBaseUnits(
+                    angularVelocity))); // Drive counterclockwise with negative X (left)
   }
 
   @Override
