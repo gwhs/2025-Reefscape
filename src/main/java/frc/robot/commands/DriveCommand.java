@@ -8,6 +8,8 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -21,6 +23,7 @@ public class DriveCommand extends Command {
   private final CommandXboxController driverController;
   private final PIDController PID;
   private Pose2d currPose;
+
 
   public boolean isBackCoralStation = false;
   public boolean isSlow = false;
