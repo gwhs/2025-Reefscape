@@ -13,9 +13,9 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class DriveCommand extends Command {
 
-  private double MaxSpeed =
+  private double maxSpeed =
       TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12VoltsMps desired top speed
-  private double MaxAngularRate =
+  private double maxAngularRate =
       3.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   public static final double PID_MAX = 0.35;
@@ -24,13 +24,20 @@ public class DriveCommand extends Command {
 
   private CommandSwerveDrivetrain drivetrain;
   private CommandXboxController driverController;
-  private boolean isSlow = false;
 
-  private final SwerveRequest.FieldCentric drive =
+  public boolean isSlow = false;
+  public boolean robotCentric = false;
+
+  private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
-          .withDeadband(MaxSpeed * 0.1)
-          .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+          .withDeadband(maxSpeed * 0.1)
+          .withRotationalDeadband(maxAngularRate * 0.1) // Add a 10% deadband
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+  private final SwerveRequest.RobotCentric robotCentricDrive =
+      new SwerveRequest.RobotCentric()
+          .withDeadband(maxSpeed * 0.1)
+          .withRotationalDeadband(maxAngularRate * 0.1) // Add a 10% deadband
+          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want robot-centric
 
   // driving in open loop
 
@@ -58,18 +65,27 @@ public class DriveCommand extends Command {
       angularVelocity *= slowFactor;
     }
 
-    xVelocity = xVelocity * MaxSpeed;
-    yVelocity = yVelocity * MaxSpeed;
-    angularVelocity = angularVelocity * MaxAngularRate;
-    DogLog.log("Drive Command/Xvelocity", xVelocity);
-    DogLog.log("Drive Command/Yvelocity", yVelocity);
-    DogLog.log("Drive Command/Rotationvelocity", angularVelocity);
+    xVelocity = xVelocity * maxSpeed;
+    yVelocity = yVelocity * maxSpeed;
+    angularVelocity = angularVelocity * maxAngularRate;
 
-    drivetrain.setControl(
-        drive
-            .withVelocityX(xVelocity) // Drive forward with negative Y (forward)
-            .withVelocityY(yVelocity) // Drive left with negative X (left)
-            .withRotationalRate(angularVelocity)); // Drive counterclockwise with negative X (left)
+    DogLog.log("Drive Command/xVelocity", xVelocity);
+    DogLog.log("Drive Command/yVelocity", yVelocity);
+    DogLog.log("Drive Command/angularVelocity", angularVelocity);
+
+    if (robotCentric) {
+      drivetrain.setControl(
+          robotCentricDrive
+              .withVelocityX(xVelocity)
+              .withVelocityY(yVelocity)
+              .withRotationalRate(angularVelocity));
+    } else {
+      drivetrain.setControl(
+          fieldCentricDrive
+              .withVelocityX(xVelocity)
+              .withVelocityY(yVelocity)
+              .withRotationalRate(angularVelocity));
+    }
   }
 
   @Override
