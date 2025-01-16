@@ -21,8 +21,8 @@ public class DriveCommand extends Command {
   private final CommandXboxController driverController;
   private final PIDController PID;
 
-  public boolean isSlow = false;
-  public boolean isBackCoralStation = true;
+  public boolean isSlow = true;
+  public boolean isBackCoralStation = false;
   public boolean robotCentric = false;
 
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
