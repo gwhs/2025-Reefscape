@@ -20,16 +20,25 @@ public class autonC5_2 extends PathPlannerAuto {
     /* All your code should go inside this try-catch block */
     try {
       /* TODO: Load all paths needed */
-      PathPlannerPath S3Leave = PathPlannerPath.fromPathFile("S3-C5");
+      PathPlannerPath F_CSP = PathPlannerPath.fromPathFile("F-CSP");
+      PathPlannerPath CSP_E = PathPlannerPath.fromPathFile("CSP-E");
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
-          new Pose2d(S3Leave.getPoint(0).position, S3Leave.getIdealStartingState().rotation());
+          new Pose2d(F_CSP.getPoint(0).position, F_CSP.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
-      isRunning().onTrue(Commands.sequence(AutoBuilder.resetOdom(startingPose)));
+      isRunning().onTrue(Commands.sequence(
+                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(F_CSP))
+                  // TODO: Name of command
+                  .withName("F to CSP"));
 
       /* TODO: Other triggers */
+    event("atCSP").onTrue(
+        Commands.sequence(
+        AutoBuilder.followPath(CSP_E)
+        .withName("CSP to E")));
+
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
