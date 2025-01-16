@@ -45,7 +45,7 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   private AprilTagCam cam2 =
       new AprilTagCam(
-          "cam2",
+          "cam3",
           AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
