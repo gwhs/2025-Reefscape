@@ -107,7 +107,9 @@ public class RobotContainer {
   private void configureAutonomous() {
     autoChooser.setDefaultOption("S3-Leave", new Template(this));
 
-    autoChooser.addOption("Wheel Radius Characterization", WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
+    autoChooser.addOption(
+        "Wheel Radius Characterization",
+        WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
 
     autoChooser.addOption("startLnLeave", new startLnLeave(this));
     autoChooser.addOption("TestPath", new Drivetrainpractice(this));
