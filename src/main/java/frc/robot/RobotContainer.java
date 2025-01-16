@@ -80,18 +80,11 @@ public class RobotContainer {
     SmartDashboard.putData(
         "LockIn", alignToPose(() -> new Pose2d(2.00, 4.00, Rotation2d.fromDegrees(0))));
     SmartDashboard.putData(
-        "LockOut", alignToPose(() -> new Pose2d(2.00, 4.00, Rotation2d.fromDegrees(180))));
+        "LockOut", alignToPose(() -> new Pose2d(0.00, 0.00, Rotation2d.fromDegrees(180))));
 
     m_driverController
         .rightTrigger()
-        .onTrue(
-            alignToPose(
-                    () -> {
-                      Pose2d curPose = drivetrain.getState().Pose;
-                      return new Pose2d(
-                          curPose.getX() + 0.2, curPose.getY(), curPose.getRotation());
-                    })
-                .andThen(Commands.print("YAY")));
+        .onTrue(alignToPose(() -> new Pose2d(1.00, 1.00, new Rotation2d(1.00))));
     m_driverController.a().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
     m_driverController.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     m_driverController.x().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
