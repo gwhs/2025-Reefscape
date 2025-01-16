@@ -46,7 +46,7 @@ public class RobotContainer {
   private AprilTagCam cam2 =
       new AprilTagCam(
           "cam2",
-          AprilTagCamConstants.BackLeftCamLocation,
+          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
