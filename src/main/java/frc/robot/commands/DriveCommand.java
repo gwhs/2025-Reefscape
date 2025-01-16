@@ -25,7 +25,7 @@ public class DriveCommand extends Command {
   private CommandSwerveDrivetrain drivetrain;
   private CommandXboxController driverController;
 
-  public boolean isSlow = false;
+  public boolean isSlow = true;
   public boolean robotCentric = false;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
@@ -52,6 +52,7 @@ public class DriveCommand extends Command {
     addRequirements(drivetrain);
   }
 
+  @Override
   public void execute() {
     double xVelocity = -driverController.getLeftY();
     double yVelocity = -driverController.getLeftX();
