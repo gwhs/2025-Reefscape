@@ -26,7 +26,7 @@ public class DriveCommand extends Command {
   private CommandSwerveDrivetrain drivetrain;
   private CommandXboxController driverController;
 
-  public boolean isSlow = false;
+  public boolean isSlow = true;
   public boolean robotCentric = false;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
