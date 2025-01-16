@@ -29,15 +29,6 @@ public class AprilTagCamConstants {
           new Rotation3d(
               Units.degreesToRadians(0), Units.degreesToRadians(10), Units.degreesToRadians(-10)));
 
-
-  public static final Transform3d FRONT_RIGHT_CAMERA_LOCATION =
-      new Transform3d(
-          0.2667,
-          0.2794,
-          0.2286,
-          new Rotation3d(
-              Units.degreesToRadians(0), Units.degreesToRadians(10), Units.degreesToRadians(-10)));
-
   public static final double Z_TOLERANCE = 2.00;
   public static final double XY_TOLERANCE = 2.00;
   public static final double MAX_X_VALUE = 690.87;
