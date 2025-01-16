@@ -23,8 +23,6 @@ import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.commands.autonomous.*;
-import frc.robot.commands.autonomous.startLnLeave;
-import frc.robot.commands.autonomous.startLnLeave2;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.Supplier;
@@ -91,9 +89,6 @@ public class RobotContainer {
                           curPose.getX() + 0.2, curPose.getY(), curPose.getRotation());
                     })
                 .andThen(Commands.print("YAY")));
-    m_driverController
-        .a()
-        .whileTrue(WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
   }
@@ -111,6 +106,8 @@ public class RobotContainer {
 
   private void configureAutonomous() {
     autoChooser.setDefaultOption("S3-Leave", new Template(this));
+
+    autoChooser.addOption("Wheel Radius Characterization", WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
 
     autoChooser.addOption("startLnLeave", new startLnLeave(this));
     autoChooser.addOption("TestPath", new Drivetrainpractice(this));

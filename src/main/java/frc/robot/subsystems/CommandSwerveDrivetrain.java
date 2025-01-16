@@ -315,7 +315,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     double[] values = new double[4];
     for (int i = 0; i < 4; i++) {
       values[i] =
-          Units.rotationsToRadians(getModule(i).getDriveMotor().getPosition().getValueAsDouble());
+          Units.rotationsToRadians(getModule(i).getDriveMotor().getPosition(true).getValueAsDouble() / 6.746031746031747);
     }
     return values;
   }
