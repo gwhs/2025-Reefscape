@@ -20,19 +20,18 @@ public class DriveCommand extends Command {
   private final CommandSwerveDrivetrain drivetrain;
   private final CommandXboxController driverController;
   private final PIDController PID;
-  private Pose2d currPose;
 
-  public boolean isSlow = true;
-  public boolean isBackCoralStation = false;
+  public boolean isSlow = false;
+  public boolean isBackCoralStation = true;
   public boolean robotCentric = false;
 
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 3.5 * Math.PI;
 
-  private final double REDLEFTSTATIONANGLE = 126;
-  private final double REDRIGHTSTATIONANGLE = -126;
-  private final double BLUELEFTSTATIONANGLE = 54;
-  private final double BLUERIGHTSTATIONANGLE = -54;
+  private final double RED_LEFT_STATION_ANGLE = 126;
+  private final double RED_RIGHT_STATION_ANGLE = -126;
+  private final double BLUE_LEFT_STATION_ANGLE = 54;
+  private final double BLUE_RIGHT_STATION_ANGLE = -54;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
@@ -80,19 +79,19 @@ public class DriveCommand extends Command {
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
         // Blue Alliance
-        if (currPose.getY() <= halfWidthField) {
+        if (currentRobotPose.getY() <= halfWidthField) {
           // Low Y => "Right" station for Blue
-          PID.setSetpoint(BLUELEFTSTATIONANGLE);
+          PID.setSetpoint(BLUE_LEFT_STATION_ANGLE);
         } else {
           // High Y => "Left" station for Blue
-          PID.setSetpoint(BLUERIGHTSTATIONANGLE);
+          PID.setSetpoint(BLUE_RIGHT_STATION_ANGLE);
         }
       } else {
         // Red Alliance or invalid
-        if (currPose.getY() <= halfWidthField) {
-          PID.setSetpoint(REDLEFTSTATIONANGLE);
+        if (currentRobotPose.getY() <= halfWidthField) {
+          PID.setSetpoint(RED_LEFT_STATION_ANGLE);
         } else {
-          PID.setSetpoint(REDRIGHTSTATIONANGLE);
+          PID.setSetpoint(RED_RIGHT_STATION_ANGLE);
         }
       }
 
