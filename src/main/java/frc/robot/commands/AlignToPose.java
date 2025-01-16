@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 
@@ -9,6 +10,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -35,7 +37,7 @@ public class AlignToPose extends Command {
     PIDX.setTolerance(0.1);
     PIDY = new PIDController(2.7, 0, 0);
     PIDY.setTolerance(0.12);
-    PIDRotation = new PIDController(0.001, 0, 0);
+    PIDRotation = new PIDController(0.0001, 0, 0);
     PIDRotation.setTolerance(5);
     PIDRotation.enableContinuousInput(-180, 180);
     this.drivetrain = drivetrain;
@@ -73,18 +75,32 @@ public class AlignToPose extends Command {
     double currX = currPose.getX();
     double currY = currPose.getY();
     Double currRotation = currPose.getRotation().getDegrees();
+    
     double PIDXOutput = PIDX.calculate(currX);
     double xVelocity = -PIDXOutput;
-    DogLog.log("PIDXOutput", PIDXOutput);
+    DogLog.log("Align/PIDXOutput", PIDXOutput);
+
     double PIDYOutput = PIDY.calculate(currY);
     double yVelocity = -PIDYOutput;
-    DogLog.log("PIDYoutput", PIDYOutput);
+    DogLog.log("Align/PIDYoutput", PIDYOutput);
+
     double PIDRotationOutput = PIDRotation.calculate(currRotation);
     double angularVelocity = PIDRotationOutput;
-    DogLog.log("PIDRotationoutput", PIDRotationOutput);
+
+    DogLog.log("Align/PIDRotationoutput", PIDRotationOutput);
+
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      xVelocity = -xVelocity * MaxSpeed;
+      yVelocity = -yVelocity * MaxSpeed;
+      angularVelocity = -angularVelocity * -MaxAngularRate;
+
+
+    }
+
     xVelocity = xVelocity * MaxSpeed;
     yVelocity = yVelocity * MaxSpeed;
     angularVelocity = angularVelocity * MaxAngularRate;
+
     angularVelocity = MathUtil.clamp(angularVelocity, -MaxAngularRate, MaxAngularRate);
     DogLog.log("Drive Command/xVelocity", xVelocity);
     DogLog.log("Drive Command/yVelocity", yVelocity);
@@ -93,9 +109,7 @@ public class AlignToPose extends Command {
         drive
             .withVelocityX(xVelocity) // Drive forward with negative Y (forward)
             .withVelocityY(yVelocity) // Drive left with negative X (left)
-            .withRotationalRate(
-                Radians.fromBaseUnits(
-                    angularVelocity))); // Drive counterclockwise with negative X (left)
+            .withRotationalRate(angularVelocity)); // Drive counterclockwise with negative X (left)
   }
 
   @Override
