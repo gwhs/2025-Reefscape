@@ -20,6 +20,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.autonomous.Templete;
+import frc.robot.commands.autonomous.autonC5_1;
+import frc.robot.commands.autonomous.autonC5_2;
+import frc.robot.commands.autonomous.autonC5_3;
+import frc.robot.commands.autonomous.autonC5_4;
+import frc.robot.commands.autonomous.autonC5_5;
 import frc.robot.commands.autonomous.startLnLeave;
 import frc.robot.commands.autonomous.startLnLeave2;
 import frc.robot.generated.TunerConstants;
@@ -92,7 +97,12 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("S3-Leave", new Templete(this));
+    autoChooser.setDefaultOption("autonC5-1", new autonC5_1(this));
+    autoChooser.setDefaultOption("autonC5-2", new autonC5_2(this));
+    autoChooser.setDefaultOption("autonC5-3", new autonC5_3(this));
+    autoChooser.setDefaultOption("autonC5-4", new autonC5_4(this));
+    autoChooser.setDefaultOption("autonC5-5", new autonC5_5(this));
+
 
     autoChooser.addOption("startLnLeave", new startLnLeave(this));
     autoChooser.addOption("startLnLeave2", new startLnLeave2(this));
