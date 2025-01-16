@@ -1,8 +1,6 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Radians;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -75,7 +73,7 @@ public class AlignToPose extends Command {
     double currX = currPose.getX();
     double currY = currPose.getY();
     Double currRotation = currPose.getRotation().getDegrees();
-    
+
     double PIDXOutput = PIDX.calculate(currX);
     double xVelocity = -PIDXOutput;
     DogLog.log("Align/PIDXOutput", PIDXOutput);
@@ -93,8 +91,6 @@ public class AlignToPose extends Command {
       xVelocity = -xVelocity * MaxSpeed;
       yVelocity = -yVelocity * MaxSpeed;
       angularVelocity = -angularVelocity * -MaxAngularRate;
-
-
     }
 
     xVelocity = xVelocity * MaxSpeed;
