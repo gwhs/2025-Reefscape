@@ -20,8 +20,8 @@ public class autonC5_2 extends PathPlannerAuto {
     /* All your code should go inside this try-catch block */
     try {
       /* TODO: Load all paths needed */
-      PathPlannerPath F_CSP = PathPlannerPath.fromPathFile("F-CSP");
-      PathPlannerPath CSP_E = PathPlannerPath.fromPathFile("CSP-E");
+      PathPlannerPath F_CSP = PathPlannerPath.fromPathFile("E-CSP");
+      PathPlannerPath CSP_E = PathPlannerPath.fromPathFile("CSP-D");
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
@@ -38,7 +38,6 @@ public class autonC5_2 extends PathPlannerAuto {
         Commands.sequence(
         AutoBuilder.followPath(CSP_E)
         .withName("CSP to E")));
-
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());

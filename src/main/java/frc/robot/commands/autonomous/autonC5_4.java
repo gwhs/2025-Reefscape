@@ -20,14 +20,24 @@ public class autonC5_4 extends PathPlannerAuto {
     /* All your code should go inside this try-catch block */
     try {
       /* TODO: Load all paths needed */
-      PathPlannerPath S3Leave = PathPlannerPath.fromPathFile("S3-C5");
+      PathPlannerPath D_CSP = PathPlannerPath.fromPathFile("F-CSP");
+      PathPlannerPath CSP_C = PathPlannerPath.fromPathFile("CSP-E");
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
-          new Pose2d(S3Leave.getPoint(0).position, S3Leave.getIdealStartingState().rotation());
+          new Pose2d(D_CSP.getPoint(0).position, D_CSP.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
-      isRunning().onTrue(Commands.sequence(AutoBuilder.resetOdom(startingPose)));
+      isRunning().onTrue(Commands.sequence(
+                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(D_CSP))
+                  // TODO: Name of command
+                  .withName("D to CSP"));
+
+      /* TODO: Other triggers */
+    event("atCSP").onTrue(
+        Commands.sequence(
+        AutoBuilder.followPath(CSP_C)
+        .withName("CSP to C")));
 
       /* TODO: Other triggers */
 
