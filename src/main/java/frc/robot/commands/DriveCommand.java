@@ -15,15 +15,19 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class DriveCommand extends Command {
-  private static final double PID_MAX = 0.35;
 
+  public static final double PID_MAX = 0.35;
+
+  public boolean isSlow = true;
+  public boolean robotCentric = false;
+
+  private final SwerveRequest.FieldCentric fieldCentricDrive =
   private final CommandSwerveDrivetrain drivetrain;
   private final CommandXboxController driverController;
   private final PIDController PID;
   private Pose2d currPose;
 
   public boolean isBackCoralStation = false;
-  public boolean isSlow = false;
 
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 3.5 * Math.PI;
@@ -41,6 +45,16 @@ public class DriveCommand extends Command {
           .withDeadband(maxSpeed * 0.1)
           .withRotationalDeadband(maxAngularRate * 0.1)
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+          .withDeadband(maxSpeed * 0.1)
+          .withRotationalDeadband(maxAngularRate * 0.1) // Add a 10% deadband
+          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+  private final SwerveRequest.RobotCentric robotCentricDrive =
+      new SwerveRequest.RobotCentric()
+          .withDeadband(maxSpeed * 0.1)
+          .withRotationalDeadband(maxAngularRate * 0.1) // Add a 10% deadband
+          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want robot-centric
+
+  // driving in open loop
 
   public DriveCommand(CommandXboxController driverController, CommandSwerveDrivetrain drivetrain) {
     this.driverController = driverController;
@@ -54,13 +68,12 @@ public class DriveCommand extends Command {
   }
 
   @Override
+  @Override
   public void execute() {
     double xVelocity = -driverController.getLeftY();
     double yVelocity = -driverController.getLeftX();
-    double angularVelocity = -driverController.getRightX();
 
-    currPose = drivetrain.getState().Pose;
-    double currTheta = currPose.getRotation().getDegrees();
+    double angularVelocity = -driverController.getRightX();
 
     if (isSlow) {
       double slowFactor = 0.25;
@@ -108,10 +121,26 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/yVelocity", yVelocity);
     DogLog.log("Drive Command/angularVelocity", angularVelocity);
 
-    drivetrain.setControl(
-        drive
-            .withVelocityX(xVelocity)
-            .withVelocityY(yVelocity)
-            .withRotationalRate(angularVelocity));
+    if (robotCentric) {
+      drivetrain.setControl(
+          robotCentricDrive
+              .withVelocityX(xVelocity)
+              .withVelocityY(yVelocity)
+              .withRotationalRate(angularVelocity));
+    } else {
+      drivetrain.setControl(
+          fieldCentricDrive
+              .withVelocityX(xVelocity)
+              .withVelocityY(yVelocity)
+              .withRotationalRate(angularVelocity));
+    }
+  }
+
+  @Override
+  public void end(boolean interrupted) {}
+
+  @Override
+  public boolean isFinished() {
+    return false;
   }
 }
