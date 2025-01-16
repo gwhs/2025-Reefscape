@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /** Add your docs here. */
 public class ElevatorSubsytem extends SubsystemBase {
   private ElevatorIO elevatorIO;
+  private ElevatorIOReal elevatorIOReal;
 
   public ElevatorSubsytem() {
     if (RobotBase.isSimulation()) {
@@ -32,6 +33,8 @@ public class ElevatorSubsytem extends SubsystemBase {
   public void periodic() {
     elevatorIO.update();
     DogLog.log("Elevator/position", elevatorIO.getPosition());
+    DogLog.log("Elevator/Limit Switch Value (Reverse)", elevatorIOReal.getReverseLimit());
+    DogLog.log("Elevator/Limit Switch Value (Forward)", elevatorIOReal.getForwardLimit());
   }
 
   public Command goTo(double position) {
