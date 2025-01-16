@@ -31,7 +31,7 @@ public class ElevatorSubsytem extends SubsystemBase {
   @Override
   public void periodic() {
     elevatorIO.update();
-    DogLog.log("Elevator/position",elevatorIO.getPosition());
+    DogLog.log("Elevator/position", elevatorIO.getPosition());
   }
 
   public Command goTo(double position) {
