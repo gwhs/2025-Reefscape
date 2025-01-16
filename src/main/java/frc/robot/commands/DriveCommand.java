@@ -113,6 +113,7 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/xVelocity", xVelocity);
     DogLog.log("Drive Command/yVelocity", yVelocity);
     DogLog.log("Drive Command/angularVelocity", angularVelocity);
+    DogLog.log("Drive Command/rotationSetpoint", PID.getSetpoint());
 
     if (robotCentric) {
       drivetrain.setControl(
