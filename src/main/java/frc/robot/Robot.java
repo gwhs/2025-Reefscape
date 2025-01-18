@@ -49,7 +49,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.periodic();
 
     double currentTime = HALUtil.getFPGATime();
-    DogLog.log("Loop Time", (currentTime - prevTime)/1000);
+    DogLog.log("Loop Time", (currentTime - prevTime) / 1000);
     prevTime = currentTime;
   }
 
