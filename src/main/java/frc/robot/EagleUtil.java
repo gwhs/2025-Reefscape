@@ -73,5 +73,4 @@ public class EagleUtil {
     DogLog.log("Red Reef", red_reef);
     DogLog.log("Red Set Points", redPoses);
   }
-  
 }
