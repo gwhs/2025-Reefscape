@@ -19,17 +19,19 @@ public class autonC5_1 extends PathPlannerAuto {
     /* All your code should go inside this try-catch block */
     try {
       /* TODO: Load all paths needed */
-      PathPlannerPath SP_F = PathPlannerPath.fromPathFile("SP-F");
+      PathPlannerPath SC_F = PathPlannerPath.fromPathFile("SC-F");
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
-          new Pose2d(SP_F.getPoint(0).position, SP_F.getIdealStartingState().rotation());
+          new Pose2d(SC_F.getPoint(0).position, SC_F.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
-      isRunning().onTrue(Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SP_F))
+      isRunning()
+          .onTrue(
+              Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SC_F))
                   // TODO: Name of command
-                  .withName("Leave SP to score preload at F"));
+                  .withName("Leave SC to score preload at F"));
+
       /* TODO: Other triggers */
 
     } catch (Exception e) {

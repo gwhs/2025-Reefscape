@@ -7,7 +7,6 @@ package frc.robot.commands.autonomous;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -22,22 +21,55 @@ public class autonC5_2 extends PathPlannerAuto {
       /* TODO: Load all paths needed */
       PathPlannerPath F_CSP = PathPlannerPath.fromPathFile("F-CSP");
       PathPlannerPath CSP_E = PathPlannerPath.fromPathFile("CSP-E");
+      PathPlannerPath E_CSP = PathPlannerPath.fromPathFile("E-CSP");
+      PathPlannerPath CSP_D = PathPlannerPath.fromPathFile("CSP-D");
+      PathPlannerPath D_CSP = PathPlannerPath.fromPathFile("D-CSP");
+      PathPlannerPath CSP_C = PathPlannerPath.fromPathFile("CSP-C");
+      PathPlannerPath C_CSP = PathPlannerPath.fromPathFile("C-CSP");
+      PathPlannerPath CSP_B = PathPlannerPath.fromPathFile("CSP-B");
+      PathPlannerPath B_CSP = PathPlannerPath.fromPathFile("B-CSP");
+      double waitTime = 0.5;
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
           new Pose2d(F_CSP.getPoint(0).position, F_CSP.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
-      isRunning().onTrue(Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(F_CSP))
+      isRunning()
+          .onTrue(
+              Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(F_CSP))
                   // TODO: Name of command
                   .withName("F to CSP"));
 
+      event("atCSP_F")
+          .onTrue(
+              Commands.sequence(
+                  Commands.waitSeconds(waitTime),
+                  AutoBuilder.followPath(CSP_E),
+                  AutoBuilder.followPath(E_CSP).withName("CSP to E")));
+
+      event("atCSP_E")
+          .onTrue(
+              Commands.sequence(
+                  Commands.waitSeconds(waitTime),
+                  AutoBuilder.followPath(CSP_D),
+                  AutoBuilder.followPath(D_CSP).withName("CSP to D")));
+
+      event("atCSP_C")
+          .onTrue(
+              Commands.sequence(
+                  Commands.waitSeconds(waitTime),
+                  AutoBuilder.followPath(CSP_C),
+                  AutoBuilder.followPath(C_CSP).withName("CSP to C")));
+
+      event("atCSP_B")
+          .onTrue(
+              Commands.sequence(
+                  Commands.waitSeconds(waitTime),
+                  AutoBuilder.followPath(CSP_B),
+                  AutoBuilder.followPath(B_CSP).withName("CSP to B")));
+
       /* TODO: Other triggers */
-    event("atCSP").onTrue(
-        Commands.sequence(
-        AutoBuilder.followPath(CSP_E)
-        .withName("CSP to E")));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
