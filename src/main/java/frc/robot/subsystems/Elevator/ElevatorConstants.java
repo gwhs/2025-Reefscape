@@ -35,7 +35,7 @@ public class ElevatorConstants {
   public static final int ForwardLimitRemoteSensorID = 0;
   public static final int ReverseLimitRemoteSensorID = 0;
 
-  public static final int GEAR_RATIO = 16;
+  public static final int GEAR_RATIO = 12;
   public static final double SPROCKET_DIAMETER = Units.inchesToMeters(1.757);
 
   public static final double TOP_METER = 1.8;
