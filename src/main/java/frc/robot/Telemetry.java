@@ -53,7 +53,7 @@ public class Telemetry {
       driveStateTable.getDoubleTopic("OdometryFrequency").publish();
 
   /* Robot pose for field positioning */
-  private final NetworkTable table = inst.getTable("Pose");
+  private final NetworkTable table = inst.getTable("Field");
   private final DoubleArrayPublisher fieldPub = table.getDoubleArrayTopic("robotPose").publish();
   private final StringPublisher fieldTypePub = table.getStringTopic(".type").publish();
 
