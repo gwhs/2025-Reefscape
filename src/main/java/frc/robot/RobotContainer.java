@@ -25,6 +25,8 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.autonomous.Drivetrainpractice;
 import frc.robot.commands.autonomous.SC_preloadScore;
 import frc.robot.commands.autonomous.Template;
+import frc.robot.commands.autonomous.autonC5_1;
+import frc.robot.commands.autonomous.autonC5_2;
 import frc.robot.commands.autonomous.auton_2_cycle;
 import frc.robot.commands.autonomous.auton_2_cycle2;
 import frc.robot.commands.autonomous.startLnLeave;
@@ -115,7 +117,9 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("auton_2_cycle", new auton_2_cycle(this));
+    autoChooser.setDefaultOption("autonC5_1", new autonC5_1(this));
+    autoChooser.addOption("autonC5_2", new autonC5_2(this));
+    autoChooser.addOption("auton_2_cycle", new auton_2_cycle(this));
     autoChooser.addOption("auton_2_cycle2", new auton_2_cycle2(this));
     autoChooser.addOption("SC_preloadScore", new SC_preloadScore(this));
     autoChooser.addOption("startLnLeave", new startLnLeave(this));
