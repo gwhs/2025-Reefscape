@@ -20,9 +20,9 @@ public class autonC5_5 extends PathPlannerAuto {
     /* All your code should go inside this try-catch block */
     try {
       /* TODO: Load all paths needed */
-      PathPlannerPath C_CSP = PathPlannerPath.fromPathFile("E-CSP");
-      PathPlannerPath CSP_B = PathPlannerPath.fromPathFile("CSP-D");
-      PathPlannerPath B_CSP = PathPlannerPath.fromPathFile("CSP-D");
+      PathPlannerPath C_CSP = PathPlannerPath.fromPathFile("C-CSP");
+      PathPlannerPath CSP_B = PathPlannerPath.fromPathFile("CSP-B");
+      PathPlannerPath B_CSP = PathPlannerPath.fromPathFile("B-CSP");
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
