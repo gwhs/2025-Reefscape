@@ -90,7 +90,6 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("SC_preloadScore", new SC_preloadScore(this));
     autoChooser.setDefaultOption("auton_2_cycle", new auton_2_cycle(this));
     autoChooser.setDefaultOption("auton_2_cycle2", new auton_2_cycle2(this));
 
