@@ -27,15 +27,19 @@ public class AprilTagCamConstants {
           Units.inchesToMeters(-11.2),
           Units.inchesToMeters(8),
           new Rotation3d(
-              Units.degreesToRadians(0), Units.degreesToRadians(10), Units.degreesToRadians(-5)));
+              Units.degreesToRadians(0), 
+              Units.degreesToRadians(-10), 
+              Units.degreesToRadians(5)));
 
-  public static final Transform3d  FRONT_LEFT_CAMERA_LOCATION = 
-    new Transform3d(
-        Units.inchesToMeters(9.6),
-        Units.inchesToMeters(11.2),
-        Units.inchesToMeters(8),
-        new Rotation3d(
-            Units.degreesToRadians(0), Units.degreesToRadians(10), Units.degreesToRadians(5)));
+  public static final Transform3d FRONT_LEFT_CAMERA_LOCATION =
+      new Transform3d(
+          Units.inchesToMeters(9.6),
+          Units.inchesToMeters(11.2),
+          Units.inchesToMeters(8),
+          new Rotation3d(
+              Units.degreesToRadians(0), 
+              Units.degreesToRadians(-10), 
+              Units.degreesToRadians(-5)));
 
   public static final double Z_TOLERANCE = 2.00;
   public static final double XY_TOLERANCE = 2.00;

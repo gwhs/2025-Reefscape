@@ -43,10 +43,19 @@ public class RobotContainer {
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+
   private AprilTagCam cam3 =
       new AprilTagCam(
           "cam3",
           AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION,
+          drivetrain::addVisionMeasurent,
+          () -> drivetrain.getState().Pose,
+          () -> drivetrain.getState().Speeds);
+
+  private AprilTagCam cam4 =
+      new AprilTagCam(
+          "cam4",
+          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
@@ -93,6 +102,7 @@ public class RobotContainer {
   public void periodic() {
 
     cam3.updatePoseEstim();
+    cam4.updatePoseEstim();
   }
 
   /**
