@@ -187,3 +187,6 @@ compile_commands.json
 .factorypath
 
 simgui*.json
+
+# added by Emma K
+*pid.log
