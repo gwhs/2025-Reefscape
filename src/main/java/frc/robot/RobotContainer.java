@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.autonomous.*;
-import frc.robot.commands.autonomous.Template;
 import frc.robot.commands.autonomous.startLnLeave;
 import frc.robot.commands.autonomous.startLnLeave2;
 import frc.robot.generated.TunerConstants;
@@ -112,7 +111,7 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("S3-Leave", new Template(this));
+    autoChooser.setDefaultOption("SC_preloadScore", new SC_preloadScore(this));
 
     autoChooser.addOption("startLnLeave", new startLnLeave(this));
     autoChooser.addOption("TestPath", new Drivetrainpractice(this));
