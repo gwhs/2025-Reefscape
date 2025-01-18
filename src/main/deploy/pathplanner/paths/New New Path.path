@@ -85,7 +85,7 @@
     "maxAcceleration": 4.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
-    "nominalVoltage": 12.0,
+    "nominalVoltage": 7.5,
     "unlimited": false
   },
   "goalEndState": {
