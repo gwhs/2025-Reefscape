@@ -24,16 +24,18 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     SmartDashboard.putData("Elevator to 0", goTo(0));
-    SmartDashboard.putData("Elevator to 20", goTo(20));
-    SmartDashboard.putData("Elevator to 40", goTo(40));
+    SmartDashboard.putData("Elevator to 1", goTo(1));
+    SmartDashboard.putData("Elevator to 1.7", goTo(1.7));
   }
 
   @Override
   public void periodic() {
     elevatorIO.update();
     DogLog.log("Elevator/position", elevatorIO.getPosition());
-    DogLog.log("Elevator/Limit Switch Value (Reverse)", elevatorIOReal.getReverseLimit());
-    DogLog.log("Elevator/Limit Switch Value (Forward)", elevatorIOReal.getForwardLimit());
+    DogLog.log("Elevator/meters", rotationsToMeters(elevatorIO.getPosition()));
+    DogLog.log("Elevator/Limit Switch Value (Reverse)", elevatorIO.getReverseLimit());
+    DogLog.log("Elevator/Limit Switch Value (Forward)", elevatorIO.getForwardLimit());
+
   }
 
   public Command goTo(double meters) {
