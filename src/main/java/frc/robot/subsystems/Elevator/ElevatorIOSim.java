@@ -19,8 +19,7 @@ public class ElevatorIOSim implements ElevatorIO {
   public void setPosition(double position) {
     pidController.setGoal(ElevatorSubsystem.rotationsToMeters(position));
   }
-
-  // TODO: units are in meters, but we might want rotations
+  
   public double getPosition() {
     return ElevatorSubsystem.metersToRotations(elevatorSim.getPositionMeters());
   }

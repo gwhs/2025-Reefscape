@@ -19,7 +19,6 @@ import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
 import com.ctre.phoenix6.signals.ReverseLimitTypeValue;
 
 public class ElevatorIOReal implements ElevatorIO {
-  private static final String ForwardLimitEnable = null;
   private TalonFX m_leftElevatorMotor =
       new TalonFX(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, "rio");
   public TalonFX m_rightElevatorMotor =
