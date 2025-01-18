@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import dev.doglog.DogLog;
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -17,6 +19,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
+  private double prevTime = HALUtil.getFPGATime();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -44,6 +47,10 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     m_robotContainer.periodic();
+
+    double currentTime = HALUtil.getFPGATime();
+    DogLog.log("Loop Time", (currentTime - prevTime)/1000);
+    prevTime = currentTime;
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
