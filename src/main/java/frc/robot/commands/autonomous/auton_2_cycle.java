@@ -7,7 +7,6 @@ package frc.robot.commands.autonomous;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -20,20 +19,20 @@ public class auton_2_cycle extends PathPlannerAuto {
     /* All your code should go inside this try-catch block */
     try {
       /* TODO: Load all paths needed */
-      PathPlannerPath SP_F = PathPlannerPath.fromPathFile("SP-F");
+      PathPlannerPath SP_E = PathPlannerPath.fromPathFile("SP-E");
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
-          new Pose2d(SP_F.getPoint(0).position, SP_F.getIdealStartingState().rotation());
+          new Pose2d(SP_E.getPoint(0).position, SP_E.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
-      isRunning().onTrue(Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SP_F))
+      isRunning()
+          .onTrue(
+              Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SP_E))
                   // TODO: Name of command
-                  .withName("Leave SP to score preload at F"));
+                  .withName("Leave SP to score preload at E"));
 
       /* TODO: Other triggers */
-
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());

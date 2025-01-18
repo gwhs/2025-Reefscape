@@ -20,25 +20,34 @@ public class auton_2_cycle2 extends PathPlannerAuto {
     /* All your code should go inside this try-catch block */
     try {
       /* TODO: Load all paths needed */
-      PathPlannerPath F_CSP = PathPlannerPath.fromPathFile("F-CSP");
-      PathPlannerPath CSP_E = PathPlannerPath.fromPathFile("CSP-E");
+      PathPlannerPath E_CSP = PathPlannerPath.fromPathFile("E-CSP");
+      PathPlannerPath CSP_D = PathPlannerPath.fromPathFile("CSP-D");
+      PathPlannerPath D_CSP = PathPlannerPath.fromPathFile("D-CSP");
+      double waitTime = 0.5;
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
-          new Pose2d(F_CSP.getPoint(0).position, F_CSP.getIdealStartingState().rotation());
+          new Pose2d(E_CSP.getPoint(0).position, E_CSP.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
-      isRunning().onTrue(Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(F_CSP))
+      isRunning()
+          .onTrue(
+              Commands.sequence(
+                      AutoBuilder.resetOdom(startingPose),
+                      AutoBuilder.followPath(E_CSP))
+
                   // TODO: Name of command
-                  .withName("F to CSP"));
+                  .withName("E to CSP"));
 
       /* TODO: Other triggers */
-    event("atCSP").onTrue(
-        Commands.sequence(
-        AutoBuilder.followPath(CSP_E)
-        .withName("CSP to E")));
-
+      event("atCSP")
+          .onTrue(
+              Commands.sequence(
+                  Commands.waitSeconds(waitTime),
+                  AutoBuilder.followPath(CSP_D),
+                  AutoBuilder.followPath(D_CSP),
+                  Commands.waitSeconds(waitTime)
+                  .withName("CSP to D")));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
