@@ -7,7 +7,6 @@ package frc.robot.commands.autonomous;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -32,9 +31,7 @@ public class auton_2_cycle2 extends PathPlannerAuto {
       /* TODO: When autonomous begins */
       isRunning()
           .onTrue(
-              Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose),
-                      AutoBuilder.followPath(E_CSP))
+              Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(E_CSP))
 
                   // TODO: Name of command
                   .withName("E to CSP"));
@@ -46,8 +43,7 @@ public class auton_2_cycle2 extends PathPlannerAuto {
                   Commands.waitSeconds(waitTime),
                   AutoBuilder.followPath(CSP_D),
                   AutoBuilder.followPath(D_CSP),
-                  Commands.waitSeconds(waitTime)
-                  .withName("CSP to D")));
+                  Commands.waitSeconds(waitTime).withName("CSP to D")));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
