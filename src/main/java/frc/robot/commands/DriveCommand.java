@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.FieldConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -21,9 +22,10 @@ public class DriveCommand extends Command {
   private final CommandXboxController driverController;
   private final PIDController PID;
 
-  public boolean isSlow = true;
+  public boolean isSlow = false;
   public boolean isBackCoralStation = false;
   public boolean robotCentric = false;
+  public boolean isAlignCoral = true;
 
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 3.5 * Math.PI;
@@ -103,6 +105,26 @@ public class DriveCommand extends Command {
       angularVelocity = pidOutput;
 
       DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
+    }
+
+    if (isAlignCoral) {
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.blueReefSetpointList);
+        PID.setSetpoint(nearestPoint.getRotation().getDegrees());
+      } else {
+        Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.redReefSetpointList);
+        PID.setSetpoint(nearestPoint.getRotation().getDegrees());
+      }
+
+      // Feed the fixed angle into the PID
+      double pidOutput = PID.calculate(currentRotation);
+      pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
+
+      // Override the user's rotation with the PID result
+      angularVelocity = pidOutput;
+
+      DogLog.log("Drive Command/ReefTrackingPIDOutput", pidOutput);
     }
 
     // Multiply by our maximum speeds/rates
