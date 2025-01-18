@@ -16,15 +16,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.autonomous.*;
-import frc.robot.commands.autonomous.Template;
-import frc.robot.commands.autonomous.startLnLeave;
-import frc.robot.commands.autonomous.startLnLeave2;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.Supplier;
@@ -64,6 +62,9 @@ public class RobotContainer {
     PathfindingCommand.warmupCommand().schedule();
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
+
+    EagleUtil.printRedReefSetPoints();
+    EagleUtil.printBlueReefSetPoints();
   }
 
   /**
@@ -126,4 +127,5 @@ public class RobotContainer {
   public Command alignToPose(Supplier<Pose2d> Pose) {
     return new AlignToPose(Pose, drivetrain);
   }
+  
 }
