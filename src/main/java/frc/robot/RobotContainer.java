@@ -112,8 +112,6 @@ public class RobotContainer {
 
   private void configureAutonomous() {
     autoChooser.setDefaultOption("SC_preloadScore", new SC_preloadScore(this));
-    autoChooser.addOption("auton_2_cycle", new auton_2_cycle(this));
-    autoChooser.addOption("auton_2_cycle2", new auton_2_cycle2(this));
 
     autoChooser.addOption("startLnLeave", new startLnLeave(this));
     autoChooser.addOption("TestPath", new Drivetrainpractice(this));
