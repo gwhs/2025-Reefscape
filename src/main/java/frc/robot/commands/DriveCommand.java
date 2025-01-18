@@ -22,10 +22,10 @@ public class DriveCommand extends Command {
   private final CommandXboxController driverController;
   private final PIDController PID;
 
-  public boolean isSlow = false;
+  public boolean isSlow = true;
   public boolean isBackCoralStation = false;
   public boolean robotCentric = false;
-  public boolean isAlignCoral = true;
+  public boolean isAlignCoral = false;
 
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 3.5 * Math.PI;
