@@ -25,14 +25,14 @@ public class EagleUtil {
   private static double x = -reef_length - robot_away_from_reef;
   private static double y = reef_to_reef_distance / 2;
 
-  //blue poses
+  // blue poses
   private static Pose2d[] bluePoses = new Pose2d[12];
 
-  //red poses
+  // red poses
   private static Pose2d[] redPoses = new Pose2d[12];
-  
+
   public static void printBlueReefSetPoints() {
-    
+
     for (int i = 0; i < bluePoses.length; i++) {
       System.out.print(bluePoses[i] + ", ");
     }
@@ -52,7 +52,6 @@ public class EagleUtil {
     DogLog.log("Blue Reef", blue_reef);
     DogLog.log("Blue Set Points", bluePoses);
   }
-
 
   public static void printRedReefSetPoints() {
     for (int i = 0; i < redPoses.length; i++) {
