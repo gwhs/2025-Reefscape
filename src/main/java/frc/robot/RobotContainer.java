@@ -26,6 +26,8 @@ import frc.robot.commands.autonomous.*;
 import frc.robot.commands.autonomous.startLnLeave;
 import frc.robot.commands.autonomous.startLnLeave2;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.AprilTagCam.AprilTagCam;
+import frc.robot.subsystems.AprilTagCam.AprilTagCamConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.Supplier;
 
@@ -36,6 +38,7 @@ import java.util.function.Supplier;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -44,6 +47,22 @@ public class RobotContainer {
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+
+  private AprilTagCam cam3 =
+      new AprilTagCam(
+          "cam3",
+          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION,
+          drivetrain::addVisionMeasurent,
+          () -> drivetrain.getState().Pose,
+          () -> drivetrain.getState().Speeds);
+
+  private AprilTagCam cam4 =
+      new AprilTagCam(
+          "cam4",
+          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION,
+          drivetrain::addVisionMeasurent,
+          () -> drivetrain.getState().Pose,
+          () -> drivetrain.getState().Speeds);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -99,7 +118,11 @@ public class RobotContainer {
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
   }
 
-  public void periodic() {}
+  public void periodic() {
+
+    cam3.updatePoseEstim();
+    cam4.updatePoseEstim();
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
