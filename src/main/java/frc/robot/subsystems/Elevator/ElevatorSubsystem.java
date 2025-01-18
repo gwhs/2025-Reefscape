@@ -13,12 +13,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /** Add your docs here. */
-public class ElevatorSubsytem extends SubsystemBase {
+public class ElevatorSubsystem extends SubsystemBase {
   private ElevatorIO elevatorIO;
   private ElevatorIOReal elevatorIOReal;
 
-
-  public ElevatorSubsytem() {
+  public ElevatorSubsystem() {
     if (RobotBase.isSimulation()) {
       elevatorIO = new ElevatorIOSim();
     } else {
@@ -38,13 +37,13 @@ public class ElevatorSubsytem extends SubsystemBase {
     DogLog.log("Elevator/Limit Switch Value (Forward)", elevatorIOReal.getForwardLimit());
   }
 
-  public Command goTo(double position) {
+  public Command goTo(double meters) {
     return this.runOnce(
             () -> {
-              elevatorIO.setPosition(position);
+              elevatorIO.setPosition(metersToRotations(meters));
             })
         .andThen(
-            Commands.waitUntil(() -> MathUtil.isNear(position, elevatorIO.getPosition(), 0.1)));
+            Commands.waitUntil(() -> MathUtil.isNear(meters, rotationsToMeters(elevatorIO.getPosition()), 0.1)));
   }
 
   // homming command
@@ -52,14 +51,20 @@ public class ElevatorSubsytem extends SubsystemBase {
     return this.runOnce(
             () -> {
               elevatorIO.setVoltage(-3);
-            })  
+            })
         .andThen(Commands.waitUntil(() -> elevatorIO.getReverseLimit()))
         .andThen(
-          Commands.runOnce(
-            () -> {
-            elevatorIO.setVoltage(0);
-            }));
-          
-        
+            Commands.runOnce(
+                () -> {
+                  elevatorIO.setVoltage(0);
+                }));
   }
+  public static double rotationsToMeters(double rotations) {
+    return rotations / ElevatorConstants.GEAR_RATIO * (ElevatorConstants.SPROCKET_DIAMETER * Math.PI);
+  }
+
+  public static double metersToRotations(double meters) {
+    return meters / (ElevatorConstants.SPROCKET_DIAMETER * Math.PI) * ElevatorConstants.GEAR_RATIO;
+  }
+
 }

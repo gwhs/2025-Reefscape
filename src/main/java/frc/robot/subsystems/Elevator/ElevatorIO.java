@@ -13,6 +13,4 @@ public interface ElevatorIO {
   public void setVoltage(double voltage);
 
   public boolean getReverseLimit();
-
 }
-

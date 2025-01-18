@@ -1,9 +1,5 @@
 package frc.robot.subsystems.Elevator;
 
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -21,12 +17,12 @@ public class ElevatorIOSim implements ElevatorIO {
           .25, ElevatorConstants.ELEVATOR_PID_KI, ElevatorConstants.ELEVATOR_PID_KD, constraints);
 
   public void setPosition(double position) {
-    pidController.setGoal(position);
+    pidController.setGoal(ElevatorSubsystem.rotationsToMeters(position));
   }
 
   // TODO: units are in meters, but we might want rotations
   public double getPosition() {
-    return elevatorSim.getPositionMeters();
+    return ElevatorSubsystem.metersToRotations(elevatorSim.getPositionMeters());
   }
 
   public void update() {
@@ -40,13 +36,11 @@ public class ElevatorIOSim implements ElevatorIO {
   }
 
   public boolean getReverseLimit() {
-   return elevatorSim.getPositionMeters() == 0;
+    return elevatorSim.getPositionMeters() == 0;
   }
 
   @Override
   public void setVoltage(double voltage) {
-  elevatorSim.setInputVoltage(voltage);
+    elevatorSim.setInputVoltage(voltage);
   }
 }
-
-

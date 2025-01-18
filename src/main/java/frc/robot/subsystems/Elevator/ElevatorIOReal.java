@@ -18,8 +18,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
 import com.ctre.phoenix6.signals.ReverseLimitTypeValue;
 
-import edu.wpi.first.units.measure.Angle;
-
 public class ElevatorIOReal implements ElevatorIO {
   private static final String ForwardLimitEnable = null;
   private TalonFX m_leftElevatorMotor =
@@ -28,7 +26,7 @@ public class ElevatorIOReal implements ElevatorIO {
       new TalonFX(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, "rio");
 
   private final MotionMagicVoltage m_requestLeft = new MotionMagicVoltage(0);
-      private final Follower m_requestRight =
+  private final Follower m_requestRight =
       new Follower(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, true);
 
   private final VoltageOut m_requestLeftVoltage = new VoltageOut(0);
@@ -65,7 +63,6 @@ public class ElevatorIOReal implements ElevatorIO {
     hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
     hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionEnable = true;
     hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionValue = 0;
-    
 
     TalonFXConfigurator leftElevatorConfigurator = m_leftElevatorMotor.getConfigurator();
     leftElevatorConfigurator.apply(talonFXConfigs);
@@ -98,7 +95,6 @@ public class ElevatorIOReal implements ElevatorIO {
     m_leftElevatorMotor.setControl(m_requestLeftVoltage.withOutput(voltage));
     m_rightElevatorMotor.setControl(m_requestRight);
   }
-
 
   @Override
   public void update() {}

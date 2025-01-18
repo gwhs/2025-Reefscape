@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.Elevator;
 
+import edu.wpi.first.math.util.Units;
+
 /** Add your docs here. */
 public class ElevatorConstants {
   public static final double CLIMBER_RATIO = 36;
@@ -32,4 +34,7 @@ public class ElevatorConstants {
 
   public static final int ForwardLimitRemoteSensorID = 0;
   public static final int ReverseLimitRemoteSensorID = 0;
+
+  public static final int GEAR_RATIO = 16;
+  public static final double SPROCKET_DIAMETER = Units.inchesToMeters (1.757);
 }

@@ -28,7 +28,7 @@ import frc.robot.commands.autonomous.startLnLeave;
 import frc.robot.commands.autonomous.startLnLeave2;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Elevator.ElevatorSubsytem;
+import frc.robot.subsystems.Elevator.ElevatorSubsystem;
 import java.util.function.Supplier;
 
 /**
@@ -46,7 +46,7 @@ public class RobotContainer {
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-  private final ElevatorSubsytem m_ElevatorSubsystem = new ElevatorSubsytem();
+  private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
