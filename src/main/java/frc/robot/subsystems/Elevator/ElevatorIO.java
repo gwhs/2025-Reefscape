@@ -9,4 +9,10 @@ public interface ElevatorIO {
   public double getPosition();
 
   public void update();
+
+  public void setVoltage(double voltage);
+
+  public boolean getReverseLimit();
+
 }
+

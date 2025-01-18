@@ -1,5 +1,9 @@
 package frc.robot.subsystems.Elevator;
 
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
+
 import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -34,4 +38,15 @@ public class ElevatorIOSim implements ElevatorIO {
 
     elevatorSim.setInputVoltage(pidOutput);
   }
+
+  public boolean getReverseLimit() {
+   return elevatorSim.getPositionMeters() == 0;
+  }
+
+  @Override
+  public void setVoltage(double voltage) {
+  elevatorSim.setInputVoltage(voltage);
+  }
 }
+
+

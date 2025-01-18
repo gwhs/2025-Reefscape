@@ -17,6 +17,7 @@ public class ElevatorSubsytem extends SubsystemBase {
   private ElevatorIO elevatorIO;
   private ElevatorIOReal elevatorIOReal;
 
+
   public ElevatorSubsytem() {
     if (RobotBase.isSimulation()) {
       elevatorIO = new ElevatorIOSim();
@@ -47,5 +48,18 @@ public class ElevatorSubsytem extends SubsystemBase {
   }
 
   // homming command
-
+  public Command homingCommand() {
+    return this.runOnce(
+            () -> {
+              elevatorIO.setVoltage(-3);
+            })  
+        .andThen(Commands.waitUntil(() -> elevatorIO.getReverseLimit()))
+        .andThen(
+          Commands.runOnce(
+            () -> {
+            elevatorIO.setVoltage(0);
+            }));
+          
+        
+  }
 }
