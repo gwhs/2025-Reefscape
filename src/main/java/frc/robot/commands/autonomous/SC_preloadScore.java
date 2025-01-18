@@ -12,21 +12,27 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class Templete extends PathPlannerAuto {
-  public Templete(RobotContainer robotContainer) {
+public class SC_preloadScore extends PathPlannerAuto {
+  public SC_preloadScore(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     /* All your code should go inside this try-catch block */
     try {
       /* TODO: Load all paths needed */
-      PathPlannerPath S3Leave = PathPlannerPath.fromPathFile("S3-C5");
+      PathPlannerPath SCpreloadScore = PathPlannerPath.fromPathFile("SC-preload");
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
-          new Pose2d(S3Leave.getPoint(0).position, S3Leave.getIdealStartingState().rotation());
+          new Pose2d(
+              SCpreloadScore.getPoint(0).position,
+              SCpreloadScore.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
-      isRunning().onTrue(Commands.sequence(AutoBuilder.resetOdom(startingPose)));
+      isRunning()
+          .onTrue(
+              Commands.sequence(
+                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SCpreloadScore))
+                  .withName("Leave and score preload coral"));
 
       /* TODO: Other triggers */
 
