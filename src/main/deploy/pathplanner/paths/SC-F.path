@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.417824174527638,
-        "y": 3.4298027205159727
+        "x": 6.517117612139832,
+        "y": 3.512489651988778
       },
       "isLocked": false,
       "linkedName": "SC"
     },
     {
       "anchor": {
-        "x": 5.318,
-        "y": 2.91
+        "x": 5.296987179487179,
+        "y": 2.9826282051282056
       },
       "prevControl": {
-        "x": 5.552397408063054,
-        "y": 2.996935925216922
+        "x": 5.020102715348578,
+        "y": 2.854923670536961
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "atF",
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 0.5,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -49,13 +49,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 123.68999999999998
+    "rotation": 119.99999999999999
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 119.99999999999999
   },
   "useDefaultConstraints": true
 }
