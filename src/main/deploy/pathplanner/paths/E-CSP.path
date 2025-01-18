@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "atCSP",
+      "name": "atCSP_E",
       "waypointRelativePos": 1,
       "endWaypointRelativePos": null,
       "command": null

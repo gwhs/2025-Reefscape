@@ -41,28 +41,28 @@ public class autonC5_2 extends PathPlannerAuto {
                   // TODO: Name of command
                   .withName("F to CSP"));
 
-      event("atCSP_F")
+      event("atCSP")
           .onTrue(
               Commands.sequence(
                   Commands.waitSeconds(waitTime),
                   AutoBuilder.followPath(CSP_E),
                   AutoBuilder.followPath(E_CSP).withName("CSP to E")));
 
-      event("atCSP_E")
+      event("atCSP")
           .onTrue(
               Commands.sequence(
                   Commands.waitSeconds(waitTime),
                   AutoBuilder.followPath(CSP_D),
                   AutoBuilder.followPath(D_CSP).withName("CSP to D")));
 
-      event("atCSP_C")
+      event("atCSP")
           .onTrue(
               Commands.sequence(
                   Commands.waitSeconds(waitTime),
                   AutoBuilder.followPath(CSP_C),
                   AutoBuilder.followPath(C_CSP).withName("CSP to C")));
 
-      event("atCSP_B")
+      event("atCSP")
           .onTrue(
               Commands.sequence(
                   Commands.waitSeconds(waitTime),
