@@ -22,15 +22,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.autonomous.Drivetrainpractice;
-import frc.robot.commands.autonomous.SC_preloadScore;
-import frc.robot.commands.autonomous.Template;
-import frc.robot.commands.autonomous.auton_2_cycle;
-import frc.robot.commands.autonomous.auton_2_cycle2;
-import frc.robot.commands.autonomous.startLnLeave;
-import frc.robot.commands.autonomous.startLnLeave2;
+import frc.robot.commands.autonomous.*;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.arm.ArmSubsystem;
+
 import java.util.function.Supplier;
 
 /**
@@ -43,6 +39,7 @@ public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
   private final DriveCommand driveCommand = new DriveCommand(m_driverController, drivetrain);
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
