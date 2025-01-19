@@ -52,7 +52,7 @@ public class ElevatorIOReal implements ElevatorIO {
     currentConfig.withStatorCurrentLimitEnable(true);
     currentConfig.withStatorCurrentLimit(60);
     motorOutput.NeutralMode = NeutralModeValue.Coast;
-    motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     hardwareLimitSwitchConfigs.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
     hardwareLimitSwitchConfigs.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
@@ -67,10 +67,12 @@ public class ElevatorIOReal implements ElevatorIO {
     leftElevatorConfigurator.apply(talonFXConfigs);
 
     // TODO:
-    // motorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     TalonFXConfigurator rightElevatorConfigurator = m_rightElevatorMotor.getConfigurator();
     rightElevatorConfigurator.apply(talonFXConfigs);
+
+    m_rightElevatorMotor.setControl(m_requestRight);
   }
 
   public void setPosition(double position) {

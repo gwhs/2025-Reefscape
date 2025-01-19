@@ -11,8 +11,6 @@ public class ElevatorConstants {
   public static final double CLIMBER_RATIO = 36;
 
   public static final int LEFT_ELEVATOR_MOTOR_ID = 21;
-  public static final boolean LEFT_ELEVATOR_MOTOR_INVERTED = false;
-  public static final boolean RIGHT_ELEVATOR_MOTOR_INVERTED = true;
   public static final int RIGHT_ELEVATOR_MOTOR_ID = 14;
 
   public static final int BOT_RIGHT_LIMIT_ID = 2;
@@ -27,16 +25,11 @@ public class ElevatorConstants {
   public static final double MAX_ACCELERATION = 150.0;
   public static final double MAX_VELOCITY = 300.0;
 
-  public static final double LEFT_UP_POSITION = -193.94;
-  public static final double LEFT_DOWN_POSITION = -12.3;
-  public static final double RIGHT_UP_POSITION = 193.4;
-  public static final double RIGHT_DOWN_POSITION = 12.3;
-
   public static final int ForwardLimitRemoteSensorID = 0;
   public static final int ReverseLimitRemoteSensorID = 0;
 
-  public static final int GEAR_RATIO = 16;
+  public static final int GEAR_RATIO = 12;
   public static final double SPROCKET_DIAMETER = Units.inchesToMeters(1.757);
 
-  public static final double TOP_METER = 1.8;
+  public static final double TOP_METER = ElevatorSubsystem.rotationsToMeters(62);
 }

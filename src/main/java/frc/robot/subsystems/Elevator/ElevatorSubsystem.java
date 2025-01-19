@@ -25,7 +25,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     SmartDashboard.putData("Elevator to 0", goTo(0));
     SmartDashboard.putData("Elevator to 1", goTo(1));
-    SmartDashboard.putData("Elevator to 1.7", goTo(1.7));
+    SmartDashboard.putData("Elevator to 1.5", goTo(1.5));
   }
 
   @Override
@@ -64,10 +64,11 @@ public class ElevatorSubsystem extends SubsystemBase {
   public static double rotationsToMeters(double rotations) {
     return rotations
         / ElevatorConstants.GEAR_RATIO
-        * (ElevatorConstants.SPROCKET_DIAMETER * Math.PI);
+        * (ElevatorConstants.SPROCKET_DIAMETER * Math.PI) 
+        * 2;
   }
 
   public static double metersToRotations(double meters) {
-    return meters / (ElevatorConstants.SPROCKET_DIAMETER * Math.PI) * ElevatorConstants.GEAR_RATIO;
+    return meters / (ElevatorConstants.SPROCKET_DIAMETER * Math.PI) / ElevatorConstants.GEAR_RATIO /2;
   }
 }
