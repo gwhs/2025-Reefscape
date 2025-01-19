@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
 public class emplate extends PathPlannerAuto {
-  public Template(RobotContainer robotContainer) {
+  public emplate(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     /* All your code should go inside this try-catch block */
