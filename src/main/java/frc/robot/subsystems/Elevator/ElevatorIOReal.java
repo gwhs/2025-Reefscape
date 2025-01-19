@@ -58,8 +58,8 @@ public class ElevatorIOReal implements ElevatorIO {
     hardwareLimitSwitchConfigs.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
     hardwareLimitSwitchConfigs.ForwardLimitEnable = true;
     hardwareLimitSwitchConfigs.ReverseLimitEnable = true;
-    hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyOpen;
-    hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
+    hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyClosed;
+    hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyClosed;
     hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionEnable = true;
     hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionValue = 0;
 
@@ -85,11 +85,11 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   public boolean getForwardLimit() {
-    return m_leftElevatorMotor.getForwardLimit(true).getValue().value == 1;
+    return m_leftElevatorMotor.getForwardLimit(true).getValue().value == 0;
   }
 
   public boolean getReverseLimit() {
-    return m_leftElevatorMotor.getReverseLimit(true).getValue().value == 1;
+    return m_leftElevatorMotor.getReverseLimit(true).getValue().value == 0;
   }
 
   public void setVoltage(double voltage) {
