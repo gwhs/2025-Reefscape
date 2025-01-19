@@ -51,7 +51,7 @@ public class ElevatorIOReal implements ElevatorIO {
 
     currentConfig.withStatorCurrentLimitEnable(true);
     currentConfig.withStatorCurrentLimit(60);
-    motorOutput.NeutralMode = NeutralModeValue.Brake;
+    motorOutput.NeutralMode = NeutralModeValue.Coast;
     motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     hardwareLimitSwitchConfigs.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
