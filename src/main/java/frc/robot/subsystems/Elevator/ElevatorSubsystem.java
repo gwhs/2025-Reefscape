@@ -35,7 +35,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     DogLog.log("Elevator/meters", rotationsToMeters(elevatorIO.getPosition()));
     DogLog.log("Elevator/Limit Switch Value (Reverse)", elevatorIO.getReverseLimit());
     DogLog.log("Elevator/Limit Switch Value (Forward)", elevatorIO.getForwardLimit());
-
   }
 
   public Command goTo(double meters) {
@@ -64,11 +63,14 @@ public class ElevatorSubsystem extends SubsystemBase {
   public static double rotationsToMeters(double rotations) {
     return rotations
         / ElevatorConstants.GEAR_RATIO
-        * (ElevatorConstants.SPROCKET_DIAMETER * Math.PI) 
+        * (ElevatorConstants.SPROCKET_DIAMETER * Math.PI)
         * 2;
   }
 
   public static double metersToRotations(double meters) {
-    return meters / (ElevatorConstants.SPROCKET_DIAMETER * Math.PI) / ElevatorConstants.GEAR_RATIO /2;
+    return meters
+        / (ElevatorConstants.SPROCKET_DIAMETER * Math.PI)
+        / ElevatorConstants.GEAR_RATIO
+        / 2;
   }
 }
