@@ -4,6 +4,8 @@ package frc.robot.subsystems.Elevator;
 
 public interface ElevatorIO {
 
+  boolean[] metersToRotations = null;
+
   public void setPosition(double position);
 
   public double getPosition();
@@ -13,4 +15,6 @@ public interface ElevatorIO {
   public void setVoltage(double voltage);
 
   public boolean getReverseLimit();
+
+  public boolean getForwardLimit();
 }

@@ -14,12 +14,12 @@ public class ElevatorIOSim implements ElevatorIO {
       new Constraints(ElevatorConstants.MAX_VELOCITY, ElevatorConstants.MAX_ACCELERATION);
   private ProfiledPIDController pidController =
       new ProfiledPIDController(
-          .25, ElevatorConstants.ELEVATOR_PID_KI, ElevatorConstants.ELEVATOR_PID_KD, constraints);
+          .1, ElevatorConstants.ELEVATOR_PID_KI, ElevatorConstants.ELEVATOR_PID_KD, constraints);
 
   public void setPosition(double position) {
-    pidController.setGoal(ElevatorSubsystem.rotationsToMeters(position));
+    pidController.setGoal(position);
   }
-  
+
   public double getPosition() {
     return ElevatorSubsystem.metersToRotations(elevatorSim.getPositionMeters());
   }
@@ -36,6 +36,10 @@ public class ElevatorIOSim implements ElevatorIO {
 
   public boolean getReverseLimit() {
     return elevatorSim.getPositionMeters() == 0;
+  }
+
+  public boolean getForwardLimit() {
+    return elevatorSim.getPositionMeters() >= ElevatorConstants.TOP_METER;
   }
 
   @Override
