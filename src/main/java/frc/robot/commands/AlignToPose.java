@@ -19,25 +19,32 @@ public class AlignToPose extends Command {
   private PIDController PIDX;
   private PIDController PIDY;
   private PIDController PIDRotation;
+
   private CommandSwerveDrivetrain drivetrain;
-  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-  private double MaxAngularRate = 360;
+  
+  private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  private double maxAngularRate = 360;
+  
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
-          .withDeadband(MaxSpeed * 0.0)
-          .withRotationalDeadband(MaxAngularRate * 0.0)
+          .withDeadband(maxSpeed * 0.0)
+          .withRotationalDeadband(maxAngularRate * 0.0)
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
   public AlignToPose(Supplier<Pose2d> Pose, CommandSwerveDrivetrain drivetrain) {
     addRequirements(drivetrain);
     targetPose = Pose;
+
     PIDX = new PIDController(2.7, 0, 0); // same for now tune later
     PIDX.setTolerance(0.1);
+
     PIDY = new PIDController(2.7, 0, 0);
     PIDY.setTolerance(0.12);
-    PIDRotation = new PIDController(0.0001, 0, 0);
-    PIDRotation.setTolerance(5);
+
+    PIDRotation = new PIDController(0.1, 0, 0);
+    PIDRotation.setTolerance(0.1);
     PIDRotation.enableContinuousInput(-180, 180);
+
     this.drivetrain = drivetrain;
   }
 
@@ -51,9 +58,9 @@ public class AlignToPose extends Command {
     boolean isatX = PIDX.atSetpoint();
     boolean isatY = PIDY.atSetpoint();
     boolean isatRotation = PIDRotation.atSetpoint();
-    DogLog.log("atX", isatX);
-    DogLog.log("atY", isatY);
-    DogLog.log("atRotation", isatRotation);
+    DogLog.log("Align/atX", isatX);
+    DogLog.log("Align/atY", isatY);
+    DogLog.log("Align/atRotation", isatRotation);
 
     if (isatX && isatY && isatRotation) {
       return true;
@@ -64,6 +71,8 @@ public class AlignToPose extends Command {
   @Override
   public void initialize() {
     goToPoseWithPID(targetPose.get());
+
+    DogLog.log("Align/Target Pose", targetPose.get());
   }
 
   @Override
@@ -88,19 +97,20 @@ public class AlignToPose extends Command {
     DogLog.log("Align/PIDRotationoutput", PIDRotationOutput);
 
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-      xVelocity = -xVelocity * MaxSpeed;
-      yVelocity = -yVelocity * MaxSpeed;
-      angularVelocity = -angularVelocity * -MaxAngularRate;
+      xVelocity = -xVelocity * maxSpeed;
+      yVelocity = -yVelocity * maxSpeed;
+      angularVelocity = -angularVelocity * maxAngularRate;
+    }
+    else {
+      xVelocity = xVelocity * maxSpeed;
+      yVelocity = yVelocity * maxSpeed;
+      angularVelocity = angularVelocity * maxAngularRate;
     }
 
-    xVelocity = xVelocity * MaxSpeed;
-    yVelocity = yVelocity * MaxSpeed;
-    angularVelocity = angularVelocity * MaxAngularRate;
-
-    angularVelocity = MathUtil.clamp(angularVelocity, -MaxAngularRate, MaxAngularRate);
-    DogLog.log("Drive Command/xVelocity", xVelocity);
-    DogLog.log("Drive Command/yVelocity", yVelocity);
-    DogLog.log("Drive Command/angularVelocity", angularVelocity);
+    angularVelocity = MathUtil.clamp(angularVelocity, -maxAngularRate, maxAngularRate);
+    DogLog.log("Align/xVelocity", xVelocity);
+    DogLog.log("Align/yVelocity", yVelocity);
+    DogLog.log("Align/angularVelocity", angularVelocity);
     drivetrain.setControl(
         drive
             .withVelocityX(xVelocity) // Drive forward with negative Y (forward)
