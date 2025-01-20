@@ -28,7 +28,8 @@ public class autonC5_2 extends PathPlannerAuto {
       PathPlannerPath C_CSP = PathPlannerPath.fromPathFile("C-CSP");
       PathPlannerPath CSP_B = PathPlannerPath.fromPathFile("CSP-B");
       PathPlannerPath B_CSP = PathPlannerPath.fromPathFile("B-CSP");
-      double waitTime = 0.5;
+      double waitTime = 0.2;
+      double scoringTime = 0.5;
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
@@ -46,6 +47,7 @@ public class autonC5_2 extends PathPlannerAuto {
               Commands.sequence(
                   Commands.waitSeconds(waitTime),
                   AutoBuilder.followPath(CSP_E),
+                  Commands.waitSeconds(scoringTime),
                   AutoBuilder.followPath(E_CSP).withName("CSP to E")));
 
       event("atCSP_E")
@@ -53,6 +55,7 @@ public class autonC5_2 extends PathPlannerAuto {
               Commands.sequence(
                   Commands.waitSeconds(waitTime),
                   AutoBuilder.followPath(CSP_D),
+                  Commands.waitSeconds(scoringTime),
                   AutoBuilder.followPath(D_CSP).withName("CSP to D")));
 
       event("atCSP_D")
@@ -60,6 +63,7 @@ public class autonC5_2 extends PathPlannerAuto {
               Commands.sequence(
                   Commands.waitSeconds(waitTime),
                   AutoBuilder.followPath(CSP_C),
+                  Commands.waitSeconds(scoringTime),
                   AutoBuilder.followPath(C_CSP).withName("CSP to C")));
 
       event("atCSP_C")
@@ -67,6 +71,7 @@ public class autonC5_2 extends PathPlannerAuto {
               Commands.sequence(
                   Commands.waitSeconds(waitTime),
                   AutoBuilder.followPath(CSP_B),
+                  Commands.waitSeconds(scoringTime),
                   AutoBuilder.followPath(B_CSP).withName("CSP to B")));
 
       /* TODO: Other triggers */
