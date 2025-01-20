@@ -72,6 +72,9 @@ public class RobotContainer {
 
     EagleUtil.printRedReefSetPoints();
     EagleUtil.printBlueReefSetPoints();
+
+    DogLog.log("Field Constants/Blue Reef", FieldConstants.blueReefSetpoints);
+    DogLog.log("Field Constants/Red Reef", FieldConstants.redReefSetpoints);
   }
 
   /**
