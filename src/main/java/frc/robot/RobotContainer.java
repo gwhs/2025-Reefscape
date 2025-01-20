@@ -89,10 +89,6 @@ public class RobotContainer {
     m_driverController
         .rightTrigger()
         .onTrue(alignToPose(() -> new Pose2d(1.00, 1.00, new Rotation2d(1.00))));
-    m_driverController.a().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    m_driverController.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    m_driverController.x().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    m_driverController.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
   }
