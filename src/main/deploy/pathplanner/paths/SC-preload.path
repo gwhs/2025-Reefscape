@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.3761223435866805,
-        "y": 3.7871884342534465
+        "x": 6.648436247558859,
+        "y": 3.5518689184471803
       },
       "isLocked": false,
       "linkedName": "SC"
     },
     {
       "anchor": {
-        "x": 5.565320512820513,
-        "y": 2.9516666666666667
+        "x": 5.296987179487179,
+        "y": 2.9826282051282056
       },
       "prevControl": {
-        "x": 6.430611268739607,
-        "y": 2.9700508228629414
+        "x": 5.958079289724918,
+        "y": 3.239651160677427
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "F"
     }
   ],
   "rotationTargets": [],
@@ -49,10 +49,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 119.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auton-C5 (F-E)",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 119.99999999999999

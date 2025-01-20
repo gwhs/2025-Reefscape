@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.98216564286156,
-        "y": 2.105444064043033
+        "x": 2.367573629593391,
+        "y": 2.67615974764297
       },
       "isLocked": false,
       "linkedName": "CSP"
@@ -20,8 +20,8 @@
         "y": 3.8598717948717947
       },
       "prevControl": {
-        "x": 1.9635934646572542,
-        "y": 1.9306995524961335
+        "x": 2.219842834877956,
+        "y": 2.148145706495211
       },
       "nextControl": null,
       "isLocked": false,
@@ -52,7 +52,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auton-C5 (F-E)",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 54.0

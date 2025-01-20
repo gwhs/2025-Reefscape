@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.3617108135539713,
-        "y": 2.293519841373965
+        "x": 2.715422202612846,
+        "y": 1.9151118311605504
       },
       "isLocked": false,
       "linkedName": "D"
@@ -20,8 +20,8 @@
         "y": 0.8566025641025646
       },
       "prevControl": {
-        "x": 2.117150686425731,
-        "y": 1.4553118444815678
+        "x": 2.4155251338581074,
+        "y": 1.644909058431817
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "atCSP_D",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -52,10 +52,10 @@
     "rotation": 54.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auton-C5 (F-E)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 61.78264414527075
+    "rotation": 59.99999999999999
   },
   "useDefaultConstraints": true
 }
