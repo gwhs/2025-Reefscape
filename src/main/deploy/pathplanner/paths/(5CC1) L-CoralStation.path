@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.705,
-        "y": 5.117
+        "x": 3.752151639344262,
+        "y": 4.960040983606558
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.70075,
-        "y": 6.1602500000000004
+        "x": 2.747901639344262,
+        "y": 6.003290983606559
       },
       "isLocked": false,
       "linkedName": "L"
@@ -52,7 +52,7 @@
     "rotation": -54.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "5 Cycle Non Processor",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -60.5725435968102

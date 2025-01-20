@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.23575,
-        "y": 5.039
+        "x": 5.238627049180328,
+        "y": 4.924077868852459
       },
       "prevControl": {
-        "x": 6.09375,
-        "y": 5.302249999999999
+        "x": 6.096627049180328,
+        "y": 5.187327868852458
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "5 Cycle Non Processor",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -119.99999999999999
