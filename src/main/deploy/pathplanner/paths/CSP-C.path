@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3069490366083945,
-        "y": 1.6477320831409066
+        "x": 2.531280677661697,
+        "y": 1.7514506601751245
       },
       "isLocked": false,
       "linkedName": "CSP"
@@ -20,8 +20,8 @@
         "y": 2.9826282051282056
       },
       "prevControl": {
-        "x": 3.065069352173638,
-        "y": 2.679054813485831
+        "x": 3.1061931920190484,
+        "y": 2.556261185304049
       },
       "nextControl": null,
       "isLocked": false,
@@ -44,7 +44,7 @@
     "maxAcceleration": 8.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
-    "nominalVoltage": 8.5,
+    "nominalVoltage": 9.0,
     "unlimited": false
   },
   "goalEndState": {
