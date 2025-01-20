@@ -20,6 +20,8 @@ public class autonC5_1 extends PathPlannerAuto {
     try {
       /* TODO: Load all paths needed */
       PathPlannerPath SC_F = PathPlannerPath.fromPathFile("SC-F");
+      double waitTime = 0.2;
+      double scoringTime = 0.5;
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
@@ -28,7 +30,11 @@ public class autonC5_1 extends PathPlannerAuto {
       /* TODO: When autonomous begins */
       isRunning()
           .onTrue(
-              Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SC_F))
+              Commands.sequence(AutoBuilder.resetOdom(startingPose), 
+              AutoBuilder.followPath(SC_F), 
+              Commands.waitSeconds(scoringTime),
+              Commands.runOnce(() -> new autonC5_2(robotContainer).schedule()))
+              // waiting for preload for scoring 
                   // TODO: Name of command
                   .withName("Leave SC to score preload at F"));
 
