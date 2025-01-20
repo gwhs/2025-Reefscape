@@ -26,10 +26,10 @@ public class auton_5CC1 extends PathPlannerAuto {
           new Pose2d(SL_I.getPoint(0).position, SL_I.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
-      isRunning().onTrue(Commands.sequence(
-        AutoBuilder.resetOdom(startingPose),
-        AutoBuilder.followPath(SL_I))
-        .withName("Leave SL, score preload at I"));
+      isRunning()
+          .onTrue(
+              Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SL_I))
+                  .withName("Leave SL, score preload at I"));
 
       /* TODO: Other triggers */
 

@@ -29,35 +29,34 @@ public class auton_5CC1_2 extends PathPlannerAuto {
       PathPlannerPath CS_A = PathPlannerPath.fromPathFile("(5CC1) CoralStationS-A");
       double waitTime = 0.5;
 
-
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
           new Pose2d(I_CS.getPoint(0).position, I_CS.getIdealStartingState().rotation());
 
       /* TODO: When autonomous begins */
-      isRunning().onTrue(Commands.sequence(
-        AutoBuilder.resetOdom(startingPose),
-        AutoBuilder.followPath(I_CS))
-        .withName("I to Coral Station"));
+      isRunning()
+          .onTrue(
+              Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(I_CS))
+                  .withName("I to Coral Station"));
 
       /* TODO: Other triggers */
 
       event("atCS")
-        .onTrue(Commands.sequence(
-          Commands.waitSeconds(waitTime),
-          AutoBuilder.followPath(CS_J),
-          AutoBuilder.followPath(J_CS),
-          Commands.waitSeconds(waitTime),
-          AutoBuilder.followPath(CS_K),
-          AutoBuilder.followPath(K_CS),
-          Commands.waitSeconds(waitTime),
-          AutoBuilder.followPath(CS_L),
-          AutoBuilder.followPath(L_CS),
-          Commands.waitSeconds(waitTime),
-          AutoBuilder.followPath(CS_A),
-          Commands.waitSeconds(waitTime)
-          .withName("CS to J to CS, CS to K to CS, CS to L to CS, CS to A")
-        ));
+          .onTrue(
+              Commands.sequence(
+                  Commands.waitSeconds(waitTime),
+                  AutoBuilder.followPath(CS_J),
+                  AutoBuilder.followPath(J_CS),
+                  Commands.waitSeconds(waitTime),
+                  AutoBuilder.followPath(CS_K),
+                  AutoBuilder.followPath(K_CS),
+                  Commands.waitSeconds(waitTime),
+                  AutoBuilder.followPath(CS_L),
+                  AutoBuilder.followPath(L_CS),
+                  Commands.waitSeconds(waitTime),
+                  AutoBuilder.followPath(CS_A),
+                  Commands.waitSeconds(waitTime)
+                      .withName("CS to J to CS, CS to K to CS, CS to L to CS, CS to A")));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
