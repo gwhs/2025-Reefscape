@@ -21,10 +21,12 @@ public class AlignToPose extends Command {
   private PIDController PIDRotation;
 
   private CommandSwerveDrivetrain drivetrain;
-  
+
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-  private double maxAngularRate = 360;
-  
+  private double maxAngularRate = 3.5 * Math.PI;
+
+  public static final double PID_MAX = 0.35;
+
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
           .withDeadband(maxSpeed * 0.0)
@@ -39,7 +41,7 @@ public class AlignToPose extends Command {
     PIDX.setTolerance(0.1);
 
     PIDY = new PIDController(2.7, 0, 0);
-    PIDY.setTolerance(0.12);
+    PIDY.setTolerance(0.1);
 
     PIDRotation = new PIDController(0.1, 0, 0);
     PIDRotation.setTolerance(0.1);
@@ -91,7 +93,8 @@ public class AlignToPose extends Command {
     double yVelocity = -PIDYOutput;
     DogLog.log("Align/PIDYoutput", PIDYOutput);
 
-    double PIDRotationOutput = PIDRotation.calculate(currRotation);
+    double PIDRotationOutput =
+        MathUtil.clamp(PIDRotation.calculate(currRotation), -PID_MAX, PID_MAX);
     double angularVelocity = PIDRotationOutput;
 
     DogLog.log("Align/PIDRotationoutput", PIDRotationOutput);
@@ -99,9 +102,8 @@ public class AlignToPose extends Command {
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
       xVelocity = -xVelocity * maxSpeed;
       yVelocity = -yVelocity * maxSpeed;
-      angularVelocity = -angularVelocity * maxAngularRate;
-    }
-    else {
+      angularVelocity = angularVelocity * maxAngularRate;
+    } else {
       xVelocity = xVelocity * maxSpeed;
       yVelocity = yVelocity * maxSpeed;
       angularVelocity = angularVelocity * maxAngularRate;
