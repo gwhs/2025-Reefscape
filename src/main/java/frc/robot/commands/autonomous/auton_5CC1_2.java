@@ -20,13 +20,13 @@ public class auton_5CC1_2 extends PathPlannerAuto {
     try {
       /* TODO: Load all paths needed */
       PathPlannerPath I_CS = PathPlannerPath.fromPathFile("(5CC1) I-CoralStation");
-      PathPlannerPath CS_J = PathPlannerPath.fromPathFile("(5CC1) CoralStationS-J");
+      PathPlannerPath CS_J = PathPlannerPath.fromPathFile("(5CC1) CoralStation-J");
       PathPlannerPath J_CS = PathPlannerPath.fromPathFile("(5CC1) J-CoralStation");
-      PathPlannerPath CS_K = PathPlannerPath.fromPathFile("(5CC1) CoralStationS-K");
+      PathPlannerPath CS_K = PathPlannerPath.fromPathFile("(5CC1) CoralStation-K");
       PathPlannerPath K_CS = PathPlannerPath.fromPathFile("(5CC1) K-CoralStation");
-      PathPlannerPath CS_L = PathPlannerPath.fromPathFile("(5CC1) CoralStationS-L");
+      PathPlannerPath CS_L = PathPlannerPath.fromPathFile("(5CC1) CoralStation-L");
       PathPlannerPath L_CS = PathPlannerPath.fromPathFile("(5CC1) L-CoralStation");
-      PathPlannerPath CS_A = PathPlannerPath.fromPathFile("(5CC1) CoralStationS-A");
+      PathPlannerPath CS_A = PathPlannerPath.fromPathFile("(5CC1) CoralStation-A");
       double waitTime = 0.5;
 
       /* TODO: Get starting position of starting path */
