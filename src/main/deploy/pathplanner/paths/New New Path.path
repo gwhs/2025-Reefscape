@@ -82,10 +82,10 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 8.5,
+    "maxAcceleration": 7.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
-    "nominalVoltage": 9.0,
+    "nominalVoltage": 7.0,
     "unlimited": false
   },
   "goalEndState": {
