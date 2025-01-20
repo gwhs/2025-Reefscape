@@ -20,8 +20,8 @@ public class autonC5_1 extends PathPlannerAuto {
     try {
       /* TODO: Load all paths needed */
       PathPlannerPath SC_F = PathPlannerPath.fromPathFile("SC-F");
-      double waitTime = 0.2;
-      double scoringTime = 0.5;
+      double waitTime = 0.1;
+      double scoringTime = 0.3;
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =

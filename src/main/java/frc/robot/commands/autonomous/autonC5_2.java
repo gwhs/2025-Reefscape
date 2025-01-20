@@ -28,8 +28,8 @@ public class autonC5_2 extends PathPlannerAuto {
       PathPlannerPath C_CSP = PathPlannerPath.fromPathFile("C-CSP");
       PathPlannerPath CSP_B = PathPlannerPath.fromPathFile("CSP-B");
       PathPlannerPath B_CSP = PathPlannerPath.fromPathFile("B-CSP");
-      double waitTime = 0.2;
-      double scoringTime = 0.5;
+      double waitTime = 0.1;
+      double scoringTime = 0.3;
 
       /* TODO: Get starting position of starting path */
       Pose2d startingPose =
