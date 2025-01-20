@@ -30,11 +30,12 @@ public class autonC5_1 extends PathPlannerAuto {
       /* TODO: When autonomous begins */
       isRunning()
           .onTrue(
-              Commands.sequence(AutoBuilder.resetOdom(startingPose), 
-              AutoBuilder.followPath(SC_F), 
-              Commands.waitSeconds(scoringTime),
-              Commands.runOnce(() -> new autonC5_2(robotContainer).schedule()))
-              // waiting for preload for scoring 
+              Commands.sequence(
+                      AutoBuilder.resetOdom(startingPose),
+                      AutoBuilder.followPath(SC_F),
+                      Commands.waitSeconds(scoringTime),
+                      Commands.runOnce(() -> new autonC5_2(robotContainer).schedule()))
+                  // waiting for preload for scoring
                   // TODO: Name of command
                   .withName("Leave SC to score preload at F"));
 
