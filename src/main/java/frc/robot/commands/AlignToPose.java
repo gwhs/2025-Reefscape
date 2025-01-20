@@ -16,9 +16,9 @@ import java.util.function.Supplier;
 
 public class AlignToPose extends Command {
   Supplier<Pose2d> targetPose;
-  private PIDController PIDX;
-  private PIDController PIDY;
-  private PIDController PIDRotation;
+  private PIDController PID_X;
+  private PIDController PID_Y;
+  private PIDController PID_Rotation;
 
   private CommandSwerveDrivetrain drivetrain;
 
@@ -35,36 +35,36 @@ public class AlignToPose extends Command {
 
   public AlignToPose(Supplier<Pose2d> Pose, CommandSwerveDrivetrain drivetrain) {
     addRequirements(drivetrain);
-    targetPose = Pose;
-
-    PIDX = new PIDController(2.7, 0, 0); // same for now tune later
-    PIDX.setTolerance(0.1);
-
-    PIDY = new PIDController(2.7, 0, 0);
-    PIDY.setTolerance(0.1);
-
-    PIDRotation = new PIDController(0.1, 0, 0);
-    PIDRotation.setTolerance(0.1);
-    PIDRotation.enableContinuousInput(-180, 180);
 
     this.drivetrain = drivetrain;
+    this.targetPose = Pose;
+
+    PID_X = new PIDController(2.7, 0, 0); // same for now tune later
+    PID_X.setTolerance(0.1);
+
+    PID_Y = new PIDController(2.7, 0, 0);
+    PID_Y.setTolerance(0.1);
+
+    PID_Rotation = new PIDController(0.1, 0, 0);
+    PID_Rotation.setTolerance(0.1);
+    PID_Rotation.enableContinuousInput(-180, 180);
   }
 
   public void goToPoseWithPID(Pose2d targetPose) {
-    PIDX.setSetpoint(targetPose.getX());
-    PIDY.setSetpoint(targetPose.getY());
-    PIDRotation.setSetpoint(targetPose.getRotation().getDegrees());
+    PID_X.setSetpoint(targetPose.getX());
+    PID_Y.setSetpoint(targetPose.getY());
+    PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
   }
 
   public boolean isAtTargetPose() {
-    boolean isatX = PIDX.atSetpoint();
-    boolean isatY = PIDY.atSetpoint();
-    boolean isatRotation = PIDRotation.atSetpoint();
-    DogLog.log("Align/atX", isatX);
-    DogLog.log("Align/atY", isatY);
-    DogLog.log("Align/atRotation", isatRotation);
+    boolean isAtX = PID_X.atSetpoint();
+    boolean isAtY = PID_Y.atSetpoint();
+    boolean isAtRotation = PID_Rotation.atSetpoint();
+    DogLog.log("Align/atX", isAtX);
+    DogLog.log("Align/atY", isAtY);
+    DogLog.log("Align/atRotation", isAtRotation);
 
-    if (isatX && isatY && isatRotation) {
+    if (isAtX && isAtY && isAtRotation) {
       return true;
     }
     return false;
@@ -85,16 +85,16 @@ public class AlignToPose extends Command {
     double currY = currPose.getY();
     Double currRotation = currPose.getRotation().getDegrees();
 
-    double PIDXOutput = PIDX.calculate(currX);
+    double PIDXOutput = PID_X.calculate(currX);
     double xVelocity = -PIDXOutput;
     DogLog.log("Align/PIDXOutput", PIDXOutput);
 
-    double PIDYOutput = PIDY.calculate(currY);
+    double PIDYOutput = PID_Y.calculate(currY);
     double yVelocity = -PIDYOutput;
     DogLog.log("Align/PIDYoutput", PIDYOutput);
 
     double PIDRotationOutput =
-        MathUtil.clamp(PIDRotation.calculate(currRotation), -PID_MAX, PID_MAX);
+        MathUtil.clamp(PID_Rotation.calculate(currRotation), -PID_MAX, PID_MAX);
     double angularVelocity = PIDRotationOutput;
 
     DogLog.log("Align/PIDRotationoutput", PIDRotationOutput);
