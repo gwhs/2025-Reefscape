@@ -56,11 +56,11 @@ public class ElevatorIOReal implements ElevatorIO {
 
     hardwareLimitSwitchConfigs.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
     hardwareLimitSwitchConfigs.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
-    hardwareLimitSwitchConfigs.ForwardLimitEnable = true;
-    hardwareLimitSwitchConfigs.ReverseLimitEnable = true;
+    hardwareLimitSwitchConfigs.ForwardLimitEnable = false;
+    hardwareLimitSwitchConfigs.ReverseLimitEnable = false;
     hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyClosed;
     hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyClosed;
-    hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionEnable = true;
+    hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionEnable = false;
     hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionValue = 0;
 
     TalonFXConfigurator leftElevatorConfigurator = m_leftElevatorMotor.getConfigurator();
