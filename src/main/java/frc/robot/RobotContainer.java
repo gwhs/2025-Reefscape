@@ -70,8 +70,8 @@ public class RobotContainer {
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 
-    EagleUtil.printRedReefSetPoints();
-    EagleUtil.printBlueReefSetPoints();
+    // EagleUtil.calculateRedReefSetPoints();
+    // EagleUtil.calculateBlueReefSetPoints();
 
     DogLog.log("Field Constants/Blue Reef", FieldConstants.blueReefSetpoints);
     DogLog.log("Field Constants/Red Reef", FieldConstants.redReefSetpoints);
