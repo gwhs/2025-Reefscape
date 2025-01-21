@@ -31,7 +31,7 @@ public class EagleUtil {
   // red poses
   private static Pose2d[] redPoses = new Pose2d[12];
 
-  public static void printBlueReefSetPoints() {
+  public static void calculateBlueReefSetPoints() {
 
     for (int i = 0; i < bluePoses.length; i++) {
       System.out.print(bluePoses[i] + ", ");
@@ -49,11 +49,11 @@ public class EagleUtil {
       bluePoses[i] = bluePoses[i].relativeTo(BLUE_REEF_INVERT);
     }
 
-    DogLog.log("Blue Reef", BLUE_REEF);
-    DogLog.log("Blue Set Points", bluePoses);
+    DogLog.log("Caculation/Blue Reef", BLUE_REEF);
+    DogLog.log("Caculation/Blue Set Points", bluePoses);
   }
 
-  public static void printRedReefSetPoints() {
+  public static void calculateRedReefSetPoints() {
     for (int i = 0; i < redPoses.length; i++) {
       System.out.print(redPoses[i] + ", ");
     }
@@ -69,7 +69,7 @@ public class EagleUtil {
     for (int i = 0; i < redPoses.length; i++) {
       redPoses[i] = redPoses[i].relativeTo(RED_REEF_INVERT);
     }
-    DogLog.log("Red Reef", RED_REEF);
-    DogLog.log("Red Set Points", redPoses);
+    DogLog.log("Caculation/Red Reef", RED_REEF);
+    DogLog.log("Caculation/Red Set Points", redPoses);
   }
 }
