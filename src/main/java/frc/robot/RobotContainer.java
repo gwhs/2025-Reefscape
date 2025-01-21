@@ -29,6 +29,8 @@ import frc.robot.commands.autonomous.autonC5_1;
 import frc.robot.commands.autonomous.autonC5_2;
 import frc.robot.commands.autonomous.auton_2_cycle;
 import frc.robot.commands.autonomous.auton_2_cycle2;
+import frc.robot.commands.autonomous.auton_5CC1;
+import frc.robot.commands.autonomous.auton_5CC1_2;
 import frc.robot.commands.autonomous.startLnLeave;
 import frc.robot.commands.autonomous.startLnLeave2;
 import frc.robot.generated.TunerConstants;
@@ -122,7 +124,8 @@ public class RobotContainer {
     autoChooser.addOption("TestPath", new Drivetrainpractice(this));
     autoChooser.addOption("startLnLeave2", new startLnLeave2(this));
     autoChooser.addOption("S1-Leave", new Template(this));
-
+    autoChooser.addOption("5CC1_1", new auton_5CC1(this));
+    autoChooser.addOption("5CC1_2", new auton_5CC1_2(this));
     // TODO: add more autonomous routines
 
     SmartDashboard.putData("autonomous", autoChooser);
