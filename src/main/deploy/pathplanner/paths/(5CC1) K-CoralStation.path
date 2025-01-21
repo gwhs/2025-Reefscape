@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.0638319672131145,
-        "y": 5.067930327868853
+        "x": 3.9679303278688525,
+        "y": 5.217776639344262
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.835331967213115,
-        "y": 6.208680327868852
+        "x": 2.739430327868853,
+        "y": 6.358526639344261
       },
       "isLocked": false,
       "linkedName": "K"
     },
     {
       "anchor": {
-        "x": 1.5404999999958833,
-        "y": 7.359499999997549
+        "x": 1.174795081967213,
+        "y": 7.123821721311475
       },
       "prevControl": {
-        "x": 2.6520000000000006,
-        "y": 6.45275
+        "x": 2.28629508197133,
+        "y": 6.217071721313926
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,7 +55,7 @@
   "folder": "5 Cycle Non Processor",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -58.840695491655644
+    "rotation": -59.99999999999999
   },
   "useDefaultConstraints": true
 }
