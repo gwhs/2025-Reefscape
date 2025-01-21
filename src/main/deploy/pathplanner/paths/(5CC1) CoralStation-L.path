@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5404999999958833,
-        "y": 7.359499999997549
+        "x": 1.174795081967213,
+        "y": 7.123821721311475
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.700750000000001,
-        "y": 6.209
+        "x": 2.335045081971331,
+        "y": 5.973321721313925
       },
       "isLocked": false,
       "linkedName": "Coral Station"
     },
     {
       "anchor": {
-        "x": 3.752151639344262,
-        "y": 4.960040983606558
+        "x": 3.7401639344262296,
+        "y": 5.0379610655737705
       },
       "prevControl": {
-        "x": 2.8941516393442623,
-        "y": 5.925290983606559
+        "x": 2.8821639344262295,
+        "y": 6.003211065573772
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -60.5725435968102
+    "rotation": -59.99999999999999
   },
   "reversed": false,
   "folder": "5 Cycle Non Processor",
