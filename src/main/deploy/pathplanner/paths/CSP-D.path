@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2845388682511025,
-        "y": 1.5426331392581414
+        "x": 2.333294983398443,
+        "y": 1.5742514334452329
       },
       "isLocked": false,
       "linkedName": "CSP"
@@ -20,8 +20,8 @@
         "y": 2.8071794871794875
       },
       "prevControl": {
-        "x": 2.1356776829028536,
-        "y": 1.5009464584217331
+        "x": 3.5028637332478296,
+        "y": 2.532372686154257
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,18 +41,18 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 4.5,
+    "maxAcceleration": 7.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
-    "nominalVoltage": 7.5,
+    "nominalVoltage": 7.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 61.78264414527075
+    "rotation": 59.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auton-C5 (F-E)",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 54.0
