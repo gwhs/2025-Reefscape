@@ -67,7 +67,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   public static double rotationsToMeters(double rotations) {
     return rotations
         / ElevatorConstants.GEAR_RATIO
-        * (ElevatorConstants.SPROCKET_DIAMETER * Math.PI) 
+        * (ElevatorConstants.SPROCKET_DIAMETER * Math.PI)
         * 2;
   }
 
