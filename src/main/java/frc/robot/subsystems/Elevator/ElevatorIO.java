@@ -6,9 +6,9 @@ public interface ElevatorIO {
 
   boolean[] metersToRotations = null;
 
-  public void setPosition(double position);
+  public void setRotation(double rotation);
 
-  public double getPosition();
+  public double getRotation();
 
   public void update();
 

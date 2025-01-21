@@ -13,18 +13,18 @@ public class ElevatorIOSim implements ElevatorIO {
   private Constraints constraints = new Constraints(300, 150);
   private ProfiledPIDController pidController = new ProfiledPIDController(.1, 0, 0, constraints);
 
-  public void setPosition(double position) {
-    pidController.setGoal(position);
+  public void setRotation(double rotation) {
+    pidController.setGoal(rotation);
   }
 
-  public double getPosition() {
+  public double getRotation() {
     return ElevatorSubsystem.metersToRotations(elevatorSim.getPositionMeters());
   }
 
   public void update() {
     elevatorSim.update(.020);
 
-    double pidOutput = pidController.calculate(getPosition());
+    double pidOutput = pidController.calculate(getRotation());
 
     DogLog.log("Elevator/Simulation/PID Output", pidOutput);
 

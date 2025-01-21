@@ -32,23 +32,22 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     elevatorIO.update();
-    DogLog.log("Elevator/position", elevatorIO.getPosition());
-    DogLog.log("Elevator/meters", rotationsToMeters(elevatorIO.getPosition()));
+    DogLog.log("Elevator/rotation", elevatorIO.getRotation());
+    DogLog.log("Elevator/meters", rotationsToMeters(elevatorIO.getRotation()));
     DogLog.log("Elevator/Limit Switch Value (Reverse)", elevatorIO.getReverseLimit());
     DogLog.log("Elevator/Limit Switch Value (Forward)", elevatorIO.getForwardLimit());
 
     DogLog.log("Elevator/Max Height (meter)", ElevatorConstants.TOP_METER);
-
   }
 
   public Command goTo(double meters) {
     return this.runOnce(
             () -> {
-              elevatorIO.setPosition(metersToRotations(meters));
+              elevatorIO.setRotation(metersToRotations(meters));
             })
         .andThen(
             Commands.waitUntil(
-                () -> MathUtil.isNear(meters, rotationsToMeters(elevatorIO.getPosition()), 0.1)));
+                () -> MathUtil.isNear(meters, rotationsToMeters(elevatorIO.getRotation()), 0.1)));
   }
 
   public Command homingCommand() {
@@ -72,6 +71,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public static double metersToRotations(double meters) {
-    return meters / (ElevatorConstants.SPROCKET_DIAMETER * Math.PI) * ElevatorConstants.GEAR_RATIO /2;
+    return meters
+        / (ElevatorConstants.SPROCKET_DIAMETER * Math.PI)
+        * ElevatorConstants.GEAR_RATIO
+        / 2;
   }
 }

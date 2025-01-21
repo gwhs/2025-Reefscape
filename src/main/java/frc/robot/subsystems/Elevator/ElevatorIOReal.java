@@ -77,12 +77,12 @@ public class ElevatorIOReal implements ElevatorIO {
     m_rightElevatorMotor.setControl(m_requestRight);
   }
 
-  public void setPosition(double position) {
-    m_leftElevatorMotor.setControl(m_requestLeft.withPosition(position));
+  public void setRotation(double rotation) {
+    m_leftElevatorMotor.setControl(m_requestLeft.withPosition(rotation));
     m_rightElevatorMotor.setControl(m_requestRight);
   }
 
-  public double getPosition() {
+  public double getRotation() {
     return m_leftElevatorMotor.getPosition().getValueAsDouble();
   }
 
