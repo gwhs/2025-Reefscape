@@ -6,14 +6,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import dev.doglog.DogLog;
-
 public class FieldConstants {
 
   public static Pose2d[] blueReefSetpoints = {
     new Pose2d(3.285, 4.191, Rotation2d.kZero),
     new Pose2d(3.285, 3.861, Rotation2d.kZero),
-    new Pose2d(3.744,3.065 , Rotation2d.fromDegrees(60)),
+    new Pose2d(3.744, 3.065, Rotation2d.fromDegrees(60)),
     new Pose2d(4.030, 2.900, Rotation2d.fromDegrees(60)),
     new Pose2d(4.949, 2.900, Rotation2d.fromDegrees(120)),
     new Pose2d(5.235, 3.065, Rotation2d.fromDegrees(120)),
