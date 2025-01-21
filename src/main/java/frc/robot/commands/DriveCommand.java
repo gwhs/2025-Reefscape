@@ -7,6 +7,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,8 +36,12 @@ public class DriveCommand extends Command {
   private final double BLUE_LEFT_STATION_ANGLE = 54;
   private final double BLUE_RIGHT_STATION_ANGLE = -54;
 
+  public static final double ELEVATOR_SWERVE_SLEW_RATE = 0.0;
+
   // Unit is meters
   private static final double halfWidthField = 4.0359;
+
+  public static command swerveSlew()
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
