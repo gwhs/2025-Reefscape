@@ -36,12 +36,12 @@ public class DriveCommand extends Command {
   private final double BLUE_LEFT_STATION_ANGLE = 54;
   private final double BLUE_RIGHT_STATION_ANGLE = -54;
 
-  public static final double ELEVATOR_SWERVE_SLEW_RATE = 0.0;
+  public static final double ELEVATOR_UP_SLEW_RATE = 0.0;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
 
-  public static command swerveSlew()
+  SlewRateLimiter limiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
@@ -75,12 +75,25 @@ public class DriveCommand extends Command {
 
     double angularVelocity = -driverController.getRightX();
 
+    SlewRateLimiter xVelocityLimiter = new SlewRateLimiter(0.5);  // Adjust ramp rate as needed
+    SlewRateLimiter yVelocityLimiter = new SlewRateLimiter(0.5);
+    SlewRateLimiter angularVelocityLimiter = new SlewRateLimiter(0.5);
+
     if (isSlow) {
       double slowFactor = 0.25;
       xVelocity *= slowFactor;
       yVelocity *= slowFactor;
       angularVelocity *= slowFactor;
     }
+
+    double slowEleXVelocity = xVelocityLimiter.calculate(xVelocity);
+    double slowEleYVelocity = yVelocityLimiter.calculate(yVelocity);
+    double slowEleAngularVelocity = angularVelocityLimiter.calculate(angularVelocity);
+
+    // Multiply by max speed/velocity to apply scaling factors
+    slowEleXVelocity *= maxSpeed;
+    slowEleYVelocity *= maxSpeed;
+    slowEleAngularVelocity *= maxAngularRate;
 
     if (isBackCoralStation) {
       if (DriverStation.getAlliance().isPresent()
@@ -155,6 +168,19 @@ public class DriveCommand extends Command {
               .withVelocityY(yVelocity)
               .withRotationalRate(angularVelocity));
     }
+    if (robotCentric) {
+      drivetrain.setControl(
+          robotCentricDrive
+              .withVelocityX(slowEleXVelocity)
+              .withVelocityY(slowEleYVelocity)
+              .withRotationalRate(slowEleAngularVelocity));
+  } else {
+      drivetrain.setControl(
+          fieldCentricDrive
+              .withVelocityX(slowEleXVelocity)
+              .withVelocityY(slowEleYVelocity)
+              .withRotationalRate(slowEleAngularVelocity));
+  }
   }
 
   @Override
