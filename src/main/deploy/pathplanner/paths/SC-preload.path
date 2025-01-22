@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.340448717948719,
-        "y": 3.818589743589744
+        "x": 7.3490625,
+        "y": 3.1624573863636356
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.3761223435866805,
-        "y": 3.7871884342534465
+        "x": 6.65705002961014,
+        "y": 2.895736561221072
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "SC"
     },
     {
       "anchor": {
-        "x": 5.771730769230769,
-        "y": 3.818589743589744
+        "x": 5.296987179487179,
+        "y": 2.9826282051282056
       },
       "prevControl": {
-        "x": 6.637021525149863,
-        "y": 3.8369738997860185
+        "x": 5.958079289724918,
+        "y": 3.239651160677427
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "G"
+      "linkedName": "F"
     }
   ],
   "rotationTargets": [],
@@ -41,21 +41,21 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 4.5,
+    "maxAcceleration": 7.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
-    "nominalVoltage": 7.5,
+    "nominalVoltage": 7.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 119.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auton-C5 (F-E)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 119.99999999999999
   },
   "useDefaultConstraints": true
 }

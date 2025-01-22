@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.4025980622024474,
-        "y": 2.344586753491925
+        "x": 2.715422202612846,
+        "y": 1.9151118311605506
       },
       "isLocked": false,
       "linkedName": "D"
@@ -20,8 +20,8 @@
         "y": 0.8566025641025646
       },
       "prevControl": {
-        "x": 2.2012863853902855,
-        "y": 1.480105291104913
+        "x": 2.4155251338581074,
+        "y": 1.644909058431817
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,13 +31,20 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "atCSP_D",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 4.5,
+    "maxAcceleration": 7.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
-    "nominalVoltage": 7.5,
+    "nominalVoltage": 7.0,
     "unlimited": false
   },
   "goalEndState": {
@@ -45,10 +52,10 @@
     "rotation": 54.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auton-C5 (F-E)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 61.78264414527075
+    "rotation": 59.99999999999999
   },
   "useDefaultConstraints": true
 }

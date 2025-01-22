@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.61219262295082,
-        "y": 0.5365778688524597
+        "x": 1.174795081967213,
+        "y": 7.123821721311475
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.521311475409836,
-        "y": 0.5126024590163936
+        "x": 3.03704508197133,
+        "y": 6.4705717213139256
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Coral Station"
     },
     {
       "anchor": {
-        "x": 5.502356557377048,
-        "y": 0.5365778688524597
+        "x": 4.9868852459016395,
+        "y": 5.157838114754097
       },
       "prevControl": {
-        "x": 6.545286885245901,
-        "y": 0.5006147540983602
+        "x": 3.309885245901639,
+        "y": 6.630088114754097
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "J"
     }
   ],
   "rotationTargets": [],
@@ -34,21 +34,21 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 7.0,
+    "maxAcceleration": 4.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
-    "nominalVoltage": 7.0,
+    "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "Leave",
+  "folder": "5 Cycle Non Processor",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.34893961977045
+    "rotation": -54.0
   },
   "useDefaultConstraints": true
 }
