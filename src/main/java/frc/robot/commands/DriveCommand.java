@@ -90,7 +90,6 @@ public class DriveCommand extends Command {
     double slowEleYVelocity = yVelocityLimiter.calculate(yVelocity);
     double slowEleAngularVelocity = angularVelocityLimiter.calculate(angularVelocity);
 
-    // Multiply by max speed/velocity to apply scaling factors
     slowEleXVelocity *= maxSpeed;
     slowEleYVelocity *= maxSpeed;
     slowEleAngularVelocity *= maxAngularRate;
@@ -145,7 +144,6 @@ public class DriveCommand extends Command {
       DogLog.log("Drive Command/ReefTrackingPIDOutput", pidOutput);
     }
 
-    // Multiply by our maximum speeds/rates
     xVelocity *= maxSpeed;
     yVelocity *= maxSpeed;
     angularVelocity *= maxAngularRate;
@@ -168,19 +166,6 @@ public class DriveCommand extends Command {
               .withVelocityY(yVelocity)
               .withRotationalRate(angularVelocity));
     }
-    if (robotCentric) {
-      drivetrain.setControl(
-          robotCentricDrive
-              .withVelocityX(slowEleXVelocity)
-              .withVelocityY(slowEleYVelocity)
-              .withRotationalRate(slowEleAngularVelocity));
-  } else {
-      drivetrain.setControl(
-          fieldCentricDrive
-              .withVelocityX(slowEleXVelocity)
-              .withVelocityY(slowEleYVelocity)
-              .withRotationalRate(slowEleAngularVelocity));
-  }
   }
 
   @Override
