@@ -3,35 +3,42 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.61219262295082,
-        "y": 0.5365778688524597
+        "x": 1.2823076923076917,
+        "y": 0.8566025641025646
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.521311475409836,
-        "y": 0.5126024590163936
+        "x": 2.531280677661697,
+        "y": 1.7514506601751245
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CSP"
     },
     {
       "anchor": {
-        "x": 5.502356557377048,
-        "y": 0.5365778688524597
+        "x": 3.7489102564102557,
+        "y": 2.9826282051282056
       },
       "prevControl": {
-        "x": 6.545286885245901,
-        "y": 0.5006147540983602
+        "x": 3.1061931920190484,
+        "y": 2.556261185304049
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "C"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "atC",
+      "waypointRelativePos": 1,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 7.0,
@@ -42,13 +49,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 59.99999999999999
   },
   "reversed": false,
-  "folder": "Leave",
+  "folder": "Auton-C5 (F-E)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.34893961977045
+    "rotation": 54.0
   },
   "useDefaultConstraints": true
 }

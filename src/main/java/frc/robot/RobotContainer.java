@@ -19,13 +19,24 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.autonomous.*;
+import frc.robot.commands.autonomous.Drivetrainpractice;
+import frc.robot.commands.autonomous.SC_preloadScore;
+import frc.robot.commands.autonomous.Template;
+import frc.robot.commands.autonomous.autonC5_1;
+import frc.robot.commands.autonomous.autonC5_2;
+import frc.robot.commands.autonomous.auton_2_cycle;
+import frc.robot.commands.autonomous.auton_2_cycle2;
+import frc.robot.commands.autonomous.auton_5CC1;
+import frc.robot.commands.autonomous.auton_5CC1_2;
+import frc.robot.commands.autonomous.startLnLeave;
+import frc.robot.commands.autonomous.startLnLeave2;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Elevator.ElevatorSubsystem;
 import java.util.function.Supplier;
 
 /**
@@ -44,6 +55,7 @@ public class RobotContainer {
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+  private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -64,6 +76,12 @@ public class RobotContainer {
     PathfindingCommand.warmupCommand().schedule();
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
+
+    // EagleUtil.calculateRedReefSetPoints();
+    // EagleUtil.calculateBlueReefSetPoints();
+
+    DogLog.log("Field Constants/Blue Reef", FieldConstants.blueReefSetpoints);
+    DogLog.log("Field Constants/Red Reef", FieldConstants.redReefSetpoints);
   }
 
   /**
@@ -79,22 +97,11 @@ public class RobotContainer {
     SmartDashboard.putData(
         "LockIn", alignToPose(() -> new Pose2d(2.00, 4.00, Rotation2d.fromDegrees(0))));
     SmartDashboard.putData(
-        "LockOut", alignToPose(() -> new Pose2d(2.00, 4.00, Rotation2d.fromDegrees(180))));
+        "LockOut", alignToPose(() -> new Pose2d(0.00, 0.00, Rotation2d.fromDegrees(180))));
 
     m_driverController
         .rightTrigger()
-        .onTrue(
-            alignToPose(
-                    () -> {
-                      Pose2d curPose = drivetrain.getState().Pose;
-                      return new Pose2d(
-                          curPose.getX() + 0.2, curPose.getY(), curPose.getRotation());
-                    })
-                .andThen(Commands.print("YAY")));
-    m_driverController.a().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    m_driverController.b().whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    m_driverController.x().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    m_driverController.y().whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        .onTrue(alignToPose(() -> new Pose2d(1.00, 1.00, new Rotation2d(1.00))));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
   }
@@ -111,14 +118,18 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("auton_2_cycle", new auton_2_cycle(this));
+    autoChooser.setDefaultOption("autonC5_1", new autonC5_1(this));
+    autoChooser.addOption("autonC5_2", new autonC5_2(this));
+    autoChooser.addOption("auton_2_cycle", new auton_2_cycle(this));
     autoChooser.addOption("auton_2_cycle2", new auton_2_cycle2(this));
     autoChooser.addOption("SC_preloadScore", new SC_preloadScore(this));
+
     autoChooser.addOption("startLnLeave", new startLnLeave(this));
     autoChooser.addOption("TestPath", new Drivetrainpractice(this));
     autoChooser.addOption("startLnLeave2", new startLnLeave2(this));
     autoChooser.addOption("S1-Leave", new Template(this));
-
+    autoChooser.addOption("5CC1_1", new auton_5CC1(this));
+    autoChooser.addOption("5CC1_2", new auton_5CC1_2(this));
     // TODO: add more autonomous routines
 
     SmartDashboard.putData("autonomous", autoChooser);
