@@ -75,7 +75,7 @@ public class DriveCommand extends Command {
 
     double angularVelocity = -driverController.getRightX();
 
-    SlewRateLimiter xVelocityLimiter = new SlewRateLimiter(0.5);  // Adjust ramp rate as needed
+    SlewRateLimiter xVelocityLimiter = new SlewRateLimiter(0.5); // Adjust ramp rate as needed
     SlewRateLimiter yVelocityLimiter = new SlewRateLimiter(0.5);
     SlewRateLimiter angularVelocityLimiter = new SlewRateLimiter(0.5);
 
