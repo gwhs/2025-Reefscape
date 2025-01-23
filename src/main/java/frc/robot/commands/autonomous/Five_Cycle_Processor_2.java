@@ -12,17 +12,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-<<<<<<<< HEAD:src/main/java/frc/robot/commands/autonomous/Five_Cycle_Processor_2.java
 public class Five_Cycle_Processor_2 extends PathPlannerAuto {
   public Five_Cycle_Processor_2(RobotContainer robotContainer) {
-========
-public class AutonC5_2 extends PathPlannerAuto {
-  public AutonC5_2(RobotContainer robotContainer) {
->>>>>>>> dev:src/main/java/frc/robot/commands/autonomous/AutonC5_2.java
     super(Commands.run(() -> {}));
 
     try {
-
       PathPlannerPath F_CSP = PathPlannerPath.fromPathFile("F-CSP");
       PathPlannerPath CSP_E = PathPlannerPath.fromPathFile("CSP-E");
       PathPlannerPath E_CSP = PathPlannerPath.fromPathFile("E-CSP");
@@ -32,6 +26,7 @@ public class AutonC5_2 extends PathPlannerAuto {
       PathPlannerPath C_CSP = PathPlannerPath.fromPathFile("C-CSP");
       PathPlannerPath CSP_B = PathPlannerPath.fromPathFile("CSP-B");
       PathPlannerPath B_CSP = PathPlannerPath.fromPathFile("B-CSP");
+
       double waitTime = 0.05;
       double scoringTime = 0.2;
 
@@ -78,11 +73,6 @@ public class AutonC5_2 extends PathPlannerAuto {
                       Commands.waitSeconds(scoringTime),
                       AutoBuilder.followPath(B_CSP))
                   .withName("CSP to B"));
-<<<<<<<< HEAD:src/main/java/frc/robot/commands/autonomous/Five_Cycle_Processor_2.java
-========
-
-      /* TODO: Other triggers */
->>>>>>>> dev:src/main/java/frc/robot/commands/autonomous/AutonC5_2.java
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());

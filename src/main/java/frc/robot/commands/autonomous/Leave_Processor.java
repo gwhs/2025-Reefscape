@@ -12,18 +12,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-<<<<<<<< HEAD:src/main/java/frc/robot/commands/autonomous/Leave_Processor.java
 public class Leave_Processor extends PathPlannerAuto {
   public Leave_Processor(RobotContainer robotContainer) {
-========
-public class Start_Ln_Leave_2 extends PathPlannerAuto {
-  public Start_Ln_Leave_2(RobotContainer robotContainer) {
->>>>>>>> dev:src/main/java/frc/robot/commands/autonomous/Start_Ln_Leave_2.java
     super(Commands.run(() -> {}));
 
-    /* All your code should go inside this try-catch block */
     try {
-
       PathPlannerPath startLnLeave2 = PathPlannerPath.fromPathFile("Startline-Leave2");
 
       Pose2d startingPose =

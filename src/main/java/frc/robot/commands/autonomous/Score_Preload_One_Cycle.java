@@ -12,17 +12,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-<<<<<<<< HEAD:src/main/java/frc/robot/commands/autonomous/Score_Preload_One_Cycle.java
 public class Score_Preload_One_Cycle extends PathPlannerAuto {
   public Score_Preload_One_Cycle(RobotContainer robotContainer) {
-========
-public class SC_Preload_Score extends PathPlannerAuto {
-  public SC_Preload_Score(RobotContainer robotContainer) {
->>>>>>>> dev:src/main/java/frc/robot/commands/autonomous/SC_Preload_Score.java
     super(Commands.run(() -> {}));
 
     try {
-
       PathPlannerPath SCpreloadScore = PathPlannerPath.fromPathFile("SC-preload");
       Pose2d startingPose =
           new Pose2d(

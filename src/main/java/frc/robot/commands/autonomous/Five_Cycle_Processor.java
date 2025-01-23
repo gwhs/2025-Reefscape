@@ -12,19 +12,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-<<<<<<<< HEAD:src/main/java/frc/robot/commands/autonomous/Five_Cycle_Processor.java
 public class Five_Cycle_Processor extends PathPlannerAuto {
   public Five_Cycle_Processor(RobotContainer robotContainer) {
-========
-public class AutonC5_1 extends PathPlannerAuto {
-  public AutonC5_1(RobotContainer robotContainer) {
->>>>>>>> dev:src/main/java/frc/robot/commands/autonomous/AutonC5_1.java
     super(Commands.run(() -> {}));
 
     try {
-
       PathPlannerPath SC_F = PathPlannerPath.fromPathFile("SC-F");
-      // double waitTime = 0.1; never used?
+
+      double waitTime = 0.1;
       double scoringTime = 0.3;
 
       Pose2d startingPose =
@@ -36,11 +31,7 @@ public class AutonC5_1 extends PathPlannerAuto {
                       AutoBuilder.resetOdom(startingPose),
                       AutoBuilder.followPath(SC_F),
                       Commands.waitSeconds(scoringTime),
-<<<<<<<< HEAD:src/main/java/frc/robot/commands/autonomous/Five_Cycle_Processor.java
                       Commands.runOnce(() -> new Five_Cycle_Processor(robotContainer).schedule()))
-========
-                      Commands.runOnce(() -> new AutonC5_2(robotContainer).schedule()))
->>>>>>>> dev:src/main/java/frc/robot/commands/autonomous/AutonC5_1.java
                   .withName("Leave SC to score preload at F"));
 
     } catch (Exception e) {

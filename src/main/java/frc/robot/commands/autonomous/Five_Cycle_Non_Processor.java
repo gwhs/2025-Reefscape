@@ -14,10 +14,9 @@ import frc.robot.RobotContainer;
 
 public class Five_Cycle_Non_Processor extends PathPlannerAuto {
   public Five_Cycle_Non_Processor(RobotContainer robotContainer) {
-    super(Commands.run(() -> {}));}
+    super(Commands.run(() -> {}));
 
     try {
-
       PathPlannerPath SL_I = PathPlannerPath.fromPathFile("(5CC1) SL-I");
 
       Pose2d startingPose =
@@ -32,4 +31,4 @@ public class Five_Cycle_Non_Processor extends PathPlannerAuto {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
     }
   }
-
+}

@@ -12,14 +12,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-
 public class Five_Cycle_Non_Processor_2 extends PathPlannerAuto {
 
-
-  public Five_Cycle_Non_Processor_2(RobotContainer robotContainer) super(Commands.run(() -> {}));}
+  public Five_Cycle_Non_Processor_2(RobotContainer robotContainer) {
+    super(Commands.run(() -> {}));
 
     try {
-
       PathPlannerPath I_CS = PathPlannerPath.fromPathFile("(5CC1) I-CoralStation");
       PathPlannerPath CS_J = PathPlannerPath.fromPathFile("(5CC1) CoralStation-J");
       PathPlannerPath J_CS = PathPlannerPath.fromPathFile("(5CC1) J-CoralStation");
@@ -28,6 +26,7 @@ public class Five_Cycle_Non_Processor_2 extends PathPlannerAuto {
       PathPlannerPath CS_L = PathPlannerPath.fromPathFile("(5CC1) CoralStation-L");
       PathPlannerPath L_CS = PathPlannerPath.fromPathFile("(5CC1) L-CoralStation");
       PathPlannerPath CS_A = PathPlannerPath.fromPathFile("(5CC1) CoralStation-A");
+
       double waitTime = 0.5;
 
       Pose2d startingPose =
@@ -58,4 +57,5 @@ public class Five_Cycle_Non_Processor_2 extends PathPlannerAuto {
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
     }
-
+  }
+}

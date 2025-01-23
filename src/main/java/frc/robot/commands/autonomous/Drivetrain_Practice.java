@@ -16,7 +16,6 @@ public class Drivetrain_Practice extends PathPlannerAuto {
   public Drivetrain_Practice(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
-    /* All your code should go inside this try-catch block */
     try {
 
       PathPlannerPath TestPath = PathPlannerPath.fromPathFile("TestPath");

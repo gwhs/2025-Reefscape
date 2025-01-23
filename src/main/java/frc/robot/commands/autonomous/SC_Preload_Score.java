@@ -16,7 +16,6 @@ public class SC_Preload_Score extends PathPlannerAuto {
   public SC_Preload_Score(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
-    /* All your code should go inside this try-catch block */
     try {
 
       PathPlannerPath SCpreloadScore = PathPlannerPath.fromPathFile("SC-preload");
@@ -30,8 +29,6 @@ public class SC_Preload_Score extends PathPlannerAuto {
               Commands.sequence(
                       AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SCpreloadScore))
                   .withName("Leave and score preload coral"));
-
-      /* TODO: Other triggers */
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
