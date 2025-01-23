@@ -19,19 +19,19 @@ public class Mechanism2D {
   //private final ArmSubsystem armSubsystem;
   //private final IntakeSubsystem intakeSubsystem;
   private final Mechanism2d panel = new Mechanism2d(ROBOT_LENGTH, ROBOT_LENGTH*3);
-  private final MechanismLigament2d elevator; 
+ // private final MechanismLigament2d elevator;
 
   // Robot Constants
   public static final double ROBOT_LENGTH = Units.inchesToMeters(28);
 
   // Code for the stick figure of each subsystems
   // Code for elevator 
-  MechanismRoot2d root = panel.getRoot("elevatorRoot", 0.44, 0); 
-  MechanismLigament2d m_elevator = root.append(new MechanismLigament2d("elevatorL", 1.03, 90));
+  Mechanism2d mech = new Mechanism2d( 0.44, 0); 
+  MechanismRoot2d root = mech.getRoot("elevator", ROBOT_LENGTH, ROBOT_LENGTH);
+
+  elevator = root.append(new MechanismLigament2d("elevator", kElevatorMinimumLength, 90));
  // Overlapping arm height with superstructure to illustrate both superstructure and arm height
   //MechanismLigament2d m_armJoint = root.append(new MechanismLigament2d("armL", 0.78, 90));
-
-
 
   // Code for arm
   //MechanismLigament2d m_arm = m_armJoint.append(new MechanismLigament2d("arm", 0.38, 270));
@@ -51,20 +51,14 @@ public class Mechanism2D {
   MechanismLigament2d m_intakeArm2 = m_intakeArm1.append(new MechanismLigament2d("intake arm 2", 0.23, -135));
   */
 
-  //code for climber
-  
-  
-  // code for reaction bar
-  // MechanismRoot2d root3 = panel.getRoot("reactionBar", 0, 0);
-  // MechanismLigament2d m_reactionBar = root3.append(new MechanismLigament2d("reactionBar", 0.47, 135));
-
  /* public Mechanism2D(ArmSubsystem armSubsystem, IntakeSubsystem intakeSubsystem) {
     this.armSubsystem = armSubsystem;
     this.intakeSubsystem = intakeSubsystem; 
   }
 */
 
-  /*public void update() {
+  public void update() {
+    /* 
     double intakeArmAngle = intakeSubsystem.getArmAngle();
     double armAngle = armSubsystem.getArmAngle();
   
@@ -74,8 +68,8 @@ public class Mechanism2D {
     //TO DO: Update intake arm angles in stick figures; 0 degree is deployed n, 92 degrees is retracted position
     m_intakeArm1.setAngle(intakeArmAngle+8);
     m_intakeArm2.setAngle(-intakeArmAngle-50); 
-
-    SmartDashboard.putData("Robot Visualizer/panel", panel);
+    */
+    SmartDashboard.putData("Mech2d", mech);
   }
-  */
 }
+  
