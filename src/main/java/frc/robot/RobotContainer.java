@@ -24,6 +24,7 @@ import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.autonomous.*;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.AprilTagCam.AprilTagCam;
 import frc.robot.subsystems.AprilTagCam.AprilTagCamConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -41,6 +42,7 @@ public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
   private final DriveCommand driveCommand = new DriveCommand(m_driverController, drivetrain);
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
