@@ -35,7 +35,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     DogLog.log("Elevator/meters", rotationsToMeters(elevatorIO.getPosition()));
     DogLog.log("Elevator/Limit Switch Value (Reverse)", elevatorIO.getReverseLimit());
     DogLog.log("Elevator/Limit Switch Value (Forward)", elevatorIO.getForwardLimit());
-
   }
 
   public Command goTo(double meters) {

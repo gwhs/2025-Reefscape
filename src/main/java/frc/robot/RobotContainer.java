@@ -84,9 +84,13 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    IS_DISABLED.onTrue(Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Coast)).ignoringDisable(true));
-    IS_DISABLED.onFalse(Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Brake)).ignoringDisable(false));
-    
+    IS_DISABLED.onTrue(
+        Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Coast))
+            .ignoringDisable(true));
+    IS_DISABLED.onFalse(
+        Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Brake))
+            .ignoringDisable(false));
+
     SmartDashboard.putData(
         "LockIn", alignToPose(() -> new Pose2d(2.00, 4.00, Rotation2d.fromDegrees(0))));
     SmartDashboard.putData(
