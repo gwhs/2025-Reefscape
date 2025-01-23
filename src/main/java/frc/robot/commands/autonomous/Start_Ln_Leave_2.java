@@ -12,32 +12,24 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class autonC5_1 extends PathPlannerAuto {
-  public autonC5_1(RobotContainer robotContainer) {
+public class Start_Ln_Leave_2 extends PathPlannerAuto {
+  public Start_Ln_Leave_2(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     /* All your code should go inside this try-catch block */
     try {
-      /* TODO: Load all paths needed */
-      PathPlannerPath SC_F = PathPlannerPath.fromPathFile("SC-F");
-      double waitTime = 0.1;
-      double scoringTime = 0.3;
 
-      /* TODO: Get starting position of starting path */
+      PathPlannerPath startLnLeave2 = PathPlannerPath.fromPathFile("Startline-Leave2");
+
       Pose2d startingPose =
-          new Pose2d(SC_F.getPoint(0).position, SC_F.getIdealStartingState().rotation());
+          new Pose2d(
+              startLnLeave2.getPoint(0).position, startLnLeave2.getIdealStartingState().rotation());
 
-      /* TODO: When autonomous begins */
       isRunning()
           .onTrue(
               Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose),
-                      AutoBuilder.followPath(SC_F),
-                      Commands.waitSeconds(scoringTime),
-                      Commands.runOnce(() -> new autonC5_2(robotContainer).schedule()))
-                  // waiting for preload for scoring
-                  // TODO: Name of command
-                  .withName("Leave SC to score preload at F"));
+                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(startLnLeave2))
+                  .withName("Leave Starting Line"));
 
       /* TODO: Other triggers */
 
