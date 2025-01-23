@@ -24,9 +24,10 @@ public class FiveCycleNonProcessor extends PathPlannerAuto {
 
       isRunning()
           .onTrue(
-              Commands.sequence(AutoBuilder.resetOdom(startingPose), 
-              AutoBuilder.followPath(SL_I),
-              Commands.runOnce(() -> new FiveCycleNonProcessor2(robotContainer).schedule()))
+              Commands.sequence(
+                      AutoBuilder.resetOdom(startingPose),
+                      AutoBuilder.followPath(SL_I),
+                      Commands.runOnce(() -> new FiveCycleNonProcessor2(robotContainer).schedule()))
                   .withName("Leave SL, score preload at I"));
 
     } catch (Exception e) {
