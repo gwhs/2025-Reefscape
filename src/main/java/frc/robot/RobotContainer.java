@@ -105,16 +105,16 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("Five_Cycle_Processor", new Five_Cycle_Processor(this));
-    autoChooser.addOption("Five_Cycle_Processor_2", new Five_Cycle_Processor_2(this));
-    autoChooser.addOption("Two_Cycle_Processor", new Two_Cycle_Processor(this));
-    autoChooser.addOption("Two_Cycle_Processor_2", new Two_Cycle_Processor_2(this));
-    autoChooser.addOption("Score_Preload_One_Cycle", new Score_Preload_One_Cycle(this));
-    autoChooser.addOption("Leave_Non_Processor", new Leave_Non_Processor(this));
-    autoChooser.addOption("Drivetrain_Practice", new Drivetrain_Practice(this));
-    autoChooser.addOption("Leave_Processor", new Leave_Processor(this));
-    autoChooser.addOption("Five_Cycle_Non_Processor", new Five_Cycle_Non_Processor(this));
-    autoChooser.addOption("Five_Cycle_Non_Processor_2", new Five_Cycle_Non_Processor_2(this));
+    autoChooser.setDefaultOption("Five_Cycle_Processor", new FiveCycleProcessor(this));
+    autoChooser.addOption("Five_Cycle_Processor_2", new FiveCycleProcessor2(this));
+    autoChooser.addOption("Two_Cycle_Processor", new TwoCycleProcessor(this));
+    autoChooser.addOption("Two_Cycle_Processor_2", new TwoCycleProcessor2(this));
+    autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
+    autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
+    autoChooser.addOption("Drivetrain_Practice", new DrivetrainPractice(this));
+    autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
+    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycleNonProcessor(this));
+    autoChooser.addOption("Five_Cycle_Non_Processor_2", new FiveCycleNonProcessor2(this));
 
     SmartDashboard.putData("autonomous", autoChooser);
   }

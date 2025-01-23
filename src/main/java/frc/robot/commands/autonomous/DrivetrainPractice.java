@@ -12,22 +12,21 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class Score_Preload_One_Cycle extends PathPlannerAuto {
-  public Score_Preload_One_Cycle(RobotContainer robotContainer) {
+public class DrivetrainPractice extends PathPlannerAuto {
+  public DrivetrainPractice(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     try {
-      PathPlannerPath SCpreloadScore = PathPlannerPath.fromPathFile("SC-preload");
+
+      PathPlannerPath TestPath = PathPlannerPath.fromPathFile("TestPath");
+
       Pose2d startingPose =
-          new Pose2d(
-              SCpreloadScore.getPoint(0).position,
-              SCpreloadScore.getIdealStartingState().rotation());
+          new Pose2d(TestPath.getPoint(0).position, TestPath.getIdealStartingState().rotation());
 
       isRunning()
           .onTrue(
               Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SCpreloadScore))
-                  .withName("Leave and score preload coral"));
+                  AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(TestPath)));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());

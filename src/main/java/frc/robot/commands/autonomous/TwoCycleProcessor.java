@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class Two_Cycle_Processor extends PathPlannerAuto {
-  public Two_Cycle_Processor(RobotContainer robotContainer) {
+public class TwoCycleProcessor extends PathPlannerAuto {
+  public TwoCycleProcessor(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     try {
