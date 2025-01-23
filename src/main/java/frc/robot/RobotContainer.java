@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.autonomous.*;
-import frc.robot.commands.autonomous.Drivetrain_Practice;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator.ElevatorSubsystem;
