@@ -12,8 +12,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
+<<<<<<<< HEAD:src/main/java/frc/robot/commands/autonomous/Leave_Non_Processor.java
 public class Leave_Non_Processor extends PathPlannerAuto {
   public Leave_Non_Processor(RobotContainer robotContainer) {
+========
+public class Start_Ln_Leave_1 extends PathPlannerAuto {
+  public Start_Ln_Leave_1(RobotContainer robotContainer) {
+>>>>>>>> dev:src/main/java/frc/robot/commands/autonomous/Start_Ln_Leave_1.java
     super(Commands.run(() -> {}));
 
     try {

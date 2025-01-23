@@ -12,29 +12,34 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-<<<<<<<< HEAD:src/main/java/frc/robot/commands/autonomous/Leave_Processor.java
-public class Leave_Processor extends PathPlannerAuto {
-  public Leave_Processor(RobotContainer robotContainer) {
-========
-public class Start_Ln_Leave_2 extends PathPlannerAuto {
-  public Start_Ln_Leave_2(RobotContainer robotContainer) {
->>>>>>>> dev:src/main/java/frc/robot/commands/autonomous/Start_Ln_Leave_2.java
+public class Auton_2_Cycle_2 extends PathPlannerAuto {
+  public Auton_2_Cycle_2(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     /* All your code should go inside this try-catch block */
     try {
 
-      PathPlannerPath startLnLeave2 = PathPlannerPath.fromPathFile("Startline-Leave2");
+      PathPlannerPath E_CSP = PathPlannerPath.fromPathFile("E-CSP");
+      PathPlannerPath CSP_D = PathPlannerPath.fromPathFile("CSP-D");
+      PathPlannerPath D_CSP = PathPlannerPath.fromPathFile("D-CSP");
+      double waitTime = 0.5;
 
       Pose2d startingPose =
-          new Pose2d(
-              startLnLeave2.getPoint(0).position, startLnLeave2.getIdealStartingState().rotation());
+          new Pose2d(E_CSP.getPoint(0).position, E_CSP.getIdealStartingState().rotation());
 
       isRunning()
           .onTrue(
+              Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(E_CSP))
+                  .withName("E to CSP"));
+
+      /* TODO: Other triggers */
+      event("atCSP")
+          .onTrue(
               Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(startLnLeave2))
-                  .withName("Leave Starting Line"));
+                  Commands.waitSeconds(waitTime),
+                  AutoBuilder.followPath(CSP_D),
+                  AutoBuilder.followPath(D_CSP),
+                  Commands.waitSeconds(waitTime).withName("CSP to D")));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());

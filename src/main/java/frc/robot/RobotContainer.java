@@ -22,6 +22,16 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.autonomous.*;
+import frc.robot.commands.autonomous.AutonC5_1;
+import frc.robot.commands.autonomous.AutonC5_2;
+import frc.robot.commands.autonomous.Auton_2_Cycle_1;
+import frc.robot.commands.autonomous.Auton_2_Cycle_2;
+import frc.robot.commands.autonomous.Auton_5CC1_1;
+import frc.robot.commands.autonomous.Auton_5CC1_2;
+import frc.robot.commands.autonomous.Drivetrain_Practice;
+import frc.robot.commands.autonomous.SC_Preload_Score;
+import frc.robot.commands.autonomous.Start_Ln_Leave_1;
+import frc.robot.commands.autonomous.Start_Ln_Leave_2;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator.ElevatorSubsystem;
@@ -105,6 +115,18 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
+    autoChooser.setDefaultOption("autonC5_1", new AutonC5_1(this));
+    autoChooser.addOption("autonC5_2", new AutonC5_2(this));
+    autoChooser.addOption("auton_2_cycle", new Auton_2_Cycle_1(this));
+    autoChooser.addOption("auton_2_cycle2", new Auton_2_Cycle_2(this));
+    autoChooser.addOption("SC_preloadScore", new SC_Preload_Score(this));
+
+    autoChooser.addOption("startLnLeave", new Start_Ln_Leave_1(this));
+    autoChooser.addOption("TestPath", new Drivetrain_Practice(this));
+    autoChooser.addOption("startLnLeave2", new Start_Ln_Leave_2(this));
+    autoChooser.addOption("S1-Leave", new S1_Leave(this));
+    autoChooser.addOption("5CC1_1", new Auton_5CC1_1(this));
+    autoChooser.addOption("5CC1_2", new Auton_5CC1_2(this));
     autoChooser.setDefaultOption("Five_Cycle_Processor", new Five_Cycle_Processor(this));
     autoChooser.addOption("Five_Cycle_Processor_2", new Five_Cycle_Processor_2(this));
     autoChooser.addOption("Two_Cycle_Processor", new Two_Cycle_Processor(this));

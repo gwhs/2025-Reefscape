@@ -12,8 +12,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
+<<<<<<<< HEAD:src/main/java/frc/robot/commands/autonomous/Two_Cycle_Processor_2.java
 public class Two_Cycle_Processor_2 extends PathPlannerAuto {
   public Two_Cycle_Processor_2(RobotContainer robotContainer) {
+========
+public class Auton_2_Cycle_2 extends PathPlannerAuto {
+  public Auton_2_Cycle_2(RobotContainer robotContainer) {
+>>>>>>>> dev:src/main/java/frc/robot/commands/autonomous/Auton_2_Cycle_2.java
     super(Commands.run(() -> {}));
 
     /* All your code should go inside this try-catch block */
