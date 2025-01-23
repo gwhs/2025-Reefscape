@@ -12,24 +12,22 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class Drivetrainpractice extends PathPlannerAuto {
-  public Drivetrainpractice(RobotContainer robotContainer) {
+public class Auton_5CC1_1 extends PathPlannerAuto {
+  public Auton_5CC1_1(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     /* All your code should go inside this try-catch block */
     try {
-      /* TODO: Load all paths needed */
-      PathPlannerPath TestPath = PathPlannerPath.fromPathFile("TestPath");
 
-      /* TODO: Get starting position of starting path */
+      PathPlannerPath SL_I = PathPlannerPath.fromPathFile("(5CC1) SL-I");
+
       Pose2d startingPose =
-          new Pose2d(TestPath.getPoint(0).position, TestPath.getIdealStartingState().rotation());
+          new Pose2d(SL_I.getPoint(0).position, SL_I.getIdealStartingState().rotation());
 
-      /* TODO: When autonomous begins */
       isRunning()
           .onTrue(
-              Commands.sequence(
-                  AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(TestPath)));
+              Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SL_I))
+                  .withName("Leave SL, score preload at I"));
 
       /* TODO: Other triggers */
 

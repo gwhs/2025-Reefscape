@@ -12,28 +12,24 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class auton_2_cycle2 extends PathPlannerAuto {
-  public auton_2_cycle2(RobotContainer robotContainer) {
+public class Auton_2_Cycle_2 extends PathPlannerAuto {
+  public Auton_2_Cycle_2(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     /* All your code should go inside this try-catch block */
     try {
-      /* TODO: Load all paths needed */
+
       PathPlannerPath E_CSP = PathPlannerPath.fromPathFile("E-CSP");
       PathPlannerPath CSP_D = PathPlannerPath.fromPathFile("CSP-D");
       PathPlannerPath D_CSP = PathPlannerPath.fromPathFile("D-CSP");
       double waitTime = 0.5;
 
-      /* TODO: Get starting position of starting path */
       Pose2d startingPose =
           new Pose2d(E_CSP.getPoint(0).position, E_CSP.getIdealStartingState().rotation());
 
-      /* TODO: When autonomous begins */
       isRunning()
           .onTrue(
               Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(E_CSP))
-
-                  // TODO: Name of command
                   .withName("E to CSP"));
 
       /* TODO: Other triggers */
