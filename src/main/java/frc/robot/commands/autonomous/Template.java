@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class S1_Leave extends PathPlannerAuto {
-  public S1_Leave(RobotContainer robotContainer) {
+public class Template extends PathPlannerAuto {
+  public Template(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     /* All your code should go inside this try-catch block */

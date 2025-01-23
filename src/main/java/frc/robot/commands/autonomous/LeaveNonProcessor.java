@@ -12,13 +12,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class Start_Ln_Leave_1 extends PathPlannerAuto {
-  public Start_Ln_Leave_1(RobotContainer robotContainer) {
+public class LeaveNonProcessor extends PathPlannerAuto {
+  public LeaveNonProcessor(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
-    /* All your code should go inside this try-catch block */
     try {
-
       PathPlannerPath startLnLeave = PathPlannerPath.fromPathFile("Startline-Leave");
 
       Pose2d startingPose =
@@ -30,8 +28,6 @@ public class Start_Ln_Leave_1 extends PathPlannerAuto {
               Commands.sequence(
                       AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(startLnLeave))
                   .withName("Leave Starting Line"));
-
-      /* TODO: Other triggers */
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());

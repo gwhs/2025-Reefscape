@@ -12,24 +12,27 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class Auton_5CC1_1 extends PathPlannerAuto {
-  public Auton_5CC1_1(RobotContainer robotContainer) {
+public class FiveCycleProcessor extends PathPlannerAuto {
+  public FiveCycleProcessor(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
-    /* All your code should go inside this try-catch block */
     try {
+      PathPlannerPath SC_F = PathPlannerPath.fromPathFile("SC-F");
 
-      PathPlannerPath SL_I = PathPlannerPath.fromPathFile("(5CC1) SL-I");
+      double waitTime = 0.1;
+      double scoringTime = 0.3;
 
       Pose2d startingPose =
-          new Pose2d(SL_I.getPoint(0).position, SL_I.getIdealStartingState().rotation());
+          new Pose2d(SC_F.getPoint(0).position, SC_F.getIdealStartingState().rotation());
 
       isRunning()
           .onTrue(
-              Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SL_I))
-                  .withName("Leave SL, score preload at I"));
-
-      /* TODO: Other triggers */
+              Commands.sequence(
+                      AutoBuilder.resetOdom(startingPose),
+                      AutoBuilder.followPath(SC_F),
+                      Commands.waitSeconds(scoringTime),
+                      Commands.runOnce(() -> new FiveCycleProcessor(robotContainer).schedule()))
+                  .withName("Leave SC to score preload at F"));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());

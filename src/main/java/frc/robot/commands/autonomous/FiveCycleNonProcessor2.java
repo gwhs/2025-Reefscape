@@ -12,12 +12,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class Auton_5CC1_2 extends PathPlannerAuto {
-  public Auton_5CC1_2(RobotContainer robotContainer) {
+public class FiveCycleNonProcessor2 extends PathPlannerAuto {
+
+  public FiveCycleNonProcessor2(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     try {
-
       PathPlannerPath I_CS = PathPlannerPath.fromPathFile("(5CC1) I-CoralStation");
       PathPlannerPath CS_J = PathPlannerPath.fromPathFile("(5CC1) CoralStation-J");
       PathPlannerPath J_CS = PathPlannerPath.fromPathFile("(5CC1) J-CoralStation");
@@ -26,6 +26,7 @@ public class Auton_5CC1_2 extends PathPlannerAuto {
       PathPlannerPath CS_L = PathPlannerPath.fromPathFile("(5CC1) CoralStation-L");
       PathPlannerPath L_CS = PathPlannerPath.fromPathFile("(5CC1) L-CoralStation");
       PathPlannerPath CS_A = PathPlannerPath.fromPathFile("(5CC1) CoralStation-A");
+
       double waitTime = 0.5;
 
       Pose2d startingPose =

@@ -12,24 +12,20 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class Drivetrain_Practice extends PathPlannerAuto {
-  public Drivetrain_Practice(RobotContainer robotContainer) {
+public class TwoCycleProcessor extends PathPlannerAuto {
+  public TwoCycleProcessor(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
-    /* All your code should go inside this try-catch block */
     try {
-
-      PathPlannerPath TestPath = PathPlannerPath.fromPathFile("TestPath");
+      PathPlannerPath SP_E = PathPlannerPath.fromPathFile("SP-E");
 
       Pose2d startingPose =
-          new Pose2d(TestPath.getPoint(0).position, TestPath.getIdealStartingState().rotation());
+          new Pose2d(SP_E.getPoint(0).position, SP_E.getIdealStartingState().rotation());
 
       isRunning()
           .onTrue(
-              Commands.sequence(
-                  AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(TestPath)));
-
-      /* TODO: Other triggers */
+              Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SP_E))
+                  .withName("Leave SP to score preload at E"));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());

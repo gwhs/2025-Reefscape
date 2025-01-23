@@ -12,16 +12,15 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class Auton_2_Cycle_2 extends PathPlannerAuto {
-  public Auton_2_Cycle_2(RobotContainer robotContainer) {
+public class TwoCycleProcessor2 extends PathPlannerAuto {
+  public TwoCycleProcessor2(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
-    /* All your code should go inside this try-catch block */
     try {
-
       PathPlannerPath E_CSP = PathPlannerPath.fromPathFile("E-CSP");
       PathPlannerPath CSP_D = PathPlannerPath.fromPathFile("CSP-D");
       PathPlannerPath D_CSP = PathPlannerPath.fromPathFile("D-CSP");
+
       double waitTime = 0.5;
 
       Pose2d startingPose =
@@ -32,14 +31,14 @@ public class Auton_2_Cycle_2 extends PathPlannerAuto {
               Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(E_CSP))
                   .withName("E to CSP"));
 
-      /* TODO: Other triggers */
       event("atCSP")
           .onTrue(
               Commands.sequence(
-                  Commands.waitSeconds(waitTime),
-                  AutoBuilder.followPath(CSP_D),
-                  AutoBuilder.followPath(D_CSP),
-                  Commands.waitSeconds(waitTime).withName("CSP to D")));
+                      Commands.waitSeconds(waitTime),
+                      AutoBuilder.followPath(CSP_D),
+                      AutoBuilder.followPath(D_CSP),
+                      Commands.waitSeconds(waitTime))
+                  .withName("CSP to D"));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
