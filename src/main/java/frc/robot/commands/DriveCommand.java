@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.FieldConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Elevator.ElevatorConstants;
 import frc.robot.subsystems.Elevator.ElevatorSubsystem;
 
 public class DriveCommand extends Command {
@@ -34,6 +35,8 @@ public class DriveCommand extends Command {
   public boolean isBackCoralStation = false;
   public boolean robotCentric = false;
   public boolean isAlignCoral = false;
+
+  public boolean resetLimiter = true;
 
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 3.5 * Math.PI;
@@ -96,9 +99,18 @@ public class DriveCommand extends Command {
     }
 
     if (elevatorHeight.getAsDouble() > 1) {
+      if (resetLimiter) {
+        resetLimiter = false;
+        xVelocityLimiter.reset(xVelocity);
+        yVelocityLimiter.reset(yVelocity);
+        angularVelocityLimiter.reset(angularVelocity);
+      }
     xVelocity = xVelocityLimiter.calculate(xVelocity);
     yVelocity = yVelocityLimiter.calculate(yVelocity);
     angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
+    }
+    else {
+      resetLimiter = true;
     }
 
     if (isBackCoralStation) {
@@ -174,7 +186,7 @@ public class DriveCommand extends Command {
               .withRotationalRate(angularVelocity));
     }
   }
-
+  
   @Override
   public void end(boolean interrupted) {}
 
