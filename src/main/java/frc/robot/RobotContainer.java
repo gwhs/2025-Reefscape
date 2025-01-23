@@ -113,8 +113,8 @@ public class RobotContainer {
     autoChooser.addOption("Leave_Non_Processor", new Leave_Non_Processor(this));
     autoChooser.addOption("Drivetrain_Practice", new Drivetrain_Practice(this));
     autoChooser.addOption("Leave_Processor", new Leave_Processor(this));
-    autoChooser.addOption("Five_Cycle_Processor", new Five_Cycle_Processor(this));
-    autoChooser.addOption("Five_Cycle_Processor_2", new Five_Cycle_Processor_2(this));
+    autoChooser.addOption("Five_Cycle_Non_Processor", new Five_Cycle_Non_Processor(this));
+    autoChooser.addOption("Five_Cycle_Non_Processor_2", new Five_Cycle_Non_Processor_2(this));
 
     SmartDashboard.putData("autonomous", autoChooser);
   }
