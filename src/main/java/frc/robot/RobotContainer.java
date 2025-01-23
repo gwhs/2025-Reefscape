@@ -30,7 +30,6 @@ import frc.robot.commands.autonomous.Auton_5CC1_1;
 import frc.robot.commands.autonomous.Auton_5CC1_2;
 import frc.robot.commands.autonomous.Drivetrain_Practice;
 import frc.robot.commands.autonomous.SC_Preload_Score;
-// import frc.robot.commands.autonomous.Template;
 import frc.robot.commands.autonomous.Start_Ln_Leave_1;
 import frc.robot.commands.autonomous.Start_Ln_Leave_2;
 import frc.robot.generated.TunerConstants;
