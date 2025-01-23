@@ -12,14 +12,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-<<<<<<<< HEAD:src/main/java/frc/robot/commands/autonomous/Five_Cycle_Non_Processor.java
 public class Five_Cycle_Non_Processor extends PathPlannerAuto {
   public Five_Cycle_Non_Processor(RobotContainer robotContainer) {
-========
-public class Auton_5CC1_1 extends PathPlannerAuto {
-  public Auton_5CC1_1(RobotContainer robotContainer) {
->>>>>>>> dev:src/main/java/frc/robot/commands/autonomous/Auton_5CC1_1.java
-    super(Commands.run(() -> {}));
+    super(Commands.run(() -> {}));}
 
     try {
 
@@ -37,4 +32,4 @@ public class Auton_5CC1_1 extends PathPlannerAuto {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
     }
   }
-}
+
