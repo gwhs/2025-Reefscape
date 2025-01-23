@@ -105,7 +105,7 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("Five_Cycle_Processor", new Five_Cycle_Processor(this));
+    autoChooser.setDefaultOption("FIVE_CYCLE_PROCESSOR", new Five_Cycle_Processor(this));
     autoChooser.addOption("Five_Cycle_Processor_2", new Five_Cycle_Processor_2(this));
     autoChooser.addOption("Two_Cycle_Processor", new Two_Cycle_Processor(this));
     autoChooser.addOption("Two_Cycle_Processor_2", new Two_Cycle_Processor_2(this));
