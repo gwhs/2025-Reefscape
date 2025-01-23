@@ -10,6 +10,7 @@ import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,6 +26,8 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator.ElevatorSubsystem;
 import java.util.function.Supplier;
+
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -42,6 +45,9 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+
+  public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
+  public static final Trigger IS_ENABLED = new Trigger(() -> DriverStation.isEnabled());
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -80,6 +86,12 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    IS_DISABLED.onTrue(
+        Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Coast))
+            .ignoringDisable(true));
+    IS_DISABLED.onFalse(
+        Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Brake))
+            .ignoringDisable(false));
     SmartDashboard.putData(
         "LockIn", alignToPose(() -> new Pose2d(2.00, 4.00, Rotation2d.fromDegrees(0))));
     SmartDashboard.putData(
@@ -104,16 +116,16 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("FIVE_CYCLE_PROCESSOR", new Five_Cycle_Processor(this));
-    autoChooser.addOption("Five_Cycle_Processor_2", new Five_Cycle_Processor_2(this));
-    autoChooser.addOption("Two_Cycle_Processor", new Two_Cycle_Processor(this));
-    autoChooser.addOption("Two_Cycle_Processor_2", new Two_Cycle_Processor_2(this));
-    autoChooser.addOption("Score_Preload_One_Cycle", new Score_Preload_One_Cycle(this));
-    autoChooser.addOption("Leave_Non_Processor", new Leave_Non_Processor(this));
-    autoChooser.addOption("Drivetrain_Practice", new Drivetrain_Practice(this));
-    autoChooser.addOption("Leave_Processor", new Leave_Processor(this));
-    autoChooser.addOption("Five_Cycle_Non_Processor", new Five_Cycle_Non_Processor(this));
-    autoChooser.addOption("Five_Cycle_Non_Processor_2", new Five_Cycle_Non_Processor_2(this));
+    autoChooser.setDefaultOption("FIVE_CYCLE_PROCESSOR", new FiveCycleProcessor(this));
+    autoChooser.addOption("Five_Cycle_Processor_2", new FiveCycleProcessor2(this));
+    autoChooser.addOption("Two_Cycle_Processor", new TwoCycleProcessor(this));
+    autoChooser.addOption("Two_Cycle_Processor_2", new TwoCycleProcessor2(this));
+    autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
+    autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
+    autoChooser.addOption("Drivetrain_Practice", new DrivetrainPractice(this));
+    autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
+    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycleNonProcessor(this));
+    autoChooser.addOption("Five_Cycle_Non_Processor_2", new FiveCycleNonProcessor2(this));
 
     SmartDashboard.putData("autonomous", autoChooser);
   }
