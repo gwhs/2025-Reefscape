@@ -48,12 +48,15 @@ public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-  private final DriveCommand driveCommand = new DriveCommand(m_driverController, drivetrain);
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+
+  private final DriveCommand driveCommand = new DriveCommand(m_driverController, drivetrain, ()->0);
+  //put elevator get height in place of 0
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

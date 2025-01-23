@@ -2,6 +2,9 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.concurrent.atomic.DoubleAccumulator;
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
@@ -15,12 +18,16 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.FieldConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Elevator.ElevatorSubsystem;
 
 public class DriveCommand extends Command {
   private static final double PID_MAX = 0.35;
 
   private final CommandSwerveDrivetrain drivetrain;
   private final CommandXboxController driverController;
+  private final SlewRateLimiter angularVelocityLimiter;
+  private final SlewRateLimiter xVelocityLimiter;
+  private final SlewRateLimiter yVelocityLimiter;
   private final PIDController PID;
 
   public boolean isSlow = true;
@@ -36,12 +43,12 @@ public class DriveCommand extends Command {
   private final double BLUE_LEFT_STATION_ANGLE = 54;
   private final double BLUE_RIGHT_STATION_ANGLE = -54;
 
-  public static final double ELEVATOR_UP_SLEW_RATE = 0.0;
+  public final double ELEVATOR_UP_SLEW_RATE = 0.0;
+
+  public final DoubleSupplier elevatorHeight;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
-
-  SlewRateLimiter limiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
@@ -54,13 +61,19 @@ public class DriveCommand extends Command {
           .withRotationalDeadband(maxAngularRate * 0.1) // Add a 10% deadband
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want robot-centric
 
-  public DriveCommand(CommandXboxController driverController, CommandSwerveDrivetrain drivetrain) {
+  public DriveCommand(CommandXboxController driverController, CommandSwerveDrivetrain drivetrain, DoubleSupplier elevatorHeight) {
     this.driverController = driverController;
     this.drivetrain = drivetrain;
 
     this.PID = new PIDController(0.02, 0, 0);
     this.PID.setTolerance(0.1);
     this.PID.enableContinuousInput(-180, 180);
+
+    angularVelocityLimiter = new SlewRateLimiter(0);
+    xVelocityLimiter = new SlewRateLimiter(0);
+    yVelocityLimiter = new SlewRateLimiter(0);
+
+    this.elevatorHeight = elevatorHeight;
 
     addRequirements(drivetrain);
   }
@@ -74,11 +87,7 @@ public class DriveCommand extends Command {
     double yVelocity = -driverController.getLeftX();
 
     double angularVelocity = -driverController.getRightX();
-
-    SlewRateLimiter xVelocityLimiter = new SlewRateLimiter(0.5); // Adjust ramp rate as needed
-    SlewRateLimiter yVelocityLimiter = new SlewRateLimiter(0.5);
-    SlewRateLimiter angularVelocityLimiter = new SlewRateLimiter(0.5);
-
+    
     if (isSlow) {
       double slowFactor = 0.25;
       xVelocity *= slowFactor;
@@ -86,13 +95,11 @@ public class DriveCommand extends Command {
       angularVelocity *= slowFactor;
     }
 
-    double slowEleXVelocity = xVelocityLimiter.calculate(xVelocity);
-    double slowEleYVelocity = yVelocityLimiter.calculate(yVelocity);
-    double slowEleAngularVelocity = angularVelocityLimiter.calculate(angularVelocity);
-
-    slowEleXVelocity *= maxSpeed;
-    slowEleYVelocity *= maxSpeed;
-    slowEleAngularVelocity *= maxAngularRate;
+    if (elevatorHeight.getAsDouble() > 1) {
+    xVelocity = xVelocityLimiter.calculate(xVelocity);
+    yVelocity = yVelocityLimiter.calculate(yVelocity);
+    angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
+    }
 
     if (isBackCoralStation) {
       if (DriverStation.getAlliance().isPresent()
