@@ -55,6 +55,8 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
 
+  private final RobotVisualizer robotVisualizer = new RobotVisualizer();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Setup DogLog
@@ -104,7 +106,10 @@ public class RobotContainer {
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
   }
 
-  public void periodic() {}
+  public void periodic() {
+    robotVisualizer.update();
+  }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

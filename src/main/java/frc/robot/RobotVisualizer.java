@@ -9,27 +9,24 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
-//import frc.robot.subsystems.Arm.ArmSubsystem;
-//import frc.robot.subsystems.Intake.IntakeSubsystem;
 
 /** Add your docs here. */
-public class Mechanism2D {
+public class RobotVisualizer {
   //private final ArmSubsystem armSubsystem;
   //private final IntakeSubsystem intakeSubsystem;
   private final Mechanism2d panel = new Mechanism2d(ROBOT_LENGTH, ROBOT_LENGTH*3);
- // private final MechanismLigament2d elevator;
 
   // Robot Constants
   public static final double ROBOT_LENGTH = Units.inchesToMeters(28);
 
   // Code for the stick figure of each subsystems
   // Code for elevator 
-  Mechanism2d mech = new Mechanism2d( 0.44, 0); 
-  MechanismRoot2d root = mech.getRoot("elevator", ROBOT_LENGTH, ROBOT_LENGTH);
+  MechanismRoot2d root = panel.getRoot("elevator", 0, 0); 
+  MechanismLigament2d m_elevator = root.append(new MechanismLigament2d("elevatorL", 1.6, 90));
 
-  elevator = root.append(new MechanismLigament2d("elevator", kElevatorMinimumLength, 90));
+  MechanismRoot2d root2 = panel.getRoot("elevator", 50, 0); 
+  MechanismLigament2d m_elevator2 = root.append(new MechanismLigament2d("elevatorL", 1.6, 90));
+
  // Overlapping arm height with superstructure to illustrate both superstructure and arm height
   //MechanismLigament2d m_armJoint = root.append(new MechanismLigament2d("armL", 0.78, 90));
 
@@ -56,20 +53,9 @@ public class Mechanism2D {
     this.intakeSubsystem = intakeSubsystem; 
   }
 */
+ public void update() {
+    SmartDashboard.putData("RobotVisualizer", panel);
 
-  public void update() {
-    /* 
-    double intakeArmAngle = intakeSubsystem.getArmAngle();
-    double armAngle = armSubsystem.getArmAngle();
-  
-    //TO DO: Update arm angles in stick figures; 90 degrees is straight down. 180 degrees is perpendicular to floor and above intake
-    m_arm.setAngle(armAngle+90);
-
-    //TO DO: Update intake arm angles in stick figures; 0 degree is deployed n, 92 degrees is retracted position
-    m_intakeArm1.setAngle(intakeArmAngle+8);
-    m_intakeArm2.setAngle(-intakeArmAngle-50); 
-    */
-    SmartDashboard.putData("Mech2d", mech);
-  }
+  } 
 }
   
