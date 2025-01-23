@@ -12,26 +12,23 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class SC_Preload_Score extends PathPlannerAuto {
-  public SC_Preload_Score(RobotContainer robotContainer) {
+public class Leave_Non_Processor extends PathPlannerAuto {
+  public Leave_Non_Processor(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
-    /* All your code should go inside this try-catch block */
     try {
 
-      PathPlannerPath SCpreloadScore = PathPlannerPath.fromPathFile("SC-preload");
+      PathPlannerPath startLnLeave = PathPlannerPath.fromPathFile("Startline-Leave");
+
       Pose2d startingPose =
           new Pose2d(
-              SCpreloadScore.getPoint(0).position,
-              SCpreloadScore.getIdealStartingState().rotation());
+              startLnLeave.getPoint(0).position, startLnLeave.getIdealStartingState().rotation());
 
       isRunning()
           .onTrue(
               Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SCpreloadScore))
-                  .withName("Leave and score preload coral"));
-
-      /* TODO: Other triggers */
+                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(startLnLeave))
+                  .withName("Leave Starting Line"));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());

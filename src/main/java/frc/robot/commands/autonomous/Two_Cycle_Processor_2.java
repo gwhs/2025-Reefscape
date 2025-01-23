@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class Auton_2_Cycle_2 extends PathPlannerAuto {
-  public Auton_2_Cycle_2(RobotContainer robotContainer) {
+public class Two_Cycle_Processor_2 extends PathPlannerAuto {
+  public Two_Cycle_Processor_2(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     /* All your code should go inside this try-catch block */
@@ -32,7 +32,6 @@ public class Auton_2_Cycle_2 extends PathPlannerAuto {
               Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(E_CSP))
                   .withName("E to CSP"));
 
-      /* TODO: Other triggers */
       event("atCSP")
           .onTrue(
               Commands.sequence(

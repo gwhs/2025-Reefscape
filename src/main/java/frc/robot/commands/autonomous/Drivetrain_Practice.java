@@ -29,8 +29,6 @@ public class Drivetrain_Practice extends PathPlannerAuto {
               Commands.sequence(
                   AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(TestPath)));
 
-      /* TODO: Other triggers */
-
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
     }

@@ -12,11 +12,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class AutonC5_2 extends PathPlannerAuto {
-  public AutonC5_2(RobotContainer robotContainer) {
+public class Five_Cycle_Processor_2 extends PathPlannerAuto {
+  public Five_Cycle_Processor_2(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
-    /* All your code should go inside this try-catch block */
     try {
 
       PathPlannerPath F_CSP = PathPlannerPath.fromPathFile("F-CSP");
@@ -74,8 +73,6 @@ public class AutonC5_2 extends PathPlannerAuto {
                       Commands.waitSeconds(scoringTime),
                       AutoBuilder.followPath(B_CSP))
                   .withName("CSP to B"));
-
-      /* TODO: Other triggers */
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
