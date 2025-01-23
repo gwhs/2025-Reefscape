@@ -12,27 +12,22 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class Five_Cycle_Processor extends PathPlannerAuto {
-  public Five_Cycle_Processor(RobotContainer robotContainer) {
+public class LeaveNonProcessor extends PathPlannerAuto {
+  public LeaveNonProcessor(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     try {
-      PathPlannerPath SC_F = PathPlannerPath.fromPathFile("SC-F");
-
-      double waitTime = 0.1;
-      double scoringTime = 0.3;
+      PathPlannerPath startLnLeave = PathPlannerPath.fromPathFile("Startline-Leave");
 
       Pose2d startingPose =
-          new Pose2d(SC_F.getPoint(0).position, SC_F.getIdealStartingState().rotation());
+          new Pose2d(
+              startLnLeave.getPoint(0).position, startLnLeave.getIdealStartingState().rotation());
 
       isRunning()
           .onTrue(
               Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose),
-                      AutoBuilder.followPath(SC_F),
-                      Commands.waitSeconds(scoringTime),
-                      Commands.runOnce(() -> new Five_Cycle_Processor(robotContainer).schedule()))
-                  .withName("Leave SC to score preload at F"));
+                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(startLnLeave))
+                  .withName("Leave Starting Line"));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
