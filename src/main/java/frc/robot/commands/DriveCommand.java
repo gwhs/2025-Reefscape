@@ -98,11 +98,6 @@ public class DriveCommand extends Command {
     }
 
     if (elevatorHeight.getAsDouble() > 1) {
-<<<<<<< HEAD
-      xVelocity = xVelocityLimiter.calculate(xVelocity);
-      yVelocity = yVelocityLimiter.calculate(yVelocity);
-      angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
-=======
       if (resetLimiter) {
         resetLimiter = false;
         xVelocityLimiter.reset(xVelocity);
@@ -114,7 +109,6 @@ public class DriveCommand extends Command {
       angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
     } else {
       resetLimiter = true;
->>>>>>> 1bbe22d8bc1d7090851e0af787195a8a0dc382c6
     }
 
     if (isBackCoralStation) {
