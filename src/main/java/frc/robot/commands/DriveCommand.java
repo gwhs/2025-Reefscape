@@ -2,9 +2,6 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.util.concurrent.atomic.DoubleAccumulator;
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
@@ -18,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.FieldConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Elevator.ElevatorSubsystem;
+import java.util.function.DoubleSupplier;
 
 public class DriveCommand extends Command {
   private static final double PID_MAX = 0.35;
@@ -61,7 +58,10 @@ public class DriveCommand extends Command {
           .withRotationalDeadband(maxAngularRate * 0.1) // Add a 10% deadband
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want robot-centric
 
-  public DriveCommand(CommandXboxController driverController, CommandSwerveDrivetrain drivetrain, DoubleSupplier elevatorHeight) {
+  public DriveCommand(
+      CommandXboxController driverController,
+      CommandSwerveDrivetrain drivetrain,
+      DoubleSupplier elevatorHeight) {
     this.driverController = driverController;
     this.drivetrain = drivetrain;
 
@@ -87,7 +87,7 @@ public class DriveCommand extends Command {
     double yVelocity = -driverController.getLeftX();
 
     double angularVelocity = -driverController.getRightX();
-    
+
     if (isSlow) {
       double slowFactor = 0.25;
       xVelocity *= slowFactor;
@@ -96,9 +96,9 @@ public class DriveCommand extends Command {
     }
 
     if (elevatorHeight.getAsDouble() > 1) {
-    xVelocity = xVelocityLimiter.calculate(xVelocity);
-    yVelocity = yVelocityLimiter.calculate(yVelocity);
-    angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
+      xVelocity = xVelocityLimiter.calculate(xVelocity);
+      yVelocity = yVelocityLimiter.calculate(yVelocity);
+      angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
     }
 
     if (isBackCoralStation) {
