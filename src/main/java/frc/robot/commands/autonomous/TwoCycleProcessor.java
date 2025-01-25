@@ -12,23 +12,20 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
-public class emplate extends PathPlannerAuto {
-  public emplate(RobotContainer robotContainer) {
+public class TwoCycleProcessor extends PathPlannerAuto {
+  public TwoCycleProcessor(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
-    /* All your code should go inside this try-catch block */
     try {
-      /* TODO: Load all paths needed */
-      PathPlannerPath S3Leave = PathPlannerPath.fromPathFile("S3-C5");
+      PathPlannerPath SP_E = PathPlannerPath.fromPathFile("SP-E");
 
-      /* TODO: Get starting position of starting path */
       Pose2d startingPose =
-          new Pose2d(S3Leave.getPoint(0).position, S3Leave.getIdealStartingState().rotation());
+          new Pose2d(SP_E.getPoint(0).position, SP_E.getIdealStartingState().rotation());
 
-      /* TODO: When autonomous begins */
-      isRunning().onTrue(Commands.sequence(AutoBuilder.resetOdom(startingPose)));
-
-      /* TODO: Other triggers */
+      isRunning()
+          .onTrue(
+              Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SP_E))
+                  .withName("Leave SP to score preload at E"));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
