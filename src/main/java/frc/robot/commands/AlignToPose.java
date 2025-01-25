@@ -85,11 +85,11 @@ public class AlignToPose extends Command {
     double currY = currPose.getY();
     Double currRotation = currPose.getRotation().getDegrees();
 
-    double PIDXOutput = Math.clamp(PID_X.calculate(currX), -PID_MAX, PID_MAX);
+    double PIDXOutput = MathUtil.clamp(PID_X.calculate(currX), -PID_MAX, PID_MAX);
     double xVelocity = -PIDXOutput;
     DogLog.log("Align/PIDXOutput", PIDXOutput);
 
-    double PIDYOutput = Math.clamp(PID_Y.calculate(currY), -PID_MAX, PID_MAX);
+    double PIDYOutput = MathUtil.clamp(PID_Y.calculate(currY), -PID_MAX, PID_MAX);
     double yVelocity = -PIDYOutput;
     DogLog.log("Align/PIDYoutput", PIDYOutput);
 
