@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Elevator;
+package frc.robot.subsystems.elevator;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.ProfiledPIDController;
