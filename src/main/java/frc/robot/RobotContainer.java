@@ -71,8 +71,10 @@ public class RobotContainer {
 
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
 
-  private final DriveCommand driveCommand = new DriveCommand(m_driverController, drivetrain, ()-> m_ElevatorSubsystem.getHeight());
-  //put elevator get height in place of 0
+  private final DriveCommand driveCommand =
+      new DriveCommand(m_driverController, drivetrain, () -> m_ElevatorSubsystem.getHeight());
+
+  // put elevator get height in place of 0
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

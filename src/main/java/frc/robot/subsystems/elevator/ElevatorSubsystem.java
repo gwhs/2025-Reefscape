@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems.elevator;
 
-import java.util.function.DoubleSupplier;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -78,7 +76,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         / 2;
   }
 
-    public double getHeight() {
-      return rotationsToMeters(elevatorIO.getRotation());
+  public double getHeight() {
+    return rotationsToMeters(elevatorIO.getRotation());
   }
 }
