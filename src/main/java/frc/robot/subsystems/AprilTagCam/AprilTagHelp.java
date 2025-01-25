@@ -1,4 +1,4 @@
-package frc.robot.subsystems.AprilTagCam;
+package frc.robot.subsystems.aprilTagCam;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;

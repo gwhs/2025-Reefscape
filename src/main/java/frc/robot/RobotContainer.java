@@ -24,11 +24,11 @@ import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.autonomous.*;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.AprilTagCam.AprilTagCam;
-import frc.robot.subsystems.AprilTagCam.AprilTagCamConstants;
-import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Elevator.ElevatorSubsystem;
+import frc.robot.subsystems.aprilTagCam.AprilTagCam;
+import frc.robot.subsystems.aprilTagCam.AprilTagCamConstants;
+import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import java.util.function.Supplier;
 
 /**
