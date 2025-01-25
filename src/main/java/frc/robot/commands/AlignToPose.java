@@ -23,7 +23,7 @@ public class AlignToPose extends Command {
   private CommandSwerveDrivetrain drivetrain;
 
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-  private double maxAngularRate = 3.5 * Math.PI;
+  private double maxAngularRate = 1.0 * Math.PI;
 
   public static final double PID_MAX = 0.35;
 
@@ -45,7 +45,7 @@ public class AlignToPose extends Command {
     PID_Y = new PIDController(2.7, 0, 0);
     PID_Y.setTolerance(0.1);
 
-    PID_Rotation = new PIDController(0.05, 0, 0);
+    PID_Rotation = new PIDController(0.1, 0, 0);
     PID_Rotation.setTolerance(0.1);
     PID_Rotation.enableContinuousInput(-180, 180);
   }
