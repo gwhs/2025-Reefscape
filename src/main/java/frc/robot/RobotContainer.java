@@ -116,13 +116,21 @@ public class RobotContainer {
    */
   private void configureBindings() {
     IS_DISABLED.onTrue(
-        Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Coast))
+        Commands.runOnce(
+                () -> {
+                  drivetrain.configNeutralMode(NeutralModeValue.Coast);
+                  led.setColor(LEDPattern.solid(Color.kRed), led.m_LedBuffer);
+                })
             .ignoringDisable(true));
-    led.setColor(LEDPattern.solid(Color.kRed), led.m_LedBuffer);
+
     IS_DISABLED.onFalse(
-        Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Brake))
+        Commands.runOnce(
+                () -> {
+                  drivetrain.configNeutralMode(NeutralModeValue.Brake);
+                  led.setColor(LEDPattern.solid(Color.kGreen), led.m_LedBuffer);
+                })
             .ignoringDisable(false));
-    led.setColor(LEDPattern.solid(Color.kGreen), led.m_LedBuffer);
+
     SmartDashboard.putData(
         "LockOut", alignToPose(() -> new Pose2d(0.00, 0.00, Rotation2d.fromDegrees(180))));
 
