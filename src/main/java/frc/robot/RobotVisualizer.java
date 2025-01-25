@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -11,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import frc.robot.subsystems.Elevator.ElevatorConstants;
 
 /** Add your docs here. */
 public class RobotVisualizer {
@@ -83,7 +85,7 @@ public class RobotVisualizer {
 */
  public void update() {
     SmartDashboard.putData("RobotVisualizer", panel);
-
+    
   } 
 }
   
