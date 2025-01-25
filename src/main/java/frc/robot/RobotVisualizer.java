@@ -11,7 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-//import frc.robot.subsystems.Elevator.ElevatorConstants;
+
+// import frc.robot.subsystems.Elevator.ElevatorConstants;
 
 /** Add your docs here. */
 public class RobotVisualizer {
@@ -26,6 +27,9 @@ public class RobotVisualizer {
   public Color color2 = Color.kFirstRed;
 
   // Code for the stick figure of each subsystems
+
+  //make the elevator length increase based on height 
+
 
   // elevator base
 
@@ -68,10 +72,5 @@ public class RobotVisualizer {
 
   public void update() {
     SmartDashboard.putData("RobotVisualizer", panel);
-  }
-
-  public static void updatePoseEstim() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'updatePoseEstim'");
   }
 }
