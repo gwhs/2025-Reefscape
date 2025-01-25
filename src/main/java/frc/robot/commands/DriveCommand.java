@@ -25,7 +25,7 @@ public class DriveCommand extends Command {
   public boolean isSlow = true;
   public boolean isBackCoralStation = false;
   public boolean robotCentric = false;
-  public boolean isAlignCoral = false;
+  public boolean faceCoral = false;
 
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 3.5 * Math.PI;
@@ -107,7 +107,7 @@ public class DriveCommand extends Command {
       DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
     }
 
-    if (isAlignCoral) {
+    if (faceCoral) {
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
         Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.blueReefSetpointList);
