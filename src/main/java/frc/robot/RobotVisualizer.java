@@ -5,20 +5,30 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-
-// import frc.robot.subsystems.Elevator.ElevatorConstants;
+import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.elevator.ElevatorConstants;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
 
 /** Add your docs here. */
 public class RobotVisualizer {
+
   // private final ArmSubsystem armSubsystem;
   // private final IntakeSubsystem intakeSubsystem;
+  private final ElevatorSubsystem elevatorSubsystem;
+  private static final double kMetersPerPulse = 0.01;
   private final Mechanism2d panel = new Mechanism2d(ROBOT_LENGTH, ROBOT_LENGTH * 3);
+  private final Encoder m_elevatorEncoder = new Encoder(0, 1);
+
+  private static final double kElevatorMinimumLength = 0.5;
+
+
 
   // Robot Constants
   public static final double ROBOT_LENGTH = Units.inchesToMeters(28);
@@ -40,7 +50,7 @@ public class RobotVisualizer {
   // Code for elevator
   MechanismRoot2d root = panel.getRoot("elevator", 0, 0);
   MechanismLigament2d m_elevator =
-      root.append(new MechanismLigament2d("elevatorL", 1.5, 90, 10, new Color8Bit(color1)));
+      root.append(new MechanismLigament2d("elevatorL", 3, 90, 10, new Color8Bit(color2)));
 
   MechanismRoot2d root2 = panel.getRoot("elevator2", 0.7, 0);
   MechanismLigament2d m_elevator2 =
@@ -70,7 +80,17 @@ public class RobotVisualizer {
       m_elevatorH3.append(
           new MechanismLigament2d("arm", 0.85, -90, 10, new Color8Bit(Color.kWhite)));
 
+                  
+            
+          
+    public RobotVisualizer(ElevatorSubsystem elevatorSubsystem) {
+                this.elevatorSubsystem = elevatorSubsystem;
+                m_elevatorEncoder.setDistancePerPulse(kMetersPerPulse);
+     }
+
+
   public void update() {
+    m_elevator.setLength(kElevatorMinimumLength + m_elevatorEncoder.getDistance());
     SmartDashboard.putData("RobotVisualizer", panel);
   }
 }
