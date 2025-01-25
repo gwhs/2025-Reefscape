@@ -21,15 +21,39 @@ public class RobotVisualizer {
   // Robot Constants
   public static final double ROBOT_LENGTH = Units.inchesToMeters(28);
 
+  public Color color1 = Color.kFirstBlue;
+  public Color color2 = Color.kFirstRed;
+
   // Code for the stick figure of each subsystems
+
+  //elevator base
+
+  MechanismRoot2d base = panel.getRoot("base", -0.31, 0.0175);
+  MechanismLigament2d m_base = base.append(new MechanismLigament2d("baseL", 1.3, 0, 10, new Color8Bit(color1)));
+
   // Code for elevator 
   MechanismRoot2d root = panel.getRoot("elevator", 0, 0); 
-  MechanismLigament2d m_elevator = root.append(new MechanismLigament2d("elevatorL", 1.6, 90));
+  MechanismLigament2d m_elevator = root.append(new MechanismLigament2d("elevatorL", 1.5, 90, 10, new Color8Bit(color1)));
 
-  MechanismRoot2d root2 = panel.getRoot("elevator2", 0, 0); 
-  MechanismLigament2d m_elevator2 = root2.append(new MechanismLigament2d("elevatorL2", 1.4, 90, 10, new Color8Bit(Color.kPurple)));
+  MechanismRoot2d root2 = panel.getRoot("elevator2", 0.7, 0); 
+  MechanismLigament2d m_elevator2 = root2.append(new MechanismLigament2d("elevatorL2", 1.5, 90, 10, new Color8Bit(color1)));
 
-  MechanismLigament2d arm = root2.append(new MechanismLigament2d("arm", 0.5, 0));
+// inner elevator
+  MechanismRoot2d root3 = panel.getRoot("elevator3", 0.04, 0.078); 
+  MechanismLigament2d m_elevator3 = root3.append(new MechanismLigament2d("elevatorL3", 1.5, 90, 10, new Color8Bit(color2)));
+
+  MechanismRoot2d root4 = panel.getRoot("elevator4", 0.66, 0.078); 
+  MechanismLigament2d m_elevator4 = root4.append(new MechanismLigament2d("elevatorL4", 1.5, 90, 10, new Color8Bit(color2)));
+
+  MechanismLigament2d m_elevatorH2 = m_elevator3.append(new MechanismLigament2d("horizontal2", 0.62, -90, 10, new Color8Bit(color2)));
+  MechanismLigament2d m_elevatorH3 = m_elevator3.append(new MechanismLigament2d("horizontal3", 0.31, -90, 10, new Color8Bit(color2)));
+
+  MechanismLigament2d m_elevatorH1 = root3.append(new MechanismLigament2d("horizontal1", 0.62, 0, 10, new Color8Bit(color2)));
+
+  //arm
+  MechanismLigament2d arm = m_elevatorH3.append(new MechanismLigament2d("arm", 0.85, -90, 10, new Color8Bit(Color.kWhite)));
+
+  //MechanismLigament2d arm = m_elevator2.append(new MechanismLigament2d("arm", 0.5, 0));
 
  // Overlapping arm height with superstructure to illustrate both superstructure and arm height
   //MechanismLigament2d m_armJoint = root.append(new MechanismLigament2d("armL", 0.78, 90));
@@ -43,7 +67,7 @@ public class RobotVisualizer {
   //MechanismLigament2d m_pizzaBox2 = m_arm.append(new MechanismLigament2d("pizzaBox2", 0.205, -90));
 
   // TO DO: use MechanismRoot2d and MechanismLigament2d to form stick figures that represent the intake
-  // Example of attaching to roots/ligaments: MechanismLigament2d m_spinner = m_arm.append(new MechanismLigament2d("spinner", 0.2, 270, 12, new Color8Bit(Color.kPurple)));
+  // Example of attaching to roots/ligaments: MechanismLigament2d m_spinner = m_arm.append(new MechanismLigament2d("spinner", 0.2, 270, 12, new Color8Bit(color2)));
   
   // code for intakes
   // needs fixing
