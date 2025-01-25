@@ -32,6 +32,8 @@ public class DriveCommand extends Command {
   public boolean robotCentric = false;
   public boolean isAlignCoral = false;
 
+  public boolean resetLimiter = true;
+
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 3.5 * Math.PI;
 
@@ -40,7 +42,7 @@ public class DriveCommand extends Command {
   private final double BLUE_LEFT_STATION_ANGLE = 54;
   private final double BLUE_RIGHT_STATION_ANGLE = -54;
 
-  public final double ELEVATOR_UP_SLEW_RATE = 0.0;
+  public final double ELEVATOR_UP_SLEW_RATE = 0.5;
 
   public final DoubleSupplier elevatorHeight;
 
@@ -69,9 +71,9 @@ public class DriveCommand extends Command {
     this.PID.setTolerance(0.1);
     this.PID.enableContinuousInput(-180, 180);
 
-    angularVelocityLimiter = new SlewRateLimiter(0);
-    xVelocityLimiter = new SlewRateLimiter(0);
-    yVelocityLimiter = new SlewRateLimiter(0);
+    angularVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
+    xVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
+    yVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
 
     this.elevatorHeight = elevatorHeight;
 
@@ -96,9 +98,23 @@ public class DriveCommand extends Command {
     }
 
     if (elevatorHeight.getAsDouble() > 1) {
+<<<<<<< HEAD
       xVelocity = xVelocityLimiter.calculate(xVelocity);
       yVelocity = yVelocityLimiter.calculate(yVelocity);
       angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
+=======
+      if (resetLimiter) {
+        resetLimiter = false;
+        xVelocityLimiter.reset(xVelocity);
+        yVelocityLimiter.reset(yVelocity);
+        angularVelocityLimiter.reset(angularVelocity);
+      }
+      xVelocity = xVelocityLimiter.calculate(xVelocity);
+      yVelocity = yVelocityLimiter.calculate(yVelocity);
+      angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
+    } else {
+      resetLimiter = true;
+>>>>>>> 1bbe22d8bc1d7090851e0af787195a8a0dc382c6
     }
 
     if (isBackCoralStation) {

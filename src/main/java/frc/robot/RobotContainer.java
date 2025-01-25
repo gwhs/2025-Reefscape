@@ -6,11 +6,12 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
-import com.pathplanner.lib.commands.PathfindingCommand;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,20 +23,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.autonomous.*;
-import frc.robot.commands.autonomous.Drivetrainpractice;
-import frc.robot.commands.autonomous.SC_preloadScore;
-import frc.robot.commands.autonomous.Template;
-import frc.robot.commands.autonomous.autonC5_1;
-import frc.robot.commands.autonomous.autonC5_2;
-import frc.robot.commands.autonomous.auton_2_cycle;
-import frc.robot.commands.autonomous.auton_2_cycle2;
-import frc.robot.commands.autonomous.auton_5CC1;
-import frc.robot.commands.autonomous.auton_5CC1_2;
-import frc.robot.commands.autonomous.startLnLeave;
-import frc.robot.commands.autonomous.startLnLeave2;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Elevator.ElevatorSubsystem;
+import frc.robot.subsystems.aprilTagCam.AprilTagCam;
+import frc.robot.subsystems.aprilTagCam.AprilTagCamConstants;
+import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import java.util.function.Supplier;
 
 /**
@@ -45,13 +38,36 @@ import java.util.function.Supplier;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
-  private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
+  private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  private final ElevatorSubsystem elevator = new ElevatorSubsystem();
+  private final ArmSubsystem arm = new ArmSubsystem();
+
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+
+  public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
+
+  private AprilTagCam cam3 =
+      new AprilTagCam(
+          "cam3",
+          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION,
+          drivetrain::addVisionMeasurent,
+          () -> drivetrain.getState().Pose,
+          () -> drivetrain.getState().Speeds);
+
+  private AprilTagCam cam4 =
+      new AprilTagCam(
+          "cam4",
+          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION,
+          drivetrain::addVisionMeasurent,
+          () -> drivetrain.getState().Pose,
+          () -> drivetrain.getState().Speeds);
 
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
 
@@ -74,7 +90,7 @@ public class RobotContainer {
 
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    PathfindingCommand.warmupCommand().schedule();
+    // PathfindingCommand.warmupCommand().schedule();
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 
@@ -95,6 +111,13 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    IS_DISABLED.onTrue(
+        Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Coast))
+            .ignoringDisable(true));
+    IS_DISABLED.onFalse(
+        Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Brake))
+            .ignoringDisable(false));
+
     SmartDashboard.putData(
         "LockIn", alignToPose(() -> new Pose2d(2.00, 4.00, Rotation2d.fromDegrees(0))));
     SmartDashboard.putData(
@@ -107,7 +130,11 @@ public class RobotContainer {
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
   }
 
-  public void periodic() {}
+  public void periodic() {
+
+    cam3.updatePoseEstim();
+    cam4.updatePoseEstim();
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -119,19 +146,16 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("autonC5_1", new autonC5_1(this));
-    autoChooser.addOption("autonC5_2", new autonC5_2(this));
-    autoChooser.addOption("auton_2_cycle", new auton_2_cycle(this));
-    autoChooser.addOption("auton_2_cycle2", new auton_2_cycle2(this));
-    autoChooser.addOption("SC_preloadScore", new SC_preloadScore(this));
-
-    autoChooser.addOption("startLnLeave", new startLnLeave(this));
-    autoChooser.addOption("TestPath", new Drivetrainpractice(this));
-    autoChooser.addOption("startLnLeave2", new startLnLeave2(this));
-    autoChooser.addOption("S1-Leave", new Template(this));
-    autoChooser.addOption("5CC1_1", new auton_5CC1(this));
-    autoChooser.addOption("5CC1_2", new auton_5CC1_2(this));
-    // TODO: add more autonomous routines
+    autoChooser.setDefaultOption("FIVE_CYCLE_PROCESSOR", new FiveCycleProcessor(this));
+    autoChooser.addOption("Five_Cycle_Processor_2", new FiveCycleProcessor2(this));
+    autoChooser.addOption("Two_Cycle_Processor", new TwoCycleProcessor(this));
+    autoChooser.addOption("Two_Cycle_Processor_2", new TwoCycleProcessor2(this));
+    autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
+    autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
+    autoChooser.addOption("Drivetrain_Practice", new DrivetrainPractice(this));
+    autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
+    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycleNonProcessor(this));
+    autoChooser.addOption("Five_Cycle_Non_Processor_2", new FiveCycleNonProcessor2(this));
 
     SmartDashboard.putData("autonomous", autoChooser);
   }
