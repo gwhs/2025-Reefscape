@@ -12,9 +12,11 @@ import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -29,6 +31,7 @@ import frc.robot.subsystems.aprilTagCam.AprilTagCam;
 import frc.robot.subsystems.aprilTagCam.AprilTagCamConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.Supplier;
 
 /**
@@ -41,13 +44,14 @@ public class RobotContainer {
 
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
-  
+
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
+  private final LedSubsystem led = new LedSubsystem();
 
   private final DriveCommand driveCommand = new DriveCommand(m_driverController, drivetrain);
 
@@ -111,18 +115,19 @@ public class RobotContainer {
     IS_DISABLED.onTrue(
         Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Coast))
             .ignoringDisable(true));
+    led.setColor(LEDPattern.solid(Color.kRed), led.m_LedBuffer);
     IS_DISABLED.onFalse(
         Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Brake))
             .ignoringDisable(false));
-
-    SmartDashboard.putData(
-        "LockIn", alignToPose(() -> new Pose2d(2.00, 4.00, Rotation2d.fromDegrees(0))));
+    led.setColor(LEDPattern.solid(Color.kGreen), led.m_LedBuffer);
     SmartDashboard.putData(
         "LockOut", alignToPose(() -> new Pose2d(0.00, 0.00, Rotation2d.fromDegrees(180))));
 
     m_driverController
         .rightTrigger()
         .onTrue(alignToPose(() -> new Pose2d(1.00, 1.00, new Rotation2d(1.00))));
+
+    m_driverController.leftBumper().onTrue(setLEDToAllianceColor());
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
   }
@@ -159,5 +164,16 @@ public class RobotContainer {
 
   public Command alignToPose(Supplier<Pose2d> Pose) {
     return new AlignToPose(Pose, drivetrain);
+  }
+
+  public Command setLEDToAllianceColor() {
+    return Commands.run(() -> led.setMiddle(led.m_LedBuffer, getAllianceColor(), 4));
+  }
+
+  public Color getAllianceColor() {
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      return Color.kBlue;
+    }
+    return Color.kRed;
   }
 }
