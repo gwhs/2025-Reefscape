@@ -42,7 +42,7 @@ public class DriveCommand extends Command {
   private final double BLUE_LEFT_STATION_ANGLE = 54;
   private final double BLUE_RIGHT_STATION_ANGLE = -54;
 
-  public final double ELEVATOR_UP_SLEW_RATE = 0.0;
+  public final double ELEVATOR_UP_SLEW_RATE = 0.5;
 
   public final DoubleSupplier elevatorHeight;
 
@@ -71,9 +71,9 @@ public class DriveCommand extends Command {
     this.PID.setTolerance(0.1);
     this.PID.enableContinuousInput(-180, 180);
 
-    angularVelocityLimiter = new SlewRateLimiter(0);
-    xVelocityLimiter = new SlewRateLimiter(0);
-    yVelocityLimiter = new SlewRateLimiter(0);
+    angularVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
+    xVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
+    yVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
 
     this.elevatorHeight = elevatorHeight;
 
