@@ -24,9 +24,9 @@ import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.autonomous.*;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.AprilTagCam.AprilTagCam;
 import frc.robot.subsystems.AprilTagCam.AprilTagCamConstants;
+import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator.ElevatorSubsystem;
 import java.util.function.Supplier;
@@ -41,17 +41,19 @@ public class RobotContainer {
 
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
-  private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-  private final ArmSubsystem armSubsystem = new ArmSubsystem();
-  private final DriveCommand driveCommand = new DriveCommand(m_driverController, drivetrain);
+
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
+  private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  private final ElevatorSubsystem elevator = new ElevatorSubsystem();
+  private final ArmSubsystem arm = new ArmSubsystem();
+
+  private final DriveCommand driveCommand = new DriveCommand(m_driverController, drivetrain);
+
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-  private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
 
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
-  public static final Trigger IS_ENABLED = new Trigger(() -> DriverStation.isEnabled());
 
   private AprilTagCam cam3 =
       new AprilTagCam(
@@ -112,6 +114,7 @@ public class RobotContainer {
     IS_DISABLED.onFalse(
         Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Brake))
             .ignoringDisable(false));
+
     SmartDashboard.putData(
         "LockIn", alignToPose(() -> new Pose2d(2.00, 4.00, Rotation2d.fromDegrees(0))));
     SmartDashboard.putData(
