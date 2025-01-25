@@ -117,12 +117,12 @@ public class RobotContainer {
   private void configureBindings() {
     IS_DISABLED.onTrue(
         Commands.runOnce(() -> {drivetrain.configNeutralMode(NeutralModeValue.Coast);
-           led.setColor(LEDPattern.solid(Color.kRed), led.m_LedBuffer);})
+           led.setColor(LEDPattern.solid(Color.kRed));})
             .ignoringDisable(true));
     
     IS_DISABLED.onFalse(
         Commands.runOnce(() -> {drivetrain.configNeutralMode(NeutralModeValue.Brake); 
-          led.setColor(LEDPattern.solid(Color.kGreen), led.m_LedBuffer);})
+          led.setColor(LEDPattern.solid(Color.kGreen));})
             .ignoringDisable(false));
     SmartDashboard.putData(
               "LockIn", alignToPose(() -> new Pose2d(2.00, 4.00, Rotation2d.fromDegrees(0))));
@@ -186,7 +186,7 @@ public class RobotContainer {
   }
 
   public Command setLEDToAllianceColor() {
-    return Commands.run(() -> led.setColor(LEDPattern.solid(getAllianceColor()), led.m_LedBuffer));
+    return Commands.run(() -> led.setColor(LEDPattern.solid(getAllianceColor())));
   }
 
   public Color getAllianceColor() {

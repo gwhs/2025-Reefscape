@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LedSubsystem extends SubsystemBase {
   AddressableLED m_led;
-  public AddressableLEDBuffer m_LedBuffer;
+  AddressableLEDBuffer m_LedBuffer;
 
   public LedSubsystem() {
     m_led = new AddressableLED(9);
@@ -18,17 +18,17 @@ public class LedSubsystem extends SubsystemBase {
     m_led.start();
   }
 
-  public void setColor(LEDPattern pattern, AddressableLEDBuffer buf) {
+  public void setColor(LEDPattern pattern) {
     pattern.applyTo(m_LedBuffer);
-    m_led.setData(buf);
+    m_led.setData(m_LedBuffer);
   }
 
-  public Color getColor(AddressableLEDBuffer buf, int index) {
+  public Color getColor(int index) {
 
-    return buf.getLED(index);
+    return m_LedBuffer.getLED(index);
   }
 
   public void turnOff() {
-    setColor(LEDPattern.solid(Color.kBlack), m_LedBuffer);
+    setColor(LEDPattern.solid(Color.kBlack));
   }
 }
