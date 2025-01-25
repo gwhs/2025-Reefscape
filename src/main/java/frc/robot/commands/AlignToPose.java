@@ -45,7 +45,7 @@ public class AlignToPose extends Command {
     PID_Y = new PIDController(2.7, 0, 0);
     PID_Y.setTolerance(0.1);
 
-    PID_Rotation = new PIDController(0.1, 0, 0);
+    PID_Rotation = new PIDController(0.05, 0, 0);
     PID_Rotation.setTolerance(0.1);
     PID_Rotation.enableContinuousInput(-180, 180);
   }
@@ -85,18 +85,17 @@ public class AlignToPose extends Command {
     double currY = currPose.getY();
     Double currRotation = currPose.getRotation().getDegrees();
 
-    double PIDXOutput = PID_X.calculate(currX);
+    double PIDXOutput = Math.clamp(PID_X.calculate(currX), -PID_MAX, PID_MAX);
     double xVelocity = -PIDXOutput;
     DogLog.log("Align/PIDXOutput", PIDXOutput);
 
-    double PIDYOutput = PID_Y.calculate(currY);
+    double PIDYOutput = Math.clamp(PID_Y.calculate(currY), -PID_MAX, PID_MAX);
     double yVelocity = -PIDYOutput;
     DogLog.log("Align/PIDYoutput", PIDYOutput);
 
     double PIDRotationOutput =
         MathUtil.clamp(PID_Rotation.calculate(currRotation), -PID_MAX, PID_MAX);
     double angularVelocity = PIDRotationOutput;
-
     DogLog.log("Align/PIDRotationoutput", PIDRotationOutput);
 
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
