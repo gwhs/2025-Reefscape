@@ -33,5 +33,9 @@ public class ArmIOSim implements ArmIO {
 
   public void update() {
     armSim.update(0.20);
+
+    double pidOutput = pidController.calculate(getPosition());
+
+    armSim.setInputVoltage(pidOutput);
   }
 }
