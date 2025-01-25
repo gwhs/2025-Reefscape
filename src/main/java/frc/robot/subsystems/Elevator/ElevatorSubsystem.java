@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ElevatorSubsystem extends SubsystemBase {
   private ElevatorIO elevatorIO;
-  private ElevatorIOReal elevatorIOReal;
 
   public ElevatorSubsystem() {
     if (RobotBase.isSimulation()) {
