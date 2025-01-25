@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Arm;
+package frc.robot.subsystems.arm;
 
 public class ArmConstants {
   public static final int ARM_MOTOR_ID = 54;

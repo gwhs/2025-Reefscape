@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Arm;
+package frc.robot.subsystems.arm;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
