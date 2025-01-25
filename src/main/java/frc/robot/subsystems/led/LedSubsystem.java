@@ -33,23 +33,5 @@ public class LedSubsystem extends SubsystemBase {
     setColor(LEDPattern.solid(Color.kBlack), m_LedBuffer);
   }
 
-  public void setMiddle(AddressableLEDBuffer buf, Color color, int size) {
-
-    int mid = buf.getLength() / 2;
-    AddressableLEDBufferView middleView = buf.createView(mid, size);
-    for (int i = mid; i == mid - size; i++) {
-      middleView.setLED(i, color);
-    }
-    long to = 5000;
-    try {
-      wait(to);
-      for (int i = mid; i == mid - size; i++) {
-        middleView.setLED(i, Color.kBlack);
-      }
-    } catch (Exception e) {
-      for (int i = mid; i == mid - size; i++) {
-        middleView.setLED(i, Color.kBlack);
-      }
-    }
-  }
+ 
 }

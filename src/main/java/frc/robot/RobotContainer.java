@@ -183,7 +183,7 @@ public class RobotContainer {
   }
 
   public Command setLEDToAllianceColor() {
-    return Commands.run(() -> led.setMiddle(led.m_LedBuffer, getAllianceColor(), 4));
+    return Commands.run(() -> led.setColor(LEDPattern.solid(getAllianceColor()), led.m_LedBuffer));
   }
 
   public Color getAllianceColor() {
