@@ -125,6 +125,19 @@ public class RobotContainer {
         .onTrue(alignToPose(() -> new Pose2d(1.00, 1.00, new Rotation2d(1.00))));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
+
+    m_driverController
+        .a()
+        .whileTrue(
+            alignToPose(
+                () -> {
+                  if (DriverStation.getAlliance().isPresent()
+                      && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                    return drivetrain.getState().Pose.nearest(FieldConstants.blueReefSetpointList);
+                  } else {
+                    return drivetrain.getState().Pose.nearest(FieldConstants.redReefSetpointList);
+                  }
+                }));
   }
 
   public void periodic() {
