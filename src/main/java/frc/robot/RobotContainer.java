@@ -73,6 +73,8 @@ public class RobotContainer {
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
 
+  private RobotVisualizer robotVisualizer = new RobotVisualizer();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Setup DogLog
