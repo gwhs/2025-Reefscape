@@ -26,7 +26,7 @@ public class RobotVisualizer {
   private final Mechanism2d panel = new Mechanism2d(ROBOT_LENGTH, ROBOT_LENGTH * 3);
   private final Encoder m_elevatorEncoder = new Encoder(0, 1);
 
-  private static final double kElevatorMinimumLength = 0.5;
+  private static final double kElevatorMinimumLength = 1.5;
 
 
 
@@ -47,16 +47,16 @@ public class RobotVisualizer {
   MechanismLigament2d m_base =
       base.append(new MechanismLigament2d("baseL", 1.3, 0, 10, new Color8Bit(color1)));
 
-  // Code for elevator
+  // Code for outer elevator, color coded blue
   MechanismRoot2d root = panel.getRoot("elevator", 0, 0);
   MechanismLigament2d m_elevator =
-      root.append(new MechanismLigament2d("elevatorL", 3, 90, 10, new Color8Bit(color2)));
+      root.append(new MechanismLigament2d("elevatorL", 1.5, 90, 10, new Color8Bit(color1)));
 
   MechanismRoot2d root2 = panel.getRoot("elevator2", 0.7, 0);
   MechanismLigament2d m_elevator2 =
       root2.append(new MechanismLigament2d("elevatorL2", 1.5, 90, 10, new Color8Bit(color1)));
 
-  // inner elevator
+  // inner elevator, moving part, color coded red 
   MechanismRoot2d root3 = panel.getRoot("elevator3", 0.04, 0.078);
   MechanismLigament2d m_elevator3 =
       root3.append(new MechanismLigament2d("elevatorL3", 1.5, 90, 10, new Color8Bit(color2)));
@@ -90,7 +90,8 @@ public class RobotVisualizer {
 
 
   public void update() {
-    m_elevator.setLength(kElevatorMinimumLength + m_elevatorEncoder.getDistance());
+    m_elevator3.setLength(kElevatorMinimumLength + m_elevatorEncoder.getDistance());
+    m_elevator4.setLength(kElevatorMinimumLength + m_elevatorEncoder.getDistance());
     SmartDashboard.putData("RobotVisualizer", panel);
   }
 }
