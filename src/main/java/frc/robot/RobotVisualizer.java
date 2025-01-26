@@ -18,10 +18,8 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 
 /** Add your docs here. */
 public class RobotVisualizer {
-  private final ElevatorSubsystem elevatorSubsystem;
-  private static final double kMetersPerPulse = 0.01;
+  private final ElevatorSubsystem elevator;
   private final Mechanism2d panel = new Mechanism2d(ROBOT_LENGTH, ROBOT_LENGTH * 3);
-  private final Encoder m_elevatorEncoder = new Encoder(0, 1);
 
   private static final double kElevatorMinimumLength = 1.5;
 
@@ -40,18 +38,18 @@ public class RobotVisualizer {
 
   // elevator base
 
-  MechanismRoot2d base = panel.getRoot("base", -0.31, 0.0175);
-  MechanismLigament2d m_base =
-      base.append(new MechanismLigament2d("baseL", 1.3, 0, 10, new Color8Bit(color1)));
+//   MechanismRoot2d base = panel.getRoot("base", -0.31, 0.0175);
+//   MechanismLigament2d m_base =
+//       base.append(new MechanismLigament2d("baseL", 1.3, 0, 10, new Color8Bit(color1)));
 
   // Code for outer elevator, color coded blue
-  MechanismRoot2d root = panel.getRoot("elevator", 0, 0);
-  MechanismLigament2d m_elevator =
-      root.append(new MechanismLigament2d("elevatorL", 1.5, 90, 10, new Color8Bit(color1)));
+//   MechanismRoot2d root = panel.getRoot("elevator", 0, 0);
+//   MechanismLigament2d m_elevator =
+//       root.append(new MechanismLigament2d("elevatorL", 1.5, 90, 10, new Color8Bit(color1)));
 
-  MechanismRoot2d root2 = panel.getRoot("elevator2", 0.7, 0);
-  MechanismLigament2d m_elevator2 =
-      root2.append(new MechanismLigament2d("elevatorL2", 1.5, 90, 10, new Color8Bit(color1)));
+//   MechanismRoot2d root2 = panel.getRoot("elevator2", 0.7, 0);
+//   MechanismLigament2d m_elevator2 =
+//       root2.append(new MechanismLigament2d("elevatorL2", 1.5, 90, 10, new Color8Bit(color1)));
 
   // inner elevator, moving part, color coded red 
   MechanismRoot2d root3 = panel.getRoot("elevator3", 0.04, 0.078);
@@ -80,14 +78,18 @@ public class RobotVisualizer {
                   
             
           
-    public RobotVisualizer(ElevatorSubsystem elevatorSubsystem) {
-                this.elevatorSubsystem = elevatorSubsystem;
+    public RobotVisualizer(ElevatorSubsystem elevator) {
+                this.elevator = elevator;
      }
+    
 
 
-  public void update() {
-    m_elevator3.setLength(kElevatorMinimumLength + elevatorSubsystem);
-    m_elevator4.setLength(kElevatorMinimumLength + m_elevatorEncoder.getDistance());
+public void update() {
+    double elevatorHeight = elevator.getHeightMeters() * 39.3701;
+    
+    m_elevator3.setLength(elevatorHeight);
+    m_elevator4.setLength(elevatorHeight);
+
     SmartDashboard.putData("RobotVisualizer", panel);
   }
 }
