@@ -77,10 +77,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         / 2;
   }
 
-  public Command getElevatorHeight(double f) {
-    return this.run(
-        () -> {
-          rotationsToMeters(elevatorIO.getRotation());
-        });
+  public double getHeightMeters() {
+    return rotationsToMeters(elevatorIO.getRotation());
   }
 }
