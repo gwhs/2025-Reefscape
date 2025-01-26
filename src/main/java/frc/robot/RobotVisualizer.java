@@ -16,7 +16,7 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 /** Add your docs here. */
 public class RobotVisualizer {
   private final ElevatorSubsystem elevator;
-  private final Mechanism2d panel = new Mechanism2d(ROBOT_LENGTH, ROBOT_LENGTH);
+  private final Mechanism2d panel = new Mechanism2d(ROBOT_LENGTH, ROBOT_LENGTH * 3);
 
   private static final double kElevatorMinimumLength = 1.5;
 
@@ -74,7 +74,7 @@ public class RobotVisualizer {
   }
 
   public void update() {
-    double elevatorHeight = elevator.getHeightMeters() * 39.3701;
+    double elevatorHeight = elevator.getHeightMeters();
 
     m_elevator3.setLength(elevatorHeight);
     m_elevator4.setLength(elevatorHeight);
