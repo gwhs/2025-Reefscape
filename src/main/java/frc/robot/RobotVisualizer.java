@@ -19,11 +19,9 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 /** Add your docs here. */
 public class RobotVisualizer {
   private final ElevatorSubsystem elevator;
-  private final Mechanism2d panel = new Mechanism2d(ROBOT_LENGTH, ROBOT_LENGTH * 3);
+  private final Mechanism2d panel = new Mechanism2d(ROBOT_LENGTH, ROBOT_LENGTH);
 
   private static final double kElevatorMinimumLength = 1.5;
-
-
 
   // Robot Constants
   public static final double ROBOT_LENGTH = Units.inchesToMeters(27.5);
