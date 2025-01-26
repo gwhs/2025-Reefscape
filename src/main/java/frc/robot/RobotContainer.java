@@ -49,8 +49,6 @@ public class RobotContainer {
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
 
-  private final DriveCommand driveCommand = new DriveCommand(m_driverController, drivetrain);
-
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
@@ -72,6 +70,11 @@ public class RobotContainer {
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
+
+  private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+
+  private final DriveCommand driveCommand =
+      new DriveCommand(m_driverController, drivetrain, () -> 0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -127,6 +130,19 @@ public class RobotContainer {
         .onTrue(alignToPose(() -> new Pose2d(1.00, 1.00, new Rotation2d(1.00))));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
+
+    m_driverController
+        .a()
+        .whileTrue(
+            alignToPose(
+                () -> {
+                  if (DriverStation.getAlliance().isPresent()
+                      && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                    return drivetrain.getState().Pose.nearest(FieldConstants.blueReefSetpointList);
+                  } else {
+                    return drivetrain.getState().Pose.nearest(FieldConstants.redReefSetpointList);
+                  }
+                }));
   }
 
   public void periodic() {

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ElevatorSubsystem extends SubsystemBase {
   private ElevatorIO elevatorIO;
+  private ElevatorIOReal elevatorIOReal;
 
   public ElevatorSubsystem() {
     if (RobotBase.isSimulation()) {
@@ -74,5 +75,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         / (ElevatorConstants.SPROCKET_DIAMETER * Math.PI)
         * ElevatorConstants.GEAR_RATIO
         / 2;
+  }
+
+  public double getHeightMeters() {
+    return rotationsToMeters(elevatorIO.getRotation());
   }
 }
