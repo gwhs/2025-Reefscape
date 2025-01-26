@@ -18,9 +18,6 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 
 /** Add your docs here. */
 public class RobotVisualizer {
-
-  // private final ArmSubsystem armSubsystem;
-  // private final IntakeSubsystem intakeSubsystem;
   private final ElevatorSubsystem elevatorSubsystem;
   private static final double kMetersPerPulse = 0.01;
   private final Mechanism2d panel = new Mechanism2d(ROBOT_LENGTH, ROBOT_LENGTH * 3);
@@ -31,7 +28,7 @@ public class RobotVisualizer {
 
 
   // Robot Constants
-  public static final double ROBOT_LENGTH = Units.inchesToMeters(28);
+  public static final double ROBOT_LENGTH = Units.inchesToMeters(27.5);
 
   public Color color1 = Color.kFirstBlue;
   public Color color2 = Color.kFirstRed;
@@ -85,12 +82,11 @@ public class RobotVisualizer {
           
     public RobotVisualizer(ElevatorSubsystem elevatorSubsystem) {
                 this.elevatorSubsystem = elevatorSubsystem;
-                m_elevatorEncoder.setDistancePerPulse(kMetersPerPulse);
      }
 
 
   public void update() {
-    m_elevator3.setLength(kElevatorMinimumLength + m_elevatorEncoder.getDistance());
+    m_elevator3.setLength(kElevatorMinimumLength + elevatorSubsystem);
     m_elevator4.setLength(kElevatorMinimumLength + m_elevatorEncoder.getDistance());
     SmartDashboard.putData("RobotVisualizer", panel);
   }
