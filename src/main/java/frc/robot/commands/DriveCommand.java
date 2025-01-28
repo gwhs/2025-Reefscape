@@ -27,7 +27,7 @@ public class DriveCommand extends Command {
   private final SlewRateLimiter yVelocityLimiter;
   private final PIDController PID;
 
-  public boolean isSlow = false;
+  public boolean isSlow = true;
   public boolean isBackCoralStation = false;
   public boolean isRobotCentric = false;
   public boolean isFaceCoral = false;

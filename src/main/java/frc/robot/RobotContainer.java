@@ -142,6 +142,15 @@ public class RobotContainer {
                     () -> driveCommand.isBackCoralStation = false)
                 .withName("Face Coral Station"));
 
+    m_driverController
+        .y()
+        .whileTrue(
+            Commands.startEnd(
+                    () -> driveCommand.isFaceCoral = true,
+                    () -> driveCommand.isFaceCoral = false)
+                .withName("Face Coral Station"));
+
+
     m_driverController.x().onTrue(prepCoralIntake()).onFalse(coralHandoff());
 
     m_driverController.leftBumper().onTrue(setLEDToAllianceColor());
@@ -149,7 +158,7 @@ public class RobotContainer {
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
     m_driverController
-        .a()
+        .b()
         .whileTrue(
             alignToPose(
                 () -> {
