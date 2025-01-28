@@ -57,7 +57,7 @@ public class EagleUtil {
     }
 
     // for (int i = 0; i < redPoses.length; i++) {
-      // redPoses[i] = redPoses[i].relativeTo(RED_REEF_INVERT);
+    // redPoses[i] = redPoses[i].relativeTo(RED_REEF_INVERT);
     // }
     DogLog.log("Caculation/Red Reef", RED_REEF);
     DogLog.log("Caculation/Red Set Points", redPoses);
