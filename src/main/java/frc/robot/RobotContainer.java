@@ -72,7 +72,7 @@ public class RobotContainer {
           () -> drivetrain.getState().Speeds);
 
   private final DriveCommand driveCommand =
-      new DriveCommand(m_driverController, drivetrain, () -> 0);
+      new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -94,8 +94,8 @@ public class RobotContainer {
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 
-    // EagleUtil.calculateRedReefSetPoints();
-    // EagleUtil.calculateBlueReefSetPoints();
+    EagleUtil.calculateRedReefSetPoints();
+    EagleUtil.calculateBlueReefSetPoints();
 
     DogLog.log("Field Constants/Blue Reef", FieldConstants.blueReefSetpoints);
     DogLog.log("Field Constants/Red Reef", FieldConstants.redReefSetpoints);
