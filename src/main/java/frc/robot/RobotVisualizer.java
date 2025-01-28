@@ -32,18 +32,18 @@ public class RobotVisualizer {
 
   // elevator base
 
-  //   MechanismRoot2d base = panel.getRoot("base", -0.31, 0.0175);
-  //   MechanismLigament2d m_base =
-  //       base.append(new MechanismLigament2d("baseL", 1.3, 0, 10, new Color8Bit(color1)));
+  MechanismRoot2d base = panel.getRoot("base", -0.31, 0.0175);
+  MechanismLigament2d m_base =
+      base.append(new MechanismLigament2d("baseL", 1.3, 0, 10, new Color8Bit(color1)));
 
   // Code for outer elevator, color coded blue
-  //   MechanismRoot2d root = panel.getRoot("elevator", 0, 0);
-  //   MechanismLigament2d m_elevator =
-  //       root.append(new MechanismLigament2d("elevatorL", 1.5, 90, 10, new Color8Bit(color1)));
+  MechanismRoot2d root = panel.getRoot("elevator", 0, 0);
+  MechanismLigament2d m_elevator =
+      root.append(new MechanismLigament2d("elevatorL", 1.5, 90, 10, new Color8Bit(color1)));
 
-  //   MechanismRoot2d root2 = panel.getRoot("elevator2", 0.7, 0);
-  //   MechanismLigament2d m_elevator2 =
-  //       root2.append(new MechanismLigament2d("elevatorL2", 1.5, 90, 10, new Color8Bit(color1)));
+  MechanismRoot2d root2 = panel.getRoot("elevator2", 0.7, 0);
+  MechanismLigament2d m_elevator2 =
+      root2.append(new MechanismLigament2d("elevatorL2", 1.5, 90, 10, new Color8Bit(color1)));
 
   // inner elevator, moving part, color coded red
   MechanismRoot2d root3 = panel.getRoot("elevator3", 0.04, 0.078);
