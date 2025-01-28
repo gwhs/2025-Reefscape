@@ -47,6 +47,7 @@ public class DriveCommand extends Command {
   public final DoubleSupplier elevatorHeight;
 
   // Unit is meters
+
   private static final double halfWidthField = 4.0359;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
