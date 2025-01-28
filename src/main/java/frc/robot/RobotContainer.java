@@ -12,9 +12,11 @@ import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -31,6 +33,7 @@ import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.Supplier;
 
 /**
@@ -50,10 +53,13 @@ public class RobotContainer {
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
+  private final LedSubsystem led = new LedSubsystem();
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
+
+  private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
   private AprilTagCam cam3 =
       new AprilTagCam(
@@ -71,10 +77,8 @@ public class RobotContainer {
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
 
-  private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
-
   private final DriveCommand driveCommand =
-      new DriveCommand(m_driverController, drivetrain, () -> 0);
+      new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -117,10 +121,19 @@ public class RobotContainer {
    */
   private void configureBindings() {
     IS_DISABLED.onTrue(
-        Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Coast))
+        Commands.runOnce(
+                () -> {
+                  drivetrain.configNeutralMode(NeutralModeValue.Coast);
+                  led.setColor(LEDPattern.solid(Color.kRed));
+                })
             .ignoringDisable(true));
+
     IS_DISABLED.onFalse(
-        Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Brake))
+        Commands.runOnce(
+                () -> {
+                  drivetrain.configNeutralMode(NeutralModeValue.Brake);
+                  led.setColor(LEDPattern.solid(Color.kGreen));
+                })
             .ignoringDisable(false));
     
     m_driverController.x().whileTrue(Commands.startEnd(
@@ -128,6 +141,8 @@ public class RobotContainer {
        () -> driveCommand.isBackCoralStation = false).withName("Face Coral Station"));
         
     m_driverController.x().onTrue(prepCoralIntake()).onFalse(coralHandoff());
+
+    m_driverController.leftBumper().onTrue(setLEDToAllianceColor());
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
@@ -147,6 +162,7 @@ public class RobotContainer {
 
   public void periodic() {
 
+    robotVisualizer.update();
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
   }
@@ -177,6 +193,17 @@ public class RobotContainer {
 
   public Command alignToPose(Supplier<Pose2d> Pose) {
     return new AlignToPose(Pose, drivetrain);
+  }
+
+  public Command setLEDToAllianceColor() {
+    return Commands.run(() -> led.setColor(LEDPattern.solid(getAllianceColor())));
+  }
+
+  public Color getAllianceColor() {
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      return Color.kBlue;
+    }
+    return Color.kRed;
   }
 
   public Command coralHandoff() {
