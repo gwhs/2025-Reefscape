@@ -10,7 +10,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -102,7 +101,6 @@ public class RobotContainer {
     SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
     SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
 
-
     EagleUtil.calculateRedReefSetPoints();
     EagleUtil.calculateBlueReefSetPoints();
 
@@ -135,11 +133,15 @@ public class RobotContainer {
                   led.setColor(LEDPattern.solid(Color.kGreen));
                 })
             .ignoringDisable(false));
-    
-    m_driverController.x().whileTrue(Commands.startEnd(
-       () -> driveCommand.isBackCoralStation = true,
-       () -> driveCommand.isBackCoralStation = false).withName("Face Coral Station"));
-        
+
+    m_driverController
+        .x()
+        .whileTrue(
+            Commands.startEnd(
+                    () -> driveCommand.isBackCoralStation = true,
+                    () -> driveCommand.isBackCoralStation = false)
+                .withName("Face Coral Station"));
+
     m_driverController.x().onTrue(prepCoralIntake()).onFalse(coralHandoff());
 
     m_driverController.leftBumper().onTrue(setLEDToAllianceColor());
@@ -216,7 +218,7 @@ public class RobotContainer {
   }
 
   public Command prepCoralIntake() {
-    return Commands.sequence( 
+    return Commands.sequence(
             elevator.goTo(ElevatorConstants.STOW_METER).withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake");
