@@ -40,6 +40,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     DogLog.log("Elevator/Max Height (meter)", ElevatorConstants.TOP_METER);
   }
 
+  /** Drives the elevator to the give elevation in meters
+   *  
+   */
   public Command goTo(double meters) {
     return this.runOnce(
             () -> {
@@ -49,7 +52,11 @@ public class ElevatorSubsystem extends SubsystemBase {
             Commands.waitUntil(
                 () -> MathUtil.isNear(meters, rotationsToMeters(elevatorIO.getRotation()), 0.1)));
   }
-
+  /** The idea is that we slowly lower the elevator (by applying negative volt) until the reverse limit switch is triggered
+   *  then we stop the elevator 
+   *  the motor automatically sets the internal encoder to zero when the reverse limit switch is triggered 
+   * (see ElevatorIOReal for this config flag)
+   */
   public Command homingCommand() {
     return this.runOnce(
             () -> {

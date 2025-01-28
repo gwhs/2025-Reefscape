@@ -15,4 +15,12 @@ public class ElevatorConstants {
   public static final double SPROCKET_DIAMETER = Units.inchesToMeters(1.7567);
 
   public static final double TOP_METER = ElevatorSubsystem.rotationsToMeters(60);
-}
+
+  // Position constants:
+  public static final double LOWERED_ELEVATION= 0.0;
+  public static final double L3_ELEVATION = .4;
+  public static final double L4_ELEVATION = .5;
+  
+
+
+  }

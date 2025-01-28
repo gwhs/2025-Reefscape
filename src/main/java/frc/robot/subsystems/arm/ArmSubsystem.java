@@ -24,6 +24,11 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putData("Arm Command/reset to 0 degrees", setAngle(0));
   }
 
+  /** drives the arm until it reaches the given provided angle
+   * 
+   * @param angle Angle to drive the arm to in degrees 
+   * TODO Morgan add sign information/0 position information to param annotation
+   */
   public Command setAngle(double angle) {
     return this.runOnce(
             () -> {
