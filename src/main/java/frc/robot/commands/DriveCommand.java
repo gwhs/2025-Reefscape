@@ -29,8 +29,8 @@ public class DriveCommand extends Command {
 
   public boolean isSlow = true;
   public boolean isBackCoralStation = false;
-  public boolean robotCentric = false;
-  public boolean faceCoral = false;
+  public boolean isRobotCentric = false;
+  public boolean isFaceCoral = false;
 
   public boolean resetLimiter = true;
 
@@ -141,7 +141,7 @@ public class DriveCommand extends Command {
       DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
     }
 
-    if (faceCoral) {
+    if (isFaceCoral) {
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
         Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.blueReefSetpointList);
@@ -169,8 +169,12 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/yVelocity", yVelocity);
     DogLog.log("Drive Command/angularVelocity", angularVelocity);
     DogLog.log("Drive Command/rotationSetpoint", PID.getSetpoint());
+    DogLog.log("Drive Command/isSlow", isSlow);
+    DogLog.log("Drive Command/isBackCoralStation", isBackCoralStation);
+    DogLog.log("Drive Command/isRobotCentric", isRobotCentric);
+    DogLog.log("Drive Command/isFaceCoral", isFaceCoral);
 
-    if (robotCentric) {
+    if (isRobotCentric) {
       drivetrain.setControl(
           robotCentricDrive
               .withVelocityX(xVelocity)
