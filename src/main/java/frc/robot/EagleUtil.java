@@ -20,7 +20,7 @@ public class EagleUtil {
 
   private static double REEF_TO_REEF_DISTANCE = 0.33;
 
-  private static double ROBOT_AWAY_FROM_REEF = Units.inchesToMeters(50) / 2;
+  private static double ROBOT_AWAY_FROM_REEF = Units.inchesToMeters(40);
 
   private static double X = -REEF_LENGTH - ROBOT_AWAY_FROM_REEF;
   private static double Y = REEF_TO_REEF_DISTANCE / 2;
@@ -33,9 +33,6 @@ public class EagleUtil {
 
   public static void calculateBlueReefSetPoints() {
 
-    for (int i = 0; i < bluePoses.length; i++) {
-      System.out.print(bluePoses[i] + ", ");
-    }
     bluePoses[0] = new Pose2d(X, Y, Rotation2d.kZero);
     bluePoses[1] = new Pose2d(X, -Y, Rotation2d.kZero);
 
@@ -54,9 +51,6 @@ public class EagleUtil {
   }
 
   public static void calculateRedReefSetPoints() {
-    for (int i = 0; i < redPoses.length; i++) {
-      System.out.print(redPoses[i] + ", ");
-    }
     redPoses[0] = new Pose2d(X, Y, Rotation2d.kZero);
     redPoses[1] = new Pose2d(X, -Y, Rotation2d.kZero);
 
