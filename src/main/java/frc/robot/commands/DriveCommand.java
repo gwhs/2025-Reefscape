@@ -169,10 +169,10 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/yVelocity", yVelocity);
     DogLog.log("Drive Command/angularVelocity", angularVelocity);
     DogLog.log("Drive Command/rotationSetpoint", PID.getSetpoint());
-    DogLog.log("Drive Command/speed", isSlow);
-    DogLog.log("Drive Command/is back of the robot to coral station", isBackCoralStation);
-    DogLog.log("Drive Command/is robot centric", isRobotCentric);
-    DogLog.log("Drive Command/does robot face coral", isFaceCoral);
+    DogLog.log("Drive Command/isSlow", isSlow);
+    DogLog.log("Drive Command/isBackCoralStation", isBackCoralStation);
+    DogLog.log("Drive Command/isRobotCentric", isRobotCentric);
+    DogLog.log("Drive Command/isFaceCoral", isFaceCoral);
 
 
     if (isRobotCentric) {
