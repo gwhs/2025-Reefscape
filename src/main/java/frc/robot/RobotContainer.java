@@ -72,9 +72,7 @@ public class RobotContainer {
   private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
 
   private final DriveCommand driveCommand =
-      new DriveCommand(m_driverController, drivetrain, () -> m_ElevatorSubsystem.getHeight());
-
-  // put elevator get height in place of 0
+      new DriveCommand(m_driverController, drivetrain, () -> 0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -96,8 +94,8 @@ public class RobotContainer {
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 
-    // EagleUtil.calculateRedReefSetPoints();
-    // EagleUtil.calculateBlueReefSetPoints();
+    EagleUtil.calculateRedReefSetPoints();
+    EagleUtil.calculateBlueReefSetPoints();
 
     DogLog.log("Field Constants/Blue Reef", FieldConstants.blueReefSetpoints);
     DogLog.log("Field Constants/Red Reef", FieldConstants.redReefSetpoints);
@@ -130,6 +128,19 @@ public class RobotContainer {
         .onTrue(alignToPose(() -> new Pose2d(1.00, 1.00, new Rotation2d(1.00))));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
+
+    m_driverController
+        .a()
+        .whileTrue(
+            alignToPose(
+                () -> {
+                  if (DriverStation.getAlliance().isPresent()
+                      && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                    return drivetrain.getState().Pose.nearest(FieldConstants.blueReefSetpointList);
+                  } else {
+                    return drivetrain.getState().Pose.nearest(FieldConstants.redReefSetpointList);
+                  }
+                }));
   }
 
   public void periodic() {
