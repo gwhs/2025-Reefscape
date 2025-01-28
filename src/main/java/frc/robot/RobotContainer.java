@@ -210,16 +210,16 @@ public class RobotContainer {
 
   public Command coralHandoff() {
     return Commands.sequence(
-            elevator.goTo(ElevatorConstants.STOW_METER).withTimeout(0.5),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
-            elevator.goTo(ElevatorConstants.INTAKE_METER).withTimeout(1),
-            elevator.goTo(ElevatorConstants.STOW_METER).withTimeout(1))
+            elevator.setHeight(ElevatorConstants.INTAKE_METER).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(1))
         .withName("Coral HandOff");
   }
 
   public Command prepCoralIntake() {
     return Commands.sequence(
-            elevator.goTo(ElevatorConstants.STOW_METER).withTimeout(0.5),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake");
   }
