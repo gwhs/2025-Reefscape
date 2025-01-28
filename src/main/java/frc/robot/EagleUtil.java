@@ -29,11 +29,8 @@ public class EagleUtil {
 
   public static void calculateBlueReefSetPoints() {
 
-    for (int i = 0; i < bluePoses.length; i++) {
-      System.out.print(bluePoses[i] + ", ");
-    }
     bluePoses[0] = new Pose2d(X, Y + Y_OFFSET, Rotation2d.kZero);
-    bluePoses[1] = new Pose2d(X, -Y - Y_OFFSET, Rotation2d.kZero);
+    bluePoses[1] = new Pose2d(X, -Y + Y_OFFSET, Rotation2d.kZero);
 
     Rotation2d sixty = Rotation2d.fromDegrees(60);
 
@@ -50,9 +47,6 @@ public class EagleUtil {
   }
 
   public static void calculateRedReefSetPoints() {
-    for (int i = 0; i < redPoses.length; i++) {
-      System.out.print(redPoses[i] + ", ");
-    }
     redPoses[0] = new Pose2d(X, Y, Rotation2d.kZero);
     redPoses[1] = new Pose2d(X, -Y, Rotation2d.kZero);
 
