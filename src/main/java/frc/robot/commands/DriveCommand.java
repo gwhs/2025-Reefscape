@@ -174,7 +174,6 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/isRobotCentric", isRobotCentric);
     DogLog.log("Drive Command/isFaceCoral", isFaceCoral);
 
-
     if (isRobotCentric) {
       drivetrain.setControl(
           robotCentricDrive
