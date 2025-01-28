@@ -18,10 +18,9 @@ public class LedSubsystem extends SubsystemBase {
     m_led = new AddressableLED(LedUtils.PWM_LED_PORT);
     m_LedBuffer = new AddressableLEDBuffer(LedUtils.LED_LENGTH);
 
-      m_led.setLength(m_LedBuffer.getLength());
-      m_led.start();
-    }
-  
+    m_led.setLength(m_LedBuffer.getLength());
+    m_led.start();
+  }
 
   public void setColor(LEDPattern pattern) {
     if (RobotBase.isSimulation()) {
