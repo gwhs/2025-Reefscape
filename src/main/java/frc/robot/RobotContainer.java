@@ -57,6 +57,8 @@ public class RobotContainer {
 
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
 
+  private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
+
   private AprilTagCam cam3 =
       new AprilTagCam(
           "cam3",
@@ -157,6 +159,7 @@ public class RobotContainer {
 
   public void periodic() {
 
+    robotVisualizer.update();
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
   }
