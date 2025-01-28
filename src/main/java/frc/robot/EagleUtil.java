@@ -38,9 +38,9 @@ public class EagleUtil {
       bluePoses[i] = bluePoses[i - 2].rotateBy(sixty);
     }
 
-    for (int i = 0; i < bluePoses.length; i++) {
-      bluePoses[i] = bluePoses[i].relativeTo(BLUE_REEF_INVERT);
-    }
+    // for (int i = 0; i < bluePoses.length; i++) {
+    //   bluePoses[i] = bluePoses[i].relativeTo(BLUE_REEF_INVERT);
+    // }
 
     DogLog.log("Caculation/Blue Reef", BLUE_REEF);
     DogLog.log("Caculation/Blue Set Points", bluePoses);
@@ -56,9 +56,9 @@ public class EagleUtil {
       redPoses[i] = redPoses[i - 2].rotateBy(sixty);
     }
 
-    for (int i = 0; i < redPoses.length; i++) {
-      redPoses[i] = redPoses[i].relativeTo(RED_REEF_INVERT);
-    }
+    // for (int i = 0; i < redPoses.length; i++) {
+      // redPoses[i] = redPoses[i].relativeTo(RED_REEF_INVERT);
+    // }
     DogLog.log("Caculation/Red Reef", RED_REEF);
     DogLog.log("Caculation/Red Set Points", redPoses);
   }
