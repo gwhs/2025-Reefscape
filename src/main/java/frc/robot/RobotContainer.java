@@ -73,10 +73,8 @@ public class RobotContainer {
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
 
-  private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
-
   private final DriveCommand driveCommand =
-      new DriveCommand(m_driverController, drivetrain, () -> 0);
+      new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
