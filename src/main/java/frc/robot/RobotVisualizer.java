@@ -25,8 +25,8 @@ public class RobotVisualizer {
   // Robot Constants
   public static final double ROBOT_LENGTH = Units.inchesToMeters(27.5);
 
-  public Color color1 = Color.kFirstBlue;
-  public Color color2 = Color.kFirstRed;
+  public Color colorBlue = Color.kFirstBlue;
+  public Color colorRed = Color.kFirstRed;
 
   // Code for the stick figure of each subsystems
 
@@ -36,35 +36,35 @@ public class RobotVisualizer {
 
   MechanismRoot2d base = panel.getRoot("base", -0.31, 0.0175);
   MechanismLigament2d m_base =
-      base.append(new MechanismLigament2d("baseL", 1.3, 0, 10, new Color8Bit(color1)));
+      base.append(new MechanismLigament2d("baseL", 1.3, 0, 10, new Color8Bit(colorBlue)));
 
   // Code for outer elevator, color coded blue
   MechanismRoot2d root = panel.getRoot("elevator", 0, 0);
   MechanismLigament2d m_elevator =
-      root.append(new MechanismLigament2d("elevatorL", 1.5, 90, 10, new Color8Bit(color1)));
+      root.append(new MechanismLigament2d("elevatorL", 1.5, 90, 10, new Color8Bit(colorBlue)));
 
   MechanismRoot2d root2 = panel.getRoot("elevator2", 0.7, 0);
   MechanismLigament2d m_elevator2 =
-      root2.append(new MechanismLigament2d("elevatorL2", 1.5, 90, 10, new Color8Bit(color1)));
+      root2.append(new MechanismLigament2d("elevatorL2", 1.5, 90, 10, new Color8Bit(colorBlue)));
 
   // inner elevator, moving part, color coded red
   MechanismRoot2d root3 = panel.getRoot("elevator3", 0.04, 0.078);
   MechanismLigament2d m_elevator3 =
-      root3.append(new MechanismLigament2d("elevatorL3", 1.5, 90, 10, new Color8Bit(color2)));
+      root3.append(new MechanismLigament2d("elevatorL3", 1.5, 90, 10, new Color8Bit(colorRed)));
 
   MechanismRoot2d root4 = panel.getRoot("elevator4", 0.66, 0.078);
   MechanismLigament2d m_elevator4 =
-      root4.append(new MechanismLigament2d("elevatorL4", 1.5, 90, 10, new Color8Bit(color2)));
+      root4.append(new MechanismLigament2d("elevatorL4", 1.5, 90, 10, new Color8Bit(colorRed)));
 
   MechanismLigament2d m_elevatorH2 =
       m_elevator3.append(
-          new MechanismLigament2d("horizontal2", 0.62, -90, 10, new Color8Bit(color2)));
+          new MechanismLigament2d("horizontal2", 0.62, -90, 10, new Color8Bit(colorRed)));
   MechanismLigament2d m_elevatorH3 =
       m_elevator3.append(
-          new MechanismLigament2d("horizontal3", 0.31, -90, 10, new Color8Bit(color2)));
+          new MechanismLigament2d("horizontal3", 0.31, -90, 10, new Color8Bit(colorRed)));
 
   MechanismLigament2d m_elevatorH1 =
-      root3.append(new MechanismLigament2d("horizontal1", 0.62, 0, 10, new Color8Bit(color2)));
+      root3.append(new MechanismLigament2d("horizontal1", 0.62, 0, 10, new Color8Bit(colorRed)));
 
   // arm
   MechanismLigament2d m_arm =
