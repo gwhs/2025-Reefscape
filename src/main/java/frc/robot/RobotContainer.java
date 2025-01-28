@@ -27,7 +27,9 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.aprilTagCam.AprilTagCam;
 import frc.robot.subsystems.aprilTagCam.AprilTagCamConstants;
+import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import java.util.function.Supplier;
 
@@ -93,6 +95,9 @@ public class RobotContainer {
     // PathfindingCommand.warmupCommand().schedule();
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
+    SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
+    SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
+
 
     EagleUtil.calculateRedReefSetPoints();
     EagleUtil.calculateBlueReefSetPoints();
@@ -117,15 +122,12 @@ public class RobotContainer {
     IS_DISABLED.onFalse(
         Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Brake))
             .ignoringDisable(false));
-
-    SmartDashboard.putData(
-        "LockIn", alignToPose(() -> new Pose2d(2.00, 4.00, Rotation2d.fromDegrees(0))));
-    SmartDashboard.putData(
-        "LockOut", alignToPose(() -> new Pose2d(0.00, 0.00, Rotation2d.fromDegrees(180))));
-
-    m_driverController
-        .rightTrigger()
-        .onTrue(alignToPose(() -> new Pose2d(1.00, 1.00, new Rotation2d(1.00))));
+    
+    m_driverController.x().whileTrue(Commands.startEnd(
+       () -> driveCommand.isBackCoralStation = true,
+       () -> driveCommand.isBackCoralStation = false).withName("Face Coral Station"));
+        
+    m_driverController.x().onTrue(prepCoralIntake()).onFalse(coralHandoff());
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
@@ -175,5 +177,21 @@ public class RobotContainer {
 
   public Command alignToPose(Supplier<Pose2d> Pose) {
     return new AlignToPose(Pose, drivetrain);
+  }
+
+  public Command coralHandoff() {
+    return Commands.sequence(
+            elevator.goTo(ElevatorConstants.STOW_METER).withTimeout(0.5),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
+            elevator.goTo(ElevatorConstants.INTAKE_METER).withTimeout(1),
+            elevator.goTo(ElevatorConstants.STOW_METER).withTimeout(1))
+        .withName("Coral HandOff");
+  }
+
+  public Command prepCoralIntake() {
+    return Commands.sequence( 
+            elevator.goTo(ElevatorConstants.STOW_METER).withTimeout(0.5),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
+        .withName("Prepare Coral Intake");
   }
 }

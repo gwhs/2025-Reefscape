@@ -5,4 +5,6 @@ public class ArmConstants {
   public static final double MAX_VELOCITY = 300;
   public static final double MAX_ACCELERATION = 150;
   public static final double ARM_GEAR_RATIO = 62.3333333333;
+
+  public static final double ARM_INTAKE_ANGLE = 90.0;
 }

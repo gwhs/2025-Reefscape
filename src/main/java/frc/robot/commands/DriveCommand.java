@@ -28,7 +28,7 @@ public class DriveCommand extends Command {
   private final PIDController PID;
 
   public boolean isSlow = true;
-  public boolean isBackCoralStation = false;
+  public static boolean isBackCoralStation = false;
   public boolean robotCentric = false;
   public boolean faceCoral = false;
 
