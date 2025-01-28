@@ -1,6 +1,5 @@
 package frc.robot.subsystems.led;
 
-import edu.wpi.first.hal.simulation.RoboRioDataJNI;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.LEDPattern;
@@ -22,7 +21,7 @@ public class LedSubsystem extends SubsystemBase {
       m_led.setLength(m_LedBuffer.getLength());
       m_led.start();
     }
-  }
+  
 
   public void setColor(LEDPattern pattern) {
     if (RobotBase.isSimulation()) {
