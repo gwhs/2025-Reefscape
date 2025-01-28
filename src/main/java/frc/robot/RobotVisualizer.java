@@ -11,14 +11,14 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
 
 /** Add your docs here. */
 public class RobotVisualizer {
   private final ElevatorSubsystem elevator;
-  private final ArmSubsystem arm; 
-  private final Mechanism2d panel = new Mechanism2d(ROBOT_LENGTH, ROBOT_LENGTH * 3);
+  private final ArmSubsystem arm;
+  private final Mechanism2d panel = new Mechanism2d(ROBOT_LENGTH, ROBOT_LENGTH * 5);
 
   private static final double kElevatorMinimumLength = 1.5;
 
@@ -73,7 +73,7 @@ public class RobotVisualizer {
 
   public RobotVisualizer(ElevatorSubsystem elevator, ArmSubsystem arm) {
     this.elevator = elevator;
-    this.arm = arm; 
+    this.arm = arm;
   }
 
   public void update() {
@@ -82,8 +82,8 @@ public class RobotVisualizer {
 
     m_arm.setAngle(-armAngle);
 
-    m_elevator3.setLength(elevatorHeight);
-    m_elevator4.setLength(elevatorHeight);
+    m_elevator3.setLength(elevatorHeight + 1.2);
+    m_elevator4.setLength(elevatorHeight + 1.2);
 
     SmartDashboard.putData("RobotVisualizer", panel);
   }
