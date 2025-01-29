@@ -135,12 +135,17 @@ public class RobotContainer {
                     () -> driveCommand.isBackCoralStation = false)
                 .withName("Face Coral Station"));
 
-    m_driverController.x().onTrue(prepCoralIntake()).onFalse(coralHandoff());
+    m_driverController
+        .y()
+        .whileTrue(
+            Commands.startEnd(
+                    () -> driveCommand.isFaceCoral = true, () -> driveCommand.isFaceCoral = false)
+                .withName("Face reef"));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
     m_driverController
-        .a()
+        .b()
         .whileTrue(
             alignToPose(
                 () -> {
