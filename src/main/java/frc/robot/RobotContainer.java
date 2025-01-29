@@ -135,6 +135,8 @@ public class RobotContainer {
                     () -> driveCommand.isBackCoralStation = false)
                 .withName("Face Coral Station"));
 
+    m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
+
     m_driverController
         .y()
         .whileTrue(
