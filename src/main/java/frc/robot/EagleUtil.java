@@ -4,6 +4,9 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+
+import static edu.wpi.first.units.Units.Inches;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -27,7 +30,7 @@ public class EagleUtil {
 
   private static double X = -REEF_LENGTH - ROBOT_AWAY_FROM_REEF;
   private static double Y = REEF_TO_REEF_DISTANCE / 2;
-  private static double Y_OFFSET = 1;
+  private static double Y_OFFSET = Units.inchesToMeters(1);
 
   private static Pose2d[] bluePoses = new Pose2d[12];
   private static Pose2d[] redPoses = new Pose2d[12];
