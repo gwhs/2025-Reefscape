@@ -20,12 +20,8 @@ public class EagleUtil {
   private static double X = -REEF_LENGTH - ROBOT_AWAY_FROM_REEF;
   private static double Y = REEF_TO_REEF_DISTANCE / 2;
   private static double Y_OFFSET = -0.1; // to be changed if/when needed
-  private static double[][] blueReefOffsets = {
-    {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}
-  };
-  private static double[][] redReefOffsets = {
-    {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}
-  };
+  
+  
 
   // blue poses
   private static Pose2d[] bluePoses = new Pose2d[12];
@@ -34,6 +30,21 @@ public class EagleUtil {
   private static Pose2d[] redPoses = new Pose2d[12];
 
   public static void calculateBlueReefSetPoints() {
+
+    double[][] blueReefOffsets = {
+      {0, 0}, // reef A
+      {2, 2}, // reef B
+      {0, 0}, // reef C
+      {0, 0}, // reef D
+      {0, 0}, // reef E
+      {0, 0}, // reef F
+      {0, 0}, // reef G
+      {0, 0}, // reef H
+      {0, 0}, // reef I
+      {0, 0}, // reef J
+      {0, 0}, // reef K
+      {0, 0}  // reef L
+    };
 
     bluePoses[0] = new Pose2d(X, Y + Y_OFFSET, Rotation2d.kZero);
     bluePoses[1] = new Pose2d(X, -Y + Y_OFFSET, Rotation2d.kZero);
@@ -61,6 +72,21 @@ public class EagleUtil {
     redPoses[0] = new Pose2d(X, Y + Y_OFFSET, Rotation2d.kZero);
     redPoses[1] = new Pose2d(X, -Y + Y_OFFSET, Rotation2d.kZero);
 
+    double[][] redReefOffsets = {
+      {0, 0}, // reef G
+      {0, 0}, // reef H
+      {0, 0}, // reef I 
+      {0, 0}, // reef J
+      {0, 0}, // reef K
+      {0, 0}, // reef L
+      {0, 0}, // reef A
+      {0, 0}, // reef B
+      {0, 0}, // reef C
+      {0, 0}, // reef D
+      {0, 0}, // reef E
+      {0, 0}  // reef F
+    };
+
     Rotation2d sixty = Rotation2d.fromDegrees(60);
 
     for (int i = 2; i < redPoses.length; i++) {
@@ -71,9 +97,9 @@ public class EagleUtil {
       redPoses[i] = redPoses[i].relativeTo(RED_REEF_INVERT);
       redPoses[i] =
           new Pose2d(
-              bluePoses[i].getX() + redReefOffsets[i][0],
-              bluePoses[i].getY() + redReefOffsets[i][1],
-              bluePoses[i].getRotation());
+              redPoses[i].getX() + redReefOffsets[i][0],
+              redPoses[i].getY() + redReefOffsets[i][1],
+              redPoses[i].getRotation());
     }
     DogLog.log("Caculation/Red Reef", RED_REEF);
     DogLog.log("Caculation/Red Set Points", redPoses);
