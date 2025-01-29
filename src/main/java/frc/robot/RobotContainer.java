@@ -224,10 +224,33 @@ public class RobotContainer {
         .withName("Prepare Coral Intake");
   }
 
-  public Command PrepL3Score () {
+  public Command PrepL3Score() {
     return Commands.sequence(
-            elevator.setHeight(ElevatorConstants.L3_ELEVATION).withTimeout(2),
+            elevator.setHeight(ElevatorConstants.L3_PREP_POSITION).withTimeout(2),
             arm.setAngle(ArmConstants.L3_RELEASE_POSITION).withTimeout(2))
         .withName("Prep L3 Score");
+  }
+
+  public Command L3Score() {
+    return Commands.sequence(
+        Commands.parallel(
+                arm.setAngle(ArmConstants.L3_RELEASE_POSITION),
+                elevator.setHeight(ElevatorConstants.L3_RELEASE_POSITION))
+            .withName("L3 Score"));
+  }
+
+  public Command PrepL4Score() {
+    return Commands.sequence(
+            elevator.setHeight(ElevatorConstants.L4_PREP_POSITION).withTimeout(2),
+            arm.setAngle(ArmConstants.L4_RELEASE_POSITION).withTimeout(2))
+        .withName("Prep L4 Score");
+  }
+
+  public Command L4Score() {
+    return Commands.sequence(
+      Commands.parallel(
+        arm.setAngle(ArmConstants.L4_RELEASE_POSITION)
+            .alongWith(elevator.setHeight(ElevatorConstants.L4_RELEASE_POSITION))
+            .withName("L4 Score")));
   }
 }
