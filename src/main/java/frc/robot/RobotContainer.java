@@ -97,12 +97,6 @@ public class RobotContainer {
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
     SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
-
-    EagleUtil.calculateRedReefSetPoints();
-    EagleUtil.calculateBlueReefSetPoints();
-
-    DogLog.log("Field Constants/Blue Reef", FieldConstants.blueReefSetpoints);
-    DogLog.log("Field Constants/Red Reef", FieldConstants.redReefSetpoints);
   }
 
   /**

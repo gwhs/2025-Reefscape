@@ -10,31 +10,33 @@ import java.util.Arrays;
 public class EagleUtil {
   public static ArrayList<Pose2d> m_redPoses;
   public static ArrayList<Pose2d> m_bluePoses;
+
   private static double BLUE_REEF_X = Units.inchesToMeters(144 + (93.5 - 14 * 2) / 2);
   private static double BLUE_REEF_Y = Units.inchesToMeters(158.50);
   private static Pose2d BLUE_REEF = new Pose2d(BLUE_REEF_X, BLUE_REEF_Y, Rotation2d.kZero);
   private static Pose2d BLUE_REEF_INVERT = new Pose2d(-BLUE_REEF_X, -BLUE_REEF_Y, Rotation2d.kZero);
+
   private static double RED_REEF_X = Units.inchesToMeters(546.875 - (93.5 - 14 * 2) / 2);
   private static double RED_REEF_Y = Units.inchesToMeters(158.50);
   private static Pose2d RED_REEF = new Pose2d(RED_REEF_X, RED_REEF_Y, Rotation2d.kZero);
   private static Pose2d RED_REEF_INVERT = new Pose2d(-RED_REEF_X, -RED_REEF_Y, Rotation2d.kZero);
+
   private static double REEF_LENGTH = Units.inchesToMeters(35);
   private static double REEF_TO_REEF_DISTANCE = 0.33;
   private static double ROBOT_AWAY_FROM_REEF = Units.inchesToMeters(15);
+
   private static double X = -REEF_LENGTH - ROBOT_AWAY_FROM_REEF;
   private static double Y = REEF_TO_REEF_DISTANCE / 2;
   private static double Y_OFFSET = -0.1; // to be changed if/when needed
 
-  // blue poses
   private static Pose2d[] bluePoses = new Pose2d[12];
-
-  // red poses
   private static Pose2d[] redPoses = new Pose2d[12];
 
   public static ArrayList<Pose2d> calculateBlueReefSetPoints() {
     if (m_bluePoses != null) {
       return m_bluePoses;
     }
+
     double[][] blueReefOffsets = {
       // in meters
       {0, 0}, // reef A
@@ -79,6 +81,7 @@ public class EagleUtil {
     if (m_redPoses != null) {
       return m_redPoses;
     }
+    
     redPoses[0] = new Pose2d(X, Y + Y_OFFSET, Rotation2d.kZero);
     redPoses[1] = new Pose2d(X, -Y + Y_OFFSET, Rotation2d.kZero);
 
