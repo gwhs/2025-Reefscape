@@ -51,7 +51,11 @@ public class ArmIOReal implements ArmIO {
     TalonFXConfigurator leftElevatorConfigurator = armMotor.getConfigurator();
     leftElevatorConfigurator.apply(talonFXConfigs);
 
-    SmartDashboard.putData("Arm Command/reset to 90", Commands.runOnce(() -> armMotor.setPosition(Units.degreesToRotations(90) * ArmConstants.ARM_GEAR_RATIO)));
+    SmartDashboard.putData(
+        "Arm Command/reset to 90",
+        Commands.runOnce(
+            () ->
+                armMotor.setPosition(Units.degreesToRotations(90) * ArmConstants.ARM_GEAR_RATIO)));
   }
 
   // set arm angle in degrees
