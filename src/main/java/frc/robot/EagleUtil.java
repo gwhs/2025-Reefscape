@@ -4,8 +4,12 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class EagleUtil {
+  public static ArrayList<Pose2d> m_redPoses;
+  public static ArrayList<Pose2d> m_bluePoses;
   private static double BLUE_REEF_X = Units.inchesToMeters(144 + (93.5 - 14 * 2) / 2);
   private static double BLUE_REEF_Y = Units.inchesToMeters(158.50);
   private static Pose2d BLUE_REEF = new Pose2d(BLUE_REEF_X, BLUE_REEF_Y, Rotation2d.kZero);
@@ -27,7 +31,7 @@ public class EagleUtil {
   // red poses
   private static Pose2d[] redPoses = new Pose2d[12];
 
-  public static void calculateBlueReefSetPoints() {
+  public static ArrayList<Pose2d> calculateBlueReefSetPoints() {
 
     double[][] blueReefOffsets = {
       {0, 0}, // reef A
@@ -64,9 +68,11 @@ public class EagleUtil {
 
     DogLog.log("Caculation/Blue Reef", BLUE_REEF);
     DogLog.log("Caculation/Blue Set Points", bluePoses);
+    m_bluePoses = new ArrayList<Pose2d>(Arrays.asList(bluePoses));
+    return m_bluePoses;
   }
 
-  public static void calculateRedReefSetPoints() {
+  public static ArrayList<Pose2d> calculateRedReefSetPoints() {
     redPoses[0] = new Pose2d(X, Y + Y_OFFSET, Rotation2d.kZero);
     redPoses[1] = new Pose2d(X, -Y + Y_OFFSET, Rotation2d.kZero);
 
@@ -101,5 +107,9 @@ public class EagleUtil {
     }
     DogLog.log("Caculation/Red Reef", RED_REEF);
     DogLog.log("Caculation/Red Set Points", redPoses);
+
+    m_redPoses = new ArrayList<Pose2d>(Arrays.asList(redPoses));
+
+    return m_redPoses;
   }
 }
