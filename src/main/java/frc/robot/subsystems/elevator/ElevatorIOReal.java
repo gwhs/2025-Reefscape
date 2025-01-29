@@ -41,6 +41,7 @@ public class ElevatorIOReal implements ElevatorIO {
     SoftwareLimitSwitchConfigs softwareLimitSwitchConfigs = talonFXConfigs.SoftwareLimitSwitch;
 
     slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
+    slot0Configs.kG = 0; // Add 0 voltage to overcome gravity
     slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
     slot0Configs.kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
     slot0Configs.kP = 4.8; // A position error of 2.5 rotations results in 12 V output
