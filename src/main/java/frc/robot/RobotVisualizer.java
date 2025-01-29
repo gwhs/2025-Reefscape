@@ -41,11 +41,11 @@ public class RobotVisualizer {
   // Code for outer elevator, color coded blue
   MechanismRoot2d root = panel.getRoot("elevator", 0, 0);
   MechanismLigament2d m_elevator =
-      root.append(new MechanismLigament2d("elevatorL", 1.5, 90, 10, new Color8Bit(colorBlue)));
+      root.append(new MechanismLigament2d("elevatorL", 1, 90, 10, new Color8Bit(colorBlue)));
 
   MechanismRoot2d root2 = panel.getRoot("elevator2", 0.7, 0);
   MechanismLigament2d m_elevator2 =
-      root2.append(new MechanismLigament2d("elevatorL2", 1.5, 90, 10, new Color8Bit(colorBlue)));
+      root2.append(new MechanismLigament2d("elevatorL2", 1, 90, 10, new Color8Bit(colorBlue)));
 
   // inner elevator, moving part, color coded red
   MechanismRoot2d root3 = panel.getRoot("elevator3", 0.06, 0.078);
@@ -81,9 +81,6 @@ public class RobotVisualizer {
     double armAngle = arm.getAngle();
 
     m_arm.setAngle(armAngle+180);
-
-    m_elevator.setLength(elevatorHeight + Units.inchesToMeters(36));
-    m_elevator2.setLength(elevatorHeight + Units.inchesToMeters(36));
 
     m_elevator3.setLength(elevatorHeight + Units.inchesToMeters(37.2));
     m_elevator4.setLength(elevatorHeight + Units.inchesToMeters(37.2));
