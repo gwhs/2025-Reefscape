@@ -11,6 +11,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.util.Units;
 
 public class ArmIOReal implements ArmIO {
   private TalonFX armMotor = new TalonFX(ArmConstants.ARM_MOTOR_ID, "rio");
@@ -38,29 +39,29 @@ public class ArmIOReal implements ArmIO {
     motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     softwareLimitSwitch.ForwardSoftLimitEnable = true;
-    softwareLimitSwitch.ForwardSoftLimitThreshold = 270 * ArmConstants.ARM_GEAR_RATIO;
+    softwareLimitSwitch.ForwardSoftLimitThreshold = Units.degreesToRotations(330) * ArmConstants.ARM_GEAR_RATIO;
     softwareLimitSwitch.ReverseSoftLimitEnable = true;
-    softwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+    softwareLimitSwitch.ReverseSoftLimitThreshold =  Units.degreesToRotations(20) * ArmConstants.ARM_GEAR_RATIO;
 
     TalonFXConfigurator leftElevatorConfigurator = armMotor.getConfigurator();
     leftElevatorConfigurator.apply(talonFXConfigs);
   }
-
+// set arm angle in degrees
   @Override
   public void setAngle(double angle) {
-    armMotor.setControl(m_request.withPosition(angle * ArmConstants.ARM_GEAR_RATIO));
+    armMotor.setControl(m_request.withPosition(Units.degreesToRotations(angle) * ArmConstants.ARM_GEAR_RATIO));
   }
-
+// geta arm position in degrees
   @Override
   public double getPosition() {
-    return armMotor.getPosition(true).getValueAsDouble() / ArmConstants.ARM_GEAR_RATIO;
+    return Units.rotationsToDegrees(armMotor.getPosition(true).getValueAsDouble()) / ArmConstants.ARM_GEAR_RATIO;
   }
 
   @Override
   public void update() {
     DogLog.log("Arm/pid goal", armMotor.getClosedLoopReference(true).getValueAsDouble());
     DogLog.log("Arm/motor voltage", armMotor.getMotorVoltage(true).getValueAsDouble());
-    DogLog.log("Arm/ supply voltage", armMotor.getSupplyVoltage(true).getValueAsDouble());
+    DogLog.log("Arm/supply voltage", armMotor.getSupplyVoltage(true).getValueAsDouble());
     DogLog.log("Arm/device temp", armMotor.getDeviceTemp(true).getValueAsDouble());
     DogLog.log("Arm/stator current", armMotor.getStatorCurrent(true).getValueAsDouble());
   }
