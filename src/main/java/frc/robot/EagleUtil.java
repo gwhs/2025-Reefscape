@@ -27,7 +27,7 @@ public class EagleUtil {
 
   private static double X = -REEF_LENGTH - ROBOT_AWAY_FROM_REEF;
   private static double Y = REEF_TO_REEF_DISTANCE / 2;
-  private static double Y_OFFSET = -0.1; // to be changed if/when needed
+  private static double Y_OFFSET = 1;
 
   private static Pose2d[] bluePoses = new Pose2d[12];
   private static Pose2d[] redPoses = new Pose2d[12];
