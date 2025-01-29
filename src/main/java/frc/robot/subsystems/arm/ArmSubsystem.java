@@ -30,11 +30,12 @@ public class ArmSubsystem extends SubsystemBase {
    * TODO Morgan add sign information/0 position information to param annotation
    */
   public Command setAngle(double angle) {
+    double clampedAngle = MathUtil.clamp(angle, 0, 360);
     return this.runOnce(
             () -> {
-              armIO.setAngle(angle);
+              armIO.setAngle(clampedAngle);
             })
-        .andThen(Commands.waitUntil(() -> MathUtil.isNear(angle, armIO.getPosition(), 0.1)));
+        .andThen(Commands.waitUntil(() -> MathUtil.isNear(clampedAngle, armIO.getPosition(), 0.1)));
   }
 
   @Override

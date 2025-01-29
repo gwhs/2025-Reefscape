@@ -10,11 +10,12 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -27,8 +28,11 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.aprilTagCam.AprilTagCam;
 import frc.robot.subsystems.aprilTagCam.AprilTagCamConstants;
+import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.Supplier;
 
 /**
@@ -48,10 +52,13 @@ public class RobotContainer {
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
+  private final LedSubsystem led = new LedSubsystem();
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
+
+  private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
   private AprilTagCam cam3 =
       new AprilTagCam(
@@ -69,10 +76,8 @@ public class RobotContainer {
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
 
-  private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
-
   private final DriveCommand driveCommand =
-      new DriveCommand(m_driverController, drivetrain, () -> 0);
+      new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -93,6 +98,8 @@ public class RobotContainer {
     // PathfindingCommand.warmupCommand().schedule();
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
+    SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
+    SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
 
     EagleUtil.calculateRedReefSetPoints();
     EagleUtil.calculateBlueReefSetPoints();
@@ -112,20 +119,32 @@ public class RobotContainer {
    */
   private void configureBindings() {
     IS_DISABLED.onTrue(
-        Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Coast))
+        Commands.runOnce(
+                () -> {
+                  drivetrain.configNeutralMode(NeutralModeValue.Coast);
+                  led.setColor(LEDPattern.solid(Color.kRed));
+                })
             .ignoringDisable(true));
+
     IS_DISABLED.onFalse(
-        Commands.runOnce(() -> drivetrain.configNeutralMode(NeutralModeValue.Brake))
+        Commands.runOnce(
+                () -> {
+                  drivetrain.configNeutralMode(NeutralModeValue.Brake);
+                  led.setColor(LEDPattern.solid(Color.kGreen));
+                })
             .ignoringDisable(false));
 
-    SmartDashboard.putData(
-        "LockIn", alignToPose(() -> new Pose2d(2.00, 4.00, Rotation2d.fromDegrees(0))));
-    SmartDashboard.putData(
-        "LockOut", alignToPose(() -> new Pose2d(0.00, 0.00, Rotation2d.fromDegrees(180))));
-
     m_driverController
-        .rightTrigger()
-        .onTrue(alignToPose(() -> new Pose2d(1.00, 1.00, new Rotation2d(1.00))));
+        .x()
+        .whileTrue(
+            Commands.startEnd(
+                    () -> driveCommand.isBackCoralStation = true,
+                    () -> driveCommand.isBackCoralStation = false)
+                .withName("Face Coral Station"));
+
+    m_driverController.x().onTrue(prepCoralIntake()).onFalse(coralHandoff());
+
+    m_driverController.leftBumper().onTrue(setLEDToAllianceColor());
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
@@ -145,6 +164,7 @@ public class RobotContainer {
 
   public void periodic() {
 
+    robotVisualizer.update();
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
   }
@@ -175,5 +195,39 @@ public class RobotContainer {
 
   public Command alignToPose(Supplier<Pose2d> Pose) {
     return new AlignToPose(Pose, drivetrain);
+  }
+
+  public Command setLEDToAllianceColor() {
+    return Commands.run(() -> led.setColor(LEDPattern.solid(getAllianceColor())));
+  }
+
+  public Color getAllianceColor() {
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      return Color.kBlue;
+    }
+    return Color.kRed;
+  }
+
+  public Command coralHandoff() {
+    return Commands.sequence(
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.INTAKE_METER).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(1))
+        .withName("Coral HandOff");
+  }
+
+  public Command prepCoralIntake() {
+    return Commands.sequence(
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
+        .withName("Prepare Coral Intake");
+  }
+
+  public Command PrepL3Score () {
+    return Commands.sequence(
+            elevator.setHeight(ElevatorConstants.L3_ELEVATION).withTimeout(2),
+            arm.setAngle(ArmConstants.L3_RELEASE_POSITION).withTimeout(2))
+        .withName("Prep L3 Score");
   }
 }
