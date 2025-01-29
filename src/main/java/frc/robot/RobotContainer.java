@@ -11,7 +11,6 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -148,10 +147,8 @@ public class RobotContainer {
         .y()
         .whileTrue(
             Commands.startEnd(
-                    () -> driveCommand.isFaceCoral = true,
-                    () -> driveCommand.isFaceCoral = false)
+                    () -> driveCommand.isFaceCoral = true, () -> driveCommand.isFaceCoral = false)
                 .withName("Face reef"));
-
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
