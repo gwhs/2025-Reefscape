@@ -11,9 +11,7 @@ public class LedSubsystem extends SubsystemBase {
   public LedSubsystem() {
     if (RobotBase.isSimulation()) {
       ledIO = new LedIOSim();
-    }
-    
-    else {
+    } else {
       ledIO = new LedIOReal();
     }
   }

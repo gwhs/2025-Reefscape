@@ -5,12 +5,11 @@ import edu.wpi.first.wpilibj.util.Color;
 
 public interface LedIO {
 
-    void setColor(LEDPattern pattern);
+  void setColor(LEDPattern pattern);
 
-    Color getColor(int index);
+  Color getColor(int index);
 
-    void turnOff();
+  void turnOff();
 
-    void update();
-    
+  void update();
 }
