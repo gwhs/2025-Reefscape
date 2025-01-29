@@ -81,7 +81,7 @@ public class EagleUtil {
     if (m_redPoses != null) {
       return m_redPoses;
     }
-    
+
     redPoses[0] = new Pose2d(X, Y + Y_OFFSET, Rotation2d.kZero);
     redPoses[1] = new Pose2d(X, -Y + Y_OFFSET, Rotation2d.kZero);
 
