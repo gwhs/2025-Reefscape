@@ -7,6 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -95,7 +96,7 @@ public class RobotContainer {
 
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    // PathfindingCommand.warmupCommand().schedule();
+    PathfindingCommand.warmupCommand().schedule();
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
@@ -143,15 +144,8 @@ public class RobotContainer {
                 .withName("Face Coral Station"));
 
     m_driverController
-        .y()
-        .whileTrue(
-            Commands.startEnd(
-                    () -> driveCommand.isFaceCoral = true,
-                    () -> driveCommand.isFaceCoral = false)
-                .withName("Face Coral Station"));
-
-
-    m_driverController.x().onTrue(prepCoralIntake()).onFalse(coralHandoff());
+        .rightTrigger()
+        .onTrue(alignToPose(() -> new Pose2d(1.00, 1.00, new Rotation2d(1.00))));
 
     m_driverController.leftBumper().onTrue(setLEDToAllianceColor());
 
