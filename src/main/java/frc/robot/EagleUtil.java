@@ -10,20 +10,16 @@ public class EagleUtil {
   private static double BLUE_REEF_Y = Units.inchesToMeters(158.50);
   private static Pose2d BLUE_REEF = new Pose2d(BLUE_REEF_X, BLUE_REEF_Y, Rotation2d.kZero);
   private static Pose2d BLUE_REEF_INVERT = new Pose2d(-BLUE_REEF_X, -BLUE_REEF_Y, Rotation2d.kZero);
-
   private static double RED_REEF_X = Units.inchesToMeters(546.875 - (93.5 - 14 * 2) / 2);
   private static double RED_REEF_Y = Units.inchesToMeters(158.50);
   private static Pose2d RED_REEF = new Pose2d(RED_REEF_X, RED_REEF_Y, Rotation2d.kZero);
   private static Pose2d RED_REEF_INVERT = new Pose2d(-RED_REEF_X, -RED_REEF_Y, Rotation2d.kZero);
-
-  private static double REEF_LENGTH = (2.37 / 2) * Math.tanh(Units.degreesToRadians(30));
-
+  private static double REEF_LENGTH = Units.inchesToMeters(35);
   private static double REEF_TO_REEF_DISTANCE = 0.33;
-
-  private static double ROBOT_AWAY_FROM_REEF = Units.inchesToMeters(40);
-
+  private static double ROBOT_AWAY_FROM_REEF = Units.inchesToMeters(15);
   private static double X = -REEF_LENGTH - ROBOT_AWAY_FROM_REEF;
   private static double Y = REEF_TO_REEF_DISTANCE / 2;
+  private static double Y_OFFSET = -0.1; // to be changed if/when needed
 
   // blue poses
   private static Pose2d[] bluePoses = new Pose2d[12];
@@ -33,8 +29,8 @@ public class EagleUtil {
 
   public static void calculateBlueReefSetPoints() {
 
-    bluePoses[0] = new Pose2d(X, Y, Rotation2d.kZero);
-    bluePoses[1] = new Pose2d(X, -Y, Rotation2d.kZero);
+    bluePoses[0] = new Pose2d(X, Y + Y_OFFSET, Rotation2d.kZero);
+    bluePoses[1] = new Pose2d(X, -Y + Y_OFFSET, Rotation2d.kZero);
 
     Rotation2d sixty = Rotation2d.fromDegrees(60);
 
@@ -51,8 +47,8 @@ public class EagleUtil {
   }
 
   public static void calculateRedReefSetPoints() {
-    redPoses[0] = new Pose2d(X, Y, Rotation2d.kZero);
-    redPoses[1] = new Pose2d(X, -Y, Rotation2d.kZero);
+    redPoses[0] = new Pose2d(X, Y + Y_OFFSET, Rotation2d.kZero);
+    redPoses[1] = new Pose2d(X, -Y + Y_OFFSET, Rotation2d.kZero);
 
     Rotation2d sixty = Rotation2d.fromDegrees(60);
 
