@@ -39,22 +39,28 @@ public class ArmIOReal implements ArmIO {
     motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     softwareLimitSwitch.ForwardSoftLimitEnable = true;
-    softwareLimitSwitch.ForwardSoftLimitThreshold = Units.degreesToRotations(330) * ArmConstants.ARM_GEAR_RATIO;
+    softwareLimitSwitch.ForwardSoftLimitThreshold =
+        Units.degreesToRotations(330) * ArmConstants.ARM_GEAR_RATIO;
     softwareLimitSwitch.ReverseSoftLimitEnable = true;
-    softwareLimitSwitch.ReverseSoftLimitThreshold =  Units.degreesToRotations(20) * ArmConstants.ARM_GEAR_RATIO;
+    softwareLimitSwitch.ReverseSoftLimitThreshold =
+        Units.degreesToRotations(20) * ArmConstants.ARM_GEAR_RATIO;
 
     TalonFXConfigurator leftElevatorConfigurator = armMotor.getConfigurator();
     leftElevatorConfigurator.apply(talonFXConfigs);
   }
-// set arm angle in degrees
+
+  // set arm angle in degrees
   @Override
   public void setAngle(double angle) {
-    armMotor.setControl(m_request.withPosition(Units.degreesToRotations(angle) * ArmConstants.ARM_GEAR_RATIO));
+    armMotor.setControl(
+        m_request.withPosition(Units.degreesToRotations(angle) * ArmConstants.ARM_GEAR_RATIO));
   }
-// geta arm position in degrees
+
+  // geta arm position in degrees
   @Override
   public double getPosition() {
-    return Units.rotationsToDegrees(armMotor.getPosition(true).getValueAsDouble()) / ArmConstants.ARM_GEAR_RATIO;
+    return Units.rotationsToDegrees(armMotor.getPosition(true).getValueAsDouble())
+        / ArmConstants.ARM_GEAR_RATIO;
   }
 
   @Override

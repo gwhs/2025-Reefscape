@@ -58,7 +58,8 @@ public class ElevatorIOReal implements ElevatorIO {
 
     softwareLimitSwitchConfigs.ForwardSoftLimitEnable = true;
     softwareLimitSwitchConfigs.ReverseSoftLimitEnable = true;
-    softwareLimitSwitchConfigs.ForwardSoftLimitThreshold = ElevatorSubsystem.metersToRotations(ElevatorConstants.TOP_METER);
+    softwareLimitSwitchConfigs.ForwardSoftLimitThreshold =
+        ElevatorSubsystem.metersToRotations(ElevatorConstants.TOP_METER);
     softwareLimitSwitchConfigs.ReverseSoftLimitThreshold = ElevatorSubsystem.metersToRotations(0.1);
 
     TalonFXConfigurator rightElevatorConfigurator = m_rightElevatorMotor.getConfigurator();
