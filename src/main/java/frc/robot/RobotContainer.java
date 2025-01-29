@@ -11,7 +11,6 @@ import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
-
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -50,7 +49,6 @@ public class RobotContainer {
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
-
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
@@ -120,7 +118,6 @@ public class RobotContainer {
         Commands.runOnce(
                 () -> {
                   drivetrain.configNeutralMode(NeutralModeValue.Coast);
-                  
                 })
             .ignoringDisable(true));
 
@@ -128,7 +125,6 @@ public class RobotContainer {
         Commands.runOnce(
                 () -> {
                   drivetrain.configNeutralMode(NeutralModeValue.Brake);
-
                 })
             .ignoringDisable(false));
 
@@ -141,8 +137,6 @@ public class RobotContainer {
                 .withName("Face Coral Station"));
 
     m_driverController.x().onTrue(prepCoralIntake()).onFalse(coralHandoff());
-
-   
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
@@ -194,8 +188,6 @@ public class RobotContainer {
   public Command alignToPose(Supplier<Pose2d> Pose) {
     return new AlignToPose(Pose, drivetrain);
   }
-
-
 
   public Command coralHandoff() {
     return Commands.sequence(

@@ -20,8 +20,6 @@ public class EagleUtil {
   private static double X = -REEF_LENGTH - ROBOT_AWAY_FROM_REEF;
   private static double Y = REEF_TO_REEF_DISTANCE / 2;
   private static double Y_OFFSET = -0.1; // to be changed if/when needed
-  
-  
 
   // blue poses
   private static Pose2d[] bluePoses = new Pose2d[12];
@@ -43,7 +41,7 @@ public class EagleUtil {
       {0, 0}, // reef I
       {0, 0}, // reef J
       {0, 0}, // reef K
-      {0, 0}  // reef L
+      {0, 0} // reef L
     };
 
     bluePoses[0] = new Pose2d(X, Y + Y_OFFSET, Rotation2d.kZero);
@@ -75,7 +73,7 @@ public class EagleUtil {
     double[][] redReefOffsets = {
       {0, 0}, // reef G
       {0, 0}, // reef H
-      {0, 0}, // reef I 
+      {0, 0}, // reef I
       {0, 0}, // reef J
       {0, 0}, // reef K
       {0, 0}, // reef L
@@ -84,7 +82,7 @@ public class EagleUtil {
       {0, 0}, // reef C
       {0, 0}, // reef D
       {0, 0}, // reef E
-      {0, 0}  // reef F
+      {0, 0} // reef F
     };
 
     Rotation2d sixty = Rotation2d.fromDegrees(60);
