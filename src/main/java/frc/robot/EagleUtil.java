@@ -34,8 +34,9 @@ public class EagleUtil {
   public static ArrayList<Pose2d> calculateBlueReefSetPoints() {
 
     double[][] blueReefOffsets = {
+      // in meters
       {0, 0}, // reef A
-      {2, 2}, // reef B
+      {0, 0}, // reef B
       {0, 0}, // reef C
       {0, 0}, // reef D
       {0, 0}, // reef E
@@ -77,6 +78,7 @@ public class EagleUtil {
     redPoses[1] = new Pose2d(X, -Y + Y_OFFSET, Rotation2d.kZero);
 
     double[][] redReefOffsets = {
+      // also in meters
       {0, 0}, // reef G
       {0, 0}, // reef H
       {0, 0}, // reef I
