@@ -33,8 +33,6 @@ import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
-
-import java.security.Key;
 import java.util.function.Supplier;
 
 /**
@@ -102,10 +100,10 @@ public class RobotContainer {
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
     SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
-    SmartDashboard.putData("PrepL3Score",PrepL3Score());
-    SmartDashboard.putData("L3Score",L4Score());
-    SmartDashboard.putData("PrepL4Score",PrepL4Score());
-    SmartDashboard.putData("L4Score",L4Score());
+    SmartDashboard.putData("PrepL3Score", PrepL3Score());
+    SmartDashboard.putData("L3Score", L4Score());
+    SmartDashboard.putData("PrepL4Score", PrepL4Score());
+    SmartDashboard.putData("L4Score", L4Score());
 
     EagleUtil.calculateRedReefSetPoints();
     EagleUtil.calculateBlueReefSetPoints();
@@ -254,9 +252,9 @@ public class RobotContainer {
 
   public Command L4Score() {
     return Commands.sequence(
-      Commands.parallel(
-        arm.setAngle(ArmConstants.L4_RELEASE_POSITION)
-            .alongWith(elevator.setHeight(ElevatorConstants.L4_RELEASE_POSITION))
-            .withName("L4 Score")));
+        Commands.parallel(
+            arm.setAngle(ArmConstants.L4_RELEASE_POSITION)
+                .alongWith(elevator.setHeight(ElevatorConstants.L4_RELEASE_POSITION))
+                .withName("L4 Score")));
   }
 }
