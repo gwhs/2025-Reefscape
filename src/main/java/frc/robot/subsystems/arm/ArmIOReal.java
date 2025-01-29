@@ -12,6 +12,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 public class ArmIOReal implements ArmIO {
   private TalonFX armMotor = new TalonFX(ArmConstants.ARM_MOTOR_ID, "rio");
@@ -48,6 +50,8 @@ public class ArmIOReal implements ArmIO {
 
     TalonFXConfigurator leftElevatorConfigurator = armMotor.getConfigurator();
     leftElevatorConfigurator.apply(talonFXConfigs);
+
+    SmartDashboard.putData("Arm Command/reset to 90", Commands.runOnce(() -> armMotor.setPosition(Units.degreesToRotations(90) * ArmConstants.ARM_GEAR_RATIO)));
   }
 
   // set arm angle in degrees
