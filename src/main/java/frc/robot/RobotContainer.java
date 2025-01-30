@@ -7,6 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -33,6 +34,7 @@ import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
+
 import java.util.function.Supplier;
 
 /**
@@ -95,17 +97,15 @@ public class RobotContainer {
 
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    // PathfindingCommand.warmupCommand().schedule();
+    PathfindingCommand.warmupCommand().schedule();
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
     SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
 
-    EagleUtil.calculateRedReefSetPoints();
+    // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
-
-    DogLog.log("Field Constants/Blue Reef", FieldConstants.blueReefSetpoints);
-    DogLog.log("Field Constants/Red Reef", FieldConstants.redReefSetpoints);
+    EagleUtil.calculateRedReefSetPoints();
   }
 
   /**
@@ -140,12 +140,17 @@ public class RobotContainer {
                     () -> driveCommand.isBackCoralStation = false)
                 .withName("Face Coral Station"));
 
-    m_driverController.x().onTrue(prepCoralIntake()).onFalse(coralHandoff());
+    m_driverController
+        .y()
+        .whileTrue(
+            Commands.startEnd(
+                    () -> driveCommand.isFaceCoral = true, () -> driveCommand.isFaceCoral = false)
+                .withName("Face reef"));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
     m_driverController
-        .a()
+        .b()
         .whileTrue(
             alignToPose(
                 () -> {
