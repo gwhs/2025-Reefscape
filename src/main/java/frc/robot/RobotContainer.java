@@ -53,6 +53,18 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
+  public enum CoralLevel {
+    L1, 
+    L2,
+    L3,
+    L4
+  }
+  public static CoralLevel coralLevel = CoralLevel.L4;
+  public static final Trigger IS_L1 = new Trigger(() -> coralLevel == CoralLevel.L1);
+  public static final Trigger IS_L2 = new Trigger(() -> coralLevel == CoralLevel.L2);
+  public static final Trigger IS_L3 = new Trigger(() -> coralLevel == CoralLevel.L3);
+  public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
+
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
@@ -144,8 +156,11 @@ public class RobotContainer {
                     () -> driveCommand.isFaceCoral = false, () -> driveCommand.isFaceCoral = true)
                 .withName("Face reef"));
 
-    m_driverController.rightTrigger().whileTrue(prepScoreCoral(1, 200)).onFalse(scoreCoral());
-
+    IS_L4.and(m_driverController.rightTrigger().whileTrue(prepScoreCoral(1, 200)).onFalse(scoreCoral()));
+    IS_L3.and(m_driverController.rightTrigger().whileTrue(prepScoreCoral(1, 200)).onFalse(scoreCoral()));
+    IS_L2.and(m_driverController.rightTrigger().whileTrue(prepScoreCoral(1, 200)).onFalse(scoreCoral()));
+    IS_L1.and(m_driverController.rightTrigger().whileTrue(prepScoreCoral(1, 200)).onFalse(scoreCoral()));
+    
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
     m_driverController
@@ -174,6 +189,12 @@ public class RobotContainer {
                     return drivetrain.getState().Pose.nearest(FieldConstants.redReefSetpointList);
                   }
                 }));
+
+
+    m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
+    m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
+    m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
+    m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
   }
 
   public void periodic() {
