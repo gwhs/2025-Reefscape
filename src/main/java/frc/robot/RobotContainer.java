@@ -138,16 +138,32 @@ public class RobotContainer {
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
 
     m_driverController
-        .y()
+        .x()
         .whileTrue(
             Commands.startEnd(
-                    () -> driveCommand.isFaceCoral = true, () -> driveCommand.isFaceCoral = false)
+                    () -> driveCommand.isFaceCoral = false, () -> driveCommand.isFaceCoral = true)
                 .withName("Face reef"));
+
+    m_driverController.rightTrigger().whileTrue(prepScoreCoral(1, 200)).onFalse(scoreCoral());
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
     m_driverController
-        .b()
+        .rightTrigger()
+        .whileTrue(
+            Commands.startEnd(
+                    () -> {
+                      driveCommand.isRobotCentric = true;
+                      driveCommand.isSlow = true;
+                    },
+                    () -> {
+                      driveCommand.isRobotCentric = false;
+                      driveCommand.isSlow = false;
+                    })
+                .withName("Slow and Robot Centric"));
+
+    m_driverController
+        .a()
         .whileTrue(
             alignToPose(
                 () -> {
@@ -209,5 +225,19 @@ public class RobotContainer {
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake");
+  }
+
+  public Command prepScoreCoral(double elevatorHeight, double armAngle) {
+    return Commands.sequence(
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
+            arm.setAngle(armAngle).withTimeout(1))
+        .withName("Prepare Score Coral");
+  }
+
+  public Command scoreCoral() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+        .withName("Score Coral");
   }
 }

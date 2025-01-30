@@ -17,5 +17,5 @@ public class ElevatorConstants {
   public static final double TOP_METER = ElevatorSubsystem.rotationsToMeters(60);
 
   public static final double INTAKE_METER = ElevatorSubsystem.rotationsToMeters(10);
-  public static final double STOW_METER = ElevatorSubsystem.rotationsToMeters(15);
+  public static final double STOW_METER = ElevatorSubsystem.rotationsToMeters(30);
 }
