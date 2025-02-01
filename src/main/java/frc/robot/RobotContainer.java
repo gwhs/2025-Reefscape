@@ -157,14 +157,10 @@ public class RobotContainer {
                     () -> driveCommand.isFaceCoral = false, () -> driveCommand.isFaceCoral = true)
                 .withName("Face reef"));
 
-    IS_L4.and(
-        m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.7, 200));
-    IS_L3.and(
-        m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.55, 200));
-    IS_L2.and(
-        m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.38, 200));
-    IS_L1.and(
-        m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.2, 200));
+    IS_L4.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.73, 200));
+    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.1, 210));
+    IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
+    IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
 
     m_driverController.rightTrigger().onFalse(scoreCoral());
 
@@ -173,7 +169,7 @@ public class RobotContainer {
     m_driverController
         .rightTrigger()
         .whileTrue(
-            Commands.startEnd(  
+            Commands.startEnd(
                     () -> {
                       driveCommand.isRobotCentric = true;
                       driveCommand.isSlow = true;
