@@ -208,4 +208,13 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake");
   }
+
+  public Command deAlgae() { 
+    return Commands.sequence(
+          //code here
+          //ideas: move arm vertically to take algae out from under/over, move elevator w/ arm vertical 
+          //unknown final arm design current looks like a lego arm
+    )
+        .withName("Remove Algae");
+  }
 }
