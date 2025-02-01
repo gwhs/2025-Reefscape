@@ -80,7 +80,7 @@ public class DriveCommand extends Command {
     addRequirements(drivetrain);
   }
 
-  public double setPIDBackCoral( Pose2d currentRobotPose, double currentRotation){
+  public double setPIDBackCoral(Pose2d currentRobotPose, double currentRotation) {
     if (DriverStation.getAlliance().isPresent()
         && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
       // Blue Alliance
@@ -99,15 +99,15 @@ public class DriveCommand extends Command {
         PID.setSetpoint(RED_RIGHT_STATION_ANGLE);
       }
     }
-  double pidOutput = PID.calculate(currentRotation);
+    double pidOutput = PID.calculate(currentRotation);
     pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
 
     // Override the user's rotation with the PID result
     DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
     return pidOutput;
-}
+  }
 
-public double isFaceCoral(Pose2d currentRobotPose, double currentRotation){
+  public double isFaceCoral(Pose2d currentRobotPose, double currentRotation) {
     if (DriverStation.getAlliance().isPresent()
         && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
       Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.blueReefSetpointList);
@@ -124,74 +124,74 @@ public double isFaceCoral(Pose2d currentRobotPose, double currentRotation){
     // Override the user's rotation with the PID result
     DogLog.log("Drive Command/ReefTrackingPIDOutput", pidOutput);
     return pidOutput;
-}
-
-@Override
-public void execute() {
-  Pose2d currentRobotPose = drivetrain.getState().Pose;
-  double currentRotation = currentRobotPose.getRotation().getDegrees();
-
-  double xVelocity = -driverController.getLeftY();
-  double yVelocity = -driverController.getLeftX();
-
-  double angularVelocity = -driverController.getRightX();
-
-  if (isSlow) {
-    double slowFactor = 0.25;
-    xVelocity *= slowFactor;
-    yVelocity *= slowFactor;
-    angularVelocity *= slowFactor;
   }
 
-  if (elevatorHeight.getAsDouble() > 1) {
-    if (resetLimiter) {
-      resetLimiter = false;
-      xVelocityLimiter.reset(xVelocity);
-      yVelocityLimiter.reset(yVelocity);
-      angularVelocityLimiter.reset(angularVelocity);
+  @Override
+  public void execute() {
+    Pose2d currentRobotPose = drivetrain.getState().Pose;
+    double currentRotation = currentRobotPose.getRotation().getDegrees();
+
+    double xVelocity = -driverController.getLeftY();
+    double yVelocity = -driverController.getLeftX();
+
+    double angularVelocity = -driverController.getRightX();
+
+    if (isSlow) {
+      double slowFactor = 0.25;
+      xVelocity *= slowFactor;
+      yVelocity *= slowFactor;
+      angularVelocity *= slowFactor;
     }
-    xVelocity = xVelocityLimiter.calculate(xVelocity);
-    yVelocity = yVelocityLimiter.calculate(yVelocity);
-    angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
-  } else {
-    resetLimiter = true;
+
+    if (elevatorHeight.getAsDouble() > 1) {
+      if (resetLimiter) {
+        resetLimiter = false;
+        xVelocityLimiter.reset(xVelocity);
+        yVelocityLimiter.reset(yVelocity);
+        angularVelocityLimiter.reset(angularVelocity);
+      }
+      xVelocity = xVelocityLimiter.calculate(xVelocity);
+      yVelocity = yVelocityLimiter.calculate(yVelocity);
+      angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
+    } else {
+      resetLimiter = true;
+    }
+
+    if (isBackCoralStation) {
+      angularVelocity = setPIDBackCoral(currentRobotPose, currentRotation);
+    }
+
+    if (this.isFaceCoral) {
+      angularVelocity = isFaceCoral(currentRobotPose, currentRotation);
+    }
+
+    xVelocity *= maxSpeed;
+    yVelocity *= maxSpeed;
+    angularVelocity *= maxAngularRate;
+
+    DogLog.log("Drive Command/xVelocity", xVelocity);
+    DogLog.log("Drive Command/yVelocity", yVelocity);
+    DogLog.log("Drive Command/angularVelocity", angularVelocity);
+    DogLog.log("Drive Command/rotationSetpoint", PID.getSetpoint());
+    DogLog.log("Drive Command/isSlow", isSlow);
+    DogLog.log("Drive Command/isBackCoralStation", isBackCoralStation);
+    DogLog.log("Drive Command/isRobotCentric", isRobotCentric);
+    DogLog.log("Drive Command/isFaceCoral", isFaceCoral);
+
+    if (isRobotCentric) {
+      drivetrain.setControl(
+          robotCentricDrive
+              .withVelocityX(xVelocity)
+              .withVelocityY(yVelocity)
+              .withRotationalRate(angularVelocity));
+    } else {
+      drivetrain.setControl(
+          fieldCentricDrive
+              .withVelocityX(xVelocity)
+              .withVelocityY(yVelocity)
+              .withRotationalRate(angularVelocity));
+    }
   }
-
-  if(isBackCoralStation){
-    angularVelocity = setPIDBackCoral(currentRobotPose, currentRotation);
-  }
-
-  if (this.isFaceCoral) {
-    angularVelocity = isFaceCoral(currentRobotPose, currentRotation);
-  }
-
-  xVelocity *= maxSpeed;
-  yVelocity *= maxSpeed;
-  angularVelocity *= maxAngularRate;
-
-  DogLog.log("Drive Command/xVelocity", xVelocity);
-  DogLog.log("Drive Command/yVelocity", yVelocity);
-  DogLog.log("Drive Command/angularVelocity", angularVelocity);
-  DogLog.log("Drive Command/rotationSetpoint", PID.getSetpoint());
-  DogLog.log("Drive Command/isSlow", isSlow);
-  DogLog.log("Drive Command/isBackCoralStation", isBackCoralStation);
-  DogLog.log("Drive Command/isRobotCentric", isRobotCentric);
-  DogLog.log("Drive Command/isFaceCoral", isFaceCoral);
-
-  if (isRobotCentric) {
-    drivetrain.setControl(
-        robotCentricDrive
-            .withVelocityX(xVelocity)
-            .withVelocityY(yVelocity)
-            .withRotationalRate(angularVelocity));
-  } else {
-    drivetrain.setControl(
-        fieldCentricDrive
-            .withVelocityX(xVelocity)
-            .withVelocityY(yVelocity)
-            .withRotationalRate(angularVelocity));
-  }
- }
 
   @Override
   public void end(boolean interrupted) {}
