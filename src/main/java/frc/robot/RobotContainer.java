@@ -120,20 +120,21 @@ public class RobotContainer {
    */
   private void configureBindings() {
     IS_DISABLED.onTrue(
-        Commands.runOnce(
-                () -> {
-                  drivetrain.configNeutralMode(NeutralModeValue.Coast);
-                  led.setColor(LEDPattern.solid(Color.kRed));
-                })
-            .ignoringDisable(true));
+      Commands.runOnce(
+        () -> {
+          drivetrain.configNeutralMode(NeutralModeValue.Coast);
+        
+        }).andThen(led.setPattern(LEDPattern.solid(Color.kRed)))
+        .ignoringDisable(true));
+        
 
     IS_DISABLED.onFalse(
         Commands.runOnce(
                 () -> {
                   drivetrain.configNeutralMode(NeutralModeValue.Brake);
-                  led.setColor(LEDPattern.solid(Color.kGreen));
-                })
-            .ignoringDisable(false));
+                  
+                }).andThen(led.setPattern((LEDPattern.solid(Color.kGreen)))
+            .ignoringDisable(false)));
 
     m_driverController
         .x()
@@ -145,7 +146,7 @@ public class RobotContainer {
 
     m_driverController.x().onTrue(prepCoralIntake()).onFalse(coralHandoff());
 
-    m_driverController.leftBumper().onTrue(setLEDToAllianceColor());
+    
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
@@ -198,16 +199,6 @@ public class RobotContainer {
     return new AlignToPose(Pose, drivetrain);
   }
 
-  public Command setLEDToAllianceColor() {
-    return Commands.run(() -> led.setColor(LEDPattern.solid(getAllianceColor())));
-  }
-
-  public Color getAllianceColor() {
-    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-      return Color.kBlue;
-    }
-    return Color.kRed;
-  }
 
   public Command coralHandoff() {
     return Commands.sequence(
