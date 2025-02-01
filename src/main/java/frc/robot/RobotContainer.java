@@ -209,12 +209,20 @@ public class RobotContainer {
         .withName("Prepare Coral Intake");
   }
 
-  public Command deAlgae() { 
+  public Command deAlgaeLow() { 
     return Commands.sequence(
-          //code here
-          //ideas: move arm vertically to take algae out from under/over, move elevator w/ arm vertical 
-          //unknown final arm design current looks like a lego arm
-    )
-        .withName("Remove Algae");
+            arm.setAngle(ArmConstants.LOW_ALGAE_INITIAL_ANGLE),
+            elevator.setHeight(ElevatorConstants.LOW_ALGAE),
+            arm.setAngle(ArmConstants.LOW_ALGAE_DEALGAE_ANGLE))
+        .withName("Remove Algae (Low)");
   }
+  
+  public Command deAlgaeHigh() { 
+    return Commands.sequence(
+        arm.setAngle(ArmConstants.HIGH_ALGAE_INITIAL_ANGLE),
+        elevator.setHeight(ElevatorConstants.LOW_ALGAE),
+        arm.setAngle(ArmConstants.HIGH_ALGAE_DEALGAE_ANGLE))
+        .withName("Remove Algae (High)");
 }
+      //ideas: move arm vertically to take algae out from under/over, move elevator w/ arm vertical (ask Hardware & CAD)      
+ }

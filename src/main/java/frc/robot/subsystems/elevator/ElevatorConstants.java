@@ -18,4 +18,8 @@ public class ElevatorConstants {
 
   public static final double INTAKE_METER = ElevatorSubsystem.rotationsToMeters(10);
   public static final double STOW_METER = ElevatorSubsystem.rotationsToMeters(15);
-}
+
+  public static final double HIGH_ALGAE = ElevatorSubsystem.rotationsToMeters(30);
+  public static final double LOW_ALGAE = ElevatorSubsystem.rotationsToMeters(10);
+  }
+

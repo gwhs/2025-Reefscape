@@ -7,4 +7,9 @@ public class ArmConstants {
   public static final double ARM_GEAR_RATIO = 62.3333333333;
 
   public static final double ARM_INTAKE_ANGLE = 90.0;
+
+  public static final double LOW_ALGAE_INITIAL_ANGLE = 0;
+  public static final double HIGH_ALGAE_INITIAL_ANGLE = 0;
+  public static final double LOW_ALGAE_DEALGAE_ANGLE = 0;
+  public static final double HIGH_ALGAE_DEALGAE_ANGLE = 0;
 }
