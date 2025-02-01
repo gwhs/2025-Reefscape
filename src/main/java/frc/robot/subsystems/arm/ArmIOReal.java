@@ -11,6 +11,9 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 public class ArmIOReal implements ArmIO {
   private TalonFX armMotor = new TalonFX(ArmConstants.ARM_MOTOR_ID, "rio");
@@ -24,6 +27,7 @@ public class ArmIOReal implements ArmIO {
     SoftwareLimitSwitchConfigs softwareLimitSwitch = talonFXConfigs.SoftwareLimitSwitch;
 
     slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
+    slot0Configs.kG = 0; // Add 0 V to overcome gravity
     slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
     slot0Configs.kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
     slot0Configs.kP = 4.8; // A position error of 2.5 rotations results in 12 V output
@@ -38,29 +42,41 @@ public class ArmIOReal implements ArmIO {
     motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     softwareLimitSwitch.ForwardSoftLimitEnable = true;
-    softwareLimitSwitch.ForwardSoftLimitThreshold = 270 * ArmConstants.ARM_GEAR_RATIO;
+    softwareLimitSwitch.ForwardSoftLimitThreshold =
+        Units.degreesToRotations(330) * ArmConstants.ARM_GEAR_RATIO;
     softwareLimitSwitch.ReverseSoftLimitEnable = true;
-    softwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+    softwareLimitSwitch.ReverseSoftLimitThreshold =
+        Units.degreesToRotations(20) * ArmConstants.ARM_GEAR_RATIO;
 
     TalonFXConfigurator leftElevatorConfigurator = armMotor.getConfigurator();
     leftElevatorConfigurator.apply(talonFXConfigs);
+
+    SmartDashboard.putData(
+        "Arm Command/reset to 90",
+        Commands.runOnce(
+            () ->
+                armMotor.setPosition(Units.degreesToRotations(90) * ArmConstants.ARM_GEAR_RATIO)));
   }
 
+  // set arm angle in degrees
   @Override
   public void setAngle(double angle) {
-    armMotor.setControl(m_request.withPosition(angle * ArmConstants.ARM_GEAR_RATIO));
+    armMotor.setControl(
+        m_request.withPosition(Units.degreesToRotations(angle) * ArmConstants.ARM_GEAR_RATIO));
   }
 
+  // geta arm position in degrees
   @Override
   public double getPosition() {
-    return armMotor.getPosition(true).getValueAsDouble() / ArmConstants.ARM_GEAR_RATIO;
+    return Units.rotationsToDegrees(armMotor.getPosition(true).getValueAsDouble())
+        / ArmConstants.ARM_GEAR_RATIO;
   }
 
   @Override
   public void update() {
     DogLog.log("Arm/pid goal", armMotor.getClosedLoopReference(true).getValueAsDouble());
     DogLog.log("Arm/motor voltage", armMotor.getMotorVoltage(true).getValueAsDouble());
-    DogLog.log("Arm/ supply voltage", armMotor.getSupplyVoltage(true).getValueAsDouble());
+    DogLog.log("Arm/supply voltage", armMotor.getSupplyVoltage(true).getValueAsDouble());
     DogLog.log("Arm/device temp", armMotor.getDeviceTemp(true).getValueAsDouble());
     DogLog.log("Arm/stator current", armMotor.getStatorCurrent(true).getValueAsDouble());
   }

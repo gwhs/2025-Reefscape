@@ -21,9 +21,15 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putData("Arm Command/turn to 60 degrees", setAngle(60));
     SmartDashboard.putData("Arm Command/turn to 120 degrees", setAngle(120));
     SmartDashboard.putData("Arm Command/turn to 270 degrees", setAngle(270));
-    SmartDashboard.putData("Arm Command/reset to 0 degrees", setAngle(0));
+    SmartDashboard.putData("Arm Command/turn to 0 degrees", setAngle(0));
   }
 
+  /**
+   * drives the arm until it reaches the given provided angle
+   *
+   * @param angle Angle to drive the arm to in degrees TODO Morgan add sign information/0 position
+   *     information to param annotation
+   */
   public Command setAngle(double angle) {
     double clampedAngle = MathUtil.clamp(angle, 0, 360);
     return this.runOnce(
