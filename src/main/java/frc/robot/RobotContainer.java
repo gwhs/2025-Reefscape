@@ -42,7 +42,7 @@ public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
 
-  private final Telemetry logger =
+  private final Telemetry logger = 
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -56,7 +56,7 @@ public class RobotContainer {
   private AprilTagCam cam3 =
       new AprilTagCam(
           "cam3",
-          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION,
+          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
@@ -64,7 +64,7 @@ public class RobotContainer {
   private AprilTagCam cam4 =
       new AprilTagCam(
           "cam4",
-          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION,
+          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
