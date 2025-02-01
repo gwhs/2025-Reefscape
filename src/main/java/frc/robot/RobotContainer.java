@@ -7,15 +7,14 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -32,8 +31,6 @@ import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
-import frc.robot.subsystems.led.LedSubsystem;
-
 import java.util.function.Supplier;
 
 /**
@@ -53,7 +50,6 @@ public class RobotContainer {
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
-  private final LedSubsystem led = new LedSubsystem();
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
@@ -96,17 +92,15 @@ public class RobotContainer {
 
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    // PathfindingCommand.warmupCommand().schedule();
+    PathfindingCommand.warmupCommand().schedule();
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
     SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
 
-    EagleUtil.calculateRedReefSetPoints();
+    // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
-
-    DogLog.log("Field Constants/Blue Reef", FieldConstants.blueReefSetpoints);
-    DogLog.log("Field Constants/Red Reef", FieldConstants.redReefSetpoints);
+    EagleUtil.calculateRedReefSetPoints();
   }
 
   /**
@@ -120,21 +114,18 @@ public class RobotContainer {
    */
   private void configureBindings() {
     IS_DISABLED.onTrue(
-      Commands.runOnce(
-        () -> {
-          drivetrain.configNeutralMode(NeutralModeValue.Coast);
-        
-        }).andThen(led.setPattern(LEDPattern.solid(Color.kRed)))
-        .ignoringDisable(true));
-        
+        Commands.runOnce(
+                () -> {
+                  drivetrain.configNeutralMode(NeutralModeValue.Coast);
+                })
+            .ignoringDisable(true));
 
     IS_DISABLED.onFalse(
         Commands.runOnce(
                 () -> {
                   drivetrain.configNeutralMode(NeutralModeValue.Brake);
-                  
-                }).andThen(led.setPattern((LEDPattern.solid(Color.kGreen)))
-            .ignoringDisable(false)));
+                })
+            .ignoringDisable(false));
 
     m_driverController
         .x()
@@ -144,14 +135,17 @@ public class RobotContainer {
                     () -> driveCommand.isBackCoralStation = false)
                 .withName("Face Coral Station"));
 
-    m_driverController.x().onTrue(prepCoralIntake()).onFalse(coralHandoff());
-
-    
+    m_driverController
+        .y()
+        .whileTrue(
+            Commands.startEnd(
+                    () -> driveCommand.isFaceCoral = true, () -> driveCommand.isFaceCoral = false)
+                .withName("Face reef"));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
     m_driverController
-        .a()
+        .b()
         .whileTrue(
             alignToPose(
                 () -> {
@@ -198,7 +192,6 @@ public class RobotContainer {
   public Command alignToPose(Supplier<Pose2d> Pose) {
     return new AlignToPose(Pose, drivetrain);
   }
-
 
   public Command coralHandoff() {
     return Commands.sequence(
