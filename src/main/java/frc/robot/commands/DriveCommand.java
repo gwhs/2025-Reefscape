@@ -29,10 +29,9 @@ public class DriveCommand extends Command {
 
   public boolean isSlow = true;
   public boolean isBackCoralStation = false;
-  public boolean isRobotCentric = false;
   public boolean isFaceCoral = false;
 
-  public boolean resetLimiter = true;
+  private boolean resetLimiter = true;
 
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 3.5 * Math.PI;
@@ -42,9 +41,16 @@ public class DriveCommand extends Command {
   private final double BLUE_LEFT_STATION_ANGLE = 54;
   private final double BLUE_RIGHT_STATION_ANGLE = -54;
 
-  public final double ELEVATOR_UP_SLEW_RATE = 0.5;
+  private final double ELEVATOR_UP_SLEW_RATE = 0.5;
 
-  public final DoubleSupplier elevatorHeight;
+  private final DoubleSupplier elevatorHeight;
+
+  public enum DriveMode {
+    ROBOT_CENTRIC,
+    FIELD_CENTRIC
+  }
+
+  DriveMode driveMode = DriveMode.FIELD_CENTRIC;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
@@ -78,6 +84,10 @@ public class DriveCommand extends Command {
     this.elevatorHeight = elevatorHeight;
 
     addRequirements(drivetrain);
+  }
+
+  public void setDriveMode(DriveMode driveMode) {
+    this.driveMode = driveMode;
   }
 
   @Override
@@ -171,10 +181,10 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/rotationSetpoint", PID.getSetpoint());
     DogLog.log("Drive Command/isSlow", isSlow);
     DogLog.log("Drive Command/isBackCoralStation", isBackCoralStation);
-    DogLog.log("Drive Command/isRobotCentric", isRobotCentric);
+    DogLog.log("Drive Command/Drive Mode", driveMode);
     DogLog.log("Drive Command/isFaceCoral", isFaceCoral);
 
-    if (isRobotCentric) {
+    if (driveMode == DriveMode.ROBOT_CENTRIC) {
       drivetrain.setControl(
           robotCentricDrive
               .withVelocityX(xVelocity)

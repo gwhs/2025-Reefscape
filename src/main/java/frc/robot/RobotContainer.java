@@ -171,11 +171,11 @@ public class RobotContainer {
         .whileTrue(
             Commands.startEnd(
                     () -> {
-                      driveCommand.isRobotCentric = true;
+                      driveCommand.setDriveMode(DriveCommand.DriveMode.ROBOT_CENTRIC);
                       driveCommand.isSlow = true;
                     },
                     () -> {
-                      driveCommand.isRobotCentric = false;
+                      driveCommand.setDriveMode(DriveCommand.DriveMode.FIELD_CENTRIC);
                       driveCommand.isSlow = false;
                     })
                 .withName("Slow and Robot Centric"));
