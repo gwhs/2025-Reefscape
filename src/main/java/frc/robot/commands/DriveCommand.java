@@ -47,13 +47,13 @@ public class DriveCommand extends Command {
   // Unit is meters
   private static final double halfWidthField = 4.0359;
 
-  public enum targetMode {
+  public enum TargetMode {
     NORMAL,
     CORAL_STATION,
     REEF
   }
 
-  private targetMode mode = targetMode.NORMAL;
+  private TargetMode mode = TargetMode.NORMAL;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
@@ -87,7 +87,7 @@ public class DriveCommand extends Command {
   }
 
   public double calculateSetpoint(Pose2d currentRobotPose, double currentRotation) {
-    if (mode == targetMode.CORAL_STATION) {
+    if (mode == TargetMode.CORAL_STATION) {
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
         // Blue Alliance
@@ -119,7 +119,7 @@ public class DriveCommand extends Command {
     }
   }
 
-  public void setTargetMode(targetMode mode) {
+  public void setTargetMode(TargetMode mode) {
     this.mode = mode;
   }
 
@@ -158,7 +158,7 @@ public class DriveCommand extends Command {
       resetLimiter = true;
     }
 
-    if (mode == targetMode.CORAL_STATION || mode == targetMode.REEF) {
+    if (mode == TargetMode.CORAL_STATION || mode == TargetMode.REEF) {
       PID.setSetpoint(calculateSetpoint(currentRobotPose, currentRotation));
       double pidOutput = PID.calculate(currentRotation);
       pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
