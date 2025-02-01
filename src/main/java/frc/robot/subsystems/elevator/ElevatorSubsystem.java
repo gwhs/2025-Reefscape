@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ElevatorSubsystem extends SubsystemBase {
   private ElevatorIO elevatorIO;
-  private ElevatorIOReal elevatorIOReal;
 
   public ElevatorSubsystem() {
     if (RobotBase.isSimulation()) {
@@ -23,10 +22,10 @@ public class ElevatorSubsystem extends SubsystemBase {
       elevatorIO = new ElevatorIOReal();
     }
 
-    SmartDashboard.putData("Elevator to 0", goTo(0));
-    SmartDashboard.putData("Elevator to 1", goTo(1));
-    SmartDashboard.putData("Elevator to 1.3", goTo(1.3));
-    SmartDashboard.putData("Elevator to 0.5", goTo(0.5));
+    SmartDashboard.putData("Elevator to 0", setHeight(0));
+    SmartDashboard.putData("Elevator to 1", setHeight(1));
+    SmartDashboard.putData("Elevator to 1.3", setHeight(1.3));
+    SmartDashboard.putData("Elevator to 0.5", setHeight(0.5));
   }
 
   @Override
@@ -40,16 +39,26 @@ public class ElevatorSubsystem extends SubsystemBase {
     DogLog.log("Elevator/Max Height (meter)", ElevatorConstants.TOP_METER);
   }
 
-  public Command goTo(double meters) {
+  /** Drives the elevator to the give elevation in meters */
+  public Command setHeight(double meters) {
+    double clampedMeters = MathUtil.clamp(meters, 0, ElevatorConstants.TOP_METER);
     return this.runOnce(
             () -> {
-              elevatorIO.setRotation(metersToRotations(meters));
+              elevatorIO.setRotation(metersToRotations(clampedMeters));
             })
         .andThen(
             Commands.waitUntil(
-                () -> MathUtil.isNear(meters, rotationsToMeters(elevatorIO.getRotation()), 0.1)));
+                () ->
+                    MathUtil.isNear(
+                        clampedMeters, rotationsToMeters(elevatorIO.getRotation()), 0.1)));
   }
 
+  /**
+   * The idea is that we slowly lower the elevator (by applying negative volt) until the reverse
+   * limit switch is triggered then we stop the elevator the motor automatically sets the internal
+   * encoder to zero when the reverse limit switch is triggered (see ElevatorIOReal for this config
+   * flag)
+   */
   public Command homingCommand() {
     return this.runOnce(
             () -> {
@@ -67,14 +76,14 @@ public class ElevatorSubsystem extends SubsystemBase {
     return rotations
         / ElevatorConstants.GEAR_RATIO
         * (ElevatorConstants.SPROCKET_DIAMETER * Math.PI)
-        * 2;
+        * 1;
   }
 
   public static double metersToRotations(double meters) {
     return meters
         / (ElevatorConstants.SPROCKET_DIAMETER * Math.PI)
         * ElevatorConstants.GEAR_RATIO
-        / 2;
+        / 1;
   }
 
   public double getHeightMeters() {

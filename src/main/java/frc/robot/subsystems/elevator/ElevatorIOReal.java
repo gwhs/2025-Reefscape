@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.Follower;
@@ -37,8 +38,10 @@ public class ElevatorIOReal implements ElevatorIO {
     Slot0Configs slot0Configs = talonFXConfigs.Slot0;
     MotionMagicConfigs motionMagicConfigs = talonFXConfigs.MotionMagic;
     HardwareLimitSwitchConfigs hardwareLimitSwitchConfigs = talonFXConfigs.HardwareLimitSwitch;
+    SoftwareLimitSwitchConfigs softwareLimitSwitchConfigs = talonFXConfigs.SoftwareLimitSwitch;
 
     slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
+    slot0Configs.kG = 0; // Add 0 voltage to overcome gravity
     slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
     slot0Configs.kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
     slot0Configs.kP = 4.8; // A position error of 2.5 rotations results in 12 V output
@@ -52,7 +55,13 @@ public class ElevatorIOReal implements ElevatorIO {
     currentConfig.withStatorCurrentLimitEnable(true);
     currentConfig.withStatorCurrentLimit(60);
     motorOutput.NeutralMode = NeutralModeValue.Coast;
-    motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    motorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
+    softwareLimitSwitchConfigs.ForwardSoftLimitEnable = true;
+    softwareLimitSwitchConfigs.ReverseSoftLimitEnable = true;
+    softwareLimitSwitchConfigs.ForwardSoftLimitThreshold =
+        ElevatorSubsystem.metersToRotations(ElevatorConstants.TOP_METER);
+    softwareLimitSwitchConfigs.ReverseSoftLimitThreshold = ElevatorSubsystem.metersToRotations(0.1);
 
     TalonFXConfigurator rightElevatorConfigurator = m_rightElevatorMotor.getConfigurator();
     rightElevatorConfigurator.apply(talonFXConfigs);
@@ -63,12 +72,12 @@ public class ElevatorIOReal implements ElevatorIO {
     hardwareLimitSwitchConfigs.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
     hardwareLimitSwitchConfigs.ForwardLimitEnable = false;
     hardwareLimitSwitchConfigs.ReverseLimitEnable = false;
-    hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyClosed;
-    hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyClosed;
+    hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyOpen;
+    hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
     hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionEnable = false;
     hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionValue = 0;
 
-    motorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     TalonFXConfigurator leftElevatorConfigurator = m_leftElevatorMotor.getConfigurator();
     leftElevatorConfigurator.apply(talonFXConfigs);
