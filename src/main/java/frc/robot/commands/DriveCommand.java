@@ -27,10 +27,10 @@ public class DriveCommand extends Command {
   private final SlewRateLimiter yVelocityLimiter;
   private final PIDController PID;
 
-  public boolean isSlow = true;
-  public boolean isBackCoralStation = false;
+  private boolean isSlow = true;
+  private boolean isBackCoralStation = false;
   public boolean isRobotCentric = false;
-  public boolean isFaceCoral = false;
+  private boolean isFaceCoral = false;
 
   public boolean resetLimiter = true;
 
@@ -80,50 +80,63 @@ public class DriveCommand extends Command {
     addRequirements(drivetrain);
   }
 
-  public double setPIDBackCoral(Pose2d currentRobotPose, double currentRotation) {
-    if (DriverStation.getAlliance().isPresent()
-        && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-      // Blue Alliance
-      if (currentRobotPose.getY() <= halfWidthField) {
-        // Low Y => "Right" station for Blue
-        PID.setSetpoint(BLUE_LEFT_STATION_ANGLE);
+  public double calculateSetpoint(Pose2d currentRobotPose, double currentRotation) {
+    if (isBackCoralStation) {
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        // Blue Alliance
+        if (currentRobotPose.getY() <= halfWidthField) {
+          // Low Y => "Right" station for Blue
+          return BLUE_LEFT_STATION_ANGLE;
+        } else {
+          // High Y => "Left" station for Blue
+          return BLUE_RIGHT_STATION_ANGLE;
+        }
       } else {
-        // High Y => "Left" station for Blue
-        PID.setSetpoint(BLUE_RIGHT_STATION_ANGLE);
+        // Red Alliance or invalid
+        if (currentRobotPose.getY() <= halfWidthField) {
+          return RED_LEFT_STATION_ANGLE;
+        } else {
+          return RED_RIGHT_STATION_ANGLE;
+        }
       }
+
     } else {
-      // Red Alliance or invalid
-      if (currentRobotPose.getY() <= halfWidthField) {
-        PID.setSetpoint(RED_LEFT_STATION_ANGLE);
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.blueReefSetpointList);
+        return nearestPoint.getRotation().getDegrees();
       } else {
-        PID.setSetpoint(RED_RIGHT_STATION_ANGLE);
+        Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.redReefSetpointList);
+        return nearestPoint.getRotation().getDegrees();
       }
     }
-    double pidOutput = PID.calculate(currentRotation);
-    pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
-
-    // Override the user's rotation with the PID result
-    DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
-    return pidOutput;
   }
 
-  public double isFaceCoral(Pose2d currentRobotPose, double currentRotation) {
-    if (DriverStation.getAlliance().isPresent()
-        && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-      Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.blueReefSetpointList);
-      PID.setSetpoint(nearestPoint.getRotation().getDegrees());
-    } else {
-      Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.redReefSetpointList);
-      PID.setSetpoint(nearestPoint.getRotation().getDegrees());
+  public void setModeSpeed(boolean isSlow) {
+    this.isSlow = isSlow;
+  }
+
+  public void setModeBackCoralStation(boolean faceCoralStation) {
+    if (isFaceCoral && faceCoralStation) {
+      this.isFaceCoral = false;
     }
+    if (faceCoralStation) {
+      this.isBackCoralStation = true;
+    } else {
+      this.isBackCoralStation = false;
+    }
+  }
 
-    // Feed the fixed angle into the PID
-    double pidOutput = PID.calculate(currentRotation);
-    pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
-
-    // Override the user's rotation with the PID result
-    DogLog.log("Drive Command/ReefTrackingPIDOutput", pidOutput);
-    return pidOutput;
+  public void setModeFaceCoral(boolean faceReef) {
+    if (isBackCoralStation && faceReef) {
+      this.isBackCoralStation = false;
+    }
+    if (faceReef) {
+      this.isFaceCoral = true;
+    } else {
+      this.isFaceCoral = false;
+    }
   }
 
   @Override
@@ -157,12 +170,13 @@ public class DriveCommand extends Command {
       resetLimiter = true;
     }
 
-    if (isBackCoralStation) {
-      angularVelocity = setPIDBackCoral(currentRobotPose, currentRotation);
-    }
-
-    if (this.isFaceCoral) {
-      angularVelocity = isFaceCoral(currentRobotPose, currentRotation);
+    if (isBackCoralStation || isFaceCoral) {
+      PID.setSetpoint(calculateSetpoint(currentRobotPose, currentRotation));
+      double pidOutput = PID.calculate(currentRotation);
+      pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
+      // override angular velocity
+      angularVelocity = pidOutput;
+      DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
     }
 
     xVelocity *= maxSpeed;
