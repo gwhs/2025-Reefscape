@@ -161,10 +161,6 @@ public class DriveCommand extends Command {
       DogLog.log("Drive Command/ReefTrackingPIDOutput", pidOutput);
     }
 
-    if (Math.abs(driverController.getRightX()) > 0.1) {
-      angularVelocity = -driverController.getRightX();
-    }
-
     xVelocity *= maxSpeed;
     yVelocity *= maxSpeed;
     angularVelocity *= maxAngularRate;

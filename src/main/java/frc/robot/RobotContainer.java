@@ -158,20 +158,22 @@ public class RobotContainer {
                 .withName("Face reef"));
 
     IS_L4.and(
-        m_driverController.rightTrigger().whileTrue(prepScoreCoral(1, 200)).onFalse(scoreCoral()));
+        m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.7, 200));
     IS_L3.and(
-        m_driverController.rightTrigger().whileTrue(prepScoreCoral(1, 200)).onFalse(scoreCoral()));
+        m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.55, 200));
     IS_L2.and(
-        m_driverController.rightTrigger().whileTrue(prepScoreCoral(1, 200)).onFalse(scoreCoral()));
+        m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.38, 200));
     IS_L1.and(
-        m_driverController.rightTrigger().whileTrue(prepScoreCoral(1, 200)).onFalse(scoreCoral()));
+        m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.2, 200));
+
+    m_driverController.rightTrigger().onFalse(scoreCoral());
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
     m_driverController
         .rightTrigger()
         .whileTrue(
-            Commands.startEnd(
+            Commands.startEnd(  
                     () -> {
                       driveCommand.isRobotCentric = true;
                       driveCommand.isSlow = true;
@@ -206,6 +208,7 @@ public class RobotContainer {
     robotVisualizer.update();
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
+    DogLog.log("Desired Reef", coralLevel);
   }
 
   /**
