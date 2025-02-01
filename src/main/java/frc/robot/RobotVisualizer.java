@@ -69,7 +69,8 @@ public class RobotVisualizer {
   // arm
   MechanismLigament2d m_arm =
       m_elevatorH3.append(
-          new MechanismLigament2d("arm", Units.inchesToMeters(20), 90, 10, new Color8Bit(Color.kWhite)));
+          new MechanismLigament2d(
+              "arm", Units.inchesToMeters(20), 90, 10, new Color8Bit(Color.kWhite)));
 
   public RobotVisualizer(ElevatorSubsystem elevator, ArmSubsystem arm) {
     this.elevator = elevator;
@@ -80,7 +81,7 @@ public class RobotVisualizer {
     double elevatorHeight = elevator.getHeightMeters();
     double armAngle = arm.getAngle();
 
-    m_arm.setAngle(armAngle+180);
+    m_arm.setAngle(armAngle + 180);
 
     m_elevator3.setLength(elevatorHeight + Units.inchesToMeters(37.2));
     m_elevator4.setLength(elevatorHeight + Units.inchesToMeters(37.2));
