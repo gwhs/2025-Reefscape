@@ -131,17 +131,17 @@ public class RobotContainer {
         .x()
         .whileTrue(
             Commands.startEnd(
-                    () -> driveCommand.setModeBackCoralStation(true),
-                    () -> driveCommand.setModeBackCoralStation(false))
+                    () -> driveCommand.setTargetMode(DriveCommand.targetMode.CORAL_STATION),
+                    () -> driveCommand.setTargetMode(DriveCommand.targetMode.NORMAL))
                 .withName("Face Coral Station"));
 
     m_driverController
         .y()
         .whileTrue(
             Commands.startEnd(
-                    () -> driveCommand.setModeFaceCoral(true),
-                    () -> driveCommand.setModeFaceCoral(false))
-                .withName("Face reef"));
+                    () -> driveCommand.setTargetMode(DriveCommand.targetMode.REEF),
+                    () -> driveCommand.setTargetMode(DriveCommand.targetMode.NORMAL))
+                .withName("Face Reef"));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 

@@ -28,9 +28,7 @@ public class DriveCommand extends Command {
   private final PIDController PID;
 
   private boolean isSlow = true;
-  private boolean isBackCoralStation = false;
   public boolean isRobotCentric = false;
-  private boolean isFaceCoral = false;
 
   public boolean resetLimiter = true;
 
@@ -48,6 +46,14 @@ public class DriveCommand extends Command {
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
+
+  public enum targetMode {
+    NORMAL,
+    CORAL_STATION,
+    REEF
+  }
+
+  private targetMode mode = targetMode.NORMAL;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
@@ -81,7 +87,7 @@ public class DriveCommand extends Command {
   }
 
   public double calculateSetpoint(Pose2d currentRobotPose, double currentRotation) {
-    if (isBackCoralStation) {
+    if (mode == targetMode.CORAL_STATION) {
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
         // Blue Alliance
@@ -113,30 +119,12 @@ public class DriveCommand extends Command {
     }
   }
 
+  public void setTargetMode(targetMode mode) {
+    this.mode = mode;
+  }
+
   public void setModeSpeed(boolean isSlow) {
     this.isSlow = isSlow;
-  }
-
-  public void setModeBackCoralStation(boolean faceCoralStation) {
-    if (isFaceCoral && faceCoralStation) {
-      this.isFaceCoral = false;
-    }
-    if (faceCoralStation) {
-      this.isBackCoralStation = true;
-    } else {
-      this.isBackCoralStation = false;
-    }
-  }
-
-  public void setModeFaceCoral(boolean faceReef) {
-    if (isBackCoralStation && faceReef) {
-      this.isBackCoralStation = false;
-    }
-    if (faceReef) {
-      this.isFaceCoral = true;
-    } else {
-      this.isFaceCoral = false;
-    }
   }
 
   @Override
@@ -170,7 +158,7 @@ public class DriveCommand extends Command {
       resetLimiter = true;
     }
 
-    if (isBackCoralStation || isFaceCoral) {
+    if (mode == targetMode.CORAL_STATION || mode == targetMode.REEF) {
       PID.setSetpoint(calculateSetpoint(currentRobotPose, currentRotation));
       double pidOutput = PID.calculate(currentRotation);
       pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
@@ -188,9 +176,8 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/angularVelocity", angularVelocity);
     DogLog.log("Drive Command/rotationSetpoint", PID.getSetpoint());
     DogLog.log("Drive Command/isSlow", isSlow);
-    DogLog.log("Drive Command/isBackCoralStation", isBackCoralStation);
+    DogLog.log("Drive Command/targetMode", mode);
     DogLog.log("Drive Command/isRobotCentric", isRobotCentric);
-    DogLog.log("Drive Command/isFaceCoral", isFaceCoral);
 
     if (isRobotCentric) {
       drivetrain.setControl(
