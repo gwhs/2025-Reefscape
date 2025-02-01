@@ -69,7 +69,8 @@ public class RobotVisualizer {
   // arm
   MechanismLigament2d m_arm =
       m_elevatorH3.append(
-          new MechanismLigament2d("arm", 0.85, 90, 10, new Color8Bit(Color.kWhite)));
+          new MechanismLigament2d(
+              "arm", Units.inchesToMeters(20), 90, 10, new Color8Bit(Color.kWhite)));
 
   public RobotVisualizer(ElevatorSubsystem elevator, ArmSubsystem arm) {
     this.elevator = elevator;
