@@ -145,18 +145,10 @@ public class RobotContainer {
         .whileTrue(
             Commands.startEnd(
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Coral Station"));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
-
-    m_driverController
-        .x()
-        .whileTrue(
-            Commands.startEnd(
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF),
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
-                .withName("Face Reef"));
 
     IS_L4.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.73, 200));
     IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.1, 210));
