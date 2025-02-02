@@ -108,7 +108,7 @@ public class DriveCommand extends Command {
         }
       }
 
-    } else {
+    } else if (mode == TargetMode.REEF) {
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
         Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.blueReefSetpointList);
@@ -117,6 +117,8 @@ public class DriveCommand extends Command {
         Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.redReefSetpointList);
         return nearestPoint.getRotation().getDegrees();
       }
+    } else {
+      return 0;
     }
   }
 
@@ -124,7 +126,7 @@ public class DriveCommand extends Command {
     this.mode = mode;
   }
 
-  public void setModeSpeed(boolean isSlow) {
+  public void setSlowMode(boolean isSlow) {
     this.isSlow = isSlow;
   }
 
@@ -159,12 +161,10 @@ public class DriveCommand extends Command {
       resetLimiter = true;
     }
 
-    if (Math.abs(driverController.getRightX()) < DEAD_BAND
-        && (mode == TargetMode.CORAL_STATION || mode == TargetMode.REEF)) {
+    if (Math.abs(driverController.getRightX()) < DEAD_BAND && mode != TargetMode.NORMAL) {
       PID.setSetpoint(calculateSetpoint(currentRobotPose));
       double pidOutput = PID.calculate(currentRotation);
       pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
-      // override angular velocity
       angularVelocity = pidOutput;
       DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
     }
