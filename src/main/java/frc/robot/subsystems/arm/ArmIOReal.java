@@ -54,8 +54,10 @@ public class ArmIOReal implements ArmIO {
     SmartDashboard.putData(
         "Arm Command/reset to 90",
         Commands.runOnce(
-            () ->
-                armMotor.setPosition(Units.degreesToRotations(90) * ArmConstants.ARM_GEAR_RATIO)).ignoringDisable(true));
+                () ->
+                    armMotor.setPosition(
+                        Units.degreesToRotations(90) * ArmConstants.ARM_GEAR_RATIO))
+            .ignoringDisable(true));
   }
 
   // set arm angle in degrees
