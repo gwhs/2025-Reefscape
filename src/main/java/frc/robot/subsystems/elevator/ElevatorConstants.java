@@ -23,5 +23,5 @@ public class ElevatorConstants {
   public static final double L4_RELEASE_POSITION = 0.2;
 
   public static final double INTAKE_METER = ElevatorSubsystem.rotationsToMeters(0);
-  public static final double STOW_METER = ElevatorSubsystem.rotationsToMeters(10);
+  public static final double STOW_METER = ElevatorSubsystem.rotationsToMeters(15);
 }
