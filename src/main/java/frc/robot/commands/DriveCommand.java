@@ -7,6 +7,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,18 +15,24 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.FieldConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import java.util.function.DoubleSupplier;
 
 public class DriveCommand extends Command {
   private static final double PID_MAX = 0.35;
 
   private final CommandSwerveDrivetrain drivetrain;
   private final CommandXboxController driverController;
+  private final SlewRateLimiter angularVelocityLimiter;
+  private final SlewRateLimiter xVelocityLimiter;
+  private final SlewRateLimiter yVelocityLimiter;
   private final PIDController PID;
 
   public boolean isSlow = true;
   public boolean isBackCoralStation = false;
-  public boolean robotCentric = false;
-  public boolean isAlignCoral = false;
+  public boolean isRobotCentric = false;
+  public boolean isFaceCoral = false;
+
+  public boolean resetLimiter = true;
 
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 3.5 * Math.PI;
@@ -34,6 +41,10 @@ public class DriveCommand extends Command {
   private final double RED_RIGHT_STATION_ANGLE = -126;
   private final double BLUE_LEFT_STATION_ANGLE = 54;
   private final double BLUE_RIGHT_STATION_ANGLE = -54;
+
+  public final double ELEVATOR_UP_SLEW_RATE = 0.5;
+
+  public final DoubleSupplier elevatorHeight;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
@@ -49,13 +60,22 @@ public class DriveCommand extends Command {
           .withRotationalDeadband(maxAngularRate * 0.1) // Add a 10% deadband
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want robot-centric
 
-  public DriveCommand(CommandXboxController driverController, CommandSwerveDrivetrain drivetrain) {
+  public DriveCommand(
+      CommandXboxController driverController,
+      CommandSwerveDrivetrain drivetrain,
+      DoubleSupplier elevatorHeight) {
     this.driverController = driverController;
     this.drivetrain = drivetrain;
 
     this.PID = new PIDController(0.02, 0, 0);
     this.PID.setTolerance(0.1);
     this.PID.enableContinuousInput(-180, 180);
+
+    angularVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
+    xVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
+    yVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
+
+    this.elevatorHeight = elevatorHeight;
 
     addRequirements(drivetrain);
   }
@@ -75,6 +95,20 @@ public class DriveCommand extends Command {
       xVelocity *= slowFactor;
       yVelocity *= slowFactor;
       angularVelocity *= slowFactor;
+    }
+
+    if (elevatorHeight.getAsDouble() > 1) {
+      if (resetLimiter) {
+        resetLimiter = false;
+        xVelocityLimiter.reset(xVelocity);
+        yVelocityLimiter.reset(yVelocity);
+        angularVelocityLimiter.reset(angularVelocity);
+      }
+      xVelocity = xVelocityLimiter.calculate(xVelocity);
+      yVelocity = yVelocityLimiter.calculate(yVelocity);
+      angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
+    } else {
+      resetLimiter = true;
     }
 
     if (isBackCoralStation) {
@@ -107,7 +141,7 @@ public class DriveCommand extends Command {
       DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
     }
 
-    if (isAlignCoral) {
+    if (isFaceCoral) {
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
         Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.blueReefSetpointList);
@@ -127,7 +161,6 @@ public class DriveCommand extends Command {
       DogLog.log("Drive Command/ReefTrackingPIDOutput", pidOutput);
     }
 
-    // Multiply by our maximum speeds/rates
     xVelocity *= maxSpeed;
     yVelocity *= maxSpeed;
     angularVelocity *= maxAngularRate;
@@ -136,8 +169,12 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/yVelocity", yVelocity);
     DogLog.log("Drive Command/angularVelocity", angularVelocity);
     DogLog.log("Drive Command/rotationSetpoint", PID.getSetpoint());
+    DogLog.log("Drive Command/isSlow", isSlow);
+    DogLog.log("Drive Command/isBackCoralStation", isBackCoralStation);
+    DogLog.log("Drive Command/isRobotCentric", isRobotCentric);
+    DogLog.log("Drive Command/isFaceCoral", isFaceCoral);
 
-    if (robotCentric) {
+    if (isRobotCentric) {
       drivetrain.setControl(
           robotCentricDrive
               .withVelocityX(xVelocity)

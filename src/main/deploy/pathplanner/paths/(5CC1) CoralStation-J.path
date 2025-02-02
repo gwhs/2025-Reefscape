@@ -3,42 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.2122435897435895,
-        "y": 3.8598717948717947
+        "x": 1.174795081967213,
+        "y": 7.123821721311475
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.749270016405249,
-        "y": 3.0476179535820664
+        "x": 3.03704508197133,
+        "y": 6.4705717213139256
       },
       "isLocked": false,
-      "linkedName": "B"
+      "linkedName": "Coral Station"
     },
     {
       "anchor": {
-        "x": 1.2823076923076917,
-        "y": 0.8566025641025646
+        "x": 4.9868852459016395,
+        "y": 5.157838114754097
       },
       "prevControl": {
-        "x": 2.1312011846732912,
-        "y": 2.2488257517260832
+        "x": 3.309885245901639,
+        "y": 6.630088114754097
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CSP"
+      "linkedName": "J"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "atCSP_B",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 7.0,
@@ -49,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 54.0
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "Auton-C5 (F-E)",
+  "folder": "5 Cycle Non Processor",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -54.0
   },
   "useDefaultConstraints": true
 }
