@@ -97,19 +97,19 @@ public class DriveCommand extends Command {
       angularVelocity *= slowFactor;
     }
 
-    // if (elevatorHeight.getAsDouble() > 1) {
-    //   if (resetLimiter) {
-    //     resetLimiter = false;
-    //     xVelocityLimiter.reset(xVelocity);
-    //     yVelocityLimiter.reset(yVelocity);
-    //     angularVelocityLimiter.reset(angularVelocity);
-    //   }
-    //   xVelocity = xVelocityLimiter.calculate(xVelocity);
-    //   yVelocity = yVelocityLimiter.calculate(yVelocity);
-    //   angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
-    // } else {
-    //   resetLimiter = true;
-    // }
+    if (elevatorHeight.getAsDouble() > 1) {
+      if (resetLimiter) {
+        resetLimiter = false;
+        xVelocityLimiter.reset(xVelocity);
+        yVelocityLimiter.reset(yVelocity);
+        angularVelocityLimiter.reset(angularVelocity);
+      }
+      xVelocity = xVelocityLimiter.calculate(xVelocity);
+      yVelocity = yVelocityLimiter.calculate(yVelocity);
+      angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
+    } else {
+      resetLimiter = true;
+    }
 
     if (isBackCoralStation) {
       if (DriverStation.getAlliance().isPresent()
