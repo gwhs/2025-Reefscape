@@ -157,8 +157,8 @@ public class RobotContainer {
                     () -> driveCommand.isFaceCoral = false, () -> driveCommand.isFaceCoral = true)
                 .withName("Face reef"));
 
-    IS_L4.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.73, 200));
-    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.1, 210));
+    IS_L4.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57),210));
+    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 220));
     IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
     IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
 

@@ -61,7 +61,7 @@ public class ElevatorIOReal implements ElevatorIO {
     softwareLimitSwitchConfigs.ReverseSoftLimitEnable = true;
     softwareLimitSwitchConfigs.ForwardSoftLimitThreshold =
         ElevatorSubsystem.metersToRotations(ElevatorConstants.TOP_METER);
-    softwareLimitSwitchConfigs.ReverseSoftLimitThreshold = ElevatorSubsystem.metersToRotations(0.1);
+    softwareLimitSwitchConfigs.ReverseSoftLimitThreshold = ElevatorSubsystem.metersToRotations(0);
 
     TalonFXConfigurator rightElevatorConfigurator = m_rightElevatorMotor.getConfigurator();
     rightElevatorConfigurator.apply(talonFXConfigs);
@@ -71,13 +71,13 @@ public class ElevatorIOReal implements ElevatorIO {
     hardwareLimitSwitchConfigs.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
     hardwareLimitSwitchConfigs.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
     hardwareLimitSwitchConfigs.ForwardLimitEnable = false;
-    hardwareLimitSwitchConfigs.ReverseLimitEnable = false;
+    hardwareLimitSwitchConfigs.ReverseLimitEnable = true;
     hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyOpen;
     hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
-    hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionEnable = false;
+    hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionEnable = true;
     hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionValue = 0;
 
-    motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     TalonFXConfigurator leftElevatorConfigurator = m_leftElevatorMotor.getConfigurator();
     leftElevatorConfigurator.apply(talonFXConfigs);
