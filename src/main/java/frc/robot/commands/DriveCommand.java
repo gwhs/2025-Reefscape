@@ -1,6 +1,6 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -159,7 +159,8 @@ public class DriveCommand extends Command {
       resetLimiter = true;
     }
 
-    if (angularVelocity<DEAD_BAND && (mode == TargetMode.CORAL_STATION || mode == TargetMode.REEF)) {
+    if (Math.abs(driverController.getRightX()) < DEAD_BAND
+        && (mode == TargetMode.CORAL_STATION || mode == TargetMode.REEF)) {
       PID.setSetpoint(calculateSetpoint(currentRobotPose));
       double pidOutput = PID.calculate(currentRotation);
       pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
