@@ -23,8 +23,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     SmartDashboard.putData("Elevator to 0", setHeight(0));
-    SmartDashboard.putData("Elevator to 1", setHeight(1));
-    SmartDashboard.putData("Elevator to 1.3", setHeight(1.3));
+    SmartDashboard.putData("Elevator to 0.25", setHeight(0.25));
+    SmartDashboard.putData("Elevator to 0.7", setHeight(0.7));
     SmartDashboard.putData("Elevator to 0.5", setHeight(0.5));
   }
 
