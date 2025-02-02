@@ -29,6 +29,7 @@ public class DriveCommand extends Command {
 
   private boolean isSlow = true;
   public boolean isRobotCentric = false;
+  private final double DEAD_BAND = 0.1;
 
   public boolean resetLimiter = true;
 
@@ -86,7 +87,7 @@ public class DriveCommand extends Command {
     addRequirements(drivetrain);
   }
 
-  public double calculateSetpoint(Pose2d currentRobotPose, double currentRotation) {
+  public double calculateSetpoint(Pose2d currentRobotPose) {
     if (mode == TargetMode.CORAL_STATION) {
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
@@ -158,8 +159,8 @@ public class DriveCommand extends Command {
       resetLimiter = true;
     }
 
-    if (mode == TargetMode.CORAL_STATION || mode == TargetMode.REEF) {
-      PID.setSetpoint(calculateSetpoint(currentRobotPose, currentRotation));
+    if (angularVelocity<DEAD_BAND && (mode == TargetMode.CORAL_STATION || mode == TargetMode.REEF)) {
+      PID.setSetpoint(calculateSetpoint(currentRobotPose));
       double pidOutput = PID.calculate(currentRotation);
       pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
       // override angular velocity
