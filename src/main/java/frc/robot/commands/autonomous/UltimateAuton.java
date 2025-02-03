@@ -45,34 +45,22 @@ public class UltimateAuton extends PathPlannerAuto {
 
     if (reefs.length == 0) return;
 
-    if (fromStatingLine) {
+    PathPlannerPath startingPath =
+        fromStatingLine ? reefs[0].pathFromStartingLine : reefs[0].pathToCoralStation;
+    Pose2d startingPose = startingPath.getStartingHolonomicPose().get();
 
-      PathPlannerPath startingPath = reefs[0].pathFromStartingLine;
-      Pose2d startingPose = startingPath.getStartingHolonomicPose().get();
-
-      isRunning()
-          .onTrue(
-              Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose),
-                      Commands.parallel(
-                          AutoBuilder.followPath(startingPath),
-                          robotContainer.prepScoreCoral(
-                              ElevatorSubsystem.rotationsToMeters(57), 210)),
-                      AutoBuilder.followPath(reefs[0].pathToCoralStation)
-                          .alongWith(robotContainer.prepCoralIntake()))
-                  .withName("Leave Starting line, score reef, go to coral station"));
-    } else {
-      PathPlannerPath startingPath = reefs[0].pathToCoralStation;
-      Pose2d startingPose = startingPath.getStartingHolonomicPose().get();
-
-      isRunning()
-          .onTrue(
-              Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose),
-                      AutoBuilder.followPath(startingPath)
-                          .alongWith(robotContainer.prepCoralIntake()))
-                  .withName("Go to coral station"));
-    }
+    isRunning()
+        .onTrue(
+            Commands.sequence(
+                    AutoBuilder.resetOdom(startingPose),
+                    Commands.parallel(
+                            AutoBuilder.followPath(startingPath),
+                            robotContainer.prepScoreCoral(
+                                ElevatorSubsystem.rotationsToMeters(57), 210))
+                        .onlyIf(() -> fromStatingLine),
+                    AutoBuilder.followPath(reefs[0].pathToCoralStation)
+                        .alongWith(robotContainer.prepCoralIntake()))
+                .withName("Leave Starting line, score reef, go to coral station"));
 
     for (int i = 1; i < reefs.length; i++) {
       PathPlannerPath prevPath = reefs[i - 1].pathToCoralStation;
