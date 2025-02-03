@@ -46,7 +46,10 @@ public class FiveCycleProcessor extends PathPlannerAuto {
           .onTrue(
               Commands.sequence(
                       AutoBuilder.resetOdom(startingPosePart1),
-                      AutoBuilder.followPath(SC_F),
+                      Commands.parallel(
+                          AutoBuilder.followPath(SC_F),
+                          robotContainer.prepScoreCoral(
+                              ElevatorSubsystem.rotationsToMeters(57), 210)),
                       robotContainer.scoreCoral().withTimeout(0.5),
                       AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("Leave SC to score preload at F"));
@@ -65,10 +68,10 @@ public class FiveCycleProcessor extends PathPlannerAuto {
           .onTrue(
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
-                      AutoBuilder.followPath(CSP_E)
-                          .alongWith(
-                              robotContainer.prepScoreCoral(
-                                  ElevatorSubsystem.rotationsToMeters(57), 210)),
+                      Commands.parallel(
+                          AutoBuilder.followPath(CSP_E),
+                          robotContainer.prepScoreCoral(
+                              ElevatorSubsystem.rotationsToMeters(57), 210)),
                       robotContainer.scoreCoral().withTimeout(0.5),
                       AutoBuilder.followPath(E_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("CSP to E"));
