@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.autonomous.*;
+import frc.robot.commands.autonomous.UltimateAuton.Reef;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.aprilTagCam.AprilTagCam;
@@ -219,16 +220,33 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("FIVE_CYCLE_PROCESSOR", new FiveCycleProcessor(this, false));
-    autoChooser.addOption("Five_Cycle_Processor_2", new FiveCycleProcessor(this, true));
-    autoChooser.addOption("Two_Cycle_Processor", new TwoCycleProcessor(this));
-    autoChooser.addOption("Two_Cycle_Processor_2", new TwoCycleProcessor2(this));
-    autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
+    autoChooser.setDefaultOption(
+        "FIVE_CYCLE_PROCESSOR",
+        new UltimateAuton(this, true, Reef.F, Reef.E, Reef.D, Reef.C, Reef.B));
+
+    autoChooser.addOption(
+        "Five_Cycle_Processor_2", new UltimateAuton(this, false, Reef.E, Reef.D, Reef.C, Reef.B));
+
+    autoChooser.addOption(
+        "Two_Cycle_Processor", new UltimateAuton(this, true, Reef.F, Reef.E, Reef.D));
+
+    autoChooser.addOption("Two_Cycle_Processor_2", new UltimateAuton(this, false, Reef.E, Reef.D));
+
+    autoChooser.addOption("Score_Preload_One_Cycle", new UltimateAuton(this, true, Reef.F));
+
     autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
+
     autoChooser.addOption("Drivetrain_Practice", new DrivetrainPractice(this));
+
     autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
-    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycleNonProcessor(this, false));
-    autoChooser.addOption("Five_Cycle_Non_Processor_2", new FiveCycleNonProcessor(this, true));
+
+    autoChooser.addOption(
+        "Five_Cycle_Non_Processor",
+        new UltimateAuton(this, true, Reef.I, Reef.J, Reef.K, Reef.L, Reef.A));
+
+    autoChooser.addOption(
+        "Five_Cycle_Non_Processor_2",
+        new UltimateAuton(this, false, Reef.J, Reef.K, Reef.L, Reef.A));
 
     SmartDashboard.putData("autonomous", autoChooser);
   }
