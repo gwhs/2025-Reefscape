@@ -1,6 +1,6 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -27,12 +27,10 @@ public class DriveCommand extends Command {
   private final SlewRateLimiter yVelocityLimiter;
   private final PIDController PID;
 
-  public boolean isSlow = true;
-  public boolean isBackCoralStation = false;
-  public boolean isRobotCentric = false;
-  public boolean isFaceCoral = false;
+  private boolean isSlow = true;
+  private final double DEAD_BAND = 0.1;
 
-  public boolean resetLimiter = true;
+  private boolean resetLimiter = true;
 
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 3.5 * Math.PI;
@@ -42,12 +40,27 @@ public class DriveCommand extends Command {
   private final double BLUE_LEFT_STATION_ANGLE = 54;
   private final double BLUE_RIGHT_STATION_ANGLE = -54;
 
-  public final double ELEVATOR_UP_SLEW_RATE = 0.5;
+  private final double ELEVATOR_UP_SLEW_RATE = 0.5;
 
-  public final DoubleSupplier elevatorHeight;
+  private final DoubleSupplier elevatorHeight;
+
+  public enum DriveMode {
+    ROBOT_CENTRIC,
+    FIELD_CENTRIC
+  }
+
+  DriveMode driveMode = DriveMode.FIELD_CENTRIC;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
+
+  public enum TargetMode {
+    NORMAL,
+    CORAL_STATION,
+    REEF
+  }
+
+  private TargetMode mode = TargetMode.NORMAL;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
@@ -78,6 +91,53 @@ public class DriveCommand extends Command {
     this.elevatorHeight = elevatorHeight;
 
     addRequirements(drivetrain);
+  }
+
+  public double calculateSetpoint(Pose2d currentRobotPose) {
+    if (mode == TargetMode.CORAL_STATION) {
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        // Blue Alliance
+        if (currentRobotPose.getY() <= halfWidthField) {
+          // Low Y => "Right" station for Blue
+          return BLUE_LEFT_STATION_ANGLE;
+        } else {
+          // High Y => "Left" station for Blue
+          return BLUE_RIGHT_STATION_ANGLE;
+        }
+      } else {
+        // Red Alliance or invalid
+        if (currentRobotPose.getY() <= halfWidthField) {
+          return RED_LEFT_STATION_ANGLE;
+        } else {
+          return RED_RIGHT_STATION_ANGLE;
+        }
+      }
+
+    } else if (mode == TargetMode.REEF) {
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.blueReefSetpointList);
+        return nearestPoint.getRotation().getDegrees();
+      } else {
+        Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.redReefSetpointList);
+        return nearestPoint.getRotation().getDegrees();
+      }
+    } else {
+      return 0;
+    }
+  }
+
+  public void setTargetMode(TargetMode mode) {
+    this.mode = mode;
+  }
+
+  public void setSlowMode(boolean isSlow) {
+    this.isSlow = isSlow;
+  }
+
+  public void setDriveMode(DriveMode driveMode) {
+    this.driveMode = driveMode;
   }
 
   @Override
@@ -111,54 +171,12 @@ public class DriveCommand extends Command {
       resetLimiter = true;
     }
 
-    if (isBackCoralStation) {
-      if (DriverStation.getAlliance().isPresent()
-          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-        // Blue Alliance
-        if (currentRobotPose.getY() <= halfWidthField) {
-          // Low Y => "Right" station for Blue
-          PID.setSetpoint(BLUE_LEFT_STATION_ANGLE);
-        } else {
-          // High Y => "Left" station for Blue
-          PID.setSetpoint(BLUE_RIGHT_STATION_ANGLE);
-        }
-      } else {
-        // Red Alliance or invalid
-        if (currentRobotPose.getY() <= halfWidthField) {
-          PID.setSetpoint(RED_LEFT_STATION_ANGLE);
-        } else {
-          PID.setSetpoint(RED_RIGHT_STATION_ANGLE);
-        }
-      }
-
-      // Feed the fixed angle into the PID
+    if (Math.abs(driverController.getRightX()) < DEAD_BAND && mode != TargetMode.NORMAL) {
+      PID.setSetpoint(calculateSetpoint(currentRobotPose));
       double pidOutput = PID.calculate(currentRotation);
       pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
-
-      // Override the user's rotation with the PID result
       angularVelocity = pidOutput;
-
       DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
-    }
-
-    if (isFaceCoral) {
-      if (DriverStation.getAlliance().isPresent()
-          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-        Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.blueReefSetpointList);
-        PID.setSetpoint(nearestPoint.getRotation().getDegrees());
-      } else {
-        Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.redReefSetpointList);
-        PID.setSetpoint(nearestPoint.getRotation().getDegrees());
-      }
-
-      // Feed the fixed angle into the PID
-      double pidOutput = PID.calculate(currentRotation);
-      pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
-
-      // Override the user's rotation with the PID result
-      angularVelocity = pidOutput;
-
-      DogLog.log("Drive Command/ReefTrackingPIDOutput", pidOutput);
     }
 
     xVelocity *= maxSpeed;
@@ -170,11 +188,10 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/angularVelocity", angularVelocity);
     DogLog.log("Drive Command/rotationSetpoint", PID.getSetpoint());
     DogLog.log("Drive Command/isSlow", isSlow);
-    DogLog.log("Drive Command/isBackCoralStation", isBackCoralStation);
-    DogLog.log("Drive Command/isRobotCentric", isRobotCentric);
-    DogLog.log("Drive Command/isFaceCoral", isFaceCoral);
+    DogLog.log("Drive Command/targetMode", mode);
+    DogLog.log("Drive Command/Drive Mode", driveMode);
 
-    if (isRobotCentric) {
+    if (driveMode == DriveMode.ROBOT_CENTRIC) {
       drivetrain.setControl(
           robotCentricDrive
               .withVelocityX(xVelocity)

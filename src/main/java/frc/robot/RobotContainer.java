@@ -53,6 +53,19 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
+  public enum CoralLevel {
+    L1,
+    L2,
+    L3,
+    L4
+  }
+
+  public static CoralLevel coralLevel = CoralLevel.L4;
+  public static final Trigger IS_L1 = new Trigger(() -> coralLevel == CoralLevel.L1);
+  public static final Trigger IS_L2 = new Trigger(() -> coralLevel == CoralLevel.L2);
+  public static final Trigger IS_L3 = new Trigger(() -> coralLevel == CoralLevel.L3);
+  public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
+
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
@@ -60,7 +73,7 @@ public class RobotContainer {
   private AprilTagCam cam3 =
       new AprilTagCam(
           "cam3",
-          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION,
+          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
@@ -68,7 +81,7 @@ public class RobotContainer {
   private AprilTagCam cam4 =
       new AprilTagCam(
           "cam4",
-          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION,
+          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
@@ -131,21 +144,39 @@ public class RobotContainer {
         .x()
         .whileTrue(
             Commands.startEnd(
-                    () -> driveCommand.isBackCoralStation = true,
-                    () -> driveCommand.isBackCoralStation = false)
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Coral Station"));
 
-    m_driverController
-        .y()
-        .whileTrue(
-            Commands.startEnd(
-                    () -> driveCommand.isFaceCoral = true, () -> driveCommand.isFaceCoral = false)
-                .withName("Face reef"));
+    m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
+
+    IS_L4
+        .and(m_driverController.rightTrigger())
+        .whileTrue(prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
+    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 220));
+    IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
+    IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
+
+    m_driverController.rightTrigger().onFalse(scoreCoral());
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
     m_driverController
-        .b()
+        .rightTrigger()
+        .whileTrue(
+            Commands.startEnd(
+                    () -> {
+                      driveCommand.setDriveMode(DriveCommand.DriveMode.ROBOT_CENTRIC);
+                      driveCommand.setSlowMode(true);
+                    },
+                    () -> {
+                      driveCommand.setDriveMode(DriveCommand.DriveMode.FIELD_CENTRIC);
+                      driveCommand.setSlowMode(false);
+                    })
+                .withName("Slow and Robot Centric"));
+
+    m_driverController
+        .a()
         .whileTrue(
             alignToPose(
                 () -> {
@@ -156,6 +187,11 @@ public class RobotContainer {
                     return drivetrain.getState().Pose.nearest(FieldConstants.redReefSetpointList);
                   }
                 }));
+
+    m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
+    m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
+    m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
+    m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
   }
 
   public void periodic() {
@@ -163,6 +199,7 @@ public class RobotContainer {
     robotVisualizer.update();
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
+    DogLog.log("Desired Reef", coralLevel);
   }
 
   /**
@@ -207,5 +244,19 @@ public class RobotContainer {
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake");
+  }
+
+  public Command prepScoreCoral(double elevatorHeight, double armAngle) {
+    return Commands.sequence(
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
+            arm.setAngle(armAngle).withTimeout(1))
+        .withName("Prepare Score Coral");
+  }
+
+  public Command scoreCoral() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+        .withName("Score Coral");
   }
 }

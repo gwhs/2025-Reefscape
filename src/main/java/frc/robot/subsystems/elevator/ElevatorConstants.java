@@ -14,8 +14,14 @@ public class ElevatorConstants {
   public static final int GEAR_RATIO = 12;
   public static final double SPROCKET_DIAMETER = Units.inchesToMeters(1.7567);
 
-  public static final double TOP_METER = ElevatorSubsystem.rotationsToMeters(60);
+  public static final double TOP_METER = ElevatorSubsystem.rotationsToMeters(58);
 
-  public static final double INTAKE_METER = ElevatorSubsystem.rotationsToMeters(10);
+  // Position constants:
+  public static final double L3_PREP_POSITION = 0.4;
+  public static final double L4_PREP_POSITION = 0.5;
+  public static final double L3_RELEASE_POSITION = 0.1;
+  public static final double L4_RELEASE_POSITION = 0.2;
+
+  public static final double INTAKE_METER = ElevatorSubsystem.rotationsToMeters(0);
   public static final double STOW_METER = ElevatorSubsystem.rotationsToMeters(15);
 }
