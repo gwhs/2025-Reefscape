@@ -41,7 +41,7 @@ public class AlignToPose extends Command {
 
     PID_X = new PIDController(2.7, 0, 0); // same for now tune later
     PID_X.setTolerance(0.2);
-    
+
     PID_Y = new PIDController(2.7, 0, 0);
     PID_Y.setTolerance(0.2);
 
