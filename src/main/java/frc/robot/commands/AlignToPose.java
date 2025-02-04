@@ -25,11 +25,11 @@ public class AlignToPose extends Command {
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 1.0 * Math.PI;
 
-  public static final double PID_MAX = 0.35;
+  public static final double PID_MAX = 0.44;
 
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
-          .withDeadband(maxSpeed * 0.0)
+          .withDeadband(maxSpeed * 0.05)
           .withRotationalDeadband(maxAngularRate * 0.0)
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
@@ -40,13 +40,13 @@ public class AlignToPose extends Command {
     this.targetPose = Pose;
 
     PID_X = new PIDController(2.7, 0, 0); // same for now tune later
-    PID_X.setTolerance(0.1);
-
+    PID_X.setTolerance(0.2);
+    
     PID_Y = new PIDController(2.7, 0, 0);
-    PID_Y.setTolerance(0.1);
+    PID_Y.setTolerance(0.2);
 
     PID_Rotation = new PIDController(0.05, 0, 0);
-    PID_Rotation.setTolerance(0.1);
+    PID_Rotation.setTolerance(0.5);
     PID_Rotation.enableContinuousInput(-180, 180);
   }
 
