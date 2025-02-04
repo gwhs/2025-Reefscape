@@ -43,8 +43,10 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_E),
+                      robotContainer.scoreCoral(),
                       Commands.waitSeconds(scoringTime),
-                      AutoBuilder.followPath(E_CSP))
+                      AutoBuilder.followPath(E_CSP),
+                      robotContainer.coralHandoff())
                   .withName("CSP to E"));
 
       event("atCSP_E")
@@ -52,8 +54,10 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_D),
+                      robotContainer.scoreCoral(),
                       Commands.waitSeconds(scoringTime),
-                      AutoBuilder.followPath(D_CSP))
+                      AutoBuilder.followPath(D_CSP),                      
+                      robotContainer.coralHandoff())
                   .withName("CSP to D"));
 
       event("atCSP_D")
@@ -61,8 +65,10 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_C),
+                      robotContainer.scoreCoral(),
                       Commands.waitSeconds(scoringTime),
-                      AutoBuilder.followPath(C_CSP))
+                      AutoBuilder.followPath(C_CSP),
+                      robotContainer.coralHandoff())
                   .withName("CSP to C"));
 
       event("atCSP_C")
@@ -70,8 +76,10 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_B),
+                      robotContainer.scoreCoral(),
                       Commands.waitSeconds(scoringTime),
-                      AutoBuilder.followPath(B_CSP))
+                      AutoBuilder.followPath(B_CSP),
+                      robotContainer.coralHandoff())
                   .withName("CSP to B"));
 
     } catch (Exception e) {
