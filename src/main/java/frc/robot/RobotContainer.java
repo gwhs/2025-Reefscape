@@ -110,7 +110,8 @@ public class RobotContainer {
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
     SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
-    SmartDashboard.putData("Robot Command/prep score", prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
+    SmartDashboard.putData(
+        "Robot Command/prep score", prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
     SmartDashboard.putData("Robot Command/Score L4", L4Score());
 
     // Calculate reef setpoints at startup
@@ -261,6 +262,7 @@ public class RobotContainer {
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral");
   }
+
   public Command L4Score() {
     return Commands.sequence(
             arm.setAngle(ArmConstants.L4_RELEASE_POSITION).withTimeout(1),
