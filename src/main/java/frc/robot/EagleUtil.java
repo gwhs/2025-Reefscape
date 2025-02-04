@@ -135,14 +135,14 @@ public class EagleUtil {
     }
   }
 
-  public static Pose2d getCachedPose(Pose2d pose) {
+  public static Pose2d getCachedReefPose(Pose2d pose) {
     if (cachedPose == null) {
       cachedPose = getNearestReefPoint(pose);
     }
     return cachedPose;
   }
 
-  public static void clearCachedPose() {
+  public static void clearCachedReefPose() {
     cachedPose = null;
   }
 }

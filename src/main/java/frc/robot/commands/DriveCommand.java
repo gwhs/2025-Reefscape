@@ -115,7 +115,7 @@ public class DriveCommand extends Command {
       }
 
     } else if (mode == TargetMode.REEF) {
-      Pose2d nearest = EagleUtil.getCachedPose(currentRobotPose);
+      Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
       return nearest.getRotation().getDegrees();
     } else {
       return 0;

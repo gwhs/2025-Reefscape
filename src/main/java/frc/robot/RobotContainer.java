@@ -177,7 +177,7 @@ public class RobotContainer {
 
     m_driverController
         .a()
-        .whileTrue(alignToPose(() -> EagleUtil.getCachedPose(drivetrain.getState().Pose)));
+        .whileTrue(alignToPose(() -> EagleUtil.getCachedReefPose(drivetrain.getState().Pose)));
 
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
