@@ -8,7 +8,7 @@ public class ArmConstants {
 
   // Position consntants: in degrees
   public static final double VERTICAL_POSITION = 0.0;
-  public static final double L3_PREP_POSITION = 200;
+  public static final double L3_PREP_POSITION = 330;
   public static final double L3_RELEASE_POSITION = 150;
   public static final double L4_PREP_POSITION = 200;
   public static final double L4_RELEASE_POSITION = 200;
