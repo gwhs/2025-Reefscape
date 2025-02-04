@@ -73,7 +73,7 @@ public class RobotContainer {
   private AprilTagCam cam3 =
       new AprilTagCam(
           "cam3",
-          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION,
+          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
@@ -81,7 +81,7 @@ public class RobotContainer {
   private AprilTagCam cam4 =
       new AprilTagCam(
           "cam4",
-          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION,
+          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
@@ -144,21 +144,16 @@ public class RobotContainer {
         .x()
         .whileTrue(
             Commands.startEnd(
-                    () -> driveCommand.isBackCoralStation = true,
-                    () -> driveCommand.isBackCoralStation = false)
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Coral Station"));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
 
-    m_driverController
-        .x()
-        .whileTrue(
-            Commands.startEnd(
-                    () -> driveCommand.isFaceCoral = false, () -> driveCommand.isFaceCoral = true)
-                .withName("Face reef"));
-
-    IS_L4.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.73, 200));
-    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.1, 210));
+    IS_L4
+        .and(m_driverController.rightTrigger())
+        .whileTrue(prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
+    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 220));
     IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
     IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
 
@@ -172,11 +167,11 @@ public class RobotContainer {
             Commands.startEnd(
                     () -> {
                       driveCommand.setDriveMode(DriveCommand.DriveMode.ROBOT_CENTRIC);
-                      driveCommand.isSlow = true;
+                      driveCommand.setSlowMode(true);
                     },
                     () -> {
                       driveCommand.setDriveMode(DriveCommand.DriveMode.FIELD_CENTRIC);
-                      driveCommand.isSlow = false;
+                      driveCommand.setSlowMode(false);
                     })
                 .withName("Slow and Robot Centric"));
 
