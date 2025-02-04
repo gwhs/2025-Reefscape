@@ -4,6 +4,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -31,6 +32,8 @@ public class EagleUtil {
 
   private static Pose2d[] bluePoses = new Pose2d[12];
   private static Pose2d[] redPoses = new Pose2d[12];
+
+  private static Pose2d cachedPose = null;
 
   public static ArrayList<Pose2d> calculateBlueReefSetPoints() {
     if (m_bluePoses != null) {
@@ -121,5 +124,25 @@ public class EagleUtil {
     m_redPoses = new ArrayList<Pose2d>(Arrays.asList(redPoses));
 
     return m_redPoses;
+  }
+
+  public static Pose2d getNearestReefPoint(Pose2d pose) {
+    if (DriverStation.getAlliance().isPresent()
+        && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      return pose.nearest(FieldConstants.blueReefSetpointList);
+    } else {
+      return pose.nearest(FieldConstants.redReefSetpointList);
+    }
+  }
+
+  public static Pose2d getCachedPose(Pose2d pose) {
+    if (cachedPose == null) {
+      cachedPose = getNearestReefPoint(pose);
+    }
+    return cachedPose;
+  }
+
+  public static void clearCachedPose() {
+    cachedPose = null;
   }
 }

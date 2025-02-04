@@ -12,7 +12,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.FieldConstants;
+import frc.robot.EagleUtil;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.DoubleSupplier;
@@ -115,14 +115,8 @@ public class DriveCommand extends Command {
       }
 
     } else if (mode == TargetMode.REEF) {
-      if (DriverStation.getAlliance().isPresent()
-          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-        Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.blueReefSetpointList);
-        return nearestPoint.getRotation().getDegrees();
-      } else {
-        Pose2d nearestPoint = currentRobotPose.nearest(FieldConstants.redReefSetpointList);
-        return nearestPoint.getRotation().getDegrees();
-      }
+      Pose2d nearest = EagleUtil.getCachedPose(currentRobotPose);
+      return nearest.getRotation().getDegrees();
     } else {
       return 0;
     }
