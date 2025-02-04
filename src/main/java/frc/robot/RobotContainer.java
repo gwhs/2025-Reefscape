@@ -157,10 +157,10 @@ public class RobotContainer {
         .and(m_driverController.rightTrigger())
         .whileTrue(prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
     IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 220));
-    // IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
-    // IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
+    IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
+    IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
 
-    m_driverController.rightTrigger().onFalse(L4Score());
+    IS_L4.and(m_driverController.rightTrigger().onFalse(L4Score()));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
@@ -266,9 +266,8 @@ public class RobotContainer {
   public Command L4Score() {
     return Commands.sequence(
             arm.setAngle(ArmConstants.L4_RELEASE_POSITION).withTimeout(1),
-            // drive backward,
             driveCommand.driveBackward(1).withTimeout(0.2),
-            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(0.5))
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.5))
         .withName("Score L4");
   }
 }
