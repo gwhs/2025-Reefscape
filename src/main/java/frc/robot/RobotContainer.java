@@ -186,7 +186,6 @@ public class RobotContainer {
   }
 
   public void periodic() {
-    EagleUtil.clearCachedPose();
     robotVisualizer.update();
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
