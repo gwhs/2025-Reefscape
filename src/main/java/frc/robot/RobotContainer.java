@@ -276,9 +276,9 @@ public class RobotContainer {
         .withName("Score Coral L3");
   }
 
-  public Command prepScoreCoraL4() {
+  public Command prepScoreCoralL4() {
     double elevatorHeight = ElevatorConstants.L4_PREP_POSITION;
-    double armAngle = ElevatorConstants.L4_PREP_POSITION;
+    double armAngle = ArmConstants.L4_PREP_POSITION;
     return Commands.sequence(
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
             arm.setAngle(armAngle).withTimeout(1))
