@@ -177,16 +177,7 @@ public class RobotContainer {
 
     m_driverController
         .a()
-        .whileTrue(
-            alignToPose(
-                () -> {
-                  if (DriverStation.getAlliance().isPresent()
-                      && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                    return drivetrain.getState().Pose.nearest(FieldConstants.blueReefSetpointList);
-                  } else {
-                    return drivetrain.getState().Pose.nearest(FieldConstants.redReefSetpointList);
-                  }
-                }));
+        .whileTrue(alignToPose(() -> EagleUtil.getCachedReefPose(drivetrain.getState().Pose)));
 
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
@@ -195,7 +186,6 @@ public class RobotContainer {
   }
 
   public void periodic() {
-
     robotVisualizer.update();
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
