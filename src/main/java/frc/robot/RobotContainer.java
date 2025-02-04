@@ -266,4 +266,32 @@ public class RobotContainer {
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral");
   }
+  
+  public Command prepScoreCoraL3(double elevatorHeight, double armAngle) {
+    return Commands.sequence(
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
+            arm.setAngle(armAngle).withTimeout(1))
+        .withName("Prepare Score Coral L3");
+  }
+  
+  public Command scoreCoralL3Command() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+        .withName("Score Coral L3");
+  }
+
+  public Command prepScoreCoraL4(double elevatorHeight, double armAngle) {
+    return Commands.sequence(
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
+            arm.setAngle(armAngle).withTimeout(1))
+        .withName("Prepare Score Coral L4");
+  }
+  
+  public Command scoreCoralL4Command() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+        .withName("Score Coral L4");
 }
+  }
