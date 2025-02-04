@@ -44,8 +44,8 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
 
-    EagleUtil.clearCachedReefPose();
-    
+    EagleUtil.clearCachedPose();
+
     CommandScheduler.getInstance().run();
 
     m_robotContainer.periodic();

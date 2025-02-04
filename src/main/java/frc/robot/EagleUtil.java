@@ -126,7 +126,7 @@ public class EagleUtil {
     return m_redPoses;
   }
 
-  public static Pose2d getNearestReefPoint(Pose2d pose) {
+  private static Pose2d getNearestReefPoint(Pose2d pose) {
     if (DriverStation.getAlliance().isPresent()
         && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
       return pose.nearest(FieldConstants.blueReefSetpointList);
@@ -142,7 +142,7 @@ public class EagleUtil {
     return cachedPose;
   }
 
-  public static void clearCachedReefPose() {
+  public static void clearCachedPose() {
     cachedPose = null;
   }
 }
