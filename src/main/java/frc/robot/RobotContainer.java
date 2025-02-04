@@ -144,18 +144,11 @@ public class RobotContainer {
         .x()
         .whileTrue(
             Commands.startEnd(
-                    () -> driveCommand.isBackCoralStation = true,
-                    () -> driveCommand.isBackCoralStation = false)
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Coral Station"));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
-
-    m_driverController
-        .x()
-        .whileTrue(
-            Commands.startEnd(
-                    () -> driveCommand.isFaceCoral = false, () -> driveCommand.isFaceCoral = true)
-                .withName("Face reef"));
 
     IS_L4
         .and(m_driverController.rightTrigger())
@@ -174,11 +167,11 @@ public class RobotContainer {
             Commands.startEnd(
                     () -> {
                       driveCommand.isRobotCentric = true;
-                      driveCommand.isSlow = true;
+                      driveCommand.setSlowMode(true);
                     },
                     () -> {
                       driveCommand.isRobotCentric = false;
-                      driveCommand.isSlow = false;
+                      driveCommand.setSlowMode(false);
                     })
                 .withName("Slow and Robot Centric"));
 
