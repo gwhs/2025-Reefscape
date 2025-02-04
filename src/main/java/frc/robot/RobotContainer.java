@@ -155,8 +155,8 @@ public class RobotContainer {
 
     IS_L4
         .and(m_driverController.rightTrigger())
-        .whileTrue(prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 330));
-    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 320));
+        .whileTrue(prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 225));
+    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 200));
     IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
     IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
 
