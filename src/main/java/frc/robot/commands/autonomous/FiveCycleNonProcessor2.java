@@ -42,16 +42,23 @@ public class FiveCycleNonProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CS_J),
+                      robotContainer.prepScoreCoraL4(),
+                      robotContainer.scoreCoralL4Command(),
                       AutoBuilder.followPath(J_CS),
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CS_K),
+                      robotContainer.prepScoreCoraL4(),
+                      robotContainer.scoreCoralL4Command(),
                       AutoBuilder.followPath(K_CS),
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CS_L),
+                      robotContainer.prepScoreCoraL4(),
+                      robotContainer.scoreCoralL4Command(),
                       AutoBuilder.followPath(L_CS),
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CS_A),
-                      Commands.waitSeconds(waitTime))
+                      robotContainer.prepScoreCoraL4(),
+                      robotContainer.scoreCoralL4Command())
                   .withName("CS to J to CS, CS to K to CS, CS to L to CS, CS to A"));
 
     } catch (Exception e) {
