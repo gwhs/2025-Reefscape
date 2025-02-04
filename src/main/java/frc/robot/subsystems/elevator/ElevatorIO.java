@@ -17,4 +17,6 @@ public interface ElevatorIO {
   public boolean getReverseLimit();
 
   public boolean getForwardLimit();
+
+  public void setneutralmode(boolean neutral);
 }

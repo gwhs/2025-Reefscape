@@ -39,6 +39,10 @@ public class ElevatorIOSim implements ElevatorIO {
     return elevatorSim.getPositionMeters() >= ElevatorConstants.TOP_METER;
   }
 
+  public void setneutralmode(boolean neutral) {
+    DogLog.log("Elevator/Simulation/NeutralMode", neutral);
+  }
+
   @Override
   public void setVoltage(double voltage) {
     elevatorSim.setInputVoltage(voltage);

@@ -89,4 +89,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   public double getHeightMeters() {
     return rotationsToMeters(elevatorIO.getRotation());
   }
+
+  public void setneutralmode(boolean neutralmode) {
+    elevatorIO.setneutralmode(neutralmode);
+  }
 }
