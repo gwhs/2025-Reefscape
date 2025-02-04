@@ -110,6 +110,8 @@ public class RobotContainer {
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
     SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
+    SmartDashboard.putData("Robot Command/prep score", prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
+    SmartDashboard.putData("Robot Command/Score L4", L4Score());
 
     // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
@@ -154,10 +156,10 @@ public class RobotContainer {
         .and(m_driverController.rightTrigger())
         .whileTrue(prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
     IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 220));
-    IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
-    IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
+    // IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
+    // IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
 
-    m_driverController.rightTrigger().onFalse(scoreCoral());
+    m_driverController.rightTrigger().onFalse(L4Score());
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
@@ -258,5 +260,13 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral");
+  }
+  public Command L4Score() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.L4_RELEASE_POSITION).withTimeout(1),
+            // drive backward,
+            driveCommand.driveBackward(1).withTimeout(0.2),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(0.5))
+        .withName("Score L4");
   }
 }
