@@ -20,8 +20,8 @@ public class ArmIOSim implements ArmIO {
 
   private TrapezoidProfile.Constraints constraints =
       new TrapezoidProfile.Constraints(
-          (ArmConstants.MAX_VELOCITY * 2 * Math.PI) * 360,
-          (ArmConstants.MAX_ACCELERATION * 2 * Math.PI) * 360);
+          ArmConstants.MAX_VELOCITY * 360,
+          ArmConstants.MAX_ACCELERATION * 360);
   private ProfiledPIDController pidController = new ProfiledPIDController(.1, 0, 0, constraints);
 
   public ArmIOSim() {
