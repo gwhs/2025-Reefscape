@@ -161,6 +161,9 @@ public class RobotContainer {
     IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
 
     IS_L4.and(m_driverController.rightTrigger().onFalse(L4Score()));
+    IS_L3.and(m_driverController.rightTrigger().onFalse(scoreCoral()));
+    IS_L2.and(m_driverController.rightTrigger().onFalse(scoreCoral()));
+    IS_L1.and(m_driverController.rightTrigger().onFalse(scoreCoral()));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
