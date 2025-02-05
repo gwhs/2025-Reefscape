@@ -24,4 +24,8 @@ public class ElevatorConstants {
 
   public static final double INTAKE_METER = ElevatorSubsystem.rotationsToMeters(0);
   public static final double STOW_METER = ElevatorSubsystem.rotationsToMeters(15);
+
+  public static final double MAX_VELOCITY = 300; 
+  public static final double MAX_ACCELERATION = 150;
+
 }

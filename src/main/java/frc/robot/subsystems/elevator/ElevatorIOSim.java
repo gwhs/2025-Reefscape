@@ -10,7 +10,7 @@ public class ElevatorIOSim implements ElevatorIO {
   private ElevatorSim elevatorSim =
       new ElevatorSim(0.12, 0.01, DCMotor.getFalcon500Foc(2), 0, 1.7, true, 0);
 
-  private Constraints constraints = new Constraints(300, 150);
+  private Constraints constraints = new Constraints(ElevatorConstants.MAX_VELOCITY, ElevatorConstants.MAX_ACCELERATION);
   private ProfiledPIDController pidController = new ProfiledPIDController(.1, 0, 0, constraints);
 
   public void setRotation(double rotation) {
