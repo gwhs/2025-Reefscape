@@ -34,7 +34,9 @@ public class FiveCycleNonProcessor2 extends PathPlannerAuto {
 
       isRunning()
           .onTrue(
-              Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(I_CS).alongWith(robotContainer.prepCoralIntake()))
+              Commands.sequence(
+                      AutoBuilder.resetOdom(startingPose),
+                      AutoBuilder.followPath(I_CS).alongWith(robotContainer.prepCoralIntake()))
                   .withName("I to Coral Station"));
 
       event("atCS")
