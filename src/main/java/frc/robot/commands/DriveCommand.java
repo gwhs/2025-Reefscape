@@ -221,8 +221,4 @@ public class DriveCommand extends Command {
                 robotCentricDrive.withVelocityX(-velocity).withVelocityY(0).withRotationalRate(0)));
   }
 
-  public Command driveBackward() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'driveBackward'");
-  }
 }
