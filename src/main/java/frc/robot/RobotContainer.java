@@ -146,18 +146,11 @@ public class RobotContainer {
         .x()
         .whileTrue(
             Commands.startEnd(
-                    () -> driveCommand.isBackCoralStation = true,
-                    () -> driveCommand.isBackCoralStation = false)
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Coral Station"));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
-
-    m_driverController
-        .x()
-        .whileTrue(
-            Commands.startEnd(
-                    () -> driveCommand.isFaceCoral = false, () -> driveCommand.isFaceCoral = true)
-                .withName("Face reef"));
 
     IS_L4
         .and(m_driverController.rightTrigger())
@@ -175,27 +168,18 @@ public class RobotContainer {
         .whileTrue(
             Commands.startEnd(
                     () -> {
-                      driveCommand.isRobotCentric = true;
-                      driveCommand.isSlow = true;
+                      driveCommand.setDriveMode(DriveCommand.DriveMode.ROBOT_CENTRIC);
+                      driveCommand.setSlowMode(true);
                     },
                     () -> {
-                      driveCommand.isRobotCentric = false;
-                      driveCommand.isSlow = false;
+                      driveCommand.setDriveMode(DriveCommand.DriveMode.FIELD_CENTRIC);
+                      driveCommand.setSlowMode(false);
                     })
                 .withName("Slow and Robot Centric"));
 
     m_driverController
         .a()
-        .whileTrue(
-            alignToPose(
-                () -> {
-                  if (DriverStation.getAlliance().isPresent()
-                      && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                    return drivetrain.getState().Pose.nearest(FieldConstants.blueReefSetpointList);
-                  } else {
-                    return drivetrain.getState().Pose.nearest(FieldConstants.redReefSetpointList);
-                  }
-                }));
+        .whileTrue(alignToPose(() -> EagleUtil.getCachedReefPose(drivetrain.getState().Pose)));
 
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
@@ -204,7 +188,6 @@ public class RobotContainer {
   }
 
   public void periodic() {
-
     robotVisualizer.update();
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
