@@ -110,8 +110,8 @@ public class RobotContainer {
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
     SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
-    SmartDashboard.putData("Robot Command/Score Coral", scoreCoral());    
-    SmartDashboard.putData("Robot Command/Prep Score Coral", prepScoreCoral(0, 0));    
+    SmartDashboard.putData("Robot Command/Score Coral", scoreCoral());
+    SmartDashboard.putData("Robot Command/Prep Score Coral", prepScoreCoral(0, 0));
 
     // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
