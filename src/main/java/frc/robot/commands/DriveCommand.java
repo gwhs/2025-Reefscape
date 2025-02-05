@@ -220,5 +220,4 @@ public class DriveCommand extends Command {
             drivetrain.setControl(
                 robotCentricDrive.withVelocityX(-velocity).withVelocityY(0).withRotationalRate(0)));
   }
-
 }

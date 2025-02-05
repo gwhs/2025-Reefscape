@@ -155,10 +155,20 @@ public class RobotContainer {
 
     IS_L4
         .and(m_driverController.rightTrigger())
-        .whileTrue(prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 225));
-    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 200));
-    IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
-    IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
+        .whileTrue(
+            prepScoreCoral(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION));
+    IS_L3
+        .and(m_driverController.rightTrigger())
+        .whileTrue(
+            prepScoreCoral(ElevatorConstants.L3_PREP_POSITION, ArmConstants.L3_PREP_POSITION));
+    IS_L2
+        .and(m_driverController.rightTrigger())
+        .whileTrue(
+            prepScoreCoral(ElevatorConstants.L2_PREP_POSITION, ArmConstants.L2_PREP_POSITION));
+    IS_L1
+        .and(m_driverController.rightTrigger())
+        .whileTrue(
+            prepScoreCoral(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION));
 
     IS_L4.and(m_driverController.rightTrigger().onFalse(scoreCoralL4()));
     IS_L3.and(m_driverController.rightTrigger().onFalse(scoreCoral()));
@@ -268,7 +278,7 @@ public class RobotContainer {
 
   public Command scoreCoralL4() {
     return Commands.sequence(
-            arm.setAngle(ArmConstants.L4_RELEASE_POSITION).withTimeout(1),
+            arm.setAngle(ArmConstants.L4_SCORE_POSITION).withTimeout(1),
             driveCommand.driveBackward(1).withTimeout(0.2),
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.5),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
