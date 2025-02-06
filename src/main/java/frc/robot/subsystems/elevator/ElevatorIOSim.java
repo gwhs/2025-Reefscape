@@ -1,5 +1,6 @@
 package frc.robot.subsystems.elevator;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -38,6 +39,10 @@ public class ElevatorIOSim implements ElevatorIO {
 
   public boolean getForwardLimit() {
     return elevatorSim.getPositionMeters() >= ElevatorConstants.TOP_METER;
+  }
+
+  public void setNeutralMode(NeutralModeValue mode) {
+    DogLog.log("Elevator/Simulation/NeutralMode", mode);
   }
 
   @Override
