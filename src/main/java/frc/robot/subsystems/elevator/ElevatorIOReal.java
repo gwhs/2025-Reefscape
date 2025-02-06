@@ -157,6 +157,11 @@ public class ElevatorIOReal implements ElevatorIO {
     m_rightElevatorMotor.setControl(m_requestRight);
   }
 
+  public void setNeutralMode(NeutralModeValue mode) {
+    m_leftElevatorMotor.setNeutralMode(mode);
+    m_rightElevatorMotor.setNeutralMode(mode);
+  }
+
   @Override
   public void update() {
     boolean leftElevatorConnected =
