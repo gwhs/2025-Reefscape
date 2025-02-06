@@ -50,6 +50,7 @@ public class RobotContainer {
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
+  private final EagleUtil utils = new EagleUtil();
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 

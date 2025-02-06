@@ -1,12 +1,15 @@
 package frc.robot;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class EagleUtil {
   public static ArrayList<Pose2d> m_redPoses;
@@ -16,7 +19,6 @@ public class EagleUtil {
   private static double BLUE_REEF_Y = Units.inchesToMeters(158.50);
   private static Pose2d BLUE_REEF = new Pose2d(BLUE_REEF_X, BLUE_REEF_Y, Rotation2d.kZero);
   private static Pose2d BLUE_REEF_INVERT = new Pose2d(-BLUE_REEF_X, -BLUE_REEF_Y, Rotation2d.kZero);
-
   private static double RED_REEF_X = Units.inchesToMeters(546.875 - (93.5 - 14 * 2) / 2);
   private static double RED_REEF_Y = Units.inchesToMeters(158.50);
   private static Pose2d RED_REEF = new Pose2d(RED_REEF_X, RED_REEF_Y, Rotation2d.kZero);
@@ -34,6 +36,8 @@ public class EagleUtil {
   private static Pose2d[] redPoses = new Pose2d[12];
 
   private static Pose2d cachedPose = null;
+  private Alliance red = DriverStation.Alliance.Red;
+  private Alliance blue = DriverStation.Alliance.Blue;
 
   public static ArrayList<Pose2d> calculateBlueReefSetPoints() {
     if (m_bluePoses != null) {
@@ -144,5 +148,39 @@ public class EagleUtil {
 
   public static void clearCachedPose() {
     cachedPose = null;
+  }
+
+  public class PoseComparator implements Comparator<Pose2d> {
+    public Pose2d robotPose;
+
+    public PoseComparator(Pose2d robotPose) {
+      this.robotPose = robotPose;
+    }
+
+    public int compare(Pose2d poseA, Pose2d poseB) {
+      double distA = poseA.getTranslation().getDistance(robotPose.getTranslation());
+      double distB = poseB.getTranslation().getDistance(robotPose.getTranslation());
+      int dist = (int) distA - (int) distB;
+      return dist;
+    }
+  }
+
+  public Pose2d closestReefSetPoint(Pose2d pose, int n) {
+    n = MathUtil.clamp(n, 0, 23);
+    if (DriverStation.getAlliance().isPresent() && whichAlliance() == red) {
+      ArrayList<Pose2d> red = calculateRedReefSetPoints();
+      red.sort(new PoseComparator(pose));
+      return red.get(n);
+    }
+
+    // else {
+    ArrayList<Pose2d> blue = calculateBlueReefSetPoints();
+    blue.sort(new PoseComparator(pose));
+    return blue.get(n);
+    // }
+  }
+
+  private Alliance whichAlliance() {
+    return DriverStation.getAlliance().get();
   }
 }
