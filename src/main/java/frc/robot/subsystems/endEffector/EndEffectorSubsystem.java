@@ -1,6 +1,8 @@
 package frc.robot.subsystems.endEffector;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class EndEffectorSubsystem extends SubsystemBase {
@@ -17,12 +19,12 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
   }
 
-  public void setVoltage(double voltage) {
-    endEffectorIO.setVoltage(voltage);
+  public Command setVoltage(double voltage) {
+    return Commands.runOnce(() -> endEffectorIO.setVoltage(voltage));
   }
 
-  public void stopMotor() {
-    endEffectorIO.stopMotor();
+  public Command stopMotor() {
+    return Commands.runOnce(() -> endEffectorIO.stopMotor());
   }
 
   @Override
