@@ -240,7 +240,7 @@ public class RobotContainer {
     return Commands.sequence(
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
             arm.setAngle(armAngle).withTimeout(1))
-        .withName("Prepare Score Coral");
+            .withName("Prepare Score Coral; Elevator Height:"+ elevatorHeight + "Arm Angle"+ armAngle); 
   }
 
   public Command scoreCoral() {
