@@ -68,8 +68,7 @@ public class RobotContainer {
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
 
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
-  public static final Trigger IS_TELEOP = new Trigger (() -> DriverStation.isEnabled());
-
+  public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isEnabled());
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
@@ -92,7 +91,7 @@ public class RobotContainer {
   private final DriveCommand driveCommand =
       new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
 
-  public final Trigger IS_REEFMODE = new Trigger (() -> driveCommand.mode == TargetMode.REEF);
+  public final Trigger IS_REEFMODE = new Trigger(() -> driveCommand.mode == TargetMode.REEF);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -155,8 +154,7 @@ public class RobotContainer {
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
 
-    IS_TELEOP.and(IS_REEFMODE).onTrue(
-        prepScoreCoral(0, 220));
+    IS_TELEOP.and(IS_REEFMODE).onTrue(prepScoreCoral(0, 220));
 
     IS_L4
         .and(m_driverController.rightTrigger())
