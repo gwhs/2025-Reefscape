@@ -1,6 +1,7 @@
 package frc.robot.subsystems.elevator;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
@@ -9,7 +10,6 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -100,8 +100,14 @@ public class ElevatorIOReal implements ElevatorIO {
         ElevatorSubsystem.metersToRotations(ElevatorConstants.TOP_METER);
     softwareLimitSwitchConfigs.ReverseSoftLimitThreshold = ElevatorSubsystem.metersToRotations(0);
 
-    TalonFXConfigurator rightElevatorConfigurator = m_rightElevatorMotor.getConfigurator();
-    rightElevatorConfigurator.apply(talonFXConfigs);
+    StatusCode rightStatus = StatusCode.StatusCodeNotInitialized;
+    for (int i = 0; i < 5; i++) {
+      rightStatus = m_leftElevatorMotor.getConfigurator().apply(talonFXConfigs);
+      if (rightStatus.isOK()) break;
+    }
+    if (!rightStatus.isOK()) {
+      System.out.println("Could not configure device. Error: " + rightStatus.toString());
+    }
 
     // Additional config for left motor
 
@@ -116,8 +122,14 @@ public class ElevatorIOReal implements ElevatorIO {
 
     motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-    TalonFXConfigurator leftElevatorConfigurator = m_leftElevatorMotor.getConfigurator();
-    leftElevatorConfigurator.apply(talonFXConfigs);
+    StatusCode leftStatus = StatusCode.StatusCodeNotInitialized;
+    for (int i = 0; i < 5; i++) {
+      leftStatus = m_leftElevatorMotor.getConfigurator().apply(talonFXConfigs);
+      if (leftStatus.isOK()) break;
+    }
+    if (!leftStatus.isOK()) {
+      System.out.println("Could not configure device. Error: " + leftStatus.toString());
+    }
 
     // Set right motor to follow left motor
     m_rightElevatorMotor.setControl(m_requestRight);
@@ -143,6 +155,11 @@ public class ElevatorIOReal implements ElevatorIO {
   public void setVoltage(double voltage) {
     m_leftElevatorMotor.setControl(m_requestLeftVoltage.withOutput(voltage));
     m_rightElevatorMotor.setControl(m_requestRight);
+  }
+
+  public void setNeutralMode(NeutralModeValue mode) {
+    m_leftElevatorMotor.setNeutralMode(mode);
+    m_rightElevatorMotor.setNeutralMode(mode);
   }
 
   @Override
