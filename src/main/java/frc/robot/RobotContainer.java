@@ -138,7 +138,7 @@ public class RobotContainer {
         Commands.runOnce(
                 () -> {
                   drivetrain.configNeutralMode(NeutralModeValue.Brake);
-                  elevator.setNeutralMode(NeutralModeValue.Coast);
+                  elevator.setNeutralMode(NeutralModeValue.Brake);
                 })
             .ignoringDisable(false));
 
