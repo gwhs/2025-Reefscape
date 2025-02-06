@@ -1,6 +1,7 @@
 package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -9,6 +10,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import dev.doglog.DogLog;
@@ -27,6 +29,8 @@ public class ArmIOReal implements ArmIO {
     Slot0Configs slot0Configs = talonFXConfigs.Slot0;
     SoftwareLimitSwitchConfigs softwareLimitSwitch = talonFXConfigs.SoftwareLimitSwitch;
     CurrentLimitsConfigs currentConfig = talonFXConfigs.CurrentLimits;
+    FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
+
 
     slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
     slot0Configs.kG = 0; // Add 0 V to overcome gravity
@@ -35,6 +39,13 @@ public class ArmIOReal implements ArmIO {
     slot0Configs.kP = 4.8; // A position error of 2.5 rotations results in 12 V output
     slot0Configs.kI = 0; // no output for integrated error
     slot0Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
+    
+    // feedbackConfigs.FeedbackRemoteSensorID = 0;
+    // feedbackConfigs.FeedbackRotorOffset = 0;
+    feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    feedbackConfigs.RotorToSensorRatio = ArmConstants.ARM_GEAR_RATIO;
+    feedbackConfigs.SensorToMechanismRatio = 1;
+
     motionMagicConfigs.MotionMagicCruiseVelocity = ArmConstants.MAX_VELOCITY;
     motionMagicConfigs.MotionMagicAcceleration = ArmConstants.MAX_ACCELERATION;
     motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
@@ -74,7 +85,7 @@ public class ArmIOReal implements ArmIO {
   // geta arm position in degrees
   @Override
   public double getPosition() {
-    return Units.rotationsToDegrees(armMotor.getPosition(true).getValueAsDouble())
+    return Units.rotationsToDegrees(armMotor.getRotorPosition(true).getValueAsDouble())
         / ArmConstants.ARM_GEAR_RATIO;
   }
 
