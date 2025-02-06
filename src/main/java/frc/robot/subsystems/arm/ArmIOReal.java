@@ -1,7 +1,7 @@
 package frc.robot.subsystems.arm;
 
-import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
