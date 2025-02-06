@@ -31,7 +31,6 @@ public class ArmIOReal implements ArmIO {
     CurrentLimitsConfigs currentConfig = talonFXConfigs.CurrentLimits;
     FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
 
-
     slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
     slot0Configs.kG = 0; // Add 0 V to overcome gravity
     slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
@@ -39,7 +38,7 @@ public class ArmIOReal implements ArmIO {
     slot0Configs.kP = 4.8; // A position error of 2.5 rotations results in 12 V output
     slot0Configs.kI = 0; // no output for integrated error
     slot0Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
-    
+
     // feedbackConfigs.FeedbackRemoteSensorID = 0;
     // feedbackConfigs.FeedbackRotorOffset = 0;
     feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
