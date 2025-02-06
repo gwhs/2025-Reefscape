@@ -49,7 +49,7 @@ public class DriveCommand extends Command {
     FIELD_CENTRIC
   }
 
-  DriveMode driveMode = DriveMode.FIELD_CENTRIC;
+  public DriveMode driveMode = DriveMode.FIELD_CENTRIC;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
@@ -60,7 +60,7 @@ public class DriveCommand extends Command {
     REEF
   }
 
-  private TargetMode mode = TargetMode.NORMAL;
+  public TargetMode mode = TargetMode.NORMAL;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()

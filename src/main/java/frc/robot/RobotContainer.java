@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.DriveCommand.TargetMode;
 import frc.robot.commands.autonomous.*;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -67,6 +68,8 @@ public class RobotContainer {
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
 
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
+  public static final Trigger IS_TELEOP = new Trigger (() -> DriverStation.isEnabled());
+
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
@@ -88,6 +91,8 @@ public class RobotContainer {
 
   private final DriveCommand driveCommand =
       new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
+
+  public final Trigger IS_REEFMODE = new Trigger (() -> driveCommand.mode == TargetMode.REEF);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -149,6 +154,9 @@ public class RobotContainer {
                 .withName("Face Coral Station"));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
+
+    IS_TELEOP.and(IS_REEFMODE).onTrue(
+        prepScoreCoral(0, 220));
 
     IS_L4
         .and(m_driverController.rightTrigger())
