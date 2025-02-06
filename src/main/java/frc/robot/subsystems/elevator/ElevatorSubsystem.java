@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.elevator;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -90,7 +91,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     return rotationsToMeters(elevatorIO.getRotation());
   }
 
-  public void setneutralmode(boolean neutralmode) {
-    elevatorIO.setneutralmode(neutralmode);
+  public void setNeutralMode(NeutralModeValue mode) {
+    elevatorIO.setNeutralMode(mode);
   }
 }

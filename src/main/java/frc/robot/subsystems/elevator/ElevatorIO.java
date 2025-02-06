@@ -2,6 +2,8 @@
 // https://github.com/gwhs/2024v2/blob/2025-beta/src/main/java/frc/robot/subsystems/ElevatorSubsystem/ElevatorIO.java
 package frc.robot.subsystems.elevator;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 public interface ElevatorIO {
 
   boolean[] metersToRotations = null;
@@ -18,5 +20,5 @@ public interface ElevatorIO {
 
   public boolean getForwardLimit();
 
-  public void setneutralmode(boolean neutral);
+  public void setNeutralMode(NeutralModeValue mode);
 }
