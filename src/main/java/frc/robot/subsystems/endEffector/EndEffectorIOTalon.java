@@ -9,7 +9,7 @@ import edu.wpi.first.units.measure.Voltage;
 
 class EndEffectorIOTalon implements EndEffectorIO {
 
-  private TalonFX motor = new TalonFX(EndEffectorConstants.deviceID);
+  private TalonFX motor = new TalonFX(EndEffectorConstants.deviceID, "rio");
   private final StatusSignal<Voltage> volts = motor.getMotorVoltage();
   private final StatusSignal<Temperature> temp = motor.getDeviceTemp();
 

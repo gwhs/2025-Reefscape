@@ -21,5 +21,8 @@ class EndEffectorIOSim implements EndEffectorIO {
   }
 
   @Override
-  public void update() {}
+  public void update() {
+
+    motor.update(.020);
+  }
 }
