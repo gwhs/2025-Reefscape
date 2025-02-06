@@ -220,7 +220,8 @@ public class RobotContainer {
     return new AlignToPose(Pose, drivetrain);
   }
 
-  public Command coralHandoff() { // grabs coral from the intake
+  // grabs coral from the intake
+  public Command coralHandoff() {
     return Commands.sequence(
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
@@ -229,22 +230,24 @@ public class RobotContainer {
         .withName("Coral HandOff");
   }
 
-  public Command prepCoralIntake() { // Sets it to the right height and arm postion to intake coral
+  // Sets it to the right height and arm postion to intake coral
+  public Command prepCoralIntake() {
     return Commands.sequence(
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake");
   }
 
-  public Command prepScoreCoral(
-      double elevatorHeight, double armAngle) { // Sets the arm in the right angle to score
+  // Sets the arm in the right angle to score
+  public Command prepScoreCoral(double elevatorHeight, double armAngle) {
     return Commands.sequence(
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
             arm.setAngle(armAngle).withTimeout(1))
         .withName("Prepare Score Coral");
   }
 
-  public Command scoreCoral() { // scores coral
+  // scores coral
+  public Command scoreCoral() {
     return Commands.sequence(
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
