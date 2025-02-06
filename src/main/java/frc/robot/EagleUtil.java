@@ -36,8 +36,8 @@ public class EagleUtil {
   private static Pose2d[] redPoses = new Pose2d[12];
 
   private static Pose2d cachedPose = null;
-  private Alliance red = DriverStation.Alliance.Red;
-  private Alliance blue = DriverStation.Alliance.Blue;
+  private static Alliance red = DriverStation.Alliance.Red;
+  private static Alliance blue = DriverStation.Alliance.Blue;
 
   public static ArrayList<Pose2d> calculateBlueReefSetPoints() {
     if (m_bluePoses != null) {
@@ -150,7 +150,7 @@ public class EagleUtil {
     cachedPose = null;
   }
 
-  public class PoseComparator implements Comparator<Pose2d> {
+  public static class PoseComparator implements Comparator<Pose2d> {
     public Pose2d robotPose;
 
     public PoseComparator(Pose2d robotPose) {
@@ -165,7 +165,7 @@ public class EagleUtil {
     }
   }
 
-  public Pose2d closestReefSetPoint(Pose2d pose, int n) {
+  public static Pose2d closestReefSetPoint(Pose2d pose, int n) {
     n = MathUtil.clamp(n, 0, 23);
     if (isRedAlliance()) {
       ArrayList<Pose2d> red = calculateRedReefSetPoints();
@@ -178,7 +178,7 @@ public class EagleUtil {
     return blue.get(n);
   }
 
-  private boolean isRedAlliance() {
+  public static boolean isRedAlliance() {
     return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == red;
   }
 }
