@@ -86,8 +86,7 @@ public class RobotContainer {
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
 
-  private final DriveCommand driveCommand =
-      new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
+  private final DriveCommand driveCommand = new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -282,6 +281,7 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.5),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score L4");
+  }
 
   public Command prepScoreCoraL3() {
     double elevatorHeight = ElevatorConstants.L3_PREP_POSITION;
