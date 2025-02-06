@@ -22,7 +22,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     } else {
       elevatorIO = new ElevatorIOReal();
     }
-    
+
     SmartDashboard.putData("Elevator to 0", setHeight(0));
     SmartDashboard.putData("Elevator to 0.25", setHeight(0.25));
     SmartDashboard.putData("Elevator to 0.7", setHeight(0.7));
