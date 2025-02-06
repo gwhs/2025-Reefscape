@@ -40,6 +40,9 @@ public class DriveCommand extends Command {
   private final double BLUE_LEFT_STATION_ANGLE = 54;
   private final double BLUE_RIGHT_STATION_ANGLE = -54;
 
+  private final double BLUE_CAGE_ANGLE = 90;
+  private final double RED_CAGE_ANGLE = -90;
+
   private final double ELEVATOR_UP_SLEW_RATE = 0.5;
 
   private final DoubleSupplier elevatorHeight;
@@ -57,10 +60,11 @@ public class DriveCommand extends Command {
   public enum TargetMode {
     NORMAL,
     CORAL_STATION,
-    REEF
+    REEF,
+    CAGE
   }
 
-  private TargetMode mode = TargetMode.NORMAL;
+  private TargetMode mode = TargetMode.CAGE;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
@@ -117,6 +121,13 @@ public class DriveCommand extends Command {
     } else if (mode == TargetMode.REEF) {
       Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
       return nearest.getRotation().getDegrees();
+    } else if (mode == TargetMode.CAGE) {
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        return BLUE_CAGE_ANGLE;
+      } else {
+        return RED_CAGE_ANGLE;
+      }
     } else {
       return 0;
     }
