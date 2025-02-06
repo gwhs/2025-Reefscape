@@ -160,27 +160,25 @@ public class EagleUtil {
     public int compare(Pose2d poseA, Pose2d poseB) {
       double distA = poseA.getTranslation().getDistance(robotPose.getTranslation());
       double distB = poseB.getTranslation().getDistance(robotPose.getTranslation());
-      int dist = (int) distA - (int) distB;
-      return dist;
+      double dist = distA - distB;
+      return (int) dist;
     }
   }
 
   public Pose2d closestReefSetPoint(Pose2d pose, int n) {
     n = MathUtil.clamp(n, 0, 23);
-    if (DriverStation.getAlliance().isPresent() && whichAlliance() == red) {
+    if (isRedAlliance()) {
       ArrayList<Pose2d> red = calculateRedReefSetPoints();
       red.sort(new PoseComparator(pose));
       return red.get(n);
     }
 
-    // else {
     ArrayList<Pose2d> blue = calculateBlueReefSetPoints();
     blue.sort(new PoseComparator(pose));
     return blue.get(n);
-    // }
   }
 
-  private Alliance whichAlliance() {
-    return DriverStation.getAlliance().get();
+  private boolean isRedAlliance() {
+    return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == red;
   }
 }
