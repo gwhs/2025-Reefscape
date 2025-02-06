@@ -2,6 +2,7 @@ package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
@@ -10,17 +11,21 @@ public class ArmIOSim implements ArmIO {
       new SingleJointedArmSim(
           DCMotor.getFalcon500Foc(1),
           ArmConstants.ARM_GEAR_RATIO,
-          0.5,
+          0.1,
           1,
           Units.degreesToRadians(0),
           Units.degreesToRadians(300),
           false,
-          Units.degreesToRadians(0));
+          Units.degreesToRadians(90));
 
-  private edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints constraints =
-      new edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints(
-          ArmConstants.MAX_VELOCITY, ArmConstants.MAX_ACCELERATION);
+  private TrapezoidProfile.Constraints constraints =
+      new TrapezoidProfile.Constraints(
+          ArmConstants.MAX_VELOCITY * 2 * Math.PI, ArmConstants.MAX_ACCELERATION * 2 * Math.PI);
   private ProfiledPIDController pidController = new ProfiledPIDController(.1, 0, 0, constraints);
+
+  public ArmIOSim() {
+    pidController.setGoal(90);
+  }
 
   public double getPosition() {
     return Units.radiansToDegrees(armSim.getAngleRads());
