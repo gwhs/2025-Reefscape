@@ -19,7 +19,7 @@ class EndEffectorIOSim implements EndEffectorIO {
 
   @Override
   public Command stopMotor() {
-    return Commands.runOnce( () -> motor.setInputVoltage(0));
+    return Commands.runOnce(() -> motor.setInputVoltage(0));
   }
 
   @Override

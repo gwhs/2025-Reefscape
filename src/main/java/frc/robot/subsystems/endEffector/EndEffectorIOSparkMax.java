@@ -13,12 +13,12 @@ class EndEffectorIOSparkMax implements EndEffectorIO {
   @Override
   public Command setVoltage(double voltage) {
 
-   return Commands.runOnce( () -> motor.setVoltage(voltage));
+    return Commands.runOnce(() -> motor.setVoltage(voltage));
   }
 
   @Override
   public Command stopMotor() {
-   return Commands.runOnce( () -> motor.setVoltage(0));
+    return Commands.runOnce(() -> motor.setVoltage(0));
   }
 
   @Override

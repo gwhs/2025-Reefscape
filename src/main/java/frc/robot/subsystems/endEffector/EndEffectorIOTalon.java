@@ -22,7 +22,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
 
   @Override
   public Command stopMotor() {
-    return Commands.runOnce( () -> motor.setVoltage(0));
+    return Commands.runOnce(() -> motor.setVoltage(0));
   }
 
   @Override
