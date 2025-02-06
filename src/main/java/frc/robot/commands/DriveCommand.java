@@ -64,7 +64,7 @@ public class DriveCommand extends Command {
     CAGE
   }
 
-  private TargetMode mode = TargetMode.CAGE;
+  private TargetMode mode = TargetMode.NORMAL;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
