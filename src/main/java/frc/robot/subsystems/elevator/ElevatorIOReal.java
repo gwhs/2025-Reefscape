@@ -1,6 +1,7 @@
 package frc.robot.subsystems.elevator;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
@@ -9,7 +10,6 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -87,9 +87,9 @@ public class ElevatorIOReal implements ElevatorIO {
     slot0Configs.kI = 0; // no output for integrated error
     slot0Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
     slot0Configs.withGravityType(GravityTypeValue.Elevator_Static);
-    motionMagicConfigs.MotionMagicCruiseVelocity = 80; // Target cruise velocity of 80 rps
-    motionMagicConfigs.MotionMagicAcceleration =
-        160; // Target acceleration of 160 rps/s (0.5 seconds)
+    
+    motionMagicConfigs.MotionMagicCruiseVelocity = ElevatorConstants.MAX_VELOCITY;
+    motionMagicConfigs.MotionMagicAcceleration = ElevatorConstants.MAX_ACCELERATION;
     motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
     currentConfig.withStatorCurrentLimitEnable(true);
@@ -103,8 +103,14 @@ public class ElevatorIOReal implements ElevatorIO {
         ElevatorSubsystem.metersToRotations(ElevatorConstants.TOP_METER);
     softwareLimitSwitchConfigs.ReverseSoftLimitThreshold = ElevatorSubsystem.metersToRotations(0);
 
-    TalonFXConfigurator rightElevatorConfigurator = m_rightElevatorMotor.getConfigurator();
-    rightElevatorConfigurator.apply(talonFXConfigs);
+    StatusCode rightStatus = StatusCode.StatusCodeNotInitialized;
+    for (int i = 0; i < 5; i++) {
+      rightStatus = m_leftElevatorMotor.getConfigurator().apply(talonFXConfigs);
+      if (rightStatus.isOK()) break;
+    }
+    if (!rightStatus.isOK()) {
+      System.out.println("Could not configure device. Error: " + rightStatus.toString());
+    }
 
     // Additional config for left motor
 
@@ -119,8 +125,14 @@ public class ElevatorIOReal implements ElevatorIO {
 
     motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-    TalonFXConfigurator leftElevatorConfigurator = m_leftElevatorMotor.getConfigurator();
-    leftElevatorConfigurator.apply(talonFXConfigs);
+    StatusCode leftStatus = StatusCode.StatusCodeNotInitialized;
+    for (int i = 0; i < 5; i++) {
+      leftStatus = m_leftElevatorMotor.getConfigurator().apply(talonFXConfigs);
+      if (leftStatus.isOK()) break;
+    }
+    if (!leftStatus.isOK()) {
+      System.out.println("Could not configure device. Error: " + leftStatus.toString());
+    }
 
     // Set right motor to follow left motor
     m_rightElevatorMotor.setControl(m_requestRight);
@@ -146,6 +158,11 @@ public class ElevatorIOReal implements ElevatorIO {
   public void setVoltage(double voltage) {
     m_leftElevatorMotor.setControl(m_requestLeftVoltage.withOutput(voltage));
     m_rightElevatorMotor.setControl(m_requestRight);
+  }
+
+  public void setNeutralMode(NeutralModeValue mode) {
+    m_leftElevatorMotor.setNeutralMode(mode);
+    m_rightElevatorMotor.setNeutralMode(mode);
   }
 
   @Override
