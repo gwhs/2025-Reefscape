@@ -9,13 +9,13 @@ public class ArmConstants {
   // Position consntants: in degrees
   public static final double L1_PREP_POSITION = 330;
   public static final double L2_PREP_POSITION = 330;
-  public static final double L3_PREP_POSITION = 330;
-  public static final double L4_PREP_POSITION = 200;
+  public static final double L3_PREP_POSITION = 227;
+  public static final double L4_PREP_POSITION = 225;
 
   public static final double L1_SCORE_POSITION = 150;
   public static final double L2_SCORE_POSITION = 150;
   public static final double L3_SCORE_POSITION = 150;
-  public static final double L4_SCORE_POSITION = 200;
+  public static final double L4_SCORE_POSITION = 180;
   public static final double ARM_INTAKE_ANGLE = 90.0;
   public static final double ARM_STOW_ANGLE = 90.0;
 }
