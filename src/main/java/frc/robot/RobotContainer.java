@@ -110,6 +110,8 @@ public class RobotContainer {
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
     SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
+    SmartDashboard.putData("Robot Command/Score Coral", scoreCoral());
+    SmartDashboard.putData("Robot Command/Prep Score Coral", prepScoreCoral(0, 0));
 
     // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
@@ -130,6 +132,7 @@ public class RobotContainer {
         Commands.runOnce(
                 () -> {
                   drivetrain.configNeutralMode(NeutralModeValue.Coast);
+                  elevator.setNeutralMode(NeutralModeValue.Coast);
                 })
             .ignoringDisable(true));
 
@@ -137,6 +140,7 @@ public class RobotContainer {
         Commands.runOnce(
                 () -> {
                   drivetrain.configNeutralMode(NeutralModeValue.Brake);
+                  elevator.setNeutralMode(NeutralModeValue.Brake);
                 })
             .ignoringDisable(false));
 
@@ -177,16 +181,7 @@ public class RobotContainer {
 
     m_driverController
         .a()
-        .whileTrue(
-            alignToPose(
-                () -> {
-                  if (DriverStation.getAlliance().isPresent()
-                      && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                    return drivetrain.getState().Pose.nearest(FieldConstants.blueReefSetpointList);
-                  } else {
-                    return drivetrain.getState().Pose.nearest(FieldConstants.redReefSetpointList);
-                  }
-                }));
+        .whileTrue(alignToPose(() -> EagleUtil.getCachedReefPose(drivetrain.getState().Pose)));
 
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
@@ -195,7 +190,6 @@ public class RobotContainer {
   }
 
   public void periodic() {
-
     robotVisualizer.update();
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
@@ -230,6 +224,7 @@ public class RobotContainer {
     return new AlignToPose(Pose, drivetrain);
   }
 
+  // grabs coral from the intake
   public Command coralHandoff() {
     return Commands.sequence(
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
@@ -239,6 +234,7 @@ public class RobotContainer {
         .withName("Coral HandOff");
   }
 
+  // Sets it to the right height and arm postion to intake coral
   public Command prepCoralIntake() {
     return Commands.sequence(
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
@@ -246,6 +242,7 @@ public class RobotContainer {
         .withName("Prepare Coral Intake");
   }
 
+  // Sets elevator and arm to postion
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
     return Commands.sequence(
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
@@ -253,10 +250,43 @@ public class RobotContainer {
         .withName("Prepare Score Coral");
   }
 
+  // scores coral
   public Command scoreCoral() {
     return Commands.sequence(
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral");
+  }
+
+  public Command prepScoreCoraL3() {
+    double elevatorHeight = ElevatorConstants.L3_PREP_POSITION;
+    double armAngle = ElevatorConstants.L3_PREP_POSITION;
+    return Commands.sequence(
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
+            arm.setAngle(armAngle).withTimeout(1))
+        .withName("Prepare Score Coral L3");
+  }
+
+  public Command scoreCoralL3Command() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+        .withName("Score Coral L3");
+  }
+
+  public Command prepScoreCoralL4() {
+    double elevatorHeight = ElevatorConstants.L4_PREP_POSITION;
+    double armAngle = ArmConstants.L4_PREP_POSITION;
+    return Commands.sequence(
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
+            arm.setAngle(armAngle).withTimeout(1))
+        .withName("Prepare Score Coral L4");
+  }
+
+  public Command scoreCoralL4Command() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+        .withName("Score Coral L4");
   }
 }
