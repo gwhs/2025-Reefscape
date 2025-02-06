@@ -238,7 +238,7 @@ public class RobotContainer {
         .withName("Prepare Coral Intake");
   }
 
-  // Sets the arm in the right angle to score
+  // Sets elevator and arm to postion 
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
     return Commands.sequence(
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
