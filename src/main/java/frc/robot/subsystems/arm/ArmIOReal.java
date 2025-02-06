@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -14,12 +16,23 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 public class ArmIOReal implements ArmIO {
   private TalonFX armMotor = new TalonFX(ArmConstants.ARM_MOTOR_ID, "rio");
   private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
+
+  private final StatusSignal<Double> armPIDGoal = armMotor.getClosedLoopReference();
+  private final StatusSignal<Voltage> armMotorVoltage = armMotor.getMotorVoltage();
+  private final StatusSignal<Voltage> armSupplyVoltage = armMotor.getSupplyVoltage();
+  private final StatusSignal<Temperature> armDeviceTemp = armMotor.getDeviceTemp();
+  private final StatusSignal<Current> armStatorCurrent = armMotor.getStatorCurrent();
+  private final StatusSignal<Angle> armPosition = armMotor.getPosition();
 
   public ArmIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
@@ -76,16 +89,26 @@ public class ArmIOReal implements ArmIO {
   // geta arm position in degrees
   @Override
   public double getPosition() {
-    return Units.rotationsToDegrees(armMotor.getPosition(true).getValueAsDouble())
-        / ArmConstants.ARM_GEAR_RATIO;
+    return Units.rotationsToDegrees(armPosition.getValueAsDouble()) / ArmConstants.ARM_GEAR_RATIO;
   }
 
   @Override
   public void update() {
-    DogLog.log("Arm/pid goal", armMotor.getClosedLoopReference(true).getValueAsDouble());
-    DogLog.log("Arm/motor voltage", armMotor.getMotorVoltage(true).getValueAsDouble());
-    DogLog.log("Arm/supply voltage", armMotor.getSupplyVoltage(true).getValueAsDouble());
-    DogLog.log("Arm/device temp", armMotor.getDeviceTemp(true).getValueAsDouble());
-    DogLog.log("Arm/stator current", armMotor.getStatorCurrent(true).getValueAsDouble());
+    boolean armConnected =
+        (BaseStatusSignal.refreshAll(
+                armPIDGoal,
+                armMotorVoltage,
+                armSupplyVoltage,
+                armDeviceTemp,
+                armStatorCurrent,
+                armPosition)
+            .isOK());
+
+    DogLog.log("Arm/Motor/pid goal", armPIDGoal.getValueAsDouble());
+    DogLog.log("Arm/Motor/motor voltage", armMotorVoltage.getValueAsDouble());
+    DogLog.log("Arm/Motor/supply voltage", armSupplyVoltage.getValueAsDouble());
+    DogLog.log("Arm/Motor/device temp", armDeviceTemp.getValueAsDouble());
+    DogLog.log("Arm/Motor/stator current", armStatorCurrent.getValueAsDouble());
+    DogLog.log("Arm/Motor/Connected", armConnected);
   }
 }
