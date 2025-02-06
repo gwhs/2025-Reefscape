@@ -3,16 +3,15 @@ package frc.robot.subsystems.endEffector;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 
 class EndEffectorIOTalon implements EndEffectorIO {
 
-    private TalonFX motor = new TalonFX(EndEffectorConstants.deviceID);
-    private final StatusSignal<Voltage> volts = motor.getMotorVoltage();
-    private final StatusSignal<Temperature> temp = motor.getDeviceTemp();
+  private TalonFX motor = new TalonFX(EndEffectorConstants.deviceID);
+  private final StatusSignal<Voltage> volts = motor.getMotorVoltage();
+  private final StatusSignal<Temperature> temp = motor.getDeviceTemp();
 
   @Override
   public void setVoltage(double voltage) {
@@ -26,14 +25,9 @@ class EndEffectorIOTalon implements EndEffectorIO {
 
   @Override
   public void update() {
-      boolean EndEffectorConnected = (
-        BaseStatusSignal.refreshAll(
-        volts,
-        temp)
-      ).isOK();
-      
-      DogLog.log("EndEffector/Temp", temp.getValueAsDouble());
-      DogLog.log("EndEffector/Voltage", volts.getValueAsDouble());
-    }
+    boolean EndEffectorConnected = (BaseStatusSignal.refreshAll(volts, temp)).isOK();
 
-    }
+    DogLog.log("EndEffector/Temp", temp.getValueAsDouble());
+    DogLog.log("EndEffector/Voltage", volts.getValueAsDouble());
+  }
+}

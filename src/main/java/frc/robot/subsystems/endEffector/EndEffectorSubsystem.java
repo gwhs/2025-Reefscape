@@ -13,7 +13,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
       eeio = new EndEffectorIOSim();
     } else {
       eeio = new EndEffectorIOSparkMax();
-   // eeio = new EndEffectorIOTalon();
+      // eeio = new EndEffectorIOTalon();
     }
   }
 
