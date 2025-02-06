@@ -1,7 +1,5 @@
 package frc.robot.subsystems.endEffector;
 
-
-
 interface EndEffectorIO {
 
   void setVoltage(double voltage);

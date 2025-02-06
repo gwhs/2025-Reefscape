@@ -7,7 +7,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 
-
 class EndEffectorIOTalon implements EndEffectorIO {
 
   private TalonFX motor = new TalonFX(EndEffectorConstants.deviceID, "rio");
@@ -21,7 +20,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
 
   @Override
   public void stopMotor() {
-  motor.setVoltage(0);
+    motor.setVoltage(0);
   }
 
   @Override

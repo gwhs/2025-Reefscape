@@ -4,7 +4,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import dev.doglog.DogLog;
 
-
 class EndEffectorIOSparkMax implements EndEffectorIO {
 
   private SparkMax motor = new SparkMax(EndEffectorConstants.deviceID, MotorType.kBrushless);
