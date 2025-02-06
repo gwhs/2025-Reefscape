@@ -48,7 +48,7 @@ public class ElevatorIOReal implements ElevatorIO {
     slot0Configs.kI = 0; // no output for integrated error
     slot0Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
     motionMagicConfigs.MotionMagicCruiseVelocity = ElevatorConstants.MAX_VELOCITY;
-    motionMagicConfigs.MotionMagicAcceleration = ElevatorConstants.MAX_ACCELERATION; 
+    motionMagicConfigs.MotionMagicAcceleration = ElevatorConstants.MAX_ACCELERATION;
     motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
     currentConfig.withStatorCurrentLimitEnable(true);
