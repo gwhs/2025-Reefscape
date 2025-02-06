@@ -1,10 +1,12 @@
 package frc.robot.subsystems.endEffector;
 
+import edu.wpi.first.wpilibj2.command.Command;
+
 interface EndEffectorIO {
 
-  void setVoltage(double voltage);
+  Command setVoltage(double voltage);
 
-  void stopMotor();
+  Command stopMotor();
 
   void update();
 }

@@ -6,6 +6,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 class EndEffectorIOTalon implements EndEffectorIO {
 
@@ -14,20 +16,21 @@ class EndEffectorIOTalon implements EndEffectorIO {
   private final StatusSignal<Temperature> temp = motor.getDeviceTemp();
 
   @Override
-  public void setVoltage(double voltage) {
-    motor.setVoltage(voltage);
+  public Command setVoltage(double voltage) {
+    return Commands.runOnce(() -> motor.setVoltage(voltage));
   }
 
   @Override
-  public void stopMotor() {
-    motor.setVoltage(0);
+  public Command stopMotor() {
+    return Commands.runOnce( () -> motor.setVoltage(0));
   }
 
   @Override
   public void update() {
-    boolean EndEffectorConnected = (BaseStatusSignal.refreshAll(volts, temp)).isOK();
+    boolean endEffectorConnected = (BaseStatusSignal.refreshAll(volts, temp)).isOK();
 
     DogLog.log("EndEffector/Temp", temp.getValueAsDouble());
     DogLog.log("EndEffector/Voltage", volts.getValueAsDouble());
+    DogLog.log("EndEffector/Connected", endEffectorConnected);
   }
 }

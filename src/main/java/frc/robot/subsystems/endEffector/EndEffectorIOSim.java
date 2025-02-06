@@ -3,6 +3,8 @@ package frc.robot.subsystems.endEffector;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 class EndEffectorIOSim implements EndEffectorIO {
   private FlywheelSim motor =
@@ -11,18 +13,17 @@ class EndEffectorIOSim implements EndEffectorIO {
           DCMotor.getKrakenX60(1));
 
   @Override
-  public void setVoltage(double voltage) {
-    motor.setInputVoltage(voltage);
+  public Command setVoltage(double voltage) {
+    return Commands.runOnce(() -> motor.setInputVoltage(voltage));
   }
 
   @Override
-  public void stopMotor() {
-    motor.setInputVoltage(0);
+  public Command stopMotor() {
+    return Commands.runOnce( () -> motor.setInputVoltage(0));
   }
 
   @Override
   public void update() {
-
     motor.update(.020);
   }
 }
