@@ -30,7 +30,7 @@ public class AlignToPose extends Command {
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
           .withDeadband(maxSpeed * 0.05)
-          .withRotationalDeadband(maxAngularRate * 0.0)
+          .withRotationalDeadband(maxAngularRate * 0.05)
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
   public AlignToPose(Supplier<Pose2d> Pose, CommandSwerveDrivetrain drivetrain) {
@@ -40,10 +40,10 @@ public class AlignToPose extends Command {
     this.targetPose = Pose;
 
     PID_X = new PIDController(2.7, 0, 0); // same for now tune later
-    PID_X.setTolerance(0.2);
+    PID_X.setTolerance(0.02);
 
     PID_Y = new PIDController(2.7, 0, 0);
-    PID_Y.setTolerance(0.2);
+    PID_Y.setTolerance(0.02);
 
     PID_Rotation = new PIDController(0.05, 0, 0);
     PID_Rotation.setTolerance(0.5);
