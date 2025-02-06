@@ -55,8 +55,9 @@ public class ArmIOReal implements ArmIO {
     // feedbackConfigs.FeedbackRemoteSensorID = 0;
     // feedbackConfigs.FeedbackRotorOffset = 0;
     feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-    feedbackConfigs.RotorToSensorRatio = 1; //TODO: Need to change to gear ratio with cancoder
-    feedbackConfigs.SensorToMechanismRatio = ArmConstants.ARM_GEAR_RATIO; //TODO: Need to change to 1 with cancoder
+    feedbackConfigs.RotorToSensorRatio = 1; // TODO: Need to change to gear ratio with cancoder
+    feedbackConfigs.SensorToMechanismRatio =
+        ArmConstants.ARM_GEAR_RATIO; // TODO: Need to change to 1 with cancoder
 
     motionMagicConfigs.MotionMagicCruiseVelocity = ArmConstants.MAX_VELOCITY;
     motionMagicConfigs.MotionMagicAcceleration = ArmConstants.MAX_ACCELERATION;
@@ -86,10 +87,7 @@ public class ArmIOReal implements ArmIO {
 
     SmartDashboard.putData(
         "Arm Command/reset to 90",
-        Commands.runOnce(
-                () ->
-                    armMotor.setPosition(
-                        Units.degreesToRotations(90)))
+        Commands.runOnce(() -> armMotor.setPosition(Units.degreesToRotations(90)))
             .ignoringDisable(true));
   }
 
