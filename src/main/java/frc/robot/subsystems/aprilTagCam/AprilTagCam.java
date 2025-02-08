@@ -44,7 +44,7 @@ public class AprilTagCam {
   private boolean isConnected;
 
   private final Alert visionNotConnected;
-  
+
   Optional<EstimatedRobotPose> optionalEstimPose;
   private AprilTagHelp helper = new AprilTagHelp(null, 0, null);
 
