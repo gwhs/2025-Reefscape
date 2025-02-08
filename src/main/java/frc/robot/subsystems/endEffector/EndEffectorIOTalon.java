@@ -19,8 +19,10 @@ class EndEffectorIOTalon implements EndEffectorIO {
   public EndEffectorIOTalon() {
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
     CurrentLimitsConfigs limitsConfigs = talonConfig.CurrentLimits;
+
     limitsConfigs.withStatorCurrentLimitEnable(true);
     limitsConfigs.withStatorCurrentLimit(15);
+
     StatusCode status = StatusCode.StatusCodeNotInitialized;
 
     for (int i = 0; i < 5; i++) {
