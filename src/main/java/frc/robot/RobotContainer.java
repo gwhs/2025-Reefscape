@@ -11,10 +11,15 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -31,6 +36,7 @@ import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.Supplier;
 
 /**
@@ -43,6 +49,7 @@ public class RobotContainer {
 
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
+  private final Alert batteryUnderTwelveVolts = new Alert("BATTERY UNDER 12V", AlertType.kWarning);
 
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
@@ -50,6 +57,7 @@ public class RobotContainer {
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
+  private final LedSubsystem led = new LedSubsystem();
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
@@ -136,6 +144,14 @@ public class RobotContainer {
                 })
             .ignoringDisable(true));
 
+    IS_DISABLED
+        .and(() -> RobotController.getBatteryVoltage() >= 12)
+        .onTrue(led.setPattern(LEDPattern.solid(Color.kGreen)));
+
+    IS_DISABLED
+        .and(() -> RobotController.getBatteryVoltage() < 12)
+        .onTrue(led.setPattern(LEDPattern.solid(Color.kRed)));
+
     IS_DISABLED.onFalse(
         Commands.runOnce(
                 () -> {
@@ -143,6 +159,10 @@ public class RobotContainer {
                   elevator.setNeutralMode(NeutralModeValue.Brake);
                 })
             .ignoringDisable(false));
+
+    IS_DISABLED
+        .and(() -> RobotController.getBatteryVoltage() < 12)
+        .onTrue(triggerAlert(batteryUnderTwelveVolts));
 
     m_driverController
         .x()
@@ -291,5 +311,9 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral L4");
+  }
+
+  public Command triggerAlert(Alert alert) {
+    return Commands.runOnce(() -> alert.set(true));
   }
 }
