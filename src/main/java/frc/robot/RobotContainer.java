@@ -50,7 +50,6 @@ public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
   private final Alert batteryUnderTwelveVolts = new Alert("BATTERY UNDER 12V", AlertType.kWarning);
-
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
@@ -162,7 +161,7 @@ public class RobotContainer {
 
     IS_DISABLED
         .and(() -> RobotController.getBatteryVoltage() < 12)
-        .onTrue(triggerAlert(batteryUnderTwelveVolts));
+        .onTrue(EagleUtil.triggerAlert(batteryUnderTwelveVolts));
 
     m_driverController
         .x()
@@ -311,9 +310,5 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral L4");
-  }
-
-  public Command triggerAlert(Alert alert) {
-    return Commands.runOnce(() -> alert.set(true));
   }
 }
