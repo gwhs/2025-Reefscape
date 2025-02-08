@@ -1,0 +1,61 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.9868852459016395,
+        "y": 5.157838114754097
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.534135245901639,
+        "y": 6.659338114754096
+      },
+      "isLocked": false,
+      "linkedName": "J"
+    },
+    {
+      "anchor": {
+        "x": 1.174795081967213,
+        "y": 7.123821721311475
+      },
+      "prevControl": {
+        "x": 2.2472950819713295,
+        "y": 6.490071721313925
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Coral Station"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "atCS",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 7.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 7.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -54.0
+  },
+  "reversed": false,
+  "folder": "5 Cycle Non Processor",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -119.99999999999999
+  },
+  "useDefaultConstraints": true
+}

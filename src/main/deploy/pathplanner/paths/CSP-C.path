@@ -1,0 +1,61 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.2823076923076917,
+        "y": 0.8566025641025646
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.531280677661697,
+        "y": 1.7514506601751245
+      },
+      "isLocked": false,
+      "linkedName": "CSP"
+    },
+    {
+      "anchor": {
+        "x": 3.7489102564102557,
+        "y": 2.9826282051282056
+      },
+      "prevControl": {
+        "x": 3.1061931920190484,
+        "y": 2.556261185304049
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "C"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "atC",
+      "waypointRelativePos": 1,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 7.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 7.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 59.99999999999999
+  },
+  "reversed": false,
+  "folder": "Auton-C5 (F-E)",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 54.0
+  },
+  "useDefaultConstraints": true
+}

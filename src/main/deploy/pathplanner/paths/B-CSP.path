@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.15,
-        "y": 1.868
+        "x": 3.2122435897435895,
+        "y": 3.8598717948717947
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.259995783444638,
-        "y": 2.098011968950733
+        "x": 2.749270016405249,
+        "y": 3.0476179535820664
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "B"
     },
     {
       "anchor": {
-        "x": 5.276,
-        "y": 2.931
+        "x": 1.2823076923076917,
+        "y": 0.8566025641025646
       },
       "prevControl": {
-        "x": 4.8072462021464535,
-        "y": 3.1745247215227788
+        "x": 2.1312011846732912,
+        "y": 2.2488257517260832
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CSP"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "atF",
+      "name": "atCSP_B",
       "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null
@@ -41,21 +41,21 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 4.5,
+    "maxAcceleration": 7.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
-    "nominalVoltage": 7.5,
+    "nominalVoltage": 7.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 115.278
+    "rotation": 54.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auton-C5 (F-E)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

@@ -1,17 +1,19 @@
 {
-  "robotWidth": 0.9,
-  "robotLength": 0.9,
+  "robotWidth": 0.7747,
+  "robotLength": 0.775,
   "holonomicMode": true,
   "pathFolders": [
     "Leave",
+    "Auton-C5 (F-E)",
+    "5 Cycle Non Processor",
     "Test Paths"
   ],
   "autoFolders": [],
   "defaultMaxVel": 5.0,
-  "defaultMaxAccel": 4.5,
+  "defaultMaxAccel": 7.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
-  "defaultNominalVoltage": 7.5,
+  "defaultNominalVoltage": 7.0,
   "robotMass": 74.088,
   "robotMOI": 6.883,
   "robotTrackwidth": 0.546,
