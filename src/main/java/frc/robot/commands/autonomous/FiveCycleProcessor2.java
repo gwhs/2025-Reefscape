@@ -62,7 +62,7 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
                       robotContainer.scoreCoral(),
                       Commands.waitSeconds(scoringTime),
                       AutoBuilder.followPath(D_CSP),
-                      AutoBuilder.followPath(D_CSP),  
+                      AutoBuilder.followPath(D_CSP),
                       robotContainer.prepCoralIntake(),
                       robotContainer.coralHandoff())
                   .withName("CSP to D"));
