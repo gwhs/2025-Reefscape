@@ -221,7 +221,7 @@ public class RobotContainer {
   }
 
   public Command alignToPose(Supplier<Pose2d> Pose) {
-    return new AlignToPose(Pose, drivetrain);
+    return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters());
   }
 
   // grabs coral from the intake
