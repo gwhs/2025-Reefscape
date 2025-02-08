@@ -161,7 +161,7 @@ public class RobotContainer {
 
     IS_DISABLED
         .and(() -> RobotController.getBatteryVoltage() < 12)
-        .onTrue(triggerAlert(batteryUnderTwelveVolts));
+        .onTrue(EagleUtil.triggerAlert(batteryUnderTwelveVolts));
 
     m_driverController
         .x()
@@ -172,6 +172,12 @@ public class RobotContainer {
                 .withName("Face Coral Station"));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
+
+    m_driverController
+        .leftBumper()
+        .onTrue(
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
+                .withName("Back to Original State"));
 
     IS_L4
         .and(m_driverController.rightTrigger())
@@ -310,9 +316,5 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral L4");
-  }
-
-  public Command triggerAlert(Alert alert) {
-    return Commands.runOnce(() -> alert.set(true));
   }
 }
