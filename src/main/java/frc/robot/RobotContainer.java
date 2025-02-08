@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -34,7 +35,6 @@ import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
-import edu.wpi.first.wpilibj.util.Color;
 import java.util.function.Supplier;
 
 /**
@@ -141,16 +141,13 @@ public class RobotContainer {
                 })
             .ignoringDisable(true));
 
+    IS_DISABLED
+        .and(() -> RobotController.getBatteryVoltage() >= 12)
+        .onTrue(led.setPattern(LEDPattern.solid(Color.kGreen)));
 
-    IS_DISABLED.and(() -> RobotController.getBatteryVoltage() >= 12)
-    .onTrue(
-          led.setPattern(LEDPattern.solid(Color.kGreen))
-    );
-    
-    IS_DISABLED.and(() -> RobotController.getBatteryVoltage() < 12)
-    .onTrue(
-      led.setPattern(LEDPattern.solid(Color.kRed))
-    );
+    IS_DISABLED
+        .and(() -> RobotController.getBatteryVoltage() < 12)
+        .onTrue(led.setPattern(LEDPattern.solid(Color.kRed)));
 
     IS_DISABLED.onFalse(
         Commands.runOnce(
