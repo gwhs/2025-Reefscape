@@ -7,11 +7,13 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class AlignToPose extends Command {
@@ -20,33 +22,44 @@ public class AlignToPose extends Command {
   private PIDController PID_Y;
   private PIDController PID_Rotation;
 
+  private final double ELEVATOR_UP_SLEW_RATE = 0.5;
+
+  private final SlewRateLimiter angularVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
+  private final SlewRateLimiter xVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
+  private final SlewRateLimiter yVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
+  private final DoubleSupplier elevatorHeight;
+
+  private boolean resetLimiter = true;
+
   private CommandSwerveDrivetrain drivetrain;
 
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 1.0 * Math.PI;
 
-  public static final double PID_MAX = 0.35;
+  public static final double PID_MAX = 0.44;
 
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
-          .withDeadband(maxSpeed * 0.0)
-          .withRotationalDeadband(maxAngularRate * 0.0)
+          .withDeadband(maxSpeed * 0.05)
+          .withRotationalDeadband(maxAngularRate * 0.05)
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-  public AlignToPose(Supplier<Pose2d> Pose, CommandSwerveDrivetrain drivetrain) {
+  public AlignToPose(
+      Supplier<Pose2d> Pose, CommandSwerveDrivetrain drivetrain, DoubleSupplier elevatorHeight) {
     addRequirements(drivetrain);
 
     this.drivetrain = drivetrain;
     this.targetPose = Pose;
+    this.elevatorHeight = elevatorHeight;
 
     PID_X = new PIDController(2.7, 0, 0); // same for now tune later
-    PID_X.setTolerance(0.1);
+    PID_X.setTolerance(0.02);
 
     PID_Y = new PIDController(2.7, 0, 0);
-    PID_Y.setTolerance(0.1);
+    PID_Y.setTolerance(0.02);
 
     PID_Rotation = new PIDController(0.05, 0, 0);
-    PID_Rotation.setTolerance(0.1);
+    PID_Rotation.setTolerance(0.5);
     PID_Rotation.enableContinuousInput(-180, 180);
   }
 
@@ -97,6 +110,20 @@ public class AlignToPose extends Command {
         MathUtil.clamp(PID_Rotation.calculate(currRotation), -PID_MAX, PID_MAX);
     double angularVelocity = PIDRotationOutput;
     DogLog.log("Align/PIDRotationoutput", PIDRotationOutput);
+
+    if (elevatorHeight.getAsDouble() > 0.3) {
+      if (resetLimiter) {
+        resetLimiter = false;
+        xVelocityLimiter.reset(xVelocity);
+        yVelocityLimiter.reset(yVelocity);
+        angularVelocityLimiter.reset(angularVelocity);
+      }
+      xVelocity = xVelocityLimiter.calculate(xVelocity);
+      yVelocity = yVelocityLimiter.calculate(yVelocity);
+      angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
+    } else {
+      resetLimiter = true;
+    }
 
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
       xVelocity = -xVelocity * maxSpeed;

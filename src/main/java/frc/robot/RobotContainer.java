@@ -11,10 +11,15 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -32,6 +37,7 @@ import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.Supplier;
 
 /**
@@ -44,6 +50,7 @@ public class RobotContainer {
 
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
+  private final Alert batteryUnderTwelveVolts = new Alert("BATTERY UNDER 12V", AlertType.kWarning);
 
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
@@ -51,6 +58,7 @@ public class RobotContainer {
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
+  private final LedSubsystem led = new LedSubsystem();
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
@@ -114,6 +122,8 @@ public class RobotContainer {
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
     SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
+    SmartDashboard.putData("Robot Command/Score Coral", scoreCoral());
+    SmartDashboard.putData("Robot Command/Prep Score Coral", prepScoreCoral(0, 0));
 
     // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
@@ -134,15 +144,29 @@ public class RobotContainer {
         Commands.runOnce(
                 () -> {
                   drivetrain.configNeutralMode(NeutralModeValue.Coast);
+                  elevator.setNeutralMode(NeutralModeValue.Coast);
                 })
             .ignoringDisable(true));
+
+    IS_DISABLED
+        .and(() -> RobotController.getBatteryVoltage() >= 12)
+        .onTrue(led.setPattern(LEDPattern.solid(Color.kGreen)));
+
+    IS_DISABLED
+        .and(() -> RobotController.getBatteryVoltage() < 12)
+        .onTrue(led.setPattern(LEDPattern.solid(Color.kRed)));
 
     IS_DISABLED.onFalse(
         Commands.runOnce(
                 () -> {
                   drivetrain.configNeutralMode(NeutralModeValue.Brake);
+                  elevator.setNeutralMode(NeutralModeValue.Brake);
                 })
             .ignoringDisable(false));
+
+    IS_DISABLED
+        .and(() -> RobotController.getBatteryVoltage() < 12)
+        .onTrue(triggerAlert(batteryUnderTwelveVolts));
 
     m_driverController
         .x()
@@ -192,10 +216,12 @@ public class RobotContainer {
   }
 
   public void periodic() {
+    DogLog.log("nearest (DELETE ME)", EagleUtil.closestReefSetPoint(drivetrain.getPose(), 0));
     robotVisualizer.update();
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
     DogLog.log("Desired Reef", coralLevel);
+    DogLog.log("Canivore Bus Utilization", (TunerConstants.kCANBus.getStatus()).BusUtilization);
   }
 
   /**
@@ -223,9 +249,10 @@ public class RobotContainer {
   }
 
   public Command alignToPose(Supplier<Pose2d> Pose) {
-    return new AlignToPose(Pose, drivetrain);
+    return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters());
   }
 
+  // grabs coral from the intake
   public Command coralHandoff() {
     return Commands.sequence(
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
@@ -235,6 +262,7 @@ public class RobotContainer {
         .withName("Coral HandOff");
   }
 
+  // Sets it to the right height and arm postion to intake coral
   public Command prepCoralIntake() {
     return Commands.sequence(
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
@@ -242,17 +270,56 @@ public class RobotContainer {
         .withName("Prepare Coral Intake");
   }
 
+  // Sets elevator and arm to postion
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
     return Commands.sequence(
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
             arm.setAngle(armAngle).withTimeout(1))
-        .withName("Prepare Score Coral");
+        .withName(
+            "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
 
+  // scores coral
   public Command scoreCoral() {
     return Commands.sequence(
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral");
+  }
+
+  public Command prepScoreCoraL3() {
+    double elevatorHeight = ElevatorConstants.L3_PREP_POSITION;
+    double armAngle = ElevatorConstants.L3_PREP_POSITION;
+    return Commands.sequence(
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
+            arm.setAngle(armAngle).withTimeout(1))
+        .withName("Prepare Score Coral L3");
+  }
+
+  public Command scoreCoralL3Command() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+        .withName("Score Coral L3");
+  }
+
+  public Command prepScoreCoralL4() {
+    double elevatorHeight = ElevatorConstants.L4_PREP_POSITION;
+    double armAngle = ArmConstants.L4_PREP_POSITION;
+    return Commands.sequence(
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
+            arm.setAngle(armAngle).withTimeout(1))
+        .withName("Prepare Score Coral L4");
+  }
+
+  public Command scoreCoralL4Command() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+        .withName("Score Coral L4");
+  }
+
+  public Command triggerAlert(Alert alert) {
+    return Commands.runOnce(() -> alert.set(true));
   }
 }
