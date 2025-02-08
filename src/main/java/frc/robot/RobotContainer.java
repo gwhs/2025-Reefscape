@@ -193,7 +193,8 @@ public class RobotContainer {
     IS_TELEOP
         .and(IS_REEFMODE)
         .and(IS_CLOSE_TO_REEF)
-        .onTrue(prepScoreCoral(ElevatorConstants.STOW_METER, 220).withName("auto prep score coral"));
+        .onTrue(
+            prepScoreCoral(ElevatorConstants.STOW_METER, 220).withName("auto prep score coral"));
 
     IS_L4
         .and(m_driverController.rightTrigger())
