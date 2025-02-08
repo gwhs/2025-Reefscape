@@ -184,6 +184,12 @@ public class RobotContainer {
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
 
+    m_driverController
+        .leftBumper()
+        .onTrue(
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
+                .withName("Back to Original State"));
+
     IS_TELEOP
         .and(IS_REEFMODE)
         .and(IS_CLOSE_TO_REEF)
