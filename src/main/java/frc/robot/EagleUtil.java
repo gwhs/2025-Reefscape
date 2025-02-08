@@ -37,7 +37,6 @@ public class EagleUtil {
 
   private static Pose2d cachedPose = null;
   private static Alliance red = DriverStation.Alliance.Red;
-  private static Alliance blue = DriverStation.Alliance.Blue;
 
   public static ArrayList<Pose2d> calculateBlueReefSetPoints() {
     if (m_bluePoses != null) {
