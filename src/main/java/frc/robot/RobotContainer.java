@@ -104,6 +104,7 @@ public class RobotContainer {
     configureBindings();
 
     configureAutonomous();
+    EagleUtil.closestReefSetPoint(drivetrain.getPose(), 2);
 
     // Default Commands
     drivetrain.setDefaultCommand(driveCommand);
