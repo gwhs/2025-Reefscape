@@ -173,6 +173,13 @@ public class RobotContainer {
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
 
+    m_driverController
+       .leftBumper()
+       .onTrue(
+           Commands.runOnce(
+            () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
+        .withName("Back to Orginal State"));
+
     IS_L4
         .and(m_driverController.rightTrigger())
         .whileTrue(prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
