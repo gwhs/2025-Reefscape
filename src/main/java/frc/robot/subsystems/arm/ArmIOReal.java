@@ -69,11 +69,9 @@ public class ArmIOReal implements ArmIO {
     motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     softwareLimitSwitch.ForwardSoftLimitEnable = true;
-    softwareLimitSwitch.ForwardSoftLimitThreshold =
-        Units.degreesToRotations(330);
+    softwareLimitSwitch.ForwardSoftLimitThreshold = Units.degreesToRotations(330);
     softwareLimitSwitch.ReverseSoftLimitEnable = true;
-    softwareLimitSwitch.ReverseSoftLimitThreshold =
-        Units.degreesToRotations(20);
+    softwareLimitSwitch.ReverseSoftLimitThreshold = Units.degreesToRotations(20);
 
     currentConfig.withStatorCurrentLimitEnable(true);
     currentConfig.withStatorCurrentLimit(20);
