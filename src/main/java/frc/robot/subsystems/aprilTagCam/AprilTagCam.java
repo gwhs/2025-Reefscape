@@ -41,12 +41,12 @@ public class AprilTagCam {
   private final Supplier<ChassisSpeeds> currRobotSpeed;
   private int counter;
   private final String ntKey;
+  private boolean isConnected;
 
   private final Alert visionNotConnected = new Alert("PHOTON NOT CONNECTED", AlertType.kWarning);
   Optional<EstimatedRobotPose> optionalEstimPose;
   private AprilTagHelp helper = new AprilTagHelp(null, 0, null);
 
-  //
   public AprilTagCam(
       String str,
       Transform3d robotToCam,
@@ -72,7 +72,7 @@ public class AprilTagCam {
 
   public void updatePoseEstim() {
     counter++;
-
+    isConnected = cam.isConnected();
     Pose2d robotPose = currRobotPose.get();
     Pose3d robotPose3d = new Pose3d(robotPose);
     Pose3d cameraPose3d = robotPose3d.plus(robotToCam);
@@ -131,8 +131,8 @@ public class AprilTagCam {
       addVisionMeasurement.accept(helper);
     }
 
-    DogLog.log(ntKey + "April Tag Cam Connected/", cam.isConnected());
-    if (!cam.isConnected()) {
+    DogLog.log(ntKey + "April Tag Cam Connected/", isConnected);
+    if (!isConnected) {
       EagleUtil.triggerAlert(visionNotConnected);
     }
   }
