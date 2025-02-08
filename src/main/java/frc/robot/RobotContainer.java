@@ -194,8 +194,7 @@ public class RobotContainer {
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
     DogLog.log("Desired Reef", coralLevel);
-    float CANStatus = (TunerConstants.kCANBus.getStatus()).BusUtilization;
-    DogLog.log("CANbus utilization", CANStatus);
+    DogLog.log("Canivore Bus Utilization", (TunerConstants.kCANBus.getStatus()).BusUtilization);
   }
 
   /**
