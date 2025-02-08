@@ -10,7 +10,7 @@ public class ArmConstants {
   public static final double VERTICAL_POSITION = 0.0;
   public static final double L3_PREP_POSITION = 200;
   public static final double L3_RELEASE_POSITION = 150;
-  public static final double L4_PREP_POSITION = 255; 
+  public static final double L4_PREP_POSITION = 255;
   public static final double L4_RELEASE_POSITION = 265;
   public static final double ARM_INTAKE_ANGLE = 90.0;
 }
