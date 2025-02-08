@@ -2,10 +2,8 @@ package frc.robot.subsystems.endEffector;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-
-import dev.doglog.DogLog;
-
 import com.revrobotics.spark.SparkMax;
+import dev.doglog.DogLog;
 
 class EndEffectorIOSparkMax implements EndEffectorIO {
 
