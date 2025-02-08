@@ -20,7 +20,7 @@ public class RobotVisualizer {
   private final ArmSubsystem arm;
   private final Mechanism2d panel = new Mechanism2d(ROBOT_LENGTH, ROBOT_LENGTH * 5);
 
-//   private static final double kElevatorMinimumLength = 1.5;
+  //   private static final double kElevatorMinimumLength = 1.5;
 
   // Robot Constants
   public static final double ROBOT_LENGTH = Units.inchesToMeters(27.5);

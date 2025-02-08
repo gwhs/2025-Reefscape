@@ -63,21 +63,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization =
       new SwerveRequest.SysIdSwerveTranslation();
   // private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization =
-      // new SwerveRequest.SysIdSwerveSteerGains();
+  // new SwerveRequest.SysIdSwerveSteerGains();
   // private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization =
-      // new SwerveRequest.SysIdSwerveRotation();
+  // new SwerveRequest.SysIdSwerveRotation();
 
   /* SysId routine for characterizing steer. This is used to find PID gains for the steer motors. */
   // private final SysIdRoutine m_sysIdRoutineSteer =
-      // new SysIdRoutine(
-          // new SysIdRoutine.Config(
-              // null, // Use default ramp rate (1 V/s)
-              // Volts.of(7), // Use dynamic voltage of 7 V
-              // null, // Use default timeout (10 s)
-              // Log state with SignalLogger class
-              // state -> SignalLogger.writeString("SysIdSteer_State", state.toString())),
-          // new SysIdRoutine.Mechanism(
-              // volts -> setControl(m_steerCharacterization.withVolts(volts)), null, this));
+  // new SysIdRoutine(
+  // new SysIdRoutine.Config(
+  // null, // Use default ramp rate (1 V/s)
+  // Volts.of(7), // Use dynamic voltage of 7 V
+  // null, // Use default timeout (10 s)
+  // Log state with SignalLogger class
+  // state -> SignalLogger.writeString("SysIdSteer_State", state.toString())),
+  // new SysIdRoutine.Mechanism(
+  // volts -> setControl(m_steerCharacterization.withVolts(volts)), null, this));
 
   /*
    * SysId routine for characterizing rotation.
@@ -85,24 +85,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    * See the documentation of SwerveRequest.SysIdSwerveRotation for info on importing the log to SysId.
    */
   // private final SysIdRoutine m_sysIdRoutineRotation =
-      // new SysIdRoutine(
-          // new SysIdRoutine.Config(
-              /* This is in radians per second², but SysId only supports "volts per second" */
-              // Volts.of(Math.PI / 6).per(Second),
-              /* This is in radians per second, but SysId only supports "volts" */
-              // Volts.of(Math.PI),
-              // null, // Use default timeout (10 s)
-              // Log state with SignalLogger class
-              // state -> SignalLogger.writeString("SysIdRotation_State", state.toString())),
-          // new SysIdRoutine.Mechanism(
-          //     output -> {
-          //       /* output is actually radians per second, but SysId only supports "volts" */
-          //       setControl(m_rotationCharacterization.withRotationalRate(output.in(Volts)));
-          //       /* also log the requested output for SysId */
-          //       SignalLogger.writeDouble("Rotational_Rate", output.in(Volts));
-          //     },
-          //     null,
-          //     this));
+  // new SysIdRoutine(
+  // new SysIdRoutine.Config(
+  /* This is in radians per second², but SysId only supports "volts per second" */
+  // Volts.of(Math.PI / 6).per(Second),
+  /* This is in radians per second, but SysId only supports "volts" */
+  // Volts.of(Math.PI),
+  // null, // Use default timeout (10 s)
+  // Log state with SignalLogger class
+  // state -> SignalLogger.writeString("SysIdRotation_State", state.toString())),
+  // new SysIdRoutine.Mechanism(
+  //     output -> {
+  //       /* output is actually radians per second, but SysId only supports "volts" */
+  //       setControl(m_rotationCharacterization.withRotationalRate(output.in(Volts)));
+  //       /* also log the requested output for SysId */
+  //       SignalLogger.writeDouble("Rotational_Rate", output.in(Volts));
+  //     },
+  //     null,
+  //     this));
 
   /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
   private final SysIdRoutine m_sysIdRoutineTranslation =
