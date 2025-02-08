@@ -68,13 +68,13 @@ public class ArmIOReal implements ArmIO {
 
     softwareLimitSwitch.ForwardSoftLimitEnable = true;
     softwareLimitSwitch.ForwardSoftLimitThreshold =
-        Units.degreesToRotations(330) * ArmConstants.ARM_GEAR_RATIO;
+        Units.degreesToRotations(330);
     softwareLimitSwitch.ReverseSoftLimitEnable = true;
     softwareLimitSwitch.ReverseSoftLimitThreshold =
-        Units.degreesToRotations(20) * ArmConstants.ARM_GEAR_RATIO;
+        Units.degreesToRotations(20);
 
     currentConfig.withStatorCurrentLimitEnable(true);
-    currentConfig.withStatorCurrentLimit(15);
+    currentConfig.withStatorCurrentLimit(20);
 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; i++) {
