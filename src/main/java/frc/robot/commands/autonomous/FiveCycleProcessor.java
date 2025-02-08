@@ -19,7 +19,7 @@ public class FiveCycleProcessor extends PathPlannerAuto {
     try {
       PathPlannerPath SC_F = PathPlannerPath.fromPathFile("SC-F");
 
-      double waitTime = 0.1;
+      // double waitTime = 0.1;
       double scoringTime = 0.3;
 
       Pose2d startingPose =
