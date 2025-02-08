@@ -36,12 +36,12 @@ public class AprilTagCam {
   private final Transform3d robotToCam;
   private final Supplier<Pose2d> currRobotPose;
   private final Supplier<ChassisSpeeds> currRobotSpeed;
-  private AprilTagHelp helper;
   private int counter;
 
   private final String ntKey;
 
   Optional<EstimatedRobotPose> optionalEstimPose;
+  private AprilTagHelp helper = new AprilTagHelp(null, 0, null);
 
   //
   public AprilTagCam(
@@ -68,7 +68,6 @@ public class AprilTagCam {
   }
 
   public void updatePoseEstim() {
-
     counter++;
 
     Pose2d robotPose = currRobotPose.get();
@@ -118,8 +117,7 @@ public class AprilTagCam {
       Pose2d pos = estimPose3d.toPose2d(); // yay :0 im so happy
       double timestamp = Utils.fpgaToCurrentTime(targetPose.getTimestampSeconds());
       Matrix<N3, N1> sd = findSD(optionalEstimPose, optionalEstimPose.get().targetsUsed);
-
-      helper = new AprilTagHelp(pos, timestamp, sd);
+      helper.update(pos, timestamp, sd);
 
       DogLog.log(ntKey + "Accepted Pose/", pos);
       DogLog.log(ntKey + "Accepted Time Stamp/", timestamp);

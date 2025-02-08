@@ -1,5 +1,6 @@
 package frc.robot.subsystems.endEffector;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -30,5 +31,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     endEffectorIO.update();
+    DogLog.log("EndEffector/Velocity", endEffectorIO.getVoltage());
+    DogLog.log("EndEffector/Voltage", endEffectorIO.getVelocity());
   }
 }
