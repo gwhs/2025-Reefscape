@@ -21,16 +21,16 @@ class EndEffectorIOSim implements EndEffectorIO {
   public void stopMotor() {
     motor.setInputVoltage(0);
   }
-@Override
-public double getVelocity() {
-  return motor.getAngularVelocity().in(RotationsPerSecond);
-}
 
+  @Override
+  public double getVelocity() {
+    return motor.getAngularVelocity().in(RotationsPerSecond);
+  }
 
-@Override
-public double getVoltage() {
+  @Override
+  public double getVoltage() {
     return motor.getInputVoltage();
-}
+  }
 
   @Override
   public void update() {

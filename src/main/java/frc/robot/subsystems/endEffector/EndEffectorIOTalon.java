@@ -25,15 +25,15 @@ class EndEffectorIOTalon implements EndEffectorIO {
   @Override
   @SuppressWarnings("unused") // motorOK is neverused
   public double getVelocity() {
-      boolean motorOK = (BaseStatusSignal.refreshAll(velocity)).isOK();
-      return velocity.getValueAsDouble();
+    boolean motorOK = (BaseStatusSignal.refreshAll(velocity)).isOK();
+    return velocity.getValueAsDouble();
   }
 
   @Override
   @SuppressWarnings("unused") // voltsOK is never used
   public double getVoltage() {
     boolean voltsOK = (BaseStatusSignal.refreshAll(volts)).isOK();
-      return volts.getValueAsDouble();
+    return volts.getValueAsDouble();
   }
 
   @Override

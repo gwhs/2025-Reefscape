@@ -1,14 +1,14 @@
 package frc.robot.subsystems.endEffector;
 
-
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 class EndEffectorIOSparkMax implements EndEffectorIO {
 
   private SparkMax motor = new SparkMax(EndEffectorConstants.deviceID, MotorType.kBrushless);
   private RelativeEncoder encoder = motor.getEncoder();
+
   @Override
   public void setVoltage(double voltage) {
     motor.setVoltage(voltage);
@@ -21,16 +21,16 @@ class EndEffectorIOSparkMax implements EndEffectorIO {
 
   @Override
   public double getVelocity() {
-      return encoder.getVelocity() / 60; // returns the RPM so div by 60 for RPS
+    return encoder.getVelocity() / 60; // returns the RPM so div by 60 for RPS
   }
 
   @Override
   public double getVoltage() {
-     return motor.getBusVoltage();
+    return motor.getBusVoltage();
   }
 
   @Override
   public void update() {
-  // logged in subsystem
+    // logged in subsystem
   }
 }
