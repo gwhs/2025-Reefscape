@@ -18,7 +18,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import frc.robot.EagleUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +43,7 @@ public class AprilTagCam {
   private final String ntKey;
   private boolean isConnected;
 
-  private final Alert visionNotConnected = new Alert("PHOTON NOT CONNECTED", AlertType.kWarning);
+  private final Alert visionNotConnected;
   Optional<EstimatedRobotPose> optionalEstimPose;
   private AprilTagHelp helper = new AprilTagHelp(null, 0, null);
 
@@ -55,12 +54,14 @@ public class AprilTagCam {
       Supplier<Pose2d> currRobotPose,
       Supplier<ChassisSpeeds> currRobotSpeed) {
     PortForwarder.add(5800, "photonvision.local", 5800);
-
+    
     cam = new PhotonCamera(str);
     this.addVisionMeasurement = addVisionMeasurement;
     this.robotToCam = robotToCam;
     this.currRobotPose = currRobotPose;
     this.currRobotSpeed = currRobotSpeed;
+
+    visionNotConnected = new Alert(str + "NOT CONNECTED", AlertType.kWarning);
 
     photonEstimator =
         new PhotonPoseEstimator(
@@ -135,11 +136,9 @@ public class AprilTagCam {
     }
 
     DogLog.log(ntKey + "April Tag Cam Connected/", isConnected);
-    if (!isConnected) {
-      EagleUtil.triggerAlert(visionNotConnected);
-    } else if (isConnected) {
-      EagleUtil.detriggerAlert(visionNotConnected);
-    }
+    
+      visionNotConnected.set(isConnected);
+ 
   }
 
   public boolean filterResults(

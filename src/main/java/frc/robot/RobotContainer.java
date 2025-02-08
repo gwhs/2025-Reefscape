@@ -161,7 +161,7 @@ public class RobotContainer {
 
     IS_DISABLED
         .and(() -> RobotController.getBatteryVoltage() < 12)
-        .onTrue(EagleUtil.triggerAlert(batteryUnderTwelveVolts));
+        .onTrue(triggerAlert(batteryUnderTwelveVolts));
 
     m_driverController
         .x()
@@ -310,5 +310,9 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral L4");
+  }
+
+  public Command triggerAlert(Alert alert) {
+  return Commands.runOnce(() -> alert.set(true));
   }
 }
