@@ -190,6 +190,7 @@ public class RobotContainer {
   }
 
   public void periodic() {
+    DogLog.log("nearest (DELETE ME)", EagleUtil.closestReefSetPoint(drivetrain.getPose(), 0));
     robotVisualizer.update();
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
@@ -221,7 +222,7 @@ public class RobotContainer {
   }
 
   public Command alignToPose(Supplier<Pose2d> Pose) {
-    return new AlignToPose(Pose, drivetrain);
+    return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters());
   }
 
   // grabs coral from the intake
