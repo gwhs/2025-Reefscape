@@ -1,5 +1,6 @@
 package frc.robot.subsystems.endEffector;
 
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import dev.doglog.DogLog;
@@ -7,6 +8,7 @@ import dev.doglog.DogLog;
 class EndEffectorIOSparkMax implements EndEffectorIO {
 
   private SparkMax motor = new SparkMax(EndEffectorConstants.deviceID, MotorType.kBrushless);
+  private RelativeEncoder encoder = motor.getEncoder();
 
   @Override
   public void setVoltage(double voltage) {
@@ -19,8 +21,17 @@ class EndEffectorIOSparkMax implements EndEffectorIO {
   }
 
   @Override
+  public double getVelocity() {
+    return encoder.getVelocity() / 60; // returns the RPM so div by 60 for RPS
+  }
+
+  @Override
+  public double getVoltage() {
+    return motor.getBusVoltage();
+  }
+
+  @Override
   public void update() {
-    DogLog.log("EndEffector/Voltage", motor.getBusVoltage());
-    DogLog.log("EndEffector/Temperature", motor.getMotorTemperature());
+    DogLog.log("endEncoder/Temperature", motor.getMotorTemperature());
   }
 }
