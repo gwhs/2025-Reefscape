@@ -313,6 +313,6 @@ public class RobotContainer {
   }
 
   public Command triggerAlert(Alert alert) {
-  return Commands.runOnce(() -> alert.set(true));
+    return Commands.runOnce(() -> alert.set(true));
   }
 }

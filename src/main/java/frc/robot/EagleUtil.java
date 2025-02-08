@@ -184,5 +184,4 @@ public class EagleUtil {
   public static boolean isRedAlliance() {
     return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == red;
   }
-
 }

@@ -54,7 +54,7 @@ public class AprilTagCam {
       Supplier<Pose2d> currRobotPose,
       Supplier<ChassisSpeeds> currRobotSpeed) {
     PortForwarder.add(5800, "photonvision.local", 5800);
-    
+
     cam = new PhotonCamera(str);
     this.addVisionMeasurement = addVisionMeasurement;
     this.robotToCam = robotToCam;
@@ -136,9 +136,7 @@ public class AprilTagCam {
     }
 
     DogLog.log(ntKey + "April Tag Cam Connected/", isConnected);
-    
-      visionNotConnected.set(isConnected);
- 
+    visionNotConnected.set(isConnected);
   }
 
   public boolean filterResults(
