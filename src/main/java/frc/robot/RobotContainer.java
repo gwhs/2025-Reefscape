@@ -178,7 +178,7 @@ public class RobotContainer {
        .onTrue(
            Commands.runOnce(
             () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
-        .withName("Back to Orginal State"));
+        .withName("Back to Original State"));
 
     IS_L4
         .and(m_driverController.rightTrigger())
