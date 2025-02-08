@@ -134,8 +134,7 @@ public class AprilTagCam {
     DogLog.log(ntKey + "April Tag Cam Connected/", isConnected);
     if (!isConnected) {
       EagleUtil.triggerAlert(visionNotConnected);
-    }
-    else if (isConnected) {
+    } else if (isConnected) {
       EagleUtil.detriggerAlert(visionNotConnected);
     }
   }
