@@ -255,7 +255,7 @@ public class RobotContainer {
         .withName("Prepare Coral Intake");
   }
 
-  public Command prepScoreCoral(double elevatorHeight, double armAngle) {
+  public Command prepScoreCoral() {
     return Commands.sequence(
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
             arm.setAngle(armAngle).withTimeout(1))
