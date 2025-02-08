@@ -223,7 +223,7 @@ public class RobotContainer {
   }
 
   public Command alignToPose(Supplier<Pose2d> Pose) {
-    return new AlignToPose(Pose, drivetrain);
+    return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters());
   }
 
   // grabs coral from the intake
@@ -249,7 +249,8 @@ public class RobotContainer {
     return Commands.sequence(
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
             arm.setAngle(armAngle).withTimeout(1))
-        .withName("Prepare Score Coral");
+        .withName(
+            "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
 
   // scores coral
