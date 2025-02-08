@@ -31,13 +31,19 @@ public class TwoCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(E_CSP))
                   .withName("E to CSP"));
 
-      event("atCSP")
+      event("atCSP_E")
           .onTrue(
               Commands.sequence(
+                      robotContainer.prepCoralIntake(),
+                      robotContainer.coralHandoff(),
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_D),
+                      robotContainer.prepScoreCoralL4(),
+                      robotContainer.scoreCoralL4Command(),
                       AutoBuilder.followPath(D_CSP),
-                      Commands.waitSeconds(waitTime))
+                      Commands.waitSeconds(waitTime),
+                      robotContainer.prepCoralIntake(),
+                      robotContainer.coralHandoff())
                   .withName("CSP to D"));
 
     } catch (Exception e) {
