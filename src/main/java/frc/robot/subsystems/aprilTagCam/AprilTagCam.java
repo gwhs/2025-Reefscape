@@ -41,9 +41,9 @@ public class AprilTagCam {
   private final Supplier<Pose2d> currRobotPose;
   private final Supplier<ChassisSpeeds> currRobotSpeed;
   private int counter;
-  private final Alert visionNotConnected = new Alert("PHOTON NOT CONNECTED", AlertType.kWarning);
   private final String ntKey;
 
+  private final Alert visionNotConnected = new Alert("PHOTON NOT CONNECTED", AlertType.kWarning);
   Optional<EstimatedRobotPose> optionalEstimPose;
   private AprilTagHelp helper = new AprilTagHelp(null, 0, null);
 
