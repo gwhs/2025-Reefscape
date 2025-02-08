@@ -43,7 +43,6 @@ public class AprilTagCam {
   private int counter;
   private final Alert visionNotConnected = new Alert("PHOTON NOT CONNECTED", AlertType.kWarning);
   private final String ntKey;
-
   Optional<EstimatedRobotPose> optionalEstimPose;
   private AprilTagHelp helper = new AprilTagHelp(null, 0, null);
 
@@ -54,6 +53,8 @@ public class AprilTagCam {
       Consumer<AprilTagHelp> addVisionMeasurement,
       Supplier<Pose2d> currRobotPose,
       Supplier<ChassisSpeeds> currRobotSpeed) {
+    PortForwarder.add(5800, "photonvision.local", 5800);
+
     cam = new PhotonCamera(str);
     this.addVisionMeasurement = addVisionMeasurement;
     this.robotToCam = robotToCam;
