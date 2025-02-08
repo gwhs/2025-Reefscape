@@ -2,6 +2,9 @@ package frc.robot.subsystems.endEffector;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+import dev.doglog.DogLog;
+
 import com.revrobotics.spark.SparkMax;
 
 class EndEffectorIOSparkMax implements EndEffectorIO {
@@ -31,6 +34,6 @@ class EndEffectorIOSparkMax implements EndEffectorIO {
 
   @Override
   public void update() {
-    // logged in subsystem
+    DogLog.log("endEncoder/Temperature", motor.getMotorTemperature());
   }
 }
