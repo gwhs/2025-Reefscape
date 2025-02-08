@@ -15,6 +15,10 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
+import frc.robot.EagleUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +41,7 @@ public class AprilTagCam {
   private final Supplier<Pose2d> currRobotPose;
   private final Supplier<ChassisSpeeds> currRobotSpeed;
   private int counter;
-
+  private final Alert visionNotConnected = new Alert("PHOTON NOT CONNECTED", AlertType.kWarning);
   private final String ntKey;
 
   Optional<EstimatedRobotPose> optionalEstimPose;
@@ -126,6 +130,11 @@ public class AprilTagCam {
       DogLog.log(ntKey + "Filtered April Tags/", tagListFiltered.toArray(new Pose3d[0]));
 
       addVisionMeasurement.accept(helper);
+    }
+
+    DogLog.log(ntKey + "April Tag Cam Connected/", cam.isConnected());
+    if (!cam.isConnected()) {
+      EagleUtil.triggerAlert(visionNotConnected);
     }
   }
 

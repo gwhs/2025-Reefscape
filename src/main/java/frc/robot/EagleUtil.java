@@ -5,8 +5,12 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -183,5 +187,9 @@ public class EagleUtil {
 
   public static boolean isRedAlliance() {
     return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == red;
+  }
+
+  public static Command triggerAlert(Alert alert) {
+    return Commands.runOnce(() -> alert.set(true));
   }
 }
