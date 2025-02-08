@@ -191,4 +191,8 @@ public class EagleUtil {
   public static Command triggerAlert(Alert alert) {
     return Commands.runOnce(() -> alert.set(true));
   }
+
+  public static Command detriggerAlert(Alert alert) {
+    return Commands.runOnce( () -> alert.set(false);
+  }
 }

@@ -135,6 +135,9 @@ public class AprilTagCam {
     if (!isConnected) {
       EagleUtil.triggerAlert(visionNotConnected);
     }
+    else if (isConnected) {
+      EagleUtil.detriggerAlert(visionNotConnected);
+    }
   }
 
   public boolean filterResults(
