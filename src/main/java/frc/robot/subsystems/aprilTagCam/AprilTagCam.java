@@ -55,6 +55,7 @@ public class AprilTagCam {
     this.robotToCam = robotToCam;
     this.currRobotPose = currRobotPose;
     this.currRobotSpeed = currRobotSpeed;
+    helper = null; 
 
     photonEstimator =
         new PhotonPoseEstimator(
@@ -68,7 +69,6 @@ public class AprilTagCam {
   }
 
   public void updatePoseEstim() {
-
     counter++;
 
     Pose2d robotPose = currRobotPose.get();
@@ -119,7 +119,11 @@ public class AprilTagCam {
       double timestamp = Utils.fpgaToCurrentTime(targetPose.getTimestampSeconds());
       Matrix<N3, N1> sd = findSD(optionalEstimPose, optionalEstimPose.get().targetsUsed);
 
-      helper = new AprilTagHelp(pos, timestamp, sd);
+      if(helper==null){
+        helper = new AprilTagHelp(pos, timestamp, sd);
+      } else {
+        helper.update(pos, timestamp, sd);
+      }
 
       DogLog.log(ntKey + "Accepted Pose/", pos);
       DogLog.log(ntKey + "Accepted Time Stamp/", timestamp);
