@@ -81,7 +81,8 @@ public class RobotVisualizer {
     double elevatorHeight = elevator.getHeightMeters();
     double armAngle = arm.getAngle();
 
-    m_arm.setAngle(armAngle - 180);
+    m_arm.setAngle(-armAngle);
+    
 
     m_elevator3.setLength(elevatorHeight + Units.inchesToMeters(37.2));
     m_elevator4.setLength(elevatorHeight + Units.inchesToMeters(37.2));
