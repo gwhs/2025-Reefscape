@@ -30,6 +30,8 @@ public class FiveCycleProcessor extends PathPlannerAuto {
               Commands.sequence(
                       AutoBuilder.resetOdom(startingPose),
                       AutoBuilder.followPath(SC_F),
+                      robotContainer.prepScoreCoral(),
+                      robotContainer.scoreCoral(),
                       Commands.waitSeconds(scoringTime),
                       Commands.runOnce(() -> new FiveCycleProcessor2(robotContainer).schedule()))
                   .withName("Leave SC to score preload at F"));
