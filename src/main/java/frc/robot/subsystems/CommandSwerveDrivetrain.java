@@ -55,7 +55,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds =
       new SwerveRequest.ApplyRobotSpeeds();
 
-
   /**
    * Constructs a CTRE SwerveDrivetrain using the specified constants.
    *
@@ -168,8 +167,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
     return run(() -> this.setControl(requestSupplier.get()));
   }
-
-   
 
   @Override
   public void periodic() {
