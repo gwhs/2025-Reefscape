@@ -53,6 +53,8 @@ public class AprilTagCam {
       Consumer<AprilTagHelp> addVisionMeasurement,
       Supplier<Pose2d> currRobotPose,
       Supplier<ChassisSpeeds> currRobotSpeed) {
+    PortForwarder.add(5800, "photonvision.local", 5800);
+
     cam = new PhotonCamera(str);
     this.addVisionMeasurement = addVisionMeasurement;
     this.robotToCam = robotToCam;
