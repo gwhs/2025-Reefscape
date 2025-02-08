@@ -27,7 +27,7 @@ public class TwoCycleProcessor extends PathPlannerAuto {
               Commands.sequence(
                       AutoBuilder.resetOdom(startingPose),
                       robotContainer.prepCoralIntake(),
-                      robotContainer.coralHandoff(),                      
+                      robotContainer.coralHandoff(),
                       AutoBuilder.followPath(SP_E),
                       robotContainer.prepScoreCoralL4(),
                       robotContainer.scoreCoralL4Command())
