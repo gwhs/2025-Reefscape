@@ -136,6 +136,13 @@ public class ElevatorIOReal implements ElevatorIO {
 
     // Set right motor to follow left motor
     m_rightElevatorMotor.setControl(m_requestRight);
+
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50.0,
+        leftElevatorMotorPIDGoal,
+        rightElevatorMotorPIDGoal,
+        leftElevatorMotorStatorCurrent,
+        rightElevatorMotorStatorCurrent);
   }
 
   public void setRotation(double rotation) {
