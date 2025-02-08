@@ -45,7 +45,7 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
                       robotContainer.coralHandoff(),
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_E),
-                      robotContainer.prepScoreCoral(),
+                      robotContainer.prepScoreCoralL4(),
                       robotContainer.scoreCoral(),
                       Commands.waitSeconds(scoringTime),
                       AutoBuilder.followPath(E_CSP),
@@ -58,15 +58,12 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_D),
-                      robotContainer.prepScoreCoral(),
+                      robotContainer.prepScoreCoralL4(),
                       robotContainer.scoreCoral(),
                       Commands.waitSeconds(scoringTime),
-<<<<<<< HEAD
                       AutoBuilder.followPath(D_CSP),
-=======
                       AutoBuilder.followPath(D_CSP),  
                       robotContainer.prepCoralIntake(),
->>>>>>> 9fdc7a99d54b02cbc5ffc28a27bb0010a00e0ef3
                       robotContainer.coralHandoff())
                   .withName("CSP to D"));
 
@@ -75,7 +72,7 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_C),
-                      robotContainer.prepScoreCoral(),
+                      robotContainer.prepScoreCoralL4(),
                       robotContainer.scoreCoral(),
                       Commands.waitSeconds(scoringTime),
                       AutoBuilder.followPath(C_CSP),
@@ -88,7 +85,7 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_B),
-                      robotContainer.prepScoreCoral(),
+                      robotContainer.prepScoreCoralL4(),
                       robotContainer.scoreCoral(),
                       Commands.waitSeconds(scoringTime),
                       AutoBuilder.followPath(B_CSP),
