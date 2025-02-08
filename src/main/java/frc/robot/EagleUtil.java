@@ -160,8 +160,12 @@ public class EagleUtil {
     public int compare(Pose2d poseA, Pose2d poseB) {
       double distA = poseA.getTranslation().getDistance(robotPose.getTranslation());
       double distB = poseB.getTranslation().getDistance(robotPose.getTranslation());
-      double dist = distA - distB;
-      return (int) dist;
+      if (distA > distB) {
+        return 1;
+      } else if (distA == distB) {
+        return 0;
+      }
+      return -1;
     }
   }
 
