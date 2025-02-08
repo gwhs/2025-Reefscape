@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Radians;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -9,6 +8,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -16,46 +16,55 @@ import java.util.function.Supplier;
 
 public class AlignToPose extends Command {
   Supplier<Pose2d> targetPose;
-  private PIDController PIDX;
-  private PIDController PIDY;
-  private PIDController PIDRotation;
+  private PIDController PID_X;
+  private PIDController PID_Y;
+  private PIDController PID_Rotation;
+
   private CommandSwerveDrivetrain drivetrain;
-  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-  private double MaxAngularRate = 360;
+
+  private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  private double maxAngularRate = 1.0 * Math.PI;
+
+  public static final double PID_MAX = 0.44;
+
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
-          .withDeadband(MaxSpeed * 0.0)
-          .withRotationalDeadband(MaxAngularRate * 0.0)
+          .withDeadband(maxSpeed * 0.05)
+          .withRotationalDeadband(maxAngularRate * 0.05)
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
   public AlignToPose(Supplier<Pose2d> Pose, CommandSwerveDrivetrain drivetrain) {
     addRequirements(drivetrain);
-    targetPose = Pose;
-    PIDX = new PIDController(2.7, 0, 0); // same for now tune later
-    PIDX.setTolerance(0.1);
-    PIDY = new PIDController(2.7, 0, 0);
-    PIDY.setTolerance(0.12);
-    PIDRotation = new PIDController(0.001, 0, 0);
-    PIDRotation.setTolerance(5);
-    PIDRotation.enableContinuousInput(-180, 180);
+
     this.drivetrain = drivetrain;
+    this.targetPose = Pose;
+
+    PID_X = new PIDController(2.7, 0, 0); // same for now tune later
+    PID_X.setTolerance(0.02);
+
+    PID_Y = new PIDController(2.7, 0, 0);
+    PID_Y.setTolerance(0.02);
+
+    PID_Rotation = new PIDController(0.05, 0, 0);
+    PID_Rotation.setTolerance(0.5);
+    PID_Rotation.enableContinuousInput(-180, 180);
   }
 
   public void goToPoseWithPID(Pose2d targetPose) {
-    PIDX.setSetpoint(targetPose.getX());
-    PIDY.setSetpoint(targetPose.getY());
-    PIDRotation.setSetpoint(targetPose.getRotation().getDegrees());
+    PID_X.setSetpoint(targetPose.getX());
+    PID_Y.setSetpoint(targetPose.getY());
+    PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
   }
 
   public boolean isAtTargetPose() {
-    boolean isatX = PIDX.atSetpoint();
-    boolean isatY = PIDY.atSetpoint();
-    boolean isatRotation = PIDRotation.atSetpoint();
-    DogLog.log("atX", isatX);
-    DogLog.log("atY", isatY);
-    DogLog.log("atRotation", isatRotation);
+    boolean isAtX = PID_X.atSetpoint();
+    boolean isAtY = PID_Y.atSetpoint();
+    boolean isAtRotation = PID_Rotation.atSetpoint();
+    DogLog.log("Align/atX", isAtX);
+    DogLog.log("Align/atY", isAtY);
+    DogLog.log("Align/atRotation", isAtRotation);
 
-    if (isatX && isatY && isatRotation) {
+    if (isAtX && isAtY && isAtRotation) {
       return true;
     }
     return false;
@@ -64,6 +73,8 @@ public class AlignToPose extends Command {
   @Override
   public void initialize() {
     goToPoseWithPID(targetPose.get());
+
+    DogLog.log("Align/Target Pose", targetPose.get());
   }
 
   @Override
@@ -73,29 +84,39 @@ public class AlignToPose extends Command {
     double currX = currPose.getX();
     double currY = currPose.getY();
     Double currRotation = currPose.getRotation().getDegrees();
-    double PIDXOutput = PIDX.calculate(currX);
+
+    double PIDXOutput = MathUtil.clamp(PID_X.calculate(currX), -PID_MAX, PID_MAX);
     double xVelocity = -PIDXOutput;
-    DogLog.log("PIDXOutput", PIDXOutput);
-    double PIDYOutput = PIDY.calculate(currY);
+    DogLog.log("Align/PIDXOutput", PIDXOutput);
+
+    double PIDYOutput = MathUtil.clamp(PID_Y.calculate(currY), -PID_MAX, PID_MAX);
     double yVelocity = -PIDYOutput;
-    DogLog.log("PIDYoutput", PIDYOutput);
-    double PIDRotationOutput = PIDRotation.calculate(currRotation);
+    DogLog.log("Align/PIDYoutput", PIDYOutput);
+
+    double PIDRotationOutput =
+        MathUtil.clamp(PID_Rotation.calculate(currRotation), -PID_MAX, PID_MAX);
     double angularVelocity = PIDRotationOutput;
-    DogLog.log("PIDRotationoutput", PIDRotationOutput);
-    xVelocity = xVelocity * MaxSpeed;
-    yVelocity = yVelocity * MaxSpeed;
-    angularVelocity = angularVelocity * MaxAngularRate;
-    angularVelocity = MathUtil.clamp(angularVelocity, -MaxAngularRate, MaxAngularRate);
-    DogLog.log("Drive Command/xVelocity", xVelocity);
-    DogLog.log("Drive Command/yVelocity", yVelocity);
-    DogLog.log("Drive Command/angularVelocity", angularVelocity);
+    DogLog.log("Align/PIDRotationoutput", PIDRotationOutput);
+
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      xVelocity = -xVelocity * maxSpeed;
+      yVelocity = -yVelocity * maxSpeed;
+      angularVelocity = angularVelocity * maxAngularRate;
+    } else {
+      xVelocity = xVelocity * maxSpeed;
+      yVelocity = yVelocity * maxSpeed;
+      angularVelocity = angularVelocity * maxAngularRate;
+    }
+
+    angularVelocity = MathUtil.clamp(angularVelocity, -maxAngularRate, maxAngularRate);
+    DogLog.log("Align/xVelocity", xVelocity);
+    DogLog.log("Align/yVelocity", yVelocity);
+    DogLog.log("Align/angularVelocity", angularVelocity);
     drivetrain.setControl(
         drive
             .withVelocityX(xVelocity) // Drive forward with negative Y (forward)
             .withVelocityY(yVelocity) // Drive left with negative X (left)
-            .withRotationalRate(
-                Radians.fromBaseUnits(
-                    angularVelocity))); // Drive counterclockwise with negative X (left)
+            .withRotationalRate(angularVelocity)); // Drive counterclockwise with negative X (left)
   }
 
   @Override
