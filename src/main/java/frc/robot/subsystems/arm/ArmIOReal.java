@@ -85,6 +85,8 @@ public class ArmIOReal implements ArmIO {
       System.out.println("Could not configure device. Error: " + status.toString());
     }
 
+    BaseStatusSignal.setUpdateFrequencyForAll(50.0, armPIDGoal, armStatorCurrent);
+
     SmartDashboard.putData(
         "Arm Command/reset to 90",
         Commands.runOnce(() -> armMotor.setPosition(Units.degreesToRotations(90)))
