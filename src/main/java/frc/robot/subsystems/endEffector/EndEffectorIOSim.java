@@ -1,5 +1,7 @@
 package frc.robot.subsystems.endEffector;
 
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
@@ -19,6 +21,16 @@ class EndEffectorIOSim implements EndEffectorIO {
   public void stopMotor() {
     motor.setInputVoltage(0);
   }
+@Override
+public double getVelocity() {
+  return motor.getAngularVelocity().in(RotationsPerSecond);
+}
+
+
+@Override
+public double getVoltage() {
+    return motor.getInputVoltage();
+}
 
   @Override
   public void update() {
