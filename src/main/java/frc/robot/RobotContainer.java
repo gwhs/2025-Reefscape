@@ -311,6 +311,4 @@ public class RobotContainer {
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral L4");
   }
-
-  
 }

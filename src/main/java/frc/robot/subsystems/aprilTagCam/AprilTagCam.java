@@ -18,7 +18,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import frc.robot.EagleUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
