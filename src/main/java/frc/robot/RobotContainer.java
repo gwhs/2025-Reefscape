@@ -50,7 +50,6 @@ public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
   private final Alert batteryUnderTwelveVolts = new Alert("BATTERY UNDER 12V", AlertType.kWarning);
-
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
@@ -162,7 +161,7 @@ public class RobotContainer {
 
     IS_DISABLED
         .and(() -> RobotController.getBatteryVoltage() < 12)
-        .onTrue(triggerAlert(batteryUnderTwelveVolts));
+        .onTrue(EagleUtil.triggerAlert(batteryUnderTwelveVolts));
 
     m_driverController
         .x()
@@ -173,6 +172,12 @@ public class RobotContainer {
                 .withName("Face Coral Station"));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
+
+    m_driverController
+        .leftBumper()
+        .onTrue(
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
+                .withName("Back to Original State"));
 
     IS_L4
         .and(m_driverController.rightTrigger())
@@ -202,6 +207,10 @@ public class RobotContainer {
     m_driverController
         .a()
         .whileTrue(alignToPose(() -> EagleUtil.getCachedReefPose(drivetrain.getState().Pose)));
+
+    m_driverController
+        .b()
+        .whileTrue(alignToPose(() -> EagleUtil.closestReefSetPoint(drivetrain.getPose(), 1)));
 
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
@@ -311,9 +320,5 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral L4");
-  }
-
-  public Command triggerAlert(Alert alert) {
-    return Commands.runOnce(() -> alert.set(true));
   }
 }
