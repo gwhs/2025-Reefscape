@@ -6,24 +6,23 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
+import com.revrobotics.ColorSensorV3;
 import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-
-import com.revrobotics.ColorMatch;
-import com.revrobotics.ColorMatchResult;
-import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
 class EndEffectorIOTalon implements EndEffectorIO {
 
-/**
- * This is a simple example to show how the REV Color Sensor V3 can be used to detect pre-configured
- * colors.
- */
+  /**
+   * This is a simple example to show how the REV Color Sensor V3 can be used to detect
+   * pre-configured colors.
+   */
 
   /** Change the I2C port below to match the connection of your color sensor */
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
@@ -62,7 +61,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
     m_colorMatcher.addColorMatch(kYellowTarget);
     m_colorMatcher.addColorMatch(kWhiteTarget);
     m_colorMatcher.addColorMatch(kCoralTarget);
-    
+
     // m_colorSensor.configureColorSensor(ColorSensorResolution.kColorSensorRes13bit,
     // ColorSensorMeasurementRate.kColorRate2000ms, GainFactor.kGain18x);
   }
@@ -102,11 +101,11 @@ class EndEffectorIOTalon implements EndEffectorIO {
       colorString = "Unknown";
     }
 
-    if(distance > 1500){
+    if (distance > 1500) {
       position = "inside";
-    } else if(distance < 1500){
+    } else if (distance < 1500) {
       position = "outside";
-    } else{
+    } else {
       position = "unknown";
     }
 
@@ -119,7 +118,6 @@ class EndEffectorIOTalon implements EndEffectorIO {
     SmartDashboard.putNumber("Sensor Distance", distance);
     SmartDashboard.putString("Coral Position", position);
   }
-
 
   private TalonFX motor = new TalonFX(EndEffectorConstants.deviceID, "rio");
   private final StatusSignal<Voltage> volts = motor.getMotorVoltage();
