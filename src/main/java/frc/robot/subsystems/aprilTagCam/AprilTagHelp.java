@@ -17,6 +17,12 @@ public class AprilTagHelp {
     this.timestamp = timestamp;
   }
 
+  public void update(Pose2d pos, double timestamp, Matrix<N3, N1> sd) {
+    this.sd = sd;
+    this.pos = pos;
+    this.timestamp = timestamp;
+  }
+
   public Matrix<N3, N1> getSD() {
     return sd;
   }

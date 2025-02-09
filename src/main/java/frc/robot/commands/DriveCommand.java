@@ -64,7 +64,7 @@ public class DriveCommand extends Command {
     CAGE
   }
 
-  private TargetMode mode = TargetMode.CAGE;
+  private TargetMode mode = TargetMode.NORMAL;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
@@ -162,7 +162,15 @@ public class DriveCommand extends Command {
       angularVelocity *= slowFactor;
     }
 
-    if (elevatorHeight.getAsDouble() > 1) {
+    if (Math.abs(driverController.getRightX()) < DEAD_BAND && mode != TargetMode.NORMAL) {
+      PID.setSetpoint(calculateSetpoint(currentRobotPose));
+      double pidOutput = PID.calculate(currentRotation);
+      pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
+      angularVelocity = pidOutput;
+      DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
+    }
+
+    if (elevatorHeight.getAsDouble() > 0.3) {
       if (resetLimiter) {
         resetLimiter = false;
         xVelocityLimiter.reset(xVelocity);
@@ -174,14 +182,6 @@ public class DriveCommand extends Command {
       angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
     } else {
       resetLimiter = true;
-    }
-
-    if (Math.abs(driverController.getRightX()) < DEAD_BAND && mode != TargetMode.NORMAL) {
-      PID.setSetpoint(calculateSetpoint(currentRobotPose));
-      double pidOutput = PID.calculate(currentRotation);
-      pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
-      angularVelocity = pidOutput;
-      DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
     }
 
     xVelocity *= maxSpeed;
