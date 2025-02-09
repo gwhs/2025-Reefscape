@@ -19,8 +19,6 @@ public class FiveCycleProcessor extends PathPlannerAuto {
     try {
       PathPlannerPath SC_F = PathPlannerPath.fromPathFile("SC-F");
 
-      double scoringTime = 0.3;
-
       Pose2d startingPose =
           new Pose2d(SC_F.getPoint(0).position, SC_F.getIdealStartingState().rotation());
 
@@ -31,7 +29,6 @@ public class FiveCycleProcessor extends PathPlannerAuto {
                       AutoBuilder.followPath(SC_F),
                       robotContainer.prepScoreCoralL4(),
                       robotContainer.scoreCoral(),
-                      Commands.waitSeconds(scoringTime),
                       Commands.runOnce(() -> new FiveCycleProcessor2(robotContainer).schedule()))
                   .withName("Leave SC to score preload at F"));
 
