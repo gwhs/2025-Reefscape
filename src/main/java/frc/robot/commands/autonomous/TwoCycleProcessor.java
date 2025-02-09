@@ -28,7 +28,8 @@ public class TwoCycleProcessor extends PathPlannerAuto {
                       AutoBuilder.resetOdom(startingPose),
                       AutoBuilder.followPath(SP_E),
                       robotContainer.prepScoreCoralL4(),
-                      robotContainer.scoreCoralL4Command())
+                      robotContainer.scoreCoralL4Command(),
+                      Commands.runOnce(() -> new TwoCycleProcessor2(robotContainer).schedule()))
                   .withName("Leave SP to score preload at E"));
 
     } catch (Exception e) {
