@@ -207,6 +207,7 @@ public class RobotContainer {
     m_driverController
         .a()
         .whileTrue(alignToPose(() -> EagleUtil.getCachedReefPose(drivetrain.getState().Pose)));
+        
     m_driverController
         .b()
         .whileTrue(alignToPose(() -> EagleUtil.closestReefSetPoint(drivetrain.getPose(), 1)));
