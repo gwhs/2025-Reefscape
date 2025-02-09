@@ -173,6 +173,12 @@ public class RobotContainer {
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
 
+    m_driverController
+        .leftBumper()
+        .onTrue(
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
+                .withName("Back to Original State"));
+
     IS_L4
         .and(m_driverController.rightTrigger())
         .whileTrue(prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
@@ -201,6 +207,10 @@ public class RobotContainer {
     m_driverController
         .a()
         .whileTrue(alignToPose(() -> EagleUtil.getCachedReefPose(drivetrain.getState().Pose)));
+
+    m_driverController
+        .b()
+        .whileTrue(alignToPose(() -> EagleUtil.closestReefSetPoint(drivetrain.getPose(), 1)));
 
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
