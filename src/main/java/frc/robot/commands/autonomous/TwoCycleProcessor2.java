@@ -35,14 +35,14 @@ public class TwoCycleProcessor2 extends PathPlannerAuto {
           .onTrue(
               Commands.sequence(
                       robotContainer.prepCoralIntake(),
-                      robotContainer.coralHandoff(),
                       Commands.waitSeconds(waitTime),
+                      robotContainer.coralHandoff(),
                       AutoBuilder.followPath(CSP_D),
                       robotContainer.prepScoreCoralL4(),
                       robotContainer.scoreCoralL4Command(),
                       AutoBuilder.followPath(D_CSP),
-                      Commands.waitSeconds(waitTime),
                       robotContainer.prepCoralIntake(),
+                      Commands.waitSeconds(waitTime),
                       robotContainer.coralHandoff())
                   .withName("CSP to D"));
 
