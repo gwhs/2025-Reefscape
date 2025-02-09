@@ -15,6 +15,9 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,24 +40,29 @@ public class AprilTagCam {
   private final Supplier<Pose2d> currRobotPose;
   private final Supplier<ChassisSpeeds> currRobotSpeed;
   private int counter;
-
   private final String ntKey;
+  private boolean isConnected;
+
+  private final Alert visionNotConnected;
 
   Optional<EstimatedRobotPose> optionalEstimPose;
   private AprilTagHelp helper = new AprilTagHelp(null, 0, null);
 
-  //
   public AprilTagCam(
       String str,
       Transform3d robotToCam,
       Consumer<AprilTagHelp> addVisionMeasurement,
       Supplier<Pose2d> currRobotPose,
       Supplier<ChassisSpeeds> currRobotSpeed) {
+    PortForwarder.add(5800, "photonvision.local", 5800);
+
     cam = new PhotonCamera(str);
     this.addVisionMeasurement = addVisionMeasurement;
     this.robotToCam = robotToCam;
     this.currRobotPose = currRobotPose;
     this.currRobotSpeed = currRobotSpeed;
+
+    visionNotConnected = new Alert(str + "NOT CONNECTED", AlertType.kWarning);
 
     photonEstimator =
         new PhotonPoseEstimator(
@@ -69,7 +77,7 @@ public class AprilTagCam {
 
   public void updatePoseEstim() {
     counter++;
-
+    isConnected = cam.isConnected();
     Pose2d robotPose = currRobotPose.get();
     Pose3d robotPose3d = new Pose3d(robotPose);
     Pose3d cameraPose3d = robotPose3d.plus(robotToCam);
@@ -127,6 +135,9 @@ public class AprilTagCam {
 
       addVisionMeasurement.accept(helper);
     }
+
+    DogLog.log(ntKey + "April Tag Cam Connected/", isConnected);
+    visionNotConnected.set(isConnected);
   }
 
   public boolean filterResults(
