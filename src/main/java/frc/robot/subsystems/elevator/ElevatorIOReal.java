@@ -32,8 +32,7 @@ import edu.wpi.first.units.measure.Voltage;
 public class ElevatorIOReal implements ElevatorIO {
   private TalonFX m_frontElevatorMotor =
       new TalonFX(ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, "rio");
-  public TalonFX m_backElevatorMotor =
-      new TalonFX(ElevatorConstants.BACK_ELEVATOR_MOTOR_ID, "rio");
+  public TalonFX m_backElevatorMotor = new TalonFX(ElevatorConstants.BACK_ELEVATOR_MOTOR_ID, "rio");
 
   private final MotionMagicVoltage m_requestFront = new MotionMagicVoltage(0);
   private final DifferentialFollower m_requestBack =
@@ -121,7 +120,6 @@ public class ElevatorIOReal implements ElevatorIO {
       System.out.println("Could not configure device. Error: " + rightStatus.toString());
     }
 
-  
     motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     StatusCode leftStatus = StatusCode.StatusCodeNotInitialized;
@@ -134,7 +132,8 @@ public class ElevatorIOReal implements ElevatorIO {
     }
 
     // Set back motor to follow front motor
-    m_backElevatorMotor.setControl(m_requestBack);  }
+    m_backElevatorMotor.setControl(m_requestBack);
+  }
 
   public void setRotation(double rotation) {
     m_frontElevatorMotor.setControl(m_requestFront.withPosition(rotation));
