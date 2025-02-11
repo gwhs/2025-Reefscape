@@ -18,7 +18,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import frc.robot.EagleUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +43,8 @@ public class AprilTagCam {
   private final String ntKey;
   private boolean isConnected;
 
-  private final Alert visionNotConnected = new Alert("PHOTON NOT CONNECTED", AlertType.kWarning);
+  private final Alert visionNotConnected;
+
   Optional<EstimatedRobotPose> optionalEstimPose;
   private AprilTagHelp helper = new AprilTagHelp(null, 0, null);
 
@@ -61,6 +61,8 @@ public class AprilTagCam {
     this.robotToCam = robotToCam;
     this.currRobotPose = currRobotPose;
     this.currRobotSpeed = currRobotSpeed;
+
+    visionNotConnected = new Alert(str + "NOT CONNECTED", AlertType.kWarning);
 
     photonEstimator =
         new PhotonPoseEstimator(
@@ -127,7 +129,7 @@ public class AprilTagCam {
 
       DogLog.log(ntKey + "Accepted Pose/", pos);
       DogLog.log(ntKey + "Accepted Time Stamp/", timestamp);
-      DogLog.log(ntKey + "Accepted Stdev/", sd);
+      DogLog.log(ntKey + "Accepted Stdev/", getSDArray(sd));
       DogLog.log(ntKey + "Unfiltered April Tags/", tagListUnfiltered.toArray(new Pose3d[0]));
       DogLog.log(ntKey + "Filtered April Tags/", tagListFiltered.toArray(new Pose3d[0]));
 
@@ -135,11 +137,15 @@ public class AprilTagCam {
     }
 
     DogLog.log(ntKey + "April Tag Cam Connected/", isConnected);
-    if (!isConnected) {
-      EagleUtil.triggerAlert(visionNotConnected);
-    } else if (isConnected) {
-      EagleUtil.detriggerAlert(visionNotConnected);
+    visionNotConnected.set(!isConnected);
+  }
+
+  public static double[] getSDArray(Matrix<N3, N1> sd) {
+    double[] sdArray = new double[3];
+    for (int i = 0; i < 3; i++) {
+      sdArray[i] = sd.get(i, 0);
     }
+    return sdArray;
   }
 
   public boolean filterResults(
