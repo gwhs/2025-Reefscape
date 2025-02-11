@@ -134,8 +134,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    IS_AT_POSE.toggleOnTrue(led.setPattern(LEDPattern.solid(Color.kGreen)))
-    .toggleOnFalse(led.setPattern(LEDPattern.solid(Color.kBlack)));
+    IS_AT_POSE
+        .toggleOnTrue(led.setPattern(LEDPattern.solid(Color.kGreen)))
+        .toggleOnFalse(led.setPattern(LEDPattern.solid(Color.kBlack)));
 
     IS_DISABLED.onTrue(
         Commands.runOnce(
