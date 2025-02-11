@@ -28,7 +28,6 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
       PathPlannerPath B_CSP = PathPlannerPath.fromPathFile("B-CSP");
 
       double waitTime = 0.05;
-      double scoringTime = 0.2;
 
       Pose2d startingPose =
           new Pose2d(F_CSP.getPoint(0).position, F_CSP.getIdealStartingState().rotation());
