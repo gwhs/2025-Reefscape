@@ -169,6 +169,7 @@ public class RobotContainer {
             Commands.startEnd(
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
+                .andThen(led.setPattern(LEDPattern.solid(Color.kGreen)))
                 .withName("Face Coral Station"));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
