@@ -140,14 +140,10 @@ public class AprilTagCam {
     visionNotConnected.set(isConnected);
   }
 
-  public static double[][] getSDArray(Matrix<N3, N1> sd) {
-    int rows = sd.getNumRows();
-    int cols = sd.getNumCols();
-    double[][] sdArray = new double[rows][cols];
-    for (int r = 0; i < rows; i++) {
-      for (int c = 0; j < cols; j++) {
-          sdArray[r][c] = sd.get(r, c); // Extract element (adjust if needed)
-      }
+  public static double[] getSDArray(Matrix<N3, N1> sd) {
+    double[] sdArray = new double[3];
+    for (int i = 0; i < 3; i++) {
+      sdArray[i] = sd.get(i, 0);
     }
     return sdArray;
   }
