@@ -133,6 +133,13 @@ public class ElevatorIOReal implements ElevatorIO {
 
     // Set back motor to follow front motor
     m_backElevatorMotor.setControl(m_requestBack);
+
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50.0,
+        frontElevatorMotorPIDGoal,
+        backElevatorMotorPIDGoal,
+        frontElevatorMotorStatorCurrent,
+        backElevatorMotorStatorCurrent);
   }
 
   public void setRotation(double rotation) {
