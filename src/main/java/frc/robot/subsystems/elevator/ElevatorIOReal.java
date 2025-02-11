@@ -111,24 +111,24 @@ public class ElevatorIOReal implements ElevatorIO {
     hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionEnable = true;
     hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionValue = 0;
 
-    StatusCode rightStatus = StatusCode.StatusCodeNotInitialized;
+    StatusCode backStatus = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; i++) {
-      rightStatus = m_frontElevatorMotor.getConfigurator().apply(talonFXConfigs);
-      if (rightStatus.isOK()) break;
+      backStatus = m_frontElevatorMotor.getConfigurator().apply(talonFXConfigs);
+      if (backStatus.isOK()) break;
     }
-    if (!rightStatus.isOK()) {
-      System.out.println("Could not configure device. Error: " + rightStatus.toString());
+    if (!backStatus.isOK()) {
+      System.out.println("Could not configure device. Error: " + backStatus.toString());
     }
 
     motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-    StatusCode leftStatus = StatusCode.StatusCodeNotInitialized;
+    StatusCode frontStatus = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; i++) {
-      leftStatus = m_frontElevatorMotor.getConfigurator().apply(talonFXConfigs);
-      if (leftStatus.isOK()) break;
+      frontStatus = m_frontElevatorMotor.getConfigurator().apply(talonFXConfigs);
+      if (frontStatus.isOK()) break;
     }
-    if (!leftStatus.isOK()) {
-      System.out.println("Could not configure device. Error: " + leftStatus.toString());
+    if (!frontStatus.isOK()) {
+      System.out.println("Could not configure device. Error: " + frontStatus.toString());
     }
 
     // Set back motor to follow front motor
