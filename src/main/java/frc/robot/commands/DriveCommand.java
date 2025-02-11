@@ -227,9 +227,17 @@ public class DriveCommand extends Command {
   }
 
   public Command driveBackward(double velocity) {
-    return drivetrain.run(
-        () ->
-            drivetrain.setControl(
-                robotCentricDrive.withVelocityX(-velocity).withVelocityY(0).withRotationalRate(0)));
+    return drivetrain
+        .run(
+            () ->
+                drivetrain.setControl(
+                    robotCentricDrive
+                        .withVelocityX(-velocity)
+                        .withVelocityY(0)
+                        .withRotationalRate(0)))
+        .finallyDo(
+            () ->
+                drivetrain.setControl(
+                    robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
   }
 }
