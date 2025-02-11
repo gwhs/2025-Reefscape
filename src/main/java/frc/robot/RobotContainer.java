@@ -38,6 +38,7 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.Supplier;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -202,11 +203,19 @@ public class RobotContainer {
     m_driverController
         .a()
         .whileTrue(alignToPose(() -> EagleUtil.getCachedReefPose(drivetrain.getState().Pose)));
+    m_driverController
+        .b()
+        .whileTrue(alignToPose(() -> EagleUtil.closestReefSetPoint(drivetrain.getPose(), 1)));
 
-    m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
-    m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
-    m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
-    m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
+    // m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
+    // m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
+    // m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
+    // m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
+
+    m_operatorController.y().onTrue(arm.sysIdQuasistatic(Direction.kForward));
+    m_operatorController.b().onTrue(arm.sysIdQuasistatic(Direction.kReverse));
+    m_operatorController.a().onTrue(arm.sysIdDynamic(Direction.kForward));
+    m_operatorController.x().onTrue(arm.sysIdDynamic(Direction.kReverse));
   }
 
   public void periodic() {
