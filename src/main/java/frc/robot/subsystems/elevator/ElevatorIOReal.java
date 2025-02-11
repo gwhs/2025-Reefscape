@@ -10,7 +10,7 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DifferentialFollower;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -35,8 +35,8 @@ public class ElevatorIOReal implements ElevatorIO {
   public TalonFX m_backElevatorMotor = new TalonFX(ElevatorConstants.BACK_ELEVATOR_MOTOR_ID, "rio");
 
   private final MotionMagicVoltage m_requestFront = new MotionMagicVoltage(0);
-  private final DifferentialFollower m_requestBack =
-      new DifferentialFollower(ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, true);
+  private final Follower m_requestBack =
+      new Follower(ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, true);
 
   private final VoltageOut m_requestFrontVoltage = new VoltageOut(0);
 
