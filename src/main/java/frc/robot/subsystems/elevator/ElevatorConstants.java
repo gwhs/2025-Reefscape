@@ -11,7 +11,7 @@ public class ElevatorConstants {
   public static final int LEFT_ELEVATOR_MOTOR_ID = 21;
   public static final int RIGHT_ELEVATOR_MOTOR_ID = 14;
 
-  public static final int GEAR_RATIO = 12;
+  public static final int GEAR_RATIO = 16;
   public static final double SPROCKET_DIAMETER = Units.inchesToMeters(1.7567);
 
   public static final double TOP_METER = ElevatorSubsystem.rotationsToMeters(60);

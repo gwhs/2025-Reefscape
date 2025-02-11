@@ -11,10 +11,15 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -31,6 +36,7 @@ import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.Supplier;
 
 /**
@@ -43,13 +49,14 @@ public class RobotContainer {
 
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
-
+  private final Alert batteryUnderTwelveVolts = new Alert("BATTERY UNDER 12V", AlertType.kWarning);
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
+  private final LedSubsystem led = new LedSubsystem();
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
@@ -139,6 +146,14 @@ public class RobotContainer {
                 })
             .ignoringDisable(true));
 
+    IS_DISABLED
+        .and(() -> RobotController.getBatteryVoltage() >= 12)
+        .onTrue(led.setPattern(LEDPattern.solid(Color.kGreen)));
+
+    IS_DISABLED
+        .and(() -> RobotController.getBatteryVoltage() < 12)
+        .onTrue(led.setPattern(LEDPattern.solid(Color.kRed)));
+
     IS_DISABLED.onFalse(
         Commands.runOnce(
                 () -> {
@@ -146,6 +161,10 @@ public class RobotContainer {
                   elevator.setNeutralMode(NeutralModeValue.Brake);
                 })
             .ignoringDisable(false));
+
+    IS_DISABLED
+        .and(() -> RobotController.getBatteryVoltage() < 12)
+        .onTrue(EagleUtil.triggerAlert(batteryUnderTwelveVolts));
 
     m_driverController
         .x()
@@ -156,6 +175,12 @@ public class RobotContainer {
                 .withName("Face Coral Station"));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
+
+    m_driverController
+        .leftBumper()
+        .onTrue(
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
+                .withName("Back to Original State"));
 
     IS_L4
         .and(m_driverController.rightTrigger())
@@ -199,6 +224,10 @@ public class RobotContainer {
         .a()
         .whileTrue(alignToPose(() -> EagleUtil.getCachedReefPose(drivetrain.getState().Pose)));
 
+    m_driverController
+        .b()
+        .whileTrue(alignToPose(() -> EagleUtil.closestReefSetPoint(drivetrain.getPose(), 1)));
+
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
     m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
@@ -206,10 +235,12 @@ public class RobotContainer {
   }
 
   public void periodic() {
+    DogLog.log("nearest (DELETE ME)", EagleUtil.closestReefSetPoint(drivetrain.getPose(), 0));
     robotVisualizer.update();
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
     DogLog.log("Desired Reef", coralLevel);
+    DogLog.log("Canivore Bus Utilization", (TunerConstants.kCANBus.getStatus()).BusUtilization);
   }
 
   /**
@@ -237,7 +268,7 @@ public class RobotContainer {
   }
 
   public Command alignToPose(Supplier<Pose2d> Pose) {
-    return new AlignToPose(Pose, drivetrain);
+    return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters());
   }
 
   // grabs coral from the intake
@@ -263,7 +294,8 @@ public class RobotContainer {
     return Commands.sequence(
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
             arm.setAngle(armAngle).withTimeout(1))
-        .withName("Prepare Score Coral");
+        .withName(
+            "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
 
   // scores coral

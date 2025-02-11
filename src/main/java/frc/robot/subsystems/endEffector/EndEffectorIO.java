@@ -6,5 +6,9 @@ interface EndEffectorIO {
 
   void stopMotor();
 
+  double getVelocity();
+
+  double getVoltage();
+
   void update();
 }
