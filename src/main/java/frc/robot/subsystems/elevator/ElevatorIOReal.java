@@ -113,7 +113,7 @@ public class ElevatorIOReal implements ElevatorIO {
 
     StatusCode rightStatus = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; i++) {
-      rightStatus = m_frontElevatorMotor.getConfigurator().apply(talonFXConfigs);
+      rightStatus = m_backElevatorMotor.getConfigurator().apply(talonFXConfigs);
       if (rightStatus.isOK()) break;
     }
     if (!rightStatus.isOK()) {
