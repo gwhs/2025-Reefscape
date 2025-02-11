@@ -8,8 +8,8 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class ElevatorConstants {
-  public static final int LEFT_ELEVATOR_MOTOR_ID = 21;
-  public static final int RIGHT_ELEVATOR_MOTOR_ID = 14;
+  public static final int FRONT_ELEVATOR_MOTOR_ID = 21;
+  public static final int BACK_ELEVATOR_MOTOR_ID = 14;
 
   public static final int GEAR_RATIO = 12;
   public static final double SPROCKET_DIAMETER = Units.inchesToMeters(1.7567);
