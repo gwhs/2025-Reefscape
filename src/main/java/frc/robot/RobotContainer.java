@@ -58,7 +58,8 @@ public class RobotContainer {
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
   private final LedSubsystem led = new LedSubsystem();
-
+  private final DriveCommand driveCommand =
+      new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
   public enum CoralLevel {
@@ -73,8 +74,8 @@ public class RobotContainer {
   public static final Trigger IS_L2 = new Trigger(() -> coralLevel == CoralLevel.L2);
   public static final Trigger IS_L3 = new Trigger(() -> coralLevel == CoralLevel.L3);
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
-
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
+  public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
@@ -93,9 +94,6 @@ public class RobotContainer {
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
-
-  private final DriveCommand driveCommand =
-      new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -136,6 +134,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
+    IS_AT_POSE
+        .toggleOnTrue(led.setPattern(LEDPattern.solid(Color.kGreen)))
+        .toggleOnFalse(led.setPattern(LEDPattern.solid(Color.kBlack)));
+
     IS_DISABLED.onTrue(
         Commands.runOnce(
                 () -> {
@@ -171,6 +174,10 @@ public class RobotContainer {
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Coral Station"));
+
+    m_driverController.x().onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true)));
+
+    m_driverController.x().onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false)));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
 
@@ -208,10 +215,11 @@ public class RobotContainer {
     m_driverController
         .a()
         .whileTrue(alignToPose(() -> EagleUtil.getCachedReefPose(drivetrain.getState().Pose)));
+    
     m_driverController
         .b()
         .whileTrue(alignToPose(() -> EagleUtil.closestReefSetPoint(drivetrain.getPose(), 1)));
-
+    
     // m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     // m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
     // m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));

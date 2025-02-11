@@ -64,7 +64,7 @@ public class DriveCommand extends Command {
     CAGE
   }
 
-  private TargetMode mode = TargetMode.CAGE;
+  private TargetMode mode = TargetMode.NORMAL;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
@@ -209,6 +209,13 @@ public class DriveCommand extends Command {
               .withVelocityY(yVelocity)
               .withRotationalRate(angularVelocity));
     }
+  }
+
+  public boolean isAtSetPoint() {
+    if (this.mode == TargetMode.CORAL_STATION || this.mode == TargetMode.REEF) {
+      return PID.atSetpoint();
+    }
+    return false;
   }
 
   @Override
