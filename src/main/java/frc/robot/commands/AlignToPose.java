@@ -52,10 +52,10 @@ public class AlignToPose extends Command {
     this.targetPose = Pose;
     this.elevatorHeight = elevatorHeight;
 
-    PID_X = new PIDController(2.7, 0, 0); // same for now tune later
+    PID_X = new PIDController(1.7, 0, 0); // same for now tune later
     PID_X.setTolerance(0.02);
 
-    PID_Y = new PIDController(2.7, 0, 0);
+    PID_Y = new PIDController(1.7, 0, 0);
     PID_Y.setTolerance(0.02);
 
     PID_Rotation = new PIDController(0.05, 0, 0);
