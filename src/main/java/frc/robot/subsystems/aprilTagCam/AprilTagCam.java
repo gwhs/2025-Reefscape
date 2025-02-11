@@ -137,7 +137,7 @@ public class AprilTagCam {
     }
 
     DogLog.log(ntKey + "April Tag Cam Connected/", isConnected);
-    visionNotConnected.set(isConnected);
+    visionNotConnected.set(!isConnected);
   }
 
   public static double[][] getSDArray(Matrix<N3, N1> sd) {
