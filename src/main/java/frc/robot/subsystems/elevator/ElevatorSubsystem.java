@@ -7,13 +7,10 @@ package frc.robot.subsystems.elevator;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,7 +29,8 @@ public class ElevatorSubsystem extends SubsystemBase {
               null, // Use default timeout (10 s)
               // Log state with Phoenix SignalLogger class
               (state) -> SignalLogger.writeString("state", state.toString())),
-              new SysIdRoutine.Mechanism((volts) -> elevatorIO.setVoltage(volts.in(Volts)), null, this));
+          new SysIdRoutine.Mechanism(
+              (volts) -> elevatorIO.setVoltage(volts.in(Volts)), null, this));
 
   public ElevatorSubsystem() {
     if (RobotBase.isSimulation()) {
