@@ -30,14 +30,14 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 
 public class ElevatorIOReal implements ElevatorIO {
-  
+
   private TalonFX m_frontElevatorMotor =
       new TalonFX(ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, "rio");
   public TalonFX m_backElevatorMotor = new TalonFX(ElevatorConstants.BACK_ELEVATOR_MOTOR_ID, "rio");
 
   private final MotionMagicVoltage m_requestFront = new MotionMagicVoltage(0);
-  private final Follower m_requestBack =
-      new Follower(ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, true);
+  private final DifferentialFollower m_requestBack =
+      new DifferentialFollower(ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, true);
 
   private final VoltageOut m_requestFrontVoltage = new VoltageOut(0);
 
