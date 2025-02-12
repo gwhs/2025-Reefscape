@@ -137,7 +137,7 @@ public class AprilTagCam {
     }
 
     DogLog.log(ntKey + "April Tag Cam Connected/", isConnected);
-    visionNotConnected.set(isConnected);
+    visionNotConnected.set(!isConnected);
   }
 
   public boolean filterResults(
