@@ -82,7 +82,7 @@ public class ArmIOReal implements ArmIO {
       if (status.isOK()) break;
     }
     if (!status.isOK()) {
-      System.out.println("Could not device. Error: " + status.toString());
+      System.out.println("Could not configure device. Error: " + status.toString());
     }
 
     BaseStatusSignal.setUpdateFrequencyForAll(50.0, armPIDGoal, armStatorCurrent);
