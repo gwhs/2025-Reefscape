@@ -6,6 +6,8 @@ interface EndEffectorIO {
 
   void stopMotor();
 
+  public boolean isSensorTriggered();
+
   double getVelocity();
 
   double getVoltage();
