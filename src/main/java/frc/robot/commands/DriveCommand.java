@@ -64,7 +64,7 @@ public class DriveCommand extends Command {
     CAGE
   }
 
-  private TargetMode mode = TargetMode.CAGE;
+  private TargetMode mode = TargetMode.NORMAL;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
@@ -211,11 +211,33 @@ public class DriveCommand extends Command {
     }
   }
 
+  public boolean isAtSetPoint() {
+    if (this.mode == TargetMode.CORAL_STATION || this.mode == TargetMode.REEF) {
+      return PID.atSetpoint();
+    }
+    return false;
+  }
+
   @Override
   public void end(boolean interrupted) {}
 
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  public Command driveBackward(double velocity) {
+    return drivetrain
+        .run(
+            () ->
+                drivetrain.setControl(
+                    robotCentricDrive
+                        .withVelocityX(-velocity)
+                        .withVelocityY(0)
+                        .withRotationalRate(0)))
+        .finallyDo(
+            () ->
+                drivetrain.setControl(
+                    robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
   }
 }

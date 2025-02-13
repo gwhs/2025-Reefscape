@@ -5,8 +5,11 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -26,11 +29,11 @@ public class EagleUtil {
 
   private static double REEF_LENGTH = Units.inchesToMeters(35);
   private static double REEF_TO_REEF_DISTANCE = 0.33;
-  private static double ROBOT_AWAY_FROM_REEF = Units.inchesToMeters(16);
+  private static double ROBOT_AWAY_FROM_REEF = Units.inchesToMeters(18);
 
   private static double X = -REEF_LENGTH - ROBOT_AWAY_FROM_REEF;
   private static double Y = REEF_TO_REEF_DISTANCE / 2;
-  private static double Y_OFFSET = Units.inchesToMeters(1);
+  private static double Y_OFFSET = Units.inchesToMeters(0.5);
 
   private static Pose2d[] bluePoses = new Pose2d[12];
   private static Pose2d[] redPoses = new Pose2d[12];
@@ -183,5 +186,13 @@ public class EagleUtil {
 
   public static boolean isRedAlliance() {
     return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == red;
+  }
+
+  public static Command triggerAlert(Alert alert) {
+    return Commands.runOnce(() -> alert.set(true));
+  }
+
+  public static Command detriggerAlert(Alert alert) {
+    return Commands.runOnce(() -> alert.set(false));
   }
 }

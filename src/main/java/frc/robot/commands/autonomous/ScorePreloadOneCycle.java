@@ -26,7 +26,10 @@ public class ScorePreloadOneCycle extends PathPlannerAuto {
       isRunning()
           .onTrue(
               Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SCpreloadScore))
+                      AutoBuilder.resetOdom(startingPose),
+                      AutoBuilder.followPath(SCpreloadScore),
+                      robotContainer.prepScoreCoralL4(),
+                      robotContainer.scoreCoralL4Command())
                   .withName("Leave and score preload coral"));
 
     } catch (Exception e) {

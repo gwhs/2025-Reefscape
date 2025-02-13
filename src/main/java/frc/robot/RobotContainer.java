@@ -50,7 +50,6 @@ public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
   private final Alert batteryUnderTwelveVolts = new Alert("BATTERY UNDER 12V", AlertType.kWarning);
-
   private final Telemetry logger =
       new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
 
@@ -58,7 +57,8 @@ public class RobotContainer {
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
   private final LedSubsystem led = new LedSubsystem();
-
+  private final DriveCommand driveCommand =
+      new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
   public enum CoralLevel {
@@ -73,29 +73,26 @@ public class RobotContainer {
   public static final Trigger IS_L2 = new Trigger(() -> coralLevel == CoralLevel.L2);
   public static final Trigger IS_L3 = new Trigger(() -> coralLevel == CoralLevel.L3);
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
-
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
+  public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
   private AprilTagCam cam3 =
       new AprilTagCam(
-          "cam3",
-          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION,
+          AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_DEV,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
 
   private AprilTagCam cam4 =
       new AprilTagCam(
-          "cam4",
-          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION,
+          AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_DEV,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
-
-  private final DriveCommand driveCommand =
-      new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -118,6 +115,9 @@ public class RobotContainer {
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
     SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
+    SmartDashboard.putData(
+        "Robot Command/prep score", prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
+    SmartDashboard.putData("Robot Command/Score L4", scoreCoralL4());
     SmartDashboard.putData("Robot Command/Score Coral", scoreCoral());
     SmartDashboard.putData("Robot Command/Prep Score Coral", prepScoreCoral(0, 0));
 
@@ -136,6 +136,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
+    IS_AT_POSE
+        .toggleOnTrue(led.setPattern(LEDPattern.solid(Color.kGreen)))
+        .toggleOnFalse(led.setPattern(LEDPattern.solid(Color.kBlack)));
+
     IS_DISABLED.onTrue(
         Commands.runOnce(
                 () -> {
@@ -162,7 +167,7 @@ public class RobotContainer {
 
     IS_DISABLED
         .and(() -> RobotController.getBatteryVoltage() < 12)
-        .onTrue(triggerAlert(batteryUnderTwelveVolts));
+        .onTrue(EagleUtil.triggerAlert(batteryUnderTwelveVolts));
 
     m_driverController
         .x()
@@ -172,16 +177,39 @@ public class RobotContainer {
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Coral Station"));
 
+    m_driverController.x().onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true)));
+
+    m_driverController.x().onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false)));
+
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
+
+    m_driverController
+        .leftBumper()
+        .onTrue(
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
+                .withName("Back to Original State"));
 
     IS_L4
         .and(m_driverController.rightTrigger())
-        .whileTrue(prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
-    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 220));
-    IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
-    IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(0.0, 210));
+        .whileTrue(
+            prepScoreCoral(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION));
+    IS_L3
+        .and(m_driverController.rightTrigger())
+        .whileTrue(
+            prepScoreCoral(ElevatorConstants.L3_PREP_POSITION, ArmConstants.L3_PREP_POSITION));
+    IS_L2
+        .and(m_driverController.rightTrigger())
+        .whileTrue(
+            prepScoreCoral(ElevatorConstants.L2_PREP_POSITION, ArmConstants.L2_PREP_POSITION));
+    IS_L1
+        .and(m_driverController.rightTrigger())
+        .whileTrue(
+            prepScoreCoral(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION));
 
-    m_driverController.rightTrigger().onFalse(scoreCoral());
+    IS_L4.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoralL4());
+    IS_L3.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
+    IS_L2.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
+    IS_L1.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
@@ -202,6 +230,10 @@ public class RobotContainer {
     m_driverController
         .a()
         .whileTrue(alignToPose(() -> EagleUtil.getCachedReefPose(drivetrain.getState().Pose)));
+
+    m_driverController
+        .b()
+        .whileTrue(alignToPose(() -> EagleUtil.closestReefSetPoint(drivetrain.getPose(), 1)));
 
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
@@ -281,6 +313,15 @@ public class RobotContainer {
         .withName("Score Coral");
   }
 
+  public Command scoreCoralL4() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.L4_SCORE_POSITION).withTimeout(1),
+            driveCommand.driveBackward(1).withTimeout(0.2),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.5),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+        .withName("Score L4");
+  }
+
   public Command prepScoreCoraL3() {
     double elevatorHeight = ElevatorConstants.L3_PREP_POSITION;
     double armAngle = ElevatorConstants.L3_PREP_POSITION;
@@ -311,9 +352,5 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral L4");
-  }
-
-  public Command triggerAlert(Alert alert) {
-    return Commands.runOnce(() -> alert.set(true));
   }
 }
