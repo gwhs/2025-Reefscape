@@ -17,8 +17,8 @@ public class ClimbIOReal implements ClimbIO {
     }
 
     @Override
-    public void setPosition(double desiredPos) {
-        climbMotor.setVoltage(desiredPos);
+    public void setPosition(double voltage) {
+        climbMotor.setVoltage(voltage);
     }
 
     @Override
