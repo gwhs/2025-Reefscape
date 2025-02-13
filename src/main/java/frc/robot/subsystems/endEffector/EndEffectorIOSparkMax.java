@@ -43,9 +43,9 @@ class EndEffectorIOSparkMax implements EndEffectorIO {
   public boolean isSensorTriggered() {
     double distance = m_colorSensor.getProximity();
     if (distance > 1500) {
-       return true; 
+      return true;
     } else {
-     return false;
+      return false;
     }
-   }
+  }
 }

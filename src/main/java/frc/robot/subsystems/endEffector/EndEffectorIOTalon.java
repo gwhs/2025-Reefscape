@@ -6,17 +6,12 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.ColorMatch;
-import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 
 class EndEffectorIOTalon implements EndEffectorIO {
 
@@ -69,12 +64,12 @@ class EndEffectorIOTalon implements EndEffectorIO {
   }
 
   public boolean isSensorTriggered() {
-   double distance = m_colorSensor.getProximity();
-   if (distance > 1500) {
-      return true; 
-   } else {
-    return false;
-   }
+    double distance = m_colorSensor.getProximity();
+    if (distance > 1500) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @Override

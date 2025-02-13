@@ -37,7 +37,8 @@ class EndEffectorIOSim implements EndEffectorIO {
   private boolean coralSensor = false;
 
   public EndEffectorIOSim() {
-    SmartDashboard.putData("Simulation/Coral Sensor", Commands.runOnce(() -> coralSensor = !coralSensor));
+    SmartDashboard.putData(
+        "Simulation/Coral Sensor", Commands.runOnce(() -> coralSensor = !coralSensor));
   }
 
   public boolean isSensorTriggered() {
