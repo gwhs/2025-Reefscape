@@ -9,6 +9,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 
@@ -26,10 +27,10 @@ public class ScorePreloadOneCycle extends PathPlannerAuto {
       isRunning()
           .onTrue(
               Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose),
+                      AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
                       AutoBuilder.followPath(SCpreloadScore),
-                      robotContainer.prepScoreCoralL4(),
-                      robotContainer.scoreCoralL4Command())
+                      robotContainer.prepScoreCoral(0, 227),
+                      robotContainer.scoreCoral())
                   .withName("Leave and score preload coral"));
 
     } catch (Exception e) {
