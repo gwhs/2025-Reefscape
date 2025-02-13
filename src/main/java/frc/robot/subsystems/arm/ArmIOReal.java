@@ -51,7 +51,7 @@ public class ArmIOReal implements ArmIO {
     slot0Configs.kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
     slot0Configs.kP = 100; // A position error of 2.5 rotations results in 12 V output
     slot0Configs.kI = 0; // no output for integrated error
-    slot0Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
+    slot0Configs.kD = 8.4867; // A velocity error of 1 rps results in 0.1 V output
     slot0Configs.withGravityType(GravityTypeValue.Arm_Cosine);
 
     // feedbackConfigs.FeedbackRemoteSensorID = 0;
@@ -117,7 +117,7 @@ public class ArmIOReal implements ArmIO {
                 armPosition)
             .isOK());
 
-    DogLog.log("Arm/Motor/pid goal", armPIDGoal.getValueAsDouble());
+    DogLog.log("Arm/Motor/pid goal", Units.rotationsToDegrees(armPIDGoal.getValueAsDouble()));
     DogLog.log("Arm/Motor/motor voltage", armMotorVoltage.getValueAsDouble());
     DogLog.log("Arm/Motor/supply voltage", armSupplyVoltage.getValueAsDouble());
     DogLog.log("Arm/Motor/device temp", armDeviceTemp.getValueAsDouble());
