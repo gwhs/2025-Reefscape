@@ -17,8 +17,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
     if (RobotBase.isSimulation()) {
       endEffectorIO = new EndEffectorIOSim();
     } else {
-      endEffectorIO = new EndEffectorIOSparkMax();
-      // endEffectorIO = new EndEffectorIOTalon();
+      // endEffectorIO = new EndEffectorIOSparkMax();
+      endEffectorIO = new EndEffectorIOTalon();
     }
 
     coralTriggered = new Trigger(() -> endEffectorIO.isSensorTriggered());
