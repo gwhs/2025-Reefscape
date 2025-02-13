@@ -13,10 +13,9 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.EagleUtil;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class ScorePreloadOneCycle extends PathPlannerAuto {
-  public ScorePreloadOneCycle(RobotContainer robotContainer, CommandSwerveDrivetrain drivetrain) {
+  public ScorePreloadOneCycle(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     try {
@@ -35,7 +34,8 @@ public class ScorePreloadOneCycle extends PathPlannerAuto {
                           .prepScoreCoral(0, 227)
                           .deadlineFor(
                               robotContainer.alignToPose(
-                                  () -> EagleUtil.getCachedReefPose(drivetrain.getPose()))),
+                                  () ->
+                                      EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
                       robotContainer.scoreCoral())
                   .withName("Leave and score preload coral"));
 

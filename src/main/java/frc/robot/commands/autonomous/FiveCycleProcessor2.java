@@ -9,7 +9,9 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.EagleUtil;
 import frc.robot.RobotContainer;
 
 public class FiveCycleProcessor2 extends PathPlannerAuto {
@@ -35,7 +37,7 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
       isRunning()
           .onTrue(
               Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose),
+                      AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
                       AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("F to CSP"));
 
@@ -44,7 +46,12 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_E).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoralL4(),
+                      robotContainer
+                          .prepScoreCoralL4()
+                          .deadlineFor(
+                              robotContainer.alignToPose(
+                                  () ->
+                                      EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
                       robotContainer.scoreCoral(),
                       AutoBuilder.followPath(E_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("CSP to E"));
@@ -54,7 +61,12 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_D).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoralL4(),
+                      robotContainer
+                          .prepScoreCoralL4()
+                          .deadlineFor(
+                              robotContainer.alignToPose(
+                                  () ->
+                                      EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
                       robotContainer.scoreCoral(),
                       AutoBuilder.followPath(D_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("CSP to D"));
@@ -64,7 +76,12 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_C).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoralL4(),
+                      robotContainer
+                          .prepScoreCoralL4()
+                          .deadlineFor(
+                              robotContainer.alignToPose(
+                                  () ->
+                                      EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
                       robotContainer.scoreCoral(),
                       AutoBuilder.followPath(C_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("CSP to C"));
@@ -74,7 +91,12 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_B).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoralL4(),
+                      robotContainer
+                          .prepScoreCoralL4()
+                          .deadlineFor(
+                              robotContainer.alignToPose(
+                                  () ->
+                                      EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
                       robotContainer.scoreCoral(),
                       AutoBuilder.followPath(B_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("CSP to B"));

@@ -9,7 +9,9 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.EagleUtil;
 import frc.robot.RobotContainer;
 
 public class TwoCycleProcessor extends PathPlannerAuto {
@@ -25,9 +27,14 @@ public class TwoCycleProcessor extends PathPlannerAuto {
       isRunning()
           .onTrue(
               Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose),
+                      AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
                       AutoBuilder.followPath(SP_E),
-                      robotContainer.prepScoreCoralL4(),
+                      robotContainer
+                          .prepScoreCoralL4()
+                          .deadlineFor(
+                              robotContainer.alignToPose(
+                                  () ->
+                                      EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
                       robotContainer.scoreCoralL4Command(),
                       Commands.runOnce(() -> new TwoCycleProcessor2(robotContainer).schedule()))
                   .withName("Leave SP to score preload at E"));
