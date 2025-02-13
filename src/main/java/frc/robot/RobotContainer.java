@@ -316,7 +316,7 @@ public class RobotContainer {
   public Command scoreCoralL4() {
     return Commands.sequence(
             arm.setAngle(ArmConstants.L4_SCORE_POSITION).withTimeout(1),
-            driveCommand.driveBackward(1).withTimeout(0.05),
+            driveCommand.driveBackward(1).withTimeout(0.2),
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.5),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score L4");

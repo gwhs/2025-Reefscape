@@ -53,13 +53,8 @@ public class AlignToPose extends Command {
     this.elevatorHeight = elevatorHeight;
 
     PID_X = new PIDController(1.7, 0, 0); // same for now tune later
-    PID_X.setTolerance(0.02);
-
     PID_Y = new PIDController(1.7, 0, 0);
-    PID_Y.setTolerance(0.02);
-
-    PID_Rotation = new PIDController(0.05, 0, 0);
-    PID_Rotation.setTolerance(0.5);
+    PID_Rotation = new PIDController(0.1, 0, 0);
     PID_Rotation.enableContinuousInput(-180, 180);
   }
 
@@ -153,9 +148,6 @@ public class AlignToPose extends Command {
 
   @Override
   public boolean isFinished() {
-    if (isAtTargetPose()) {
-      return true;
-    }
     return false;
   }
 }
