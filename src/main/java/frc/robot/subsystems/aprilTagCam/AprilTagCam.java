@@ -129,7 +129,7 @@ public class AprilTagCam {
 
       DogLog.log(ntKey + "Accepted Pose/", pos);
       DogLog.log(ntKey + "Accepted Time Stamp/", timestamp);
-      DogLog.log(ntKey + "Accepted Stdev/", sd);
+      DogLog.log(ntKey + "Accepted Stdev/", getSDArray(sd));
       DogLog.log(ntKey + "Unfiltered April Tags/", tagListUnfiltered.toArray(new Pose3d[0]));
       DogLog.log(ntKey + "Filtered April Tags/", tagListFiltered.toArray(new Pose3d[0]));
 
@@ -138,6 +138,14 @@ public class AprilTagCam {
 
     DogLog.log(ntKey + "April Tag Cam Connected/", isConnected);
     visionNotConnected.set(!isConnected);
+  }
+
+  public static double[] getSDArray(Matrix<N3, N1> sd) {
+    double[] sdArray = new double[3];
+    for (int i = 0; i < 3; i++) {
+      sdArray[i] = sd.get(i, 0);
+    }
+    return sdArray;
   }
 
   public boolean filterResults(
