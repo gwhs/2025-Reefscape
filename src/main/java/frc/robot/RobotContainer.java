@@ -220,15 +220,10 @@ public class RobotContainer {
         .b()
         .whileTrue(alignToPose(() -> EagleUtil.closestReefSetPoint(drivetrain.getPose(), 1)));
 
-    // m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
-    // m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
-    // m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
-    // m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
-
-    m_operatorController.y().whileTrue(arm.sysIdQuasistatic(Direction.kForward));
-    m_operatorController.b().whileTrue(arm.sysIdQuasistatic(Direction.kReverse));
-    m_operatorController.a().whileTrue(arm.sysIdDynamic(Direction.kForward));
-    m_operatorController.x().whileTrue(arm.sysIdDynamic(Direction.kReverse));
+    m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
+    m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
+    m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
+    m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
   }
 
   public void periodic() {
