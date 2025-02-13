@@ -248,7 +248,7 @@ public class RobotContainer {
     autoChooser.addOption("Five_Cycle_Processor_2", new FiveCycleProcessor2(this));
     autoChooser.addOption("Two_Cycle_Processor", new TwoCycleProcessor(this));
     autoChooser.addOption("Two_Cycle_Processor_2", new TwoCycleProcessor2(this));
-    autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
+    autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this, drivetrain));
     autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
     autoChooser.addOption("Drivetrain_Practice", new DrivetrainPractice(this));
     autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
