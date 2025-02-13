@@ -29,6 +29,6 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public double setHeight(double desiredHeight) {
-    return climbIO.setHeight();
+    return climbIO.setHeight(desiredHeight);
   }
 }
