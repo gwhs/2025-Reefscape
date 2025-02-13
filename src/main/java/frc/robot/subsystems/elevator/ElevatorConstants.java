@@ -8,8 +8,8 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class ElevatorConstants {
-  public static final int LEFT_ELEVATOR_MOTOR_ID = 21;
-  public static final int RIGHT_ELEVATOR_MOTOR_ID = 14;
+  public static final int FRONT_ELEVATOR_MOTOR_ID = 21;
+  public static final int BACK_ELEVATOR_MOTOR_ID = 14;
 
   public static final int GEAR_RATIO = 16;
   public static final double SPROCKET_DIAMETER = Units.inchesToMeters(1.7567);
@@ -28,8 +28,8 @@ public class ElevatorConstants {
   public static final double L3_SCORE_POSITION = ElevatorSubsystem.rotationsToMeters(5 / 12 * 16);
   public static final double L4_SCORE_POSITION = ElevatorSubsystem.rotationsToMeters(59 / 12 * 16);
 
-  public static final double INTAKE_METER = ElevatorSubsystem.rotationsToMeters(0 / 12 * 16);
-  public static final double STOW_METER = ElevatorSubsystem.rotationsToMeters(15 / 12 * 16);
+  public static final double INTAKE_METER = ElevatorSubsystem.rotationsToMeters(0);
+  public static final double STOW_METER = ElevatorSubsystem.rotationsToMeters(15 /12*16);
 
   public static final double MAX_VELOCITY = 80; // rps
   public static final double MAX_ACCELERATION = 160; // rps
