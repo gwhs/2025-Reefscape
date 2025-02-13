@@ -24,11 +24,11 @@ public class ClimbSubsystem extends SubsystemBase {
     climbIO.update();
   }
 
-  public double getHeight() {
-    return climbIO.getHeight();
+  public double getPosition() {
+    return climbIO.getPosition();
   }
 
-  public double setHeight(double desiredHeight) {
-    return climbIO.setHeight(desiredHeight);
+  public void setPosition(double desiredPos) {
+    climbIO.setPosition(desiredPos);
   }
 }

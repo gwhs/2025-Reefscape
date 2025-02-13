@@ -1,9 +1,9 @@
 package frc.robot.subsystems.climb;
 
 public interface ClimbIO {
-    public double getHeight();
+    public double getPosition();
 
-    public double setHeight(double desiredHeight);
+    public void setPosition(double desiredHeight);
 
     public void update();
 }
