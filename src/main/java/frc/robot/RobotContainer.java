@@ -81,16 +81,16 @@ public class RobotContainer {
 
   private AprilTagCam cam3 =
       new AprilTagCam(
-          "cam3",
-          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_ROBOT1,
+          AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_DEV,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
 
   private AprilTagCam cam4 =
       new AprilTagCam(
-          "cam4",
-          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_ROBOT1,
+          AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_DEV,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
