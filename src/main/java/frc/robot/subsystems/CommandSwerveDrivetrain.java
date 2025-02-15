@@ -37,11 +37,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
       new Trigger(() -> this.getCurrentCommand().getName().equals("AlignToPose"));
 
   public PIDController PID_X = new PIDController(1.7, 0, 0);
-  ;
   public PIDController PID_Y = new PIDController(1.7, 0, 0);
-  ;
   public PIDController PID_Rotation = new PIDController(0.1, 0, 0);
-  ;
+  public Trigger IS_AT_TARGET_POSE =
+      new Trigger(() -> PID_X.atSetpoint() && PID_Y.atSetpoint() && PID_Rotation.atSetpoint());
 
   private static final double kSimLoopPeriod = 0.005; // 5 ms
   private Notifier m_simNotifier = null;
