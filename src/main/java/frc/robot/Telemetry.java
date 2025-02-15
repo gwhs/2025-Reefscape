@@ -15,7 +15,6 @@ import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
@@ -129,14 +128,5 @@ public class Telemetry {
     /* Telemeterize the pose to a Field2d */
     fieldTypePub.set("Field2d");
     fieldPub.set(m_poseArray);
-
-    /* Telemeterize the module states to a Mechanism2d */
-    for (int i = 0; i < 4; ++i) {
-      m_moduleSpeeds[i].setAngle(state.ModuleStates[i].angle);
-      m_moduleDirections[i].setAngle(state.ModuleStates[i].angle);
-      m_moduleSpeeds[i].setLength(state.ModuleStates[i].speedMetersPerSecond / (2 * MaxSpeed));
-
-      SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
-    }
   }
 }
