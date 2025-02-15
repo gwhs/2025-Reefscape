@@ -78,7 +78,7 @@ public class ElevatorIOReal implements ElevatorIO {
     MotionMagicConfigs motionMagicConfigs = talonFXConfigs.MotionMagic;
     HardwareLimitSwitchConfigs hardwareLimitSwitchConfigs = talonFXConfigs.HardwareLimitSwitch;
     SoftwareLimitSwitchConfigs softwareLimitSwitchConfigs = talonFXConfigs.SoftwareLimitSwitch;
-
+    m_requestFront.EnableFOC = true; // this might also do it for back because it is a follower
     slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
     slot0Configs.kG = 0; // Add 0 voltage to overcome gravity
     slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
