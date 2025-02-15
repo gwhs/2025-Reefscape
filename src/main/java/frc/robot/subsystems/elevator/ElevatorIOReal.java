@@ -10,10 +10,10 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.mechanisms.SimpleDifferentialMechanism;
 import com.ctre.phoenix6.controls.DifferentialMotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.mechanisms.SimpleDifferentialMechanism;
 import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
 import com.ctre.phoenix6.signals.ForwardLimitTypeValue;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
@@ -35,7 +35,8 @@ public class ElevatorIOReal implements ElevatorIO {
       new TalonFX(ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, "rio");
   public TalonFX m_backElevatorMotor = new TalonFX(ElevatorConstants.BACK_ELEVATOR_MOTOR_ID, "rio");
 
-  private final DifferentialMotionMagicVoltage m_request = new DifferentialMotionMagicVoltage(0,0).withEnableFOC(true);
+  private final DifferentialMotionMagicVoltage m_request =
+      new DifferentialMotionMagicVoltage(0, 0).withEnableFOC(true);
   private final SimpleDifferentialMechanism differentialMechanism =
       new SimpleDifferentialMechanism(m_frontElevatorMotor, m_backElevatorMotor, true);
 
