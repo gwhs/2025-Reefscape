@@ -11,7 +11,9 @@ import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 
 class EndEffectorIOTalon implements EndEffectorIO {
 
@@ -23,6 +25,8 @@ class EndEffectorIOTalon implements EndEffectorIO {
   private final StatusSignal<Voltage> volts = motor.getMotorVoltage();
   private final StatusSignal<AngularVelocity> velocity = motor.getVelocity();
   private final StatusSignal<Temperature> temperature = motor.getDeviceTemp();
+
+  private final Alert endEffectorMotorConnectedAlert = new Alert("End Effector Motor Not Connected", AlertType.kError);
 
   public EndEffectorIOTalon() {
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
@@ -78,5 +82,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
         (BaseStatusSignal.refreshAll(volts, velocity, temperature)).isOK();
     DogLog.log("EndEffector/Temperature", temperature.getValueAsDouble());
     DogLog.log("endEffector/Connected", endEffectorConnected);
+
+    endEffectorMotorConnectedAlert.set(!endEffectorConnected);
   }
 }
