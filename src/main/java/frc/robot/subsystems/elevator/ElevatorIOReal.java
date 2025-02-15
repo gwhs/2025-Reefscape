@@ -11,7 +11,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DifferentialMotionMagicVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.controls.DifferentialVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.SimpleDifferentialMechanism;
 import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
@@ -38,9 +38,9 @@ public class ElevatorIOReal implements ElevatorIO {
   private final DifferentialMotionMagicVoltage m_request =
       new DifferentialMotionMagicVoltage(0, 0).withEnableFOC(true);
   private final SimpleDifferentialMechanism differentialMechanism =
-      new SimpleDifferentialMechanism(m_frontElevatorMotor, m_backElevatorMotor, true);
+      new SimpleDifferentialMechanism(m_frontElevatorMotor, m_backElevatorMotor, false);
 
-  private final VoltageOut m_requestFrontVoltage = new VoltageOut(0);
+  private final DifferentialVoltage m_requestVoltage = new DifferentialVoltage(0, 0);
 
   private final StatusSignal<Double> frontElevatorMotorPIDGoal =
       m_frontElevatorMotor.getClosedLoopReference();
@@ -142,7 +142,7 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   public void setRotation(double rotation) {
-    differentialMechanism.setControl(m_request);
+    differentialMechanism.setControl(m_request.withTargetPosition(rotation));
   }
 
   public double getRotation() {
@@ -158,8 +158,7 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   public void setVoltage(double voltage) {
-    m_frontElevatorMotor.setControl(m_requestFrontVoltage.withOutput(voltage));
-    m_backElevatorMotor.setControl(m_requestFrontVoltage.withOutput(voltage));
+    differentialMechanism.setControl(m_requestVoltage.withTargetOutput(voltage));
   }
 
   public void setNeutralMode(NeutralModeValue mode) {
