@@ -73,6 +73,8 @@ public class RobotVisualizer {
   public RobotVisualizer(ElevatorSubsystem elevator, ArmSubsystem arm) {
     this.elevator = elevator;
     this.arm = arm;
+
+    SmartDashboard.putData("RobotVisualizer", panel);
   }
 
   public void update() {
@@ -83,7 +85,5 @@ public class RobotVisualizer {
 
     m_elevator3.setLength(elevatorHeight + Units.inchesToMeters(37.2));
     m_elevator4.setLength(elevatorHeight + Units.inchesToMeters(37.2));
-
-    SmartDashboard.putData("RobotVisualizer", panel);
   }
 }

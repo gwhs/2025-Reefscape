@@ -12,23 +12,28 @@ public class AprilTagCamConstants {
   public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
   public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
-  public static final Transform3d FRONT_RIGHT_CAMERA_LOCATION_ROBOT1 =
+  public static final String FRONT_LEFT_CAMERA_COMP_NAME = "cam1";
+  public static final String FRONT_RIGHT_CAMERA_COMP_NAME = "cam2";
+  public static final String FRONT_LEFT_CAMERA_DEV_NAME = "cam3";
+  public static final String FRONT_RIGHT_CAMERA_DEV_NAME = "cam4";
+
+  public static final Transform3d FRONT_RIGHT_CAMERA_LOCATION_DEV =
       new Transform3d(
-          Units.inchesToMeters(9.6),
-          Units.inchesToMeters(-11.2),
-          Units.inchesToMeters(8),
+          Units.inchesToMeters(11.185),
+          Units.inchesToMeters(-9.524),
+          Units.inchesToMeters(8.250),
           new Rotation3d(
               Units.degreesToRadians(0), Units.degreesToRadians(-10), Units.degreesToRadians(5)));
 
-  public static final Transform3d FRONT_LEFT_CAMERA_LOCATION_ROBOT1 =
+  public static final Transform3d FRONT_LEFT_CAMERA_LOCATION_DEV =
       new Transform3d(
-          Units.inchesToMeters(9.6),
-          Units.inchesToMeters(11.2),
-          Units.inchesToMeters(8),
+          Units.inchesToMeters(11.185),
+          Units.inchesToMeters(9.524),
+          Units.inchesToMeters(8.250),
           new Rotation3d(
               Units.degreesToRadians(0), Units.degreesToRadians(-10), Units.degreesToRadians(-5)));
 
-  public static final Transform3d FRONT_RIGHT_CAMERA_LOCATION_ROBOT2 =
+  public static final Transform3d FRONT_RIGHT_CAMERA_LOCATION_COMP =
       new Transform3d(
           Units.inchesToMeters(9.6),
           Units.inchesToMeters(-11.2),
@@ -36,7 +41,7 @@ public class AprilTagCamConstants {
           new Rotation3d(
               Units.degreesToRadians(0), Units.degreesToRadians(-20), Units.degreesToRadians(5)));
 
-  public static final Transform3d FRONT_LEFT_CAMERA_LOCATION_ROBOT2 =
+  public static final Transform3d FRONT_LEFT_CAMERA_LOCATION_COMP =
       new Transform3d(
           Units.inchesToMeters(9.6),
           Units.inchesToMeters(11.2),

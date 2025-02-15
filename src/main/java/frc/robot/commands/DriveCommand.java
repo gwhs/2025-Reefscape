@@ -177,6 +177,10 @@ public class DriveCommand extends Command {
         yVelocityLimiter.reset(yVelocity);
         angularVelocityLimiter.reset(angularVelocity);
       }
+      xVelocity = MathUtil.clamp(xVelocity, -0.1, 0.1);
+      yVelocity = MathUtil.clamp(yVelocity, -0.1, 0.1);
+      angularVelocity = MathUtil.clamp(angularVelocity, -0.1, 0.1);
+
       xVelocity = xVelocityLimiter.calculate(xVelocity);
       yVelocity = yVelocityLimiter.calculate(yVelocity);
       angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
@@ -224,5 +228,20 @@ public class DriveCommand extends Command {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  public Command driveBackward(double velocity) {
+    return drivetrain
+        .run(
+            () ->
+                drivetrain.setControl(
+                    robotCentricDrive
+                        .withVelocityX(-velocity)
+                        .withVelocityY(0)
+                        .withRotationalRate(0)))
+        .finallyDo(
+            () ->
+                drivetrain.setControl(
+                    robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
   }
 }
