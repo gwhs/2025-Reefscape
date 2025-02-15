@@ -1,4 +1,4 @@
-  package frc.robot.commands;
+package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
@@ -170,7 +170,7 @@ public class DriveCommand extends Command {
       DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
     }
 
-    if (elevatorHeight.getAsDouble() > 0.3) { 
+    if (elevatorHeight.getAsDouble() > 0.3) {
       if (resetLimiter) {
         resetLimiter = false;
         xVelocityLimiter.reset(xVelocity);
@@ -178,9 +178,9 @@ public class DriveCommand extends Command {
         angularVelocityLimiter.reset(angularVelocity);
       }
       xVelocity = MathUtil.clamp(xVelocity, -0.1, 0.1);
-      yVelocity = MathUtil.clamp(yVelocity, -0.1,0.1);
-      angularVelocity = MathUtil.clamp(angularVelocity, -0.1,0.1);
-      
+      yVelocity = MathUtil.clamp(yVelocity, -0.1, 0.1);
+      angularVelocity = MathUtil.clamp(angularVelocity, -0.1, 0.1);
+
       xVelocity = xVelocityLimiter.calculate(xVelocity);
       yVelocity = yVelocityLimiter.calculate(yVelocity);
       angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
