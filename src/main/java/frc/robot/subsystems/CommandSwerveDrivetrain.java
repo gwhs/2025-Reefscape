@@ -34,7 +34,14 @@ import java.util.function.Supplier;
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
   public Trigger IS_ALIGNING_TO_POSE =
-      new Trigger(() -> this.getCurrentCommand().getName().equals("AlignToPose"));
+      new Trigger(
+          () -> {
+            if (this.getCurrentCommand() != null) {
+              return this.getCurrentCommand().getName().equals("AlignToPose");
+            } else {
+              return false;
+            }
+          });
 
   public PIDController PID_X = new PIDController(1.7, 0, 0);
   public PIDController PID_Y = new PIDController(1.7, 0, 0);
