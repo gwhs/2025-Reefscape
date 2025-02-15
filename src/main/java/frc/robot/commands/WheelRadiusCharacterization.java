@@ -10,6 +10,8 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import dev.doglog.DogLog;
+
 public class WheelRadiusCharacterization {
 
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05;
@@ -80,6 +82,8 @@ public class WheelRadiusCharacterization {
                               + " meters, "
                               + formatter.format(Units.metersToInches(wheelRadius))
                               + " inches");
+
+                      DogLog.log("WheelRadiusCharacteirzation in Inches", Units.metersToInches(wheelRadius));
                     })));
   }
 
