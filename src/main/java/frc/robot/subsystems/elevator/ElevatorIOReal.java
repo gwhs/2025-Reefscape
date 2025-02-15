@@ -26,7 +26,6 @@ import com.ctre.phoenix6.signals.ReverseLimitValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
-import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 
 public class ElevatorIOReal implements ElevatorIO {
@@ -44,10 +43,6 @@ public class ElevatorIOReal implements ElevatorIO {
       m_frontElevatorMotor.getClosedLoopReference();
   private final StatusSignal<Voltage> frontElevatorMotorVoltage =
       m_frontElevatorMotor.getMotorVoltage();
-  private final StatusSignal<Voltage> frontElevatorMotorSupplyVoltage =
-      m_frontElevatorMotor.getSupplyVoltage();
-  private final StatusSignal<Temperature> frontElevatorMotorDeviceTemp =
-      m_frontElevatorMotor.getDeviceTemp();
   private final StatusSignal<Current> frontElevatorMotorStatorCurrent =
       m_frontElevatorMotor.getStatorCurrent();
   private final StatusSignal<Angle> frontElevatorMotorPosition = m_frontElevatorMotor.getPosition();
@@ -61,10 +56,6 @@ public class ElevatorIOReal implements ElevatorIO {
       m_backElevatorMotor.getClosedLoopReference();
   private final StatusSignal<Voltage> backElevatorMotorVoltage =
       m_backElevatorMotor.getMotorVoltage();
-  private final StatusSignal<Voltage> backElevatorMotorSupplyVoltage =
-      m_backElevatorMotor.getSupplyVoltage();
-  private final StatusSignal<Temperature> backElevatorMotorDeviceTemp =
-      m_backElevatorMotor.getDeviceTemp();
   private final StatusSignal<Current> backElevatorMotorStatorCurrent =
       m_backElevatorMotor.getStatorCurrent();
   private final StatusSignal<Angle> backElevatorMotorPosition = m_backElevatorMotor.getPosition();
@@ -171,45 +162,29 @@ public class ElevatorIOReal implements ElevatorIO {
 
   @Override
   public void update() {
-    boolean frontElevatorConnected =
-        (BaseStatusSignal.refreshAll(
-                frontElevatorMotorPIDGoal,
-                frontElevatorMotorVoltage,
-                frontElevatorMotorSupplyVoltage,
-                frontElevatorMotorDeviceTemp,
-                frontElevatorMotorStatorCurrent,
-                frontElevatorMotorPosition,
-                forwardLimit,
-                reverseLimit)
-            .isOK());
-
-    boolean backElevatorConnected =
-        (BaseStatusSignal.refreshAll(
-                backElevatorMotorPIDGoal,
-                backElevatorMotorVoltage,
-                backElevatorMotorSupplyVoltage,
-                backElevatorMotorDeviceTemp,
-                backElevatorMotorStatorCurrent,
-                backElevatorMotorPosition)
-            .isOK());
+    BaseStatusSignal.refreshAll(
+        frontElevatorMotorPIDGoal,
+        frontElevatorMotorVoltage,
+        frontElevatorMotorStatorCurrent,
+        frontElevatorMotorPosition,
+        forwardLimit,
+        reverseLimit,
+        backElevatorMotorPIDGoal,
+        backElevatorMotorVoltage,
+        backElevatorMotorStatorCurrent,
+        backElevatorMotorPosition);
 
     DogLog.log("Elevator/Front Motor/pid goal", frontElevatorMotorPIDGoal.getValueAsDouble());
     DogLog.log("Elevator/Front Motor/motor voltage", frontElevatorMotorVoltage.getValueAsDouble());
     DogLog.log(
-        "Elevator/Front Motor/supply voltage", frontElevatorMotorSupplyVoltage.getValueAsDouble());
-    DogLog.log("Elevator/Front Motor/device temp", frontElevatorMotorDeviceTemp.getValueAsDouble());
-    DogLog.log(
         "Elevator/Front Motor/stator current", frontElevatorMotorStatorCurrent.getValueAsDouble());
     DogLog.log("Elevator/Front Motor/position", frontElevatorMotorPosition.getValueAsDouble());
 
-    DogLog.log("Elevator/Front Motor/Connected", frontElevatorConnected);
-    DogLog.log("Elevator/Back Motor/Connected", backElevatorConnected);
+    DogLog.log("Elevator/Front Motor/Connected", m_frontElevatorMotor.isConnected());
+    DogLog.log("Elevator/Back Motor/Connected", m_backElevatorMotor.isConnected());
 
     DogLog.log("Elevator/Back Motor/pid goal", backElevatorMotorPIDGoal.getValueAsDouble());
     DogLog.log("Elevator/Back Motor/motor voltage", backElevatorMotorVoltage.getValueAsDouble());
-    DogLog.log(
-        "Elevator/Back Motor/supply voltage", backElevatorMotorSupplyVoltage.getValueAsDouble());
-    DogLog.log("Elevator/Back Motor/device temp", backElevatorMotorDeviceTemp.getValueAsDouble());
     DogLog.log(
         "Elevator/Back Motor/stator current", backElevatorMotorStatorCurrent.getValueAsDouble());
     DogLog.log("Elevator/Back Motor/position", backElevatorMotorPosition.getValueAsDouble());
