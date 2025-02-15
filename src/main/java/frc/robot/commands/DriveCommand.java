@@ -138,7 +138,8 @@ public class DriveCommand extends Command {
 
   public void setSlowMode(boolean isSlow, double factor) {
     this.isSlow = isSlow;
-    factor = slowFactor;
+    factor = MathUtil.clamp(factor, 0, 1);
+    slowFactor = factor;
   }
 
   public void setDriveMode(DriveMode driveMode) {
