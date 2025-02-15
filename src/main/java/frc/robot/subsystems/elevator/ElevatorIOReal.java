@@ -30,45 +30,44 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 
 public class ElevatorIOReal implements ElevatorIO {
-  private TalonFX m_leftElevatorMotor =
-      new TalonFX(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, "rio");
-  public TalonFX m_rightElevatorMotor =
-      new TalonFX(ElevatorConstants.RIGHT_ELEVATOR_MOTOR_ID, "rio");
+  private TalonFX m_frontElevatorMotor =
+      new TalonFX(ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, "rio");
+  public TalonFX m_backElevatorMotor = new TalonFX(ElevatorConstants.BACK_ELEVATOR_MOTOR_ID, "rio");
 
-  private final MotionMagicVoltage m_requestLeft = new MotionMagicVoltage(0);
-  private final Follower m_requestRight =
-      new Follower(ElevatorConstants.LEFT_ELEVATOR_MOTOR_ID, true);
+  private final MotionMagicVoltage m_requestFront = new MotionMagicVoltage(0);
+  private final Follower m_requestBack =
+      new Follower(ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, true);
 
-  private final VoltageOut m_requestLeftVoltage = new VoltageOut(0);
+  private final VoltageOut m_requestFrontVoltage = new VoltageOut(0);
 
-  private final StatusSignal<Double> leftElevatorMotorPIDGoal =
-      m_leftElevatorMotor.getClosedLoopReference();
-  private final StatusSignal<Voltage> leftElevatorMotorVoltage =
-      m_leftElevatorMotor.getMotorVoltage();
-  private final StatusSignal<Voltage> leftElevatorMotorSupplyVoltage =
-      m_leftElevatorMotor.getSupplyVoltage();
-  private final StatusSignal<Temperature> leftElevatorMotorDeviceTemp =
-      m_leftElevatorMotor.getDeviceTemp();
-  private final StatusSignal<Current> leftElevatorMotorStatorCurrent =
-      m_leftElevatorMotor.getStatorCurrent();
-  private final StatusSignal<Angle> leftElevatorMotorPosition = m_leftElevatorMotor.getPosition();
+  private final StatusSignal<Double> frontElevatorMotorPIDGoal =
+      m_frontElevatorMotor.getClosedLoopReference();
+  private final StatusSignal<Voltage> frontElevatorMotorVoltage =
+      m_frontElevatorMotor.getMotorVoltage();
+  private final StatusSignal<Voltage> frontElevatorMotorSupplyVoltage =
+      m_frontElevatorMotor.getSupplyVoltage();
+  private final StatusSignal<Temperature> frontElevatorMotorDeviceTemp =
+      m_frontElevatorMotor.getDeviceTemp();
+  private final StatusSignal<Current> frontElevatorMotorStatorCurrent =
+      m_frontElevatorMotor.getStatorCurrent();
+  private final StatusSignal<Angle> frontElevatorMotorPosition = m_frontElevatorMotor.getPosition();
 
   private final StatusSignal<ForwardLimitValue> forwardLimit =
-      m_leftElevatorMotor.getForwardLimit();
+      m_frontElevatorMotor.getForwardLimit();
   private final StatusSignal<ReverseLimitValue> reverseLimit =
-      m_leftElevatorMotor.getReverseLimit();
+      m_frontElevatorMotor.getReverseLimit();
 
-  private final StatusSignal<Double> rightElevatorMotorPIDGoal =
-      m_rightElevatorMotor.getClosedLoopReference();
-  private final StatusSignal<Voltage> rightElevatorMotorVoltage =
-      m_rightElevatorMotor.getMotorVoltage();
-  private final StatusSignal<Voltage> rightElevatorMotorSupplyVoltage =
-      m_rightElevatorMotor.getSupplyVoltage();
-  private final StatusSignal<Temperature> rightElevatorMotorDeviceTemp =
-      m_rightElevatorMotor.getDeviceTemp();
-  private final StatusSignal<Current> rightElevatorMotorStatorCurrent =
-      m_rightElevatorMotor.getStatorCurrent();
-  private final StatusSignal<Angle> rightElevatorMotorPosition = m_rightElevatorMotor.getPosition();
+  private final StatusSignal<Double> backElevatorMotorPIDGoal =
+      m_backElevatorMotor.getClosedLoopReference();
+  private final StatusSignal<Voltage> backElevatorMotorVoltage =
+      m_backElevatorMotor.getMotorVoltage();
+  private final StatusSignal<Voltage> backElevatorMotorSupplyVoltage =
+      m_backElevatorMotor.getSupplyVoltage();
+  private final StatusSignal<Temperature> backElevatorMotorDeviceTemp =
+      m_backElevatorMotor.getDeviceTemp();
+  private final StatusSignal<Current> backElevatorMotorStatorCurrent =
+      m_backElevatorMotor.getStatorCurrent();
+  private final StatusSignal<Angle> backElevatorMotorPosition = m_backElevatorMotor.getPosition();
 
   public ElevatorIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
@@ -78,7 +77,7 @@ public class ElevatorIOReal implements ElevatorIO {
     MotionMagicConfigs motionMagicConfigs = talonFXConfigs.MotionMagic;
     HardwareLimitSwitchConfigs hardwareLimitSwitchConfigs = talonFXConfigs.HardwareLimitSwitch;
     SoftwareLimitSwitchConfigs softwareLimitSwitchConfigs = talonFXConfigs.SoftwareLimitSwitch;
-
+    m_requestFront.EnableFOC = true; // this might also do it for back because it is a follower
     slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
     slot0Configs.kG = 0; // Add 0 voltage to overcome gravity
     slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
@@ -103,17 +102,6 @@ public class ElevatorIOReal implements ElevatorIO {
         ElevatorSubsystem.metersToRotations(ElevatorConstants.TOP_METER);
     softwareLimitSwitchConfigs.ReverseSoftLimitThreshold = ElevatorSubsystem.metersToRotations(0);
 
-    StatusCode rightStatus = StatusCode.StatusCodeNotInitialized;
-    for (int i = 0; i < 5; i++) {
-      rightStatus = m_leftElevatorMotor.getConfigurator().apply(talonFXConfigs);
-      if (rightStatus.isOK()) break;
-    }
-    if (!rightStatus.isOK()) {
-      System.out.println("Could not configure device. Error: " + rightStatus.toString());
-    }
-
-    // Additional config for left motor
-
     hardwareLimitSwitchConfigs.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
     hardwareLimitSwitchConfigs.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
     hardwareLimitSwitchConfigs.ForwardLimitEnable = false;
@@ -123,35 +111,44 @@ public class ElevatorIOReal implements ElevatorIO {
     hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionEnable = true;
     hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionValue = 0;
 
+    StatusCode backStatus = StatusCode.StatusCodeNotInitialized;
+    for (int i = 0; i < 5; i++) {
+      backStatus = m_backElevatorMotor.getConfigurator().apply(talonFXConfigs);
+      if (backStatus.isOK()) break;
+    }
+    if (!backStatus.isOK()) {
+      System.out.println("Could not configure device. Error: " + backStatus.toString());
+    }
+
     motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-    StatusCode leftStatus = StatusCode.StatusCodeNotInitialized;
+    StatusCode frontStatus = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; i++) {
-      leftStatus = m_leftElevatorMotor.getConfigurator().apply(talonFXConfigs);
-      if (leftStatus.isOK()) break;
+      frontStatus = m_frontElevatorMotor.getConfigurator().apply(talonFXConfigs);
+      if (frontStatus.isOK()) break;
     }
-    if (!leftStatus.isOK()) {
-      System.out.println("Could not configure device. Error: " + leftStatus.toString());
+    if (!frontStatus.isOK()) {
+      System.out.println("Could not configure device. Error: " + frontStatus.toString());
     }
 
-    // Set right motor to follow left motor
-    m_rightElevatorMotor.setControl(m_requestRight);
+    // Set back motor to follow front motor
+    m_backElevatorMotor.setControl(m_requestBack);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         50.0,
-        leftElevatorMotorPIDGoal,
-        rightElevatorMotorPIDGoal,
-        leftElevatorMotorStatorCurrent,
-        rightElevatorMotorStatorCurrent);
+        frontElevatorMotorPIDGoal,
+        backElevatorMotorPIDGoal,
+        frontElevatorMotorStatorCurrent,
+        backElevatorMotorStatorCurrent);
   }
 
   public void setRotation(double rotation) {
-    m_leftElevatorMotor.setControl(m_requestLeft.withPosition(rotation));
-    m_rightElevatorMotor.setControl(m_requestRight);
+    m_frontElevatorMotor.setControl(m_requestFront.withPosition(rotation));
+    m_backElevatorMotor.setControl(m_requestBack);
   }
 
   public double getRotation() {
-    return leftElevatorMotorPosition.getValueAsDouble();
+    return frontElevatorMotorPosition.getValueAsDouble();
   }
 
   public boolean getForwardLimit() {
@@ -163,58 +160,58 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   public void setVoltage(double voltage) {
-    m_leftElevatorMotor.setControl(m_requestLeftVoltage.withOutput(voltage));
-    m_rightElevatorMotor.setControl(m_requestRight);
+    m_frontElevatorMotor.setControl(m_requestFrontVoltage.withOutput(voltage));
+    m_backElevatorMotor.setControl(m_requestBack);
   }
 
   public void setNeutralMode(NeutralModeValue mode) {
-    m_leftElevatorMotor.setNeutralMode(mode);
-    m_rightElevatorMotor.setNeutralMode(mode);
+    m_frontElevatorMotor.setNeutralMode(mode);
+    m_backElevatorMotor.setNeutralMode(mode);
   }
 
   @Override
   public void update() {
-    boolean leftElevatorConnected =
+    boolean frontElevatorConnected =
         (BaseStatusSignal.refreshAll(
-                leftElevatorMotorPIDGoal,
-                leftElevatorMotorVoltage,
-                leftElevatorMotorSupplyVoltage,
-                leftElevatorMotorDeviceTemp,
-                leftElevatorMotorStatorCurrent,
-                leftElevatorMotorPosition,
+                frontElevatorMotorPIDGoal,
+                frontElevatorMotorVoltage,
+                frontElevatorMotorSupplyVoltage,
+                frontElevatorMotorDeviceTemp,
+                frontElevatorMotorStatorCurrent,
+                frontElevatorMotorPosition,
                 forwardLimit,
                 reverseLimit)
             .isOK());
 
-    boolean rightElevatorConnected =
+    boolean backElevatorConnected =
         (BaseStatusSignal.refreshAll(
-                rightElevatorMotorPIDGoal,
-                rightElevatorMotorVoltage,
-                rightElevatorMotorSupplyVoltage,
-                rightElevatorMotorDeviceTemp,
-                rightElevatorMotorStatorCurrent,
-                rightElevatorMotorPosition)
+                backElevatorMotorPIDGoal,
+                backElevatorMotorVoltage,
+                backElevatorMotorSupplyVoltage,
+                backElevatorMotorDeviceTemp,
+                backElevatorMotorStatorCurrent,
+                backElevatorMotorPosition)
             .isOK());
 
-    DogLog.log("Elevator/Left Motor/pid goal", leftElevatorMotorPIDGoal.getValueAsDouble());
-    DogLog.log("Elevator/Left Motor/motor voltage", leftElevatorMotorVoltage.getValueAsDouble());
+    DogLog.log("Elevator/Front Motor/pid goal", frontElevatorMotorPIDGoal.getValueAsDouble());
+    DogLog.log("Elevator/Front Motor/motor voltage", frontElevatorMotorVoltage.getValueAsDouble());
     DogLog.log(
-        "Elevator/Left Motor/supply voltage", leftElevatorMotorSupplyVoltage.getValueAsDouble());
-    DogLog.log("Elevator/Left Motor/device temp", leftElevatorMotorDeviceTemp.getValueAsDouble());
+        "Elevator/Front Motor/supply voltage", frontElevatorMotorSupplyVoltage.getValueAsDouble());
+    DogLog.log("Elevator/Front Motor/device temp", frontElevatorMotorDeviceTemp.getValueAsDouble());
     DogLog.log(
-        "Elevator/Left Motor/stator current", leftElevatorMotorStatorCurrent.getValueAsDouble());
-    DogLog.log("Elevator/Left Motor/position", leftElevatorMotorPosition.getValueAsDouble());
+        "Elevator/Front Motor/stator current", frontElevatorMotorStatorCurrent.getValueAsDouble());
+    DogLog.log("Elevator/Front Motor/position", frontElevatorMotorPosition.getValueAsDouble());
 
-    DogLog.log("Elevator/Left Motor/Connected", leftElevatorConnected);
-    DogLog.log("Elevator/Right Motor/Connected", rightElevatorConnected);
+    DogLog.log("Elevator/Front Motor/Connected", frontElevatorConnected);
+    DogLog.log("Elevator/Back Motor/Connected", backElevatorConnected);
 
-    DogLog.log("Elevator/Right Motor/pid goal", rightElevatorMotorPIDGoal.getValueAsDouble());
-    DogLog.log("Elevator/Right Motor/motor voltage", rightElevatorMotorVoltage.getValueAsDouble());
+    DogLog.log("Elevator/Back Motor/pid goal", backElevatorMotorPIDGoal.getValueAsDouble());
+    DogLog.log("Elevator/Back Motor/motor voltage", backElevatorMotorVoltage.getValueAsDouble());
     DogLog.log(
-        "Elevator/Right Motor/supply voltage", rightElevatorMotorSupplyVoltage.getValueAsDouble());
-    DogLog.log("Elevator/Right Motor/device temp", rightElevatorMotorDeviceTemp.getValueAsDouble());
+        "Elevator/Back Motor/supply voltage", backElevatorMotorSupplyVoltage.getValueAsDouble());
+    DogLog.log("Elevator/Back Motor/device temp", backElevatorMotorDeviceTemp.getValueAsDouble());
     DogLog.log(
-        "Elevator/Right Motor/stator current", rightElevatorMotorStatorCurrent.getValueAsDouble());
-    DogLog.log("Elevator/Right Motor/position", rightElevatorMotorPosition.getValueAsDouble());
+        "Elevator/Back Motor/stator current", backElevatorMotorStatorCurrent.getValueAsDouble());
+    DogLog.log("Elevator/Back Motor/position", backElevatorMotorPosition.getValueAsDouble());
   }
 }
