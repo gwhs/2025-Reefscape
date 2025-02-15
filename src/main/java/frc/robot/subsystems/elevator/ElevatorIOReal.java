@@ -10,10 +10,10 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.controls.DifferentialMotionMagicVoltage;
+import com.ctre.phoenix6.controls.DifferentialVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.mechanisms.SimpleDifferentialMechanism;
 import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
 import com.ctre.phoenix6.signals.ForwardLimitTypeValue;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
@@ -29,15 +29,17 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 
 public class ElevatorIOReal implements ElevatorIO {
+
   private TalonFX m_frontElevatorMotor =
       new TalonFX(ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, "rio");
   public TalonFX m_backElevatorMotor = new TalonFX(ElevatorConstants.BACK_ELEVATOR_MOTOR_ID, "rio");
 
-  private final MotionMagicVoltage m_requestFront = new MotionMagicVoltage(0);
-  private final Follower m_requestBack =
-      new Follower(ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, true);
+  private final DifferentialMotionMagicVoltage m_request =
+      new DifferentialMotionMagicVoltage(0, 0).withEnableFOC(true);
+  private final SimpleDifferentialMechanism differentialMechanism =
+      new SimpleDifferentialMechanism(m_frontElevatorMotor, m_backElevatorMotor, false);
 
-  private final VoltageOut m_requestFrontVoltage = new VoltageOut(0);
+  private final DifferentialVoltage m_requestVoltage = new DifferentialVoltage(0, 0);
 
   private final StatusSignal<Double> frontElevatorMotorPIDGoal =
       m_frontElevatorMotor.getClosedLoopReference();
@@ -68,7 +70,7 @@ public class ElevatorIOReal implements ElevatorIO {
     MotionMagicConfigs motionMagicConfigs = talonFXConfigs.MotionMagic;
     HardwareLimitSwitchConfigs hardwareLimitSwitchConfigs = talonFXConfigs.HardwareLimitSwitch;
     SoftwareLimitSwitchConfigs softwareLimitSwitchConfigs = talonFXConfigs.SoftwareLimitSwitch;
-    m_requestFront.EnableFOC = true; // this might also do it for back because it is a follower
+
     slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
     slot0Configs.kG = 0; // Add 0 voltage to overcome gravity
     slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
@@ -122,9 +124,6 @@ public class ElevatorIOReal implements ElevatorIO {
       System.out.println("Could not configure device. Error: " + frontStatus.toString());
     }
 
-    // Set back motor to follow front motor
-    m_backElevatorMotor.setControl(m_requestBack);
-
     BaseStatusSignal.setUpdateFrequencyForAll(
         50.0,
         frontElevatorMotorPIDGoal,
@@ -134,8 +133,7 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   public void setRotation(double rotation) {
-    m_frontElevatorMotor.setControl(m_requestFront.withPosition(rotation));
-    m_backElevatorMotor.setControl(m_requestBack);
+    differentialMechanism.setControl(m_request.withTargetPosition(rotation));
   }
 
   public double getRotation() {
@@ -151,8 +149,7 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   public void setVoltage(double voltage) {
-    m_frontElevatorMotor.setControl(m_requestFrontVoltage.withOutput(voltage));
-    m_backElevatorMotor.setControl(m_requestBack);
+    differentialMechanism.setControl(m_requestVoltage.withTargetOutput(voltage));
   }
 
   public void setNeutralMode(NeutralModeValue mode) {
