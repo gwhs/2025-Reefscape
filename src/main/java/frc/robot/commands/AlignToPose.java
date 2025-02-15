@@ -104,6 +104,10 @@ public class AlignToPose extends Command {
         yVelocityLimiter.reset(yVelocity);
         angularVelocityLimiter.reset(angularVelocity);
       }
+      xVelocity = MathUtil.clamp(xVelocity, -0.1, 0.1);
+      yVelocity = MathUtil.clamp(yVelocity, -0.1, 0.1);
+      angularVelocity = MathUtil.clamp(angularVelocity, -0.1, 0.1);
+
       xVelocity = xVelocityLimiter.calculate(xVelocity);
       yVelocity = yVelocityLimiter.calculate(yVelocity);
       angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
