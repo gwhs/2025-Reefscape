@@ -282,8 +282,8 @@ public class RobotContainer {
     autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycleNonProcessor(this));
     autoChooser.addOption("Five_Cycle_Non_Processor_2", new FiveCycleNonProcessor2(this));
     autoChooser.addOption(
-      "Wheel_Radius_Chracterizaton",
-      WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
+        "Wheel_Radius_Chracterizaton",
+        WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
 
     SmartDashboard.putData("autonomous", autoChooser);
   }

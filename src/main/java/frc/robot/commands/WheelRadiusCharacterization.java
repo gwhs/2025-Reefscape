@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -9,8 +10,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-
-import dev.doglog.DogLog;
 
 public class WheelRadiusCharacterization {
 
@@ -83,7 +82,9 @@ public class WheelRadiusCharacterization {
                               + formatter.format(Units.metersToInches(wheelRadius))
                               + " inches");
 
-                      DogLog.log("WheelRadiusCharacteirzation in Inches", Units.metersToInches(wheelRadius));
+                      DogLog.log(
+                          "WheelRadiusCharacteirzation in Inches",
+                          Units.metersToInches(wheelRadius));
                     })));
   }
 
