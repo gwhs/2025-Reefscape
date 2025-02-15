@@ -6,7 +6,6 @@ package frc.robot.subsystems.aprilTagCam;
 import com.ctre.phoenix6.Utils;
 import dev.doglog.DogLog;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,7 +18,6 @@ import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.Filesystem;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -49,8 +47,6 @@ public class AprilTagCam {
 
   private final Alert visionNotConnected;
 
- 
-
   Optional<EstimatedRobotPose> optionalEstimPose;
   private AprilTagHelp helper = new AprilTagHelp(null, 0, null);
 
@@ -64,10 +60,8 @@ public class AprilTagCam {
     PortForwarder.add(5800, "photonvision.local", 5800);
     try {
       aprilTagFieldLayout =
-                new AprilTagFieldLayout(
-                    Path.of(
-                        Filesystem.getDeployDirectory().getPath(),
-                        "welded/2025-reef.json"));
+          new AprilTagFieldLayout(
+              Path.of(Filesystem.getDeployDirectory().getPath(), "welded/2025-reef.json"));
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -275,5 +269,5 @@ public class AprilTagCam {
         return estStdDevs;
       }
     }
-      }
+  }
 }
