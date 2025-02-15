@@ -73,7 +73,7 @@ public class AprilTagCam {
     this.currRobotPose = currRobotPose;
     this.currRobotSpeed = currRobotSpeed;
 
-    visionNotConnected = new Alert(str + "NOT CONNECTED", AlertType.kWarning);
+    visionNotConnected = new Alert(str + " NOT CONNECTED", AlertType.kError);
 
     photonEstimator =
         new PhotonPoseEstimator(

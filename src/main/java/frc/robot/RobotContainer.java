@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.commands.autonomous.*;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -137,9 +138,14 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    IS_AT_POSE
-        .toggleOnTrue(led.setPattern(LEDPattern.solid(Color.kGreen)))
-        .toggleOnFalse(led.setPattern(LEDPattern.solid(Color.kBlack)));
+    drivetrain
+        .IS_ALIGNING_TO_POSE
+        .and(drivetrain.IS_AT_TARGET_POSE)
+        .onTrue(led.setPattern(LEDPattern.solid(Color.kGreen)));
+    drivetrain
+        .IS_ALIGNING_TO_POSE
+        .and(drivetrain.IS_AT_TARGET_POSE.negate())
+        .onTrue(led.setPattern(LEDPattern.solid(Color.kBlack)));
 
     IS_DISABLED.onTrue(
         Commands.runOnce(
@@ -275,6 +281,9 @@ public class RobotContainer {
     autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
     autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycleNonProcessor(this));
     autoChooser.addOption("Five_Cycle_Non_Processor_2", new FiveCycleNonProcessor2(this));
+    autoChooser.addOption(
+        "Wheel_Radius_Chracterizaton",
+        WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
 
     SmartDashboard.putData("autonomous", autoChooser);
   }
