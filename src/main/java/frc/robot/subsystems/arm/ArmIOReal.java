@@ -11,6 +11,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -28,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 public class ArmIOReal implements ArmIO {
   private TalonFX armMotor = new TalonFX(ArmConstants.ARM_MOTOR_ID, "rio");
   private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
+  private final VoltageOut m_voltReq = new VoltageOut(0.0);
 
   private final StatusSignal<Double> armPIDGoal = armMotor.getClosedLoopReference();
   private final StatusSignal<Voltage> armMotorVoltage = armMotor.getMotorVoltage();
@@ -44,14 +46,14 @@ public class ArmIOReal implements ArmIO {
     SoftwareLimitSwitchConfigs softwareLimitSwitch = talonFXConfigs.SoftwareLimitSwitch;
     CurrentLimitsConfigs currentConfig = talonFXConfigs.CurrentLimits;
     FeedbackConfigs feedbackConfigs = talonFXConfigs.Feedback;
-
-    slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
-    slot0Configs.kG = 0; // Add 0 V to overcome gravity
-    slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
-    slot0Configs.kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
-    slot0Configs.kP = 100; // A position error of 2.5 rotations results in 12 V output
+    m_request.EnableFOC = true; // add FOC
+    slot0Configs.kS = 0.18205; // Add 0.25 V output to overcome static friction
+    slot0Configs.kG = 0.09885; // Add 0 V to overcome gravity
+    slot0Configs.kV = 7.2427; // A velocity target of 1 rps results in 0.12 V output
+    slot0Configs.kA = 0.086264; // An acceleration of 1 rps/s requires 0.01 V output
+    slot0Configs.kP = 57.759; // A position error of 2.5 rotations results in 12 V output
     slot0Configs.kI = 0; // no output for integrated error
-    slot0Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
+    slot0Configs.kD = 8.4867; // A velocity error of 1 rps results in 0.1 V output
     slot0Configs.withGravityType(GravityTypeValue.Arm_Cosine);
 
     // feedbackConfigs.FeedbackRemoteSensorID = 0;
@@ -105,6 +107,10 @@ public class ArmIOReal implements ArmIO {
     return Units.rotationsToDegrees(armPosition.getValueAsDouble());
   }
 
+  public void setVoltage(double volts) {
+    armMotor.setControl(m_voltReq.withOutput(volts));
+  }
+
   @Override
   public void update() {
     boolean armConnected =
@@ -117,7 +123,7 @@ public class ArmIOReal implements ArmIO {
                 armPosition)
             .isOK());
 
-    DogLog.log("Arm/Motor/pid goal", armPIDGoal.getValueAsDouble());
+    DogLog.log("Arm/Motor/pid goal", Units.rotationsToDegrees(armPIDGoal.getValueAsDouble()));
     DogLog.log("Arm/Motor/motor voltage", armMotorVoltage.getValueAsDouble());
     DogLog.log("Arm/Motor/supply voltage", armSupplyVoltage.getValueAsDouble());
     DogLog.log("Arm/Motor/device temp", armDeviceTemp.getValueAsDouble());
