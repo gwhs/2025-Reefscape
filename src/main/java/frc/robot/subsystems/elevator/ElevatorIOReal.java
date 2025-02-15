@@ -193,7 +193,7 @@ public class ElevatorIOReal implements ElevatorIO {
         "Elevator/Back Motor/stator current", backElevatorMotorStatorCurrent.getValueAsDouble());
     DogLog.log("Elevator/Back Motor/position", backElevatorMotorPosition.getValueAsDouble());
 
-    frontMotorConnectedAlert.set(!frontElevatorConnected);
-    backMotorConnectedAlert.set(!backElevatorConnected);
+    frontMotorConnectedAlert.set(!m_frontElevatorMotor.isConnected());
+    backMotorConnectedAlert.set(!m_backElevatorMotor.isConnected());
   }
 }
