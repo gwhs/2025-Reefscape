@@ -29,7 +29,6 @@ public class DriveCommand extends Command {
   private double slowFactor;
   private boolean isSlow = true;
   private final double DEAD_BAND = 0.1;
-
   private boolean resetLimiter = true;
 
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
@@ -137,8 +136,9 @@ public class DriveCommand extends Command {
     this.mode = mode;
   }
 
-  public void setSlowMode(boolean isSlow) {
+  public void setSlowMode(boolean isSlow, double factor) {
     this.isSlow = isSlow;
+    factor = slowFactor;
   }
 
   public void setDriveMode(DriveMode driveMode) {
@@ -156,7 +156,6 @@ public class DriveCommand extends Command {
     double angularVelocity = -driverController.getRightX();
 
     if (isSlow) {
-      double slowFactor = getSlowFactor();
       xVelocity *= slowFactor;
       yVelocity *= slowFactor;
       angularVelocity *= slowFactor;
@@ -241,11 +240,5 @@ public class DriveCommand extends Command {
                     robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
   }
 
-  public double getSlowFactor() {
-    return slowFactor;
-  }
-
-  public void setSlowFactor(double factor) {
-    slowFactor = factor;
-  }
+  
 }
