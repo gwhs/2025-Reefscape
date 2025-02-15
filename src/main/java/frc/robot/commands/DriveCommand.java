@@ -26,7 +26,7 @@ public class DriveCommand extends Command {
   private final SlewRateLimiter xVelocityLimiter;
   private final SlewRateLimiter yVelocityLimiter;
   private final PIDController PID;
-
+  private double slowFactor;
   private boolean isSlow = true;
   private final double DEAD_BAND = 0.1;
 
@@ -156,7 +156,7 @@ public class DriveCommand extends Command {
     double angularVelocity = -driverController.getRightX();
 
     if (isSlow) {
-      double slowFactor = 0.25;
+      double slowFactor = getSlowFactor();
       xVelocity *= slowFactor;
       yVelocity *= slowFactor;
       angularVelocity *= slowFactor;
@@ -239,5 +239,13 @@ public class DriveCommand extends Command {
             () ->
                 drivetrain.setControl(
                     robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
+  }
+
+  public double getSlowFactor() {
+    return slowFactor;
+  }
+
+  public void setSlowFactor(double factor) {
+    slowFactor = factor;
   }
 }
