@@ -59,8 +59,6 @@ public class RobotContainer {
   private final LedSubsystem led = new LedSubsystem();
   private final DriveCommand driveCommand =
       new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
-  private final DriveCommand driveCommand =
-      new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
   public enum CoralLevel {
@@ -76,7 +74,6 @@ public class RobotContainer {
   public static final Trigger IS_L3 = new Trigger(() -> coralLevel == CoralLevel.L3);
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
-  public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
   public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);

@@ -17,9 +17,6 @@ import java.util.function.Supplier;
 
 public class AlignToPose extends Command {
   Supplier<Pose2d> targetPose;
-  private PIDController PID_X;
-  private PIDController PID_Y;
-  private PIDController PID_Rotation;
 
   private final double ELEVATOR_UP_SLEW_RATE = 0.5;
 
@@ -50,11 +47,6 @@ public class AlignToPose extends Command {
     this.drivetrain = drivetrain;
     this.targetPose = Pose;
     this.elevatorHeight = elevatorHeight;
-
-    PID_X = new PIDController(1.7, 0, 0); // same for now tune later
-    PID_Y = new PIDController(1.7, 0, 0);
-    PID_Rotation = new PIDController(0.1, 0, 0);
-    PID_Rotation.enableContinuousInput(-180, 180);
   }
 
   public void goToPoseWithPID(Pose2d targetPose) {
