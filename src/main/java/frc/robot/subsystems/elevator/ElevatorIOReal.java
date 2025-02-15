@@ -162,19 +162,17 @@ public class ElevatorIOReal implements ElevatorIO {
 
   @Override
   public void update() {
-   
-        
     BaseStatusSignal.refreshAll(
-                frontElevatorMotorPIDGoal,
-                frontElevatorMotorVoltage,
-                frontElevatorMotorStatorCurrent,
-                frontElevatorMotorPosition,
-                forwardLimit,
-                reverseLimit,
-                backElevatorMotorPIDGoal,
-                backElevatorMotorVoltage,
-                backElevatorMotorStatorCurrent,
-                backElevatorMotorPosition);
+        frontElevatorMotorPIDGoal,
+        frontElevatorMotorVoltage,
+        frontElevatorMotorStatorCurrent,
+        frontElevatorMotorPosition,
+        forwardLimit,
+        reverseLimit,
+        backElevatorMotorPIDGoal,
+        backElevatorMotorVoltage,
+        backElevatorMotorStatorCurrent,
+        backElevatorMotorPosition);
 
     DogLog.log("Elevator/Front Motor/pid goal", frontElevatorMotorPIDGoal.getValueAsDouble());
     DogLog.log("Elevator/Front Motor/motor voltage", frontElevatorMotorVoltage.getValueAsDouble());
