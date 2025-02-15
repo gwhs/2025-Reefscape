@@ -81,7 +81,7 @@ public class RobotContainer {
   private AprilTagCam cam3 =
       new AprilTagCam(
           AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
-          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_DEV,
+          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
@@ -89,7 +89,7 @@ public class RobotContainer {
   private AprilTagCam cam4 =
       new AprilTagCam(
           AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
-          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_DEV,
+          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
@@ -137,9 +137,14 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    IS_AT_POSE
-        .toggleOnTrue(led.setPattern(LEDPattern.solid(Color.kGreen)))
-        .toggleOnFalse(led.setPattern(LEDPattern.solid(Color.kBlack)));
+    drivetrain
+        .IS_ALIGNING_TO_POSE
+        .and(drivetrain.IS_AT_TARGET_POSE)
+        .onTrue(led.setPattern(LEDPattern.solid(Color.kGreen)));
+    drivetrain
+        .IS_ALIGNING_TO_POSE
+        .and(drivetrain.IS_AT_TARGET_POSE.negate())
+        .onTrue(led.setPattern(LEDPattern.solid(Color.kBlack)));
 
     IS_DISABLED.onTrue(
         Commands.runOnce(
@@ -239,10 +244,15 @@ public class RobotContainer {
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
     m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
     m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
+
+    // m_operatorController.y().whileTrue(elevator.sysIdQuasistatic(Direction.kForward));
+    // m_operatorController.b().whileTrue(elevator.sysIdQuasistatic(Direction.kReverse));
+    // m_operatorController.a().whileTrue(elevator.sysIdDynamic(Direction.kForward));
+    // m_operatorController.x().whileTrue(elevator.sysIdDynamic(Direction.kReverse));
   }
 
   public void periodic() {
-    DogLog.log("nearest (DELETE ME)", EagleUtil.closestReefSetPoint(drivetrain.getPose(), 0));
+    DogLog.log("nearest", EagleUtil.closestReefSetPoint(drivetrain.getPose(), 0));
     robotVisualizer.update();
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
