@@ -31,7 +31,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** Add your docs here. */
 public class AprilTagCam {
-  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
+  AprilTagFieldLayout aprilTagFieldLayout =
+      AprilTagFields.k2025ReefscapeAndyMark.loadAprilTagLayoutField();
 
   private final PhotonCamera cam;
   private final Consumer<AprilTagHelp> addVisionMeasurement;
@@ -62,7 +63,7 @@ public class AprilTagCam {
     this.currRobotPose = currRobotPose;
     this.currRobotSpeed = currRobotSpeed;
 
-    visionNotConnected = new Alert(str + "NOT CONNECTED", AlertType.kWarning);
+    visionNotConnected = new Alert(str + " NOT CONNECTED", AlertType.kError);
 
     photonEstimator =
         new PhotonPoseEstimator(
