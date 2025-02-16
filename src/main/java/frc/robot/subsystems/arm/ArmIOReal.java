@@ -40,7 +40,8 @@ public class ArmIOReal implements ArmIO {
   private final StatusSignal<Current> armStatorCurrent = armMotor.getStatorCurrent();
   private final StatusSignal<Angle> armPosition = armMotor.getPosition();
 
-  private final Alert armMotorConnectedAlert = new Alert("Arm motor not connected", AlertType.kError);
+  private final Alert armMotorConnectedAlert =
+      new Alert("Arm motor not connected", AlertType.kError);
 
   public ArmIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
