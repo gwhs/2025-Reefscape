@@ -185,9 +185,9 @@ public class RobotContainer {
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Coral Station"));
 
-    m_driverController.x().onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true)));
+    m_driverController.x().onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)));
 
-    m_driverController.x().onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false)));
+    m_driverController.x().onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0.25)));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
 
@@ -227,11 +227,11 @@ public class RobotContainer {
             Commands.startEnd(
                     () -> {
                       driveCommand.setDriveMode(DriveCommand.DriveMode.ROBOT_CENTRIC);
-                      driveCommand.setSlowMode(true);
+                      driveCommand.setSlowMode(true, 0.25);
                     },
                     () -> {
                       driveCommand.setDriveMode(DriveCommand.DriveMode.FIELD_CENTRIC);
-                      driveCommand.setSlowMode(false);
+                      driveCommand.setSlowMode(false, 0.25);
                     })
                 .withName("Slow and Robot Centric"));
 
