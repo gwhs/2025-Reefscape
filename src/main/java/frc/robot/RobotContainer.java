@@ -271,8 +271,7 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("FIVE_CYCLE_PROCESSOR", new FiveCycleProcessor(this));
-    autoChooser.addOption("Five_Cycle_Processor_2", new FiveCycleProcessor2(this));
+    autoChooser.setDefaultOption("Five_Cycle_Processor", new FiveCycleProcessor(this));
     autoChooser.addOption("Two_Cycle_Processor", new TwoCycleProcessor(this));
     autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
     autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
@@ -315,17 +314,17 @@ public class RobotContainer {
 
   // Sets elevator and arm to postion
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
-    return Commands.sequence(
-            elevator.setHeight(elevatorHeight).withTimeout(0.5),
-            arm.setAngle(armAngle).withTimeout(1))
+    return Commands.parallel(
+            elevator.setHeight(elevatorHeight).withTimeout(1),
+            arm.setAngle(armAngle).withTimeout(0.5))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
 
   // scores coral
   public Command scoreCoral() {
-    return Commands.sequence(
-            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
+    return Commands.parallel(
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(0.5),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral");
   }
@@ -358,9 +357,9 @@ public class RobotContainer {
   public Command prepScoreCoralL4() {
     double elevatorHeight = ElevatorConstants.L4_PREP_POSITION;
     double armAngle = ArmConstants.L4_PREP_POSITION;
-    return Commands.sequence(
-            elevator.setHeight(elevatorHeight).withTimeout(0.5),
-            arm.setAngle(armAngle).withTimeout(1))
+    return Commands.parallel(
+            elevator.setHeight(elevatorHeight).withTimeout(1),
+            arm.setAngle(armAngle).withTimeout(0.5))
         .withName("Prepare Score Coral L4");
   }
 
