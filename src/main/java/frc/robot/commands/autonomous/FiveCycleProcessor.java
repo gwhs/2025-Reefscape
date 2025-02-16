@@ -98,20 +98,20 @@ public class FiveCycleProcessor extends PathPlannerAuto {
                       AutoBuilder.followPath(C_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("CSP to C"));
 
-      event("atCSP_C")
-          .onTrue(
-              Commands.sequence(
-                      Commands.waitSeconds(waitTime),
-                      AutoBuilder.followPath(CSP_B).alongWith(robotContainer.coralHandoff()),
-                      robotContainer
-                          .prepScoreCoralL4()
-                          .deadlineFor(
-                              robotContainer.alignToPose(
-                                  () ->
-                                      EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
-                      robotContainer.scoreCoral(),
-                      AutoBuilder.followPath(B_CSP).alongWith(robotContainer.prepCoralIntake()))
-                  .withName("CSP to B"));
+      /*event("atCSP_C")
+      .onTrue(
+          Commands.sequence(
+                  Commands.waitSeconds(waitTime),
+                  AutoBuilder.followPath(CSP_B).alongWith(robotContainer.coralHandoff()),
+                  robotContainer
+                      .prepScoreCoralL4()
+                      .deadlineFor(
+                          robotContainer.alignToPose(
+                              () ->
+                                  EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
+                  robotContainer.scoreCoral(),
+                  AutoBuilder.followPath(B_CSP).alongWith(robotContainer.prepCoralIntake()))
+              .withName("CSP to B"));*/
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
