@@ -23,6 +23,8 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -37,6 +39,9 @@ public class ArmIOReal implements ArmIO {
   private final StatusSignal<Temperature> armDeviceTemp = armMotor.getDeviceTemp();
   private final StatusSignal<Current> armStatorCurrent = armMotor.getStatorCurrent();
   private final StatusSignal<Angle> armPosition = armMotor.getPosition();
+
+  private final Alert armMotorConnectedAlert =
+      new Alert("Arm motor not connected", AlertType.kError);
 
   public ArmIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
@@ -68,7 +73,7 @@ public class ArmIOReal implements ArmIO {
     motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
     motorOutput.NeutralMode = NeutralModeValue.Coast;
-    motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     softwareLimitSwitch.ForwardSoftLimitEnable = true;
     softwareLimitSwitch.ForwardSoftLimitThreshold = Units.degreesToRotations(330);
@@ -129,5 +134,7 @@ public class ArmIOReal implements ArmIO {
     DogLog.log("Arm/Motor/device temp", armDeviceTemp.getValueAsDouble());
     DogLog.log("Arm/Motor/stator current", armStatorCurrent.getValueAsDouble());
     DogLog.log("Arm/Motor/Connected", armConnected);
+
+    armMotorConnectedAlert.set(!armConnected);
   }
 }

@@ -27,6 +27,8 @@ import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 
 public class ElevatorIOReal implements ElevatorIO {
 
@@ -61,6 +63,11 @@ public class ElevatorIOReal implements ElevatorIO {
   private final StatusSignal<Current> backElevatorMotorStatorCurrent =
       m_backElevatorMotor.getStatorCurrent();
   private final StatusSignal<Angle> backElevatorMotorPosition = m_backElevatorMotor.getPosition();
+
+  private final Alert frontElevatorMotorConnectedAlert =
+      new Alert("Front Elevator Motor Not Connected", AlertType.kError);
+  private final Alert backElevatorMotorConnectedAlert =
+      new Alert("Back Elevator Motor Not Connected", AlertType.kError);
 
   public ElevatorIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
@@ -185,5 +192,8 @@ public class ElevatorIOReal implements ElevatorIO {
     DogLog.log(
         "Elevator/Back Motor/stator current", backElevatorMotorStatorCurrent.getValueAsDouble());
     DogLog.log("Elevator/Back Motor/position", backElevatorMotorPosition.getValueAsDouble());
+
+    frontElevatorMotorConnectedAlert.set(!m_frontElevatorMotor.isConnected());
+    backElevatorMotorConnectedAlert.set(!m_backElevatorMotor.isConnected());
   }
 }
