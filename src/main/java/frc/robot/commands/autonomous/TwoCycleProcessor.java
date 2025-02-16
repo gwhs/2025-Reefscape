@@ -20,6 +20,11 @@ public class TwoCycleProcessor extends PathPlannerAuto {
 
     try {
       PathPlannerPath SP_E = PathPlannerPath.fromPathFile("SP-E");
+      PathPlannerPath E_CSP = PathPlannerPath.fromPathFile("E-CSP");
+      PathPlannerPath CSP_D = PathPlannerPath.fromPathFile("CSP-D");
+      PathPlannerPath D_CSP = PathPlannerPath.fromPathFile("D-CSP");
+
+      double waitTime = 0.5;
 
       Pose2d startingPose =
           new Pose2d(SP_E.getPoint(0).position, SP_E.getIdealStartingState().rotation());
@@ -35,9 +40,31 @@ public class TwoCycleProcessor extends PathPlannerAuto {
                               robotContainer.alignToPose(
                                   () ->
                                       EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
-                      robotContainer.scoreCoralL4Command(),
-                      Commands.runOnce(() -> new TwoCycleProcessor2(robotContainer).schedule()))
+                      robotContainer.scoreCoralL4Command())
                   .withName("Leave SP to score preload at E"));
+
+      event("atE")
+          .onTrue(
+              Commands.sequence(
+                      AutoBuilder.followPath(E_CSP).alongWith(robotContainer.prepCoralIntake()))
+                  .withName("E to CSP"));
+
+      event("atCSP_E")
+          .onTrue(
+              Commands.sequence(
+                      Commands.waitSeconds(waitTime),
+                      AutoBuilder.followPath(CSP_D).alongWith(robotContainer.coralHandoff()),
+                      robotContainer
+                          .prepScoreCoralL4()
+                          .deadlineFor(
+                              robotContainer.alignToPose(
+                                  () ->
+                                      EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
+                      robotContainer.scoreCoralL4Command(),
+                      AutoBuilder.followPath(D_CSP).alongWith(robotContainer.prepCoralIntake()),
+                      Commands.waitSeconds(waitTime),
+                      robotContainer.coralHandoff())
+                  .withName("CSP to D"));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());

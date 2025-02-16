@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.2372435897435885,
-        "y": 1.868012820512821
+        "x": 7.35,
+        "y": 2.835
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.930271354538592,
-        "y": 2.4044462541414857
+        "x": 6.571500000000001,
+        "y": 2.7769999999999992
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "SC"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 2.8278205128205127
       },
       "prevControl": {
-        "x": 6.384114175650268,
-        "y": 2.2225096195321083
+        "x": 5.586749999999999,
+        "y": 2.7769999999999992
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,7 +55,7 @@
   "folder": "Auton-C5 (F-E)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 119.99999999999999
+    "rotation": 145.0
   },
   "useDefaultConstraints": true
 }
