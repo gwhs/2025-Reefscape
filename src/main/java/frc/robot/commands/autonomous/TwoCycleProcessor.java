@@ -33,19 +33,19 @@ public class TwoCycleProcessor extends PathPlannerAuto {
           .onTrue(
               Commands.sequence(
                       AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
-                      AutoBuilder.followPath(SP_E),
+                      AutoBuilder.followPath(SP_E))
+                  .withName("Leave SP to score preload at E"));
+
+      event("atE")
+          .onTrue(
+              Commands.sequence(
                       robotContainer
                           .prepScoreCoralL4()
                           .deadlineFor(
                               robotContainer.alignToPose(
                                   () ->
                                       EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
-                      robotContainer.scoreCoralL4Command())
-                  .withName("Leave SP to score preload at E"));
-
-      event("atE")
-          .onTrue(
-              Commands.sequence(
+                      robotContainer.scoreCoralL4Command(),
                       AutoBuilder.followPath(E_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("E to CSP"));
 
