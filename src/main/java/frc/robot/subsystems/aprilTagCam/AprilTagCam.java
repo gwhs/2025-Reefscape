@@ -33,6 +33,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** Add your docs here. */
 public class AprilTagCam {
+
   AprilTagFieldLayout aprilTagFieldLayout;
 
   private final PhotonCamera cam;
