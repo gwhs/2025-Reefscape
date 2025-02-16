@@ -6,7 +6,6 @@ package frc.robot.subsystems.aprilTagCam;
 import com.ctre.phoenix6.Utils;
 import dev.doglog.DogLog;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,6 +17,9 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.Filesystem;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** Add your docs here. */
 public class AprilTagCam {
+
   AprilTagFieldLayout aprilTagFieldLayout =
       AprilTagFields.k2025ReefscapeAndyMark.loadAprilTagLayoutField();
 
@@ -55,7 +58,16 @@ public class AprilTagCam {
       Consumer<AprilTagHelp> addVisionMeasurement,
       Supplier<Pose2d> currRobotPose,
       Supplier<ChassisSpeeds> currRobotSpeed) {
+
     PortForwarder.add(5800, "photonvision.local", 5800);
+    try {
+      aprilTagFieldLayout =
+          new AprilTagFieldLayout(
+              Path.of(Filesystem.getDeployDirectory().getPath(), "welded/2025-reef.json"));
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     cam = new PhotonCamera(str);
     this.addVisionMeasurement = addVisionMeasurement;

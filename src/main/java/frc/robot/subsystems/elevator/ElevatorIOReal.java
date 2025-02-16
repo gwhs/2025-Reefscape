@@ -68,7 +68,7 @@ public class ElevatorIOReal implements ElevatorIO {
       new Alert("Front Elevator Motor Not Connected", AlertType.kError);
   private final Alert backElevatorMotorConnectedAlert =
       new Alert("Back Elevator Motor Not Connected", AlertType.kError);
-
+  
   public ElevatorIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
     MotorOutputConfigs motorOutput = talonFXConfigs.MotorOutput;
@@ -193,7 +193,9 @@ public class ElevatorIOReal implements ElevatorIO {
         "Elevator/Back Motor/stator current", backElevatorMotorStatorCurrent.getValueAsDouble());
     DogLog.log("Elevator/Back Motor/position", backElevatorMotorPosition.getValueAsDouble());
 
+
     frontElevatorMotorConnectedAlert.set(!m_frontElevatorMotor.isConnected());
     backElevatorMotorConnectedAlert.set(!m_backElevatorMotor.isConnected());
+
   }
 }
