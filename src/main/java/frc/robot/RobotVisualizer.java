@@ -26,7 +26,7 @@ public class RobotVisualizer {
   public Color colorRed = Color.kFirstRed;
 
   // Code for the stick figure of each subsystems
-  MechanismRoot2d root = panel.getRoot("elevator", 0.5, 0.078);
+  MechanismRoot2d root = panel.getRoot("elevator", ROBOT_LENGTH/2, 0.078);
   MechanismLigament2d m_elevator =
       root.append(new MechanismLigament2d("elevatorL", 1.5, 90, 10, new Color8Bit(colorRed)));
   // arm
