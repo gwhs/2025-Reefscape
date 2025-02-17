@@ -243,4 +243,11 @@ public class DriveCommand extends Command {
                 drivetrain.setControl(
                     robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
   }
+
+  public Command stopDrivetrain() {
+    return drivetrain.run(
+        () ->
+            drivetrain.setControl(
+                robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
+  }
 }
