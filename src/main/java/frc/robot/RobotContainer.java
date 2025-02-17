@@ -327,10 +327,10 @@ public class RobotContainer {
   // scores coral
   public Command scoreCoral() {
     return Commands.sequence(
-            Commands.waitSeconds(0.3),
+            Commands.waitSeconds(0.2),
             Commands.parallel(
-                arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(0.3),
-                elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.3)))
+                arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(0.2),
+                elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.2)))
         .withName("Score Coral");
   }
 

@@ -32,7 +32,7 @@ public class FiveCycleProcessor extends PathPlannerAuto {
       PathPlannerPath CSP_B = PathPlannerPath.fromPathFile("CSP-B");
       PathPlannerPath B_CSP = PathPlannerPath.fromPathFile("B-CSP");
 
-      double waitTime = 0.5;
+      double waitTime = 0.3;
 
       Pose2d startingPose =
           new Pose2d(SC_F.getPoint(0).position, SC_F.getIdealStartingState().rotation());
@@ -70,7 +70,7 @@ public class FiveCycleProcessor extends PathPlannerAuto {
                       AutoBuilder.followPath(CSP_E)
                           .deadlineFor(
                               Commands.sequence(
-                                  Commands.waitSeconds(0.2),
+                                  Commands.waitSeconds(0.1),
                                   robotContainer.prepScoreCoral(
                                       ElevatorConstants.L4_PREP_POSITION,
                                       ArmConstants.L4_PREP_POSITION))),
@@ -91,7 +91,7 @@ public class FiveCycleProcessor extends PathPlannerAuto {
                       AutoBuilder.followPath(CSP_D)
                           .deadlineFor(
                               Commands.sequence(
-                                  Commands.waitSeconds(0.2),
+                                  Commands.waitSeconds(0.1),
                                   robotContainer.prepScoreCoral(
                                       ElevatorConstants.L4_PREP_POSITION,
                                       ArmConstants.L4_PREP_POSITION))),
@@ -112,7 +112,7 @@ public class FiveCycleProcessor extends PathPlannerAuto {
                       AutoBuilder.followPath(CSP_C)
                           .deadlineFor(
                               Commands.sequence(
-                                  Commands.waitSeconds(0.2),
+                                  Commands.waitSeconds(0.1),
                                   robotContainer.prepScoreCoral(
                                       ElevatorConstants.L4_PREP_POSITION,
                                       ArmConstants.L4_PREP_POSITION))),
