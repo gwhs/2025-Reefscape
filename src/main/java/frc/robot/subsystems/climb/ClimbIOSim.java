@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class ClimbIOSim implements ClimbIO {
 
-  private static LinearSystem<N2, N1, N2> plant = LinearSystemId.createDCMotorSystem(0, 0);
+  private static LinearSystem<N2, N1, N2> plant = LinearSystemId.createDCMotorSystem(0, 1);
 
   public DCMotorSim climbSim =
-      new DCMotorSim(plant, DCMotor.getFalcon500(1), ClimbConstants.CLIMB_MEASUREMENT_STDEV);
+      new DCMotorSim(plant, DCMotor.getFalcon500(1), ClimbConstants.CLIMB_MEASUREMENT_STDEV, 1);
 
   public ClimbIOSim() {}
 
