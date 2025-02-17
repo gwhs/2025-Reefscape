@@ -2,6 +2,7 @@ plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2025.3.1"
     id 'com.diffplug.spotless' version '6.20.0'
+    id 'com.peterabeles.gversion' version '1.10'
 }
 
 java {
@@ -168,4 +169,14 @@ spotless {
         indentWithSpaces(2)
         endWithNewline()
     }
+}
+
+project.compileJava.dependsOn(createVersionFile)
+gversion {
+    srcDir = "src/main/java"
+    classPackage = "frc.robot"
+    className = "BuildConstants"
+    dateFormat = "dd-MM-yy HH:mm:ss"
+    timeZone = "America/Los_angeles"
+    indent = "  "
 }
