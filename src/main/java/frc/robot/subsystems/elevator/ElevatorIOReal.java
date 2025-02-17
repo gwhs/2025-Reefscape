@@ -28,8 +28,8 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class ElevatorIOReal implements ElevatorIO {
 
@@ -70,7 +70,7 @@ public class ElevatorIOReal implements ElevatorIO {
   private final Alert backElevatorMotorConnectedAlert =
       new Alert("Back Elevator Motor Not Connected", AlertType.kError);
 
-  private DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.LIMIT_SWITCH_CHANNEL); 
+  private DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.LIMIT_SWITCH_CHANNEL);
 
   public ElevatorIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();

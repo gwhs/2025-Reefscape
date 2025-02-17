@@ -2,11 +2,8 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -18,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.EagleUtil;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import java.util.function.DoubleSupplier;
 
 public class DriveCommand extends Command {
   private static final double PID_MAX = 0.35;
