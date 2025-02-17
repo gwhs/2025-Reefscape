@@ -89,7 +89,7 @@ public class ElevatorIOReal implements ElevatorIO {
 
     motionMagicConfigs.MotionMagicCruiseVelocity = ElevatorConstants.MAX_VELOCITY;
     motionMagicConfigs.MotionMagicAcceleration = ElevatorConstants.MAX_ACCELERATION;
-    motionMagicConfigs.MotionMagicJerk = 3200; // Target jerk of 1600 rps/s/s (0.1 seconds)
+    motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
     currentConfig.withStatorCurrentLimitEnable(true);
     currentConfig.withStatorCurrentLimit(60);
