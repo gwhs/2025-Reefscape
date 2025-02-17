@@ -29,6 +29,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class ElevatorIOReal implements ElevatorIO {
 
@@ -68,6 +69,8 @@ public class ElevatorIOReal implements ElevatorIO {
       new Alert("Front Elevator Motor Not Connected", AlertType.kError);
   private final Alert backElevatorMotorConnectedAlert =
       new Alert("Back Elevator Motor Not Connected", AlertType.kError);
+
+  private DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.LIMIT_SWITCH_CHANNEL);
 
   public ElevatorIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
@@ -182,7 +185,7 @@ public class ElevatorIOReal implements ElevatorIO {
         backElevatorMotorVoltage,
         backElevatorMotorStatorCurrent,
         backElevatorMotorPosition);
-
+    DogLog.log("Elevator/Limit Switch/enabled", limitSwitch.get());
     DogLog.log("Elevator/Front Motor/pid goal", frontElevatorMotorPIDGoal.getValueAsDouble());
     DogLog.log("Elevator/Front Motor/motor voltage", frontElevatorMotorVoltage.getValueAsDouble());
     DogLog.log(

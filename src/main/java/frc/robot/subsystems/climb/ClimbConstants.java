@@ -1,7 +1,5 @@
 package frc.robot.subsystems.climb;
 
-import edu.wpi.first.math.numbers.*;
-
 public class ClimbConstants {
   public static final int CLIMB_ID = 56;
   public static final double CLIMB_GEAR_RATIO = 64.0;
