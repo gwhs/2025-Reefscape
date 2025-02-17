@@ -26,7 +26,7 @@ public class DriveCommand extends Command {
   private final SlewRateLimiter xVelocityLimiter;
   private final SlewRateLimiter yVelocityLimiter;
   private final PIDController PID;
-  private double slowFactor;
+  private double slowFactor = 0.25;
   private boolean isSlow = true;
   private final double DEAD_BAND = 0.1;
   private boolean resetLimiter = true;
@@ -202,7 +202,7 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/isSlow", isSlow);
     DogLog.log("Drive Command/targetMode", mode);
     DogLog.log("Drive Command/Drive Mode", driveMode);
-
+    DogLog.log("Drive Command/slowFactor", slowFactor);
     if (driveMode == DriveMode.ROBOT_CENTRIC) {
       drivetrain.setControl(
           robotCentricDrive
@@ -246,5 +246,12 @@ public class DriveCommand extends Command {
             () ->
                 drivetrain.setControl(
                     robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
+  }
+
+  public Command stopDrivetrain() {
+    return drivetrain.run(
+        () ->
+            drivetrain.setControl(
+                robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
   }
 }
