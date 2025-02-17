@@ -11,6 +11,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 
 public class TwoCycleProcessor2 extends PathPlannerAuto {
   public TwoCycleProcessor2(RobotContainer robotContainer) {
@@ -39,8 +41,8 @@ public class TwoCycleProcessor2 extends PathPlannerAuto {
                       robotContainer.prepCoralIntake(),
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_D).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoralL4(),
-                      robotContainer.scoreCoralL4Command(),
+                      robotContainer.prepScoreCoral(ElevatorConstants.L4_PREP_POSITION,ArmConstants.L4_PREP_POSITION), 
+                      robotContainer.scoreCoral(),
                       AutoBuilder.followPath(D_CSP).alongWith(robotContainer.prepCoralIntake()),
                       Commands.waitSeconds(waitTime),
                       robotContainer.coralHandoff())
