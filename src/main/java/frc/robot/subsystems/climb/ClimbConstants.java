@@ -1,6 +1,5 @@
 package frc.robot.subsystems.climb;
 
-import edu.wpi.first.math.numbers.*;
 
 public class ClimbConstants {
   public static final int CLIMB_ID = 56;
