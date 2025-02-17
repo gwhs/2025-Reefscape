@@ -26,10 +26,9 @@ public class DriveCommand extends Command {
   private final SlewRateLimiter xVelocityLimiter;
   private final SlewRateLimiter yVelocityLimiter;
   private final PIDController PID;
-
+  private double slowFactor = 0.25;
   private boolean isSlow = true;
   private final double DEAD_BAND = 0.1;
-
   private boolean resetLimiter = true;
 
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
@@ -64,7 +63,7 @@ public class DriveCommand extends Command {
     CAGE
   }
 
-  private TargetMode mode = TargetMode.CAGE;
+  private TargetMode mode = TargetMode.NORMAL;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
@@ -137,8 +136,10 @@ public class DriveCommand extends Command {
     this.mode = mode;
   }
 
-  public void setSlowMode(boolean isSlow) {
+  public void setSlowMode(boolean isSlow, double factor) {
     this.isSlow = isSlow;
+    factor = MathUtil.clamp(factor, 0, 1);
+    slowFactor = factor;
   }
 
   public void setDriveMode(DriveMode driveMode) {
@@ -156,11 +157,9 @@ public class DriveCommand extends Command {
 
     double xVelocity = -driverController.getLeftY();
     double yVelocity = -driverController.getLeftX();
-
     double angularVelocity = -driverController.getRightX();
 
     if (isSlow) {
-      double slowFactor = 0.25;
       xVelocity *= slowFactor;
       yVelocity *= slowFactor;
       angularVelocity *= slowFactor;
@@ -181,6 +180,10 @@ public class DriveCommand extends Command {
         yVelocityLimiter.reset(yVelocity);
         angularVelocityLimiter.reset(angularVelocity);
       }
+      xVelocity = MathUtil.clamp(xVelocity, -0.1, 0.1);
+      yVelocity = MathUtil.clamp(yVelocity, -0.1, 0.1);
+      angularVelocity = MathUtil.clamp(angularVelocity, -0.1, 0.1);
+
       xVelocity = xVelocityLimiter.calculate(xVelocity);
       yVelocity = yVelocityLimiter.calculate(yVelocity);
       angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
@@ -199,7 +202,7 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/isSlow", isSlow);
     DogLog.log("Drive Command/targetMode", mode);
     DogLog.log("Drive Command/Drive Mode", driveMode);
-
+    DogLog.log("Drive Command/slowFactor", slowFactor);
     if (driveMode == DriveMode.ROBOT_CENTRIC) {
       drivetrain.setControl(
           robotCentricDrive
@@ -215,11 +218,38 @@ public class DriveCommand extends Command {
     }
   }
 
+  public boolean isAtSetPoint() {
+    if (this.mode == TargetMode.CORAL_STATION || this.mode == TargetMode.REEF) {
+      return PID.atSetpoint();
+    }
+    return false;
+  }
+
   @Override
   public void end(boolean interrupted) {}
 
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  public Command driveBackward(double velocity) {
+    return drivetrain
+        .run(
+            () ->
+                drivetrain.setControl(
+                    robotCentricDrive
+                        .withVelocityX(-velocity)
+                        .withVelocityY(0)
+                        .withRotationalRate(0)))
+        .finallyDo(
+            () ->
+                drivetrain.setControl(
+                    robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
+  }
+
+  public void stopDrivetrain() {
+    drivetrain.setControl(
+        robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0));
   }
 }

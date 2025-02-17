@@ -6,7 +6,6 @@ package frc.robot.subsystems.aprilTagCam;
 import com.ctre.phoenix6.Utils;
 import dev.doglog.DogLog;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,7 +17,9 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import frc.robot.EagleUtil;
+import edu.wpi.first.wpilibj.Filesystem;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +33,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** Add your docs here. */
 public class AprilTagCam {
-  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
+
+  AprilTagFieldLayout aprilTagFieldLayout;
 
   private final PhotonCamera cam;
   private final Consumer<AprilTagHelp> addVisionMeasurement;
@@ -44,7 +46,8 @@ public class AprilTagCam {
   private final String ntKey;
   private boolean isConnected;
 
-  private final Alert visionNotConnected = new Alert("PHOTON NOT CONNECTED", AlertType.kWarning);
+  private final Alert visionNotConnected;
+
   Optional<EstimatedRobotPose> optionalEstimPose;
   private AprilTagHelp helper = new AprilTagHelp(null, 0, null);
 
@@ -54,13 +57,24 @@ public class AprilTagCam {
       Consumer<AprilTagHelp> addVisionMeasurement,
       Supplier<Pose2d> currRobotPose,
       Supplier<ChassisSpeeds> currRobotSpeed) {
+
     PortForwarder.add(5800, "photonvision.local", 5800);
+    try {
+      aprilTagFieldLayout =
+          new AprilTagFieldLayout(
+              Path.of(Filesystem.getDeployDirectory().getPath(), "welded/2025-reef.json"));
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     cam = new PhotonCamera(str);
     this.addVisionMeasurement = addVisionMeasurement;
     this.robotToCam = robotToCam;
     this.currRobotPose = currRobotPose;
     this.currRobotSpeed = currRobotSpeed;
+
+    visionNotConnected = new Alert(str + " NOT CONNECTED", AlertType.kError);
 
     photonEstimator =
         new PhotonPoseEstimator(
@@ -127,7 +141,7 @@ public class AprilTagCam {
 
       DogLog.log(ntKey + "Accepted Pose/", pos);
       DogLog.log(ntKey + "Accepted Time Stamp/", timestamp);
-      DogLog.log(ntKey + "Accepted Stdev/", sd);
+      DogLog.log(ntKey + "Accepted Stdev/", getSDArray(sd));
       DogLog.log(ntKey + "Unfiltered April Tags/", tagListUnfiltered.toArray(new Pose3d[0]));
       DogLog.log(ntKey + "Filtered April Tags/", tagListFiltered.toArray(new Pose3d[0]));
 
@@ -135,11 +149,15 @@ public class AprilTagCam {
     }
 
     DogLog.log(ntKey + "April Tag Cam Connected/", isConnected);
-    if (!isConnected) {
-      EagleUtil.triggerAlert(visionNotConnected);
-    } else if (isConnected) {
-      EagleUtil.detriggerAlert(visionNotConnected);
+    visionNotConnected.set(!isConnected);
+  }
+
+  public static double[] getSDArray(Matrix<N3, N1> sd) {
+    double[] sdArray = new double[3];
+    for (int i = 0; i < 3; i++) {
+      sdArray[i] = sd.get(i, 0);
     }
+    return sdArray;
   }
 
   public boolean filterResults(

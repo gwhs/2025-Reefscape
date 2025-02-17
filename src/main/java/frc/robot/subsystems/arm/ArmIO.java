@@ -6,4 +6,6 @@ public interface ArmIO {
   public double getPosition();
 
   public void update();
+
+  public void setVoltage(double volts);
 }

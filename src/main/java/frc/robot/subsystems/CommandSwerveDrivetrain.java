@@ -9,6 +9,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.subsystems.aprilTagCam.AprilTagHelp;
@@ -31,6 +33,22 @@ import java.util.function.Supplier;
  * be used in command-based projects.
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
+  public Trigger IS_ALIGNING_TO_POSE =
+      new Trigger(
+          () -> {
+            if (this.getCurrentCommand() != null) {
+              return this.getCurrentCommand().getName().equals("AlignToPose");
+            } else {
+              return false;
+            }
+          });
+
+  public PIDController PID_X = new PIDController(1.7, 0, 0);
+  public PIDController PID_Y = new PIDController(1.7, 0, 0);
+  public PIDController PID_Rotation = new PIDController(0.1, 0, 0);
+  public Trigger IS_AT_TARGET_POSE =
+      new Trigger(() -> PID_X.atSetpoint() && PID_Y.atSetpoint() && PID_Rotation.atSetpoint());
+
   private static final double kSimLoopPeriod = 0.005; // 5 ms
   private Notifier m_simNotifier = null;
   private double m_lastSimTime;
@@ -70,6 +88,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     if (Utils.isSimulation()) {
       startSimThread();
     }
+    PID_Rotation.setTolerance(0.5);
+    PID_Rotation.enableContinuousInput(-180, 180);
+    PID_Y.setTolerance(0.02);
+    PID_X.setTolerance(0.02);
     configureAutoBuilder();
   }
 
@@ -93,6 +115,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
       startSimThread();
     }
     configureAutoBuilder();
+  }
+
+  public void goToPoseWithPID(Pose2d targetPose) {
+    PID_X.setSetpoint(targetPose.getX());
+    PID_Y.setSetpoint(targetPose.getY());
+    PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
   }
 
   /**

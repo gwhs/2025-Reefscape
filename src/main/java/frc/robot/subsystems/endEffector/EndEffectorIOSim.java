@@ -5,6 +5,8 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 class EndEffectorIOSim implements EndEffectorIO {
   private FlywheelSim motor =
@@ -30,6 +32,17 @@ class EndEffectorIOSim implements EndEffectorIO {
   @Override
   public double getVoltage() {
     return motor.getInputVoltage();
+  }
+
+  private boolean coralSensor = false;
+
+  public EndEffectorIOSim() {
+    SmartDashboard.putData(
+        "Simulation/Coral Sensor", Commands.runOnce(() -> coralSensor = !coralSensor));
+  }
+
+  public boolean isSensorTriggered() {
+    return coralSensor;
   }
 
   @Override
