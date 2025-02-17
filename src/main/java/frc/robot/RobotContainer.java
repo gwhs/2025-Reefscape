@@ -149,6 +149,10 @@ public class RobotContainer {
                   elevator.setNeutralMode(NeutralModeValue.Coast);
                 })
             .ignoringDisable(true));
+    Commands.runOnce(
+        () -> {
+          driveCommand.stopDrivetrain();
+        });
 
     IS_DISABLED
         .and(() -> RobotController.getBatteryVoltage() >= 12)
