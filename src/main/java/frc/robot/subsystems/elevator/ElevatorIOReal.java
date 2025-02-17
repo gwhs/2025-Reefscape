@@ -163,8 +163,8 @@ public class ElevatorIOReal implements ElevatorIO {
     m_frontElevatorMotor.setNeutralMode(mode);
     m_backElevatorMotor.setNeutralMode(mode);
   }
-  
-  public void setPosition(double newValue){
+
+  public void setPosition(double newValue) {
     m_frontElevatorMotor.setPosition(newValue);
     m_backElevatorMotor.setPosition(newValue);
   }

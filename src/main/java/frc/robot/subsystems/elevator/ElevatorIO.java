@@ -8,7 +8,7 @@ public interface ElevatorIO {
 
   boolean[] metersToRotations = null;
 
-  public void setPosition(double newValue); 
+  public void setPosition(double newValue);
 
   public void setRotation(double rotation);
 
