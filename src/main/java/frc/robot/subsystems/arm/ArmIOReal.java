@@ -139,7 +139,6 @@ public class ArmIOReal implements ArmIO {
                 armStatorCurrent,
                 armPosition)
             .isOK());
-
     DogLog.log("Arm/Motor/pid goal", Units.rotationsToDegrees(armPIDGoal.getValueAsDouble()));
     DogLog.log("Arm/Motor/motor voltage", armMotorVoltage.getValueAsDouble());
     DogLog.log("Arm/Motor/supply voltage", armSupplyVoltage.getValueAsDouble());
