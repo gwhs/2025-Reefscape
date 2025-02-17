@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.EagleUtil;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 
 public class FiveCycleProcessor extends PathPlannerAuto {
   public FiveCycleProcessor(RobotContainer robotContainer) {
@@ -30,7 +32,7 @@ public class FiveCycleProcessor extends PathPlannerAuto {
       PathPlannerPath CSP_B = PathPlannerPath.fromPathFile("CSP-B");
       PathPlannerPath B_CSP = PathPlannerPath.fromPathFile("B-CSP");
 
-      double waitTime = 0.05;
+      double waitTime = 0.5;
 
       Pose2d startingPose =
           new Pose2d(SC_F.getPoint(0).position, SC_F.getIdealStartingState().rotation());
@@ -39,7 +41,11 @@ public class FiveCycleProcessor extends PathPlannerAuto {
           .onTrue(
               Commands.sequence(
                       AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
-                      AutoBuilder.followPath(SC_F))
+                      AutoBuilder.followPath(SC_F)
+                          .deadlineFor(
+                              robotContainer.prepScoreCoral(
+                                  ElevatorConstants.L4_PREP_POSITION,
+                                  ArmConstants.L4_PREP_POSITION)))
                   .withName("Leave SC to score preload at F"));
 
       event("atF")
@@ -51,13 +57,17 @@ public class FiveCycleProcessor extends PathPlannerAuto {
                           robotContainer.alignToPose(
                               () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
                   robotContainer.scoreCoral(),
-                  AutoBuilder.followPath(F_CSP).alongWith(robotContainer.coralHandoff())));
+                  AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntake())));
 
       event("atCSP_F")
           .onTrue(
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
-                      AutoBuilder.followPath(CSP_E).alongWith(robotContainer.coralHandoff()),
+                      AutoBuilder.followPath(CSP_E)
+                          .deadlineFor(
+                              robotContainer.prepScoreCoral(
+                                  ElevatorConstants.L4_PREP_POSITION,
+                                  ArmConstants.L4_PREP_POSITION)),
                       robotContainer
                           .prepScoreCoralL4()
                           .deadlineFor(
@@ -72,7 +82,11 @@ public class FiveCycleProcessor extends PathPlannerAuto {
           .onTrue(
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
-                      AutoBuilder.followPath(CSP_D).alongWith(robotContainer.coralHandoff()),
+                      AutoBuilder.followPath(CSP_D)
+                          .deadlineFor(
+                              robotContainer.prepScoreCoral(
+                                  ElevatorConstants.L4_PREP_POSITION,
+                                  ArmConstants.L4_PREP_POSITION)),
                       robotContainer
                           .prepScoreCoralL4()
                           .deadlineFor(
@@ -87,7 +101,11 @@ public class FiveCycleProcessor extends PathPlannerAuto {
           .onTrue(
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
-                      AutoBuilder.followPath(CSP_C).alongWith(robotContainer.coralHandoff()),
+                      AutoBuilder.followPath(CSP_C)
+                          .deadlineFor(
+                              robotContainer.prepScoreCoral(
+                                  ElevatorConstants.L4_PREP_POSITION,
+                                  ArmConstants.L4_PREP_POSITION)),
                       robotContainer
                           .prepScoreCoralL4()
                           .deadlineFor(
