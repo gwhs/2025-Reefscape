@@ -86,6 +86,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             Commands.runOnce(
                 () -> {
                   elevatorIO.setVoltage(0);
+                  elevatorIO.setPosition(0); 
                 }));
   }
 
