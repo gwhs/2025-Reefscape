@@ -41,7 +41,8 @@ public class TwoCycleProcessor2 extends PathPlannerAuto {
                       robotContainer.prepCoralIntake(),
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_D).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoral(ElevatorConstants.L4_PREP_POSITION,ArmConstants.L4_PREP_POSITION), 
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
                       AutoBuilder.followPath(D_CSP).alongWith(robotContainer.prepCoralIntake()),
                       Commands.waitSeconds(waitTime),

@@ -46,7 +46,8 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_E).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoral(ElevatorConstants.L4_PREP_POSITION,ArmConstants.L4_PREP_POSITION),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
                       AutoBuilder.followPath(E_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("CSP to E"));
@@ -56,7 +57,8 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_D).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoral(ElevatorConstants.L4_PREP_POSITION,ArmConstants.L4_PREP_POSITION),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
                       AutoBuilder.followPath(D_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("CSP to D"));
@@ -66,7 +68,8 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_C).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoral(ElevatorConstants.L4_PREP_POSITION,ArmConstants.L4_PREP_POSITION),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
                       AutoBuilder.followPath(C_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("CSP to C"));
@@ -76,7 +79,8 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_B).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoral(ElevatorConstants.L4_PREP_POSITION,ArmConstants.L4_PREP_POSITION),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
                       AutoBuilder.followPath(B_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("CSP to B"));

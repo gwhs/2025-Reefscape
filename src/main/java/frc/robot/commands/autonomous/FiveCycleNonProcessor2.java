@@ -41,27 +41,31 @@ public class FiveCycleNonProcessor2 extends PathPlannerAuto {
                       AutoBuilder.followPath(I_CS).alongWith(robotContainer.prepCoralIntake()))
                   .withName("I to Coral Station"));
 
-      event("atCS") //0, 0 values are supposed to be L4
+      event("atCS") // 0, 0 values are supposed to be L4
           .onTrue(
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CS_J).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoral(ElevatorConstants.L4_PREP_POSITION,ArmConstants.L4_PREP_POSITION),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
                       AutoBuilder.followPath(J_CS).alongWith(robotContainer.prepCoralIntake()),
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CS_K).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoral(ElevatorConstants.L4_PREP_POSITION,ArmConstants.L4_PREP_POSITION),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
                       AutoBuilder.followPath(K_CS).alongWith(robotContainer.prepCoralIntake()),
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CS_L).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoral(ElevatorConstants.L4_PREP_POSITION,ArmConstants.L4_PREP_POSITION),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
                       AutoBuilder.followPath(L_CS).alongWith(robotContainer.prepCoralIntake()),
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CS_A).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoral(ElevatorConstants.L4_PREP_POSITION,ArmConstants.L4_PREP_POSITION),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral())
                   .withName("CS to J to CS, CS to K to CS, CS to L to CS, CS to A"));
 

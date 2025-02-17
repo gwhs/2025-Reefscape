@@ -29,7 +29,8 @@ public class FiveCycleNonProcessor extends PathPlannerAuto {
               Commands.sequence(
                       AutoBuilder.resetOdom(startingPose),
                       AutoBuilder.followPath(SL_I),
-                      robotContainer.prepScoreCoral(ElevatorConstants.L4_PREP_POSITION,ArmConstants.L4_PREP_POSITION),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
                       Commands.runOnce(() -> new FiveCycleNonProcessor2(robotContainer).schedule()))
                   .withName("Leave SL, score preload at I"));
