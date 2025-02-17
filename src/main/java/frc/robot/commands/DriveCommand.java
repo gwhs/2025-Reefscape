@@ -151,9 +151,9 @@ public class DriveCommand extends Command {
     Pose2d currentRobotPose = drivetrain.getState().Pose;
     double currentRotation = currentRobotPose.getRotation().getDegrees();
 
-    double xVelocity = MathUtil.applyDeadband(-driverController.getLeftY(), 0.1);
-    double yVelocity = -MathUtil.applyDeadband(driverController.getLeftX(), 0.1);
-    double angularVelocity = MathUtil.applyDeadband(-driverController.getRightX(), 0.1);
+    double xVelocity = -driverController.getLeftY();
+    double yVelocity = -driverController.getLeftX();
+    double angularVelocity = -driverController.getRightX();
 
     if (isSlow) {
       xVelocity *= slowFactor;
