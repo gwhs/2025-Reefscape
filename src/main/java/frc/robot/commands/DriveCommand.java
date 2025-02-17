@@ -72,8 +72,8 @@ public class DriveCommand extends Command {
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
   private final SwerveRequest.RobotCentric robotCentricDrive =
       new SwerveRequest.RobotCentric()
-          .withDeadband(maxSpeed * 0.01)
-          .withRotationalDeadband(maxAngularRate * 0.01) // Add a 10% deadband
+          .withDeadband(maxSpeed * 0.0)
+          .withRotationalDeadband(maxAngularRate * 0.0) // Add a 10% deadband
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want robot-centric
 
   public DriveCommand(
