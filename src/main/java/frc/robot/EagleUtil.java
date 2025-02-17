@@ -152,6 +152,10 @@ public class EagleUtil {
     cachedPose = null;
   }
 
+  public static double getDistanceBetween(Pose2d poseA, Pose2d poseB) {
+    return poseA.getTranslation().getDistance(poseB.getTranslation());
+  }
+
   public static class PoseComparator implements Comparator<Pose2d> {
     public Pose2d robotPose;
 
