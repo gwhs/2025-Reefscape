@@ -10,6 +10,7 @@ import edu.wpi.first.math.util.Units;
 public class ElevatorConstants {
   public static final int FRONT_ELEVATOR_MOTOR_ID = 21;
   public static final int BACK_ELEVATOR_MOTOR_ID = 14;
+  public static final int LIMIT_SWITCH_CHANNEL = 0;
 
   public static final int GEAR_RATIO = 16;
   public static final double SPROCKET_DIAMETER = Units.inchesToMeters(1.7567);

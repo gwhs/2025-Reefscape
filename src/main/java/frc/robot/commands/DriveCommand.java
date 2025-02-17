@@ -26,10 +26,9 @@ public class DriveCommand extends Command {
   private final SlewRateLimiter xVelocityLimiter;
   private final SlewRateLimiter yVelocityLimiter;
   private final PIDController PID;
-
+  private double slowFactor = 0.25;
   private boolean isSlow = true;
   private final double DEAD_BAND = 0.1;
-
   private boolean resetLimiter = true;
 
   private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
@@ -52,7 +51,7 @@ public class DriveCommand extends Command {
     FIELD_CENTRIC
   }
 
-  DriveMode driveMode = DriveMode.FIELD_CENTRIC;
+  private DriveMode driveMode = DriveMode.FIELD_CENTRIC;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
@@ -137,12 +136,18 @@ public class DriveCommand extends Command {
     this.mode = mode;
   }
 
-  public void setSlowMode(boolean isSlow) {
+  public void setSlowMode(boolean isSlow, double factor) {
     this.isSlow = isSlow;
+    factor = MathUtil.clamp(factor, 0, 1);
+    slowFactor = factor;
   }
 
   public void setDriveMode(DriveMode driveMode) {
     this.driveMode = driveMode;
+  }
+
+  public TargetMode getTargetMode() {
+    return this.mode;
   }
 
   @Override
@@ -152,11 +157,9 @@ public class DriveCommand extends Command {
 
     double xVelocity = -driverController.getLeftY();
     double yVelocity = -driverController.getLeftX();
-
     double angularVelocity = -driverController.getRightX();
 
     if (isSlow) {
-      double slowFactor = 0.25;
       xVelocity *= slowFactor;
       yVelocity *= slowFactor;
       angularVelocity *= slowFactor;
@@ -199,7 +202,7 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/isSlow", isSlow);
     DogLog.log("Drive Command/targetMode", mode);
     DogLog.log("Drive Command/Drive Mode", driveMode);
-
+    DogLog.log("Drive Command/slowFactor", slowFactor);
     if (driveMode == DriveMode.ROBOT_CENTRIC) {
       drivetrain.setControl(
           robotCentricDrive
@@ -243,5 +246,10 @@ public class DriveCommand extends Command {
             () ->
                 drivetrain.setControl(
                     robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
+  }
+
+  public void stopDrivetrain() {
+    drivetrain.setControl(
+        robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0));
   }
 }
