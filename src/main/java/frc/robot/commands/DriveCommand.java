@@ -51,7 +51,7 @@ public class DriveCommand extends Command {
     FIELD_CENTRIC
   }
 
-  DriveMode driveMode = DriveMode.FIELD_CENTRIC;
+  private DriveMode driveMode = DriveMode.FIELD_CENTRIC;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
@@ -144,6 +144,10 @@ public class DriveCommand extends Command {
 
   public void setDriveMode(DriveMode driveMode) {
     this.driveMode = driveMode;
+  }
+
+  public TargetMode getTargetMode() {
+    return this.mode;
   }
 
   @Override
