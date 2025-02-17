@@ -29,6 +29,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class ElevatorIOReal implements ElevatorIO {
 
@@ -69,6 +70,8 @@ public class ElevatorIOReal implements ElevatorIO {
   private final Alert backElevatorMotorConnectedAlert =
       new Alert("Back Elevator Motor Not Connected", AlertType.kError);
 
+  private DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.LIMIT_SWITCH_CHANNEL);
+
   public ElevatorIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
     MotorOutputConfigs motorOutput = talonFXConfigs.MotorOutput;
@@ -108,7 +111,7 @@ public class ElevatorIOReal implements ElevatorIO {
     hardwareLimitSwitchConfigs.ReverseLimitEnable = true;
     hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyOpen;
     hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
-    hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionEnable = true;
+    hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionEnable = false;
     hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionValue = 0;
 
     StatusCode backStatus = StatusCode.StatusCodeNotInitialized;
@@ -164,6 +167,11 @@ public class ElevatorIOReal implements ElevatorIO {
     m_backElevatorMotor.setNeutralMode(mode);
   }
 
+  public void setPosition(double newValue) {
+    m_frontElevatorMotor.setPosition(newValue);
+    m_backElevatorMotor.setPosition(newValue);
+  }
+
   @Override
   public void update() {
     BaseStatusSignal.refreshAll(
@@ -177,7 +185,7 @@ public class ElevatorIOReal implements ElevatorIO {
         backElevatorMotorVoltage,
         backElevatorMotorStatorCurrent,
         backElevatorMotorPosition);
-
+    DogLog.log("Elevator/Limit Switch/enabled", limitSwitch.get());
     DogLog.log("Elevator/Front Motor/pid goal", frontElevatorMotorPIDGoal.getValueAsDouble());
     DogLog.log("Elevator/Front Motor/motor voltage", frontElevatorMotorVoltage.getValueAsDouble());
     DogLog.log(
