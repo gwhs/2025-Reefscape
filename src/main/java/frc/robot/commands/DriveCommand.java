@@ -155,10 +155,9 @@ public class DriveCommand extends Command {
     double yVelocity = -driverController.getLeftX();
     double angularVelocity = -driverController.getRightX();
 
-    xVelocity = Math.signum(xVelocity) * MathUtil.applyDeadband(driverController.getLeftY(), 0.1);
-    yVelocity = Math.signum(yVelocity) * MathUtil.applyDeadband(driverController.getLeftX(), 0.1);
-    angularVelocity =
-        Math.signum(angularVelocity) * MathUtil.applyDeadband(driverController.getRightX(), 0.1);
+    xVelocity = Math.signum(xVelocity) * MathUtil.applyDeadband(driverController.getLeftY(), 0.5);
+    yVelocity = Math.signum(yVelocity) * MathUtil.applyDeadband(driverController.getLeftX(), 0.5);
+    angularVelocity = MathUtil.applyDeadband(driverController.getRightX(), 0.5);
 
     if (isSlow) {
       xVelocity *= slowFactor;
