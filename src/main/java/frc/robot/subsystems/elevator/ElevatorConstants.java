@@ -33,4 +33,5 @@ public class ElevatorConstants {
 
   public static final double MAX_VELOCITY = 80; // rps
   public static final double MAX_ACCELERATION = 160; // rps
+  public static final int LIMIT_SWITCH_CHANNEL = 0;
 }

@@ -35,6 +35,7 @@ import frc.robot.subsystems.aprilTagCam.AprilTagCam;
 import frc.robot.subsystems.aprilTagCam.AprilTagCamConstants;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
@@ -58,6 +59,7 @@ public class RobotContainer {
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
   private final LedSubsystem led = new LedSubsystem();
+  private final ClimbSubsystem climb = new ClimbSubsystem();
   private final DriveCommand driveCommand =
       new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
@@ -183,9 +185,9 @@ public class RobotContainer {
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Coral Station"));
 
-    m_driverController.x().onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true)));
+    m_driverController.x().onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)));
 
-    m_driverController.x().onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false)));
+    m_driverController.x().onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0.25)));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
 
@@ -225,11 +227,11 @@ public class RobotContainer {
             Commands.startEnd(
                     () -> {
                       driveCommand.setDriveMode(DriveCommand.DriveMode.ROBOT_CENTRIC);
-                      driveCommand.setSlowMode(true);
+                      driveCommand.setSlowMode(true, 0.25);
                     },
                     () -> {
                       driveCommand.setDriveMode(DriveCommand.DriveMode.FIELD_CENTRIC);
-                      driveCommand.setSlowMode(false);
+                      driveCommand.setSlowMode(false, 0.25);
                     })
                 .withName("Slow and Robot Centric"));
 

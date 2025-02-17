@@ -1,8 +1,11 @@
 package frc.robot.subsystems.arm;
 
+import static edu.wpi.first.units.Units.Rotations;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -12,11 +15,13 @@ import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -30,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 public class ArmIOReal implements ArmIO {
   private TalonFX armMotor = new TalonFX(ArmConstants.ARM_MOTOR_ID, "rio");
+  private CANcoder armEncoder = new CANcoder(ArmConstants.ARM_ENCODER_ID, "rio");
   private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
   private final VoltageOut m_voltReq = new VoltageOut(0.0);
 
@@ -40,7 +46,8 @@ public class ArmIOReal implements ArmIO {
   private final StatusSignal<Current> armStatorCurrent = armMotor.getStatorCurrent();
   private final StatusSignal<Angle> armPosition = armMotor.getPosition();
 
-  private final Alert motorConnectedAlert = new Alert("Arm motor not connected", AlertType.kError);
+  private final Alert armMotorConnectedAlert =
+      new Alert("Arm motor not connected", AlertType.kError);
 
   public ArmIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
@@ -93,6 +100,12 @@ public class ArmIOReal implements ArmIO {
 
     BaseStatusSignal.setUpdateFrequencyForAll(50.0, armPIDGoal, armStatorCurrent);
 
+    CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
+    cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0;
+    cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    cc_cfg.MagnetSensor.withMagnetOffset(Rotations.of(0.4));
+    armEncoder.getConfigurator().apply(cc_cfg);
+
     SmartDashboard.putData(
         "Arm Command/reset to 90",
         Commands.runOnce(() -> armMotor.setPosition(Units.degreesToRotations(90)))
@@ -126,7 +139,6 @@ public class ArmIOReal implements ArmIO {
                 armStatorCurrent,
                 armPosition)
             .isOK());
-
     DogLog.log("Arm/Motor/pid goal", Units.rotationsToDegrees(armPIDGoal.getValueAsDouble()));
     DogLog.log("Arm/Motor/motor voltage", armMotorVoltage.getValueAsDouble());
     DogLog.log("Arm/Motor/supply voltage", armSupplyVoltage.getValueAsDouble());
@@ -134,6 +146,6 @@ public class ArmIOReal implements ArmIO {
     DogLog.log("Arm/Motor/stator current", armStatorCurrent.getValueAsDouble());
     DogLog.log("Arm/Motor/Connected", armConnected);
 
-    motorConnectedAlert.set(!armConnected);
+    armMotorConnectedAlert.set(!armConnected);
   }
 }
