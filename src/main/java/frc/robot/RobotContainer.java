@@ -285,6 +285,10 @@ public class RobotContainer {
     return drivetrain.getPose();
   }
 
+  public Command zeroElevator() {
+    return elevator.homingCommand();
+  }
+
   public Command alignToPose(Supplier<Pose2d> Pose) {
     return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters());
   }

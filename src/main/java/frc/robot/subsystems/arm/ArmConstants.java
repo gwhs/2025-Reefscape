@@ -2,7 +2,7 @@ package frc.robot.subsystems.arm;
 
 public class ArmConstants {
   public static final int ARM_MOTOR_ID = 15;
-  public static final int ARM_ENCODER_ID = 0;
+  public static final int ARM_ENCODER_ID = 5;
   public static final double MAX_VELOCITY = 80; // rotation per second
   public static final double MAX_ACCELERATION = 80; // rotation per second per second
   public static final double ARM_GEAR_RATIO = 64.0;
