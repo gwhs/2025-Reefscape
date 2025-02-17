@@ -108,7 +108,7 @@ public class ElevatorIOReal implements ElevatorIO {
     hardwareLimitSwitchConfigs.ReverseLimitEnable = true;
     hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyOpen;
     hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
-    hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionEnable = true;
+    hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionEnable = false;
     hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionValue = 0;
 
     StatusCode backStatus = StatusCode.StatusCodeNotInitialized;
