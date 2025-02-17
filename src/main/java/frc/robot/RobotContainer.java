@@ -156,6 +156,10 @@ public class RobotContainer {
                   elevator.setNeutralMode(NeutralModeValue.Coast);
                 })
             .ignoringDisable(true));
+    Commands.runOnce(
+        () -> {
+          driveCommand.stopDrivetrain();
+        });
 
     IS_DISABLED
         .and(() -> RobotController.getBatteryVoltage() >= 12)
@@ -368,9 +372,5 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral L4");
-  }
-
-  public Command stopDriveTrain() {
-    return Commands.runOnce(() -> driveCommand.stopDrivetrain());
   }
 }
