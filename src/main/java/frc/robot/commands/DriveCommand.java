@@ -146,7 +146,7 @@ public class DriveCommand extends Command {
     this.driveMode = driveMode;
   }
 
-  public TargetMode TargetMode() {
+  public TargetMode getTargetMode() {
     return this.mode;
   }
 

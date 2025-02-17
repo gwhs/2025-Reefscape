@@ -106,7 +106,7 @@ public class RobotContainer {
           () -> drivetrain.getState().Speeds);
 
   public final Trigger IS_REEFMODE =
-      new Trigger(() -> driveCommand.TargetMode() == TargetMode.REEF);
+      new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
