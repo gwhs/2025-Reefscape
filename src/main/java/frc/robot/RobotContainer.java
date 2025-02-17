@@ -209,11 +209,11 @@ public class RobotContainer {
             Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
                 .withName("Back to Original State"));
 
-    IS_TELEOP
-        .and(IS_REEFMODE)
-        .and(IS_CLOSE_TO_REEF)
-        .onTrue(
-            prepScoreCoral(ElevatorConstants.STOW_METER, 220).withName("auto prep score coral"));
+    // IS_TELEOP
+    //     .and(IS_REEFMODE)
+    //     .and(IS_CLOSE_TO_REEF)
+    //     .onTrue(
+    //         prepScoreCoral(ElevatorConstants.STOW_METER, 220).withName("auto prep score coral"));
 
     IS_L4
         .and(m_driverController.rightTrigger())
