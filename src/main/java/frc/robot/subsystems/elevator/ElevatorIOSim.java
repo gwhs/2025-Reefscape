@@ -49,4 +49,10 @@ public class ElevatorIOSim implements ElevatorIO {
   public void setVoltage(double voltage) {
     elevatorSim.setInputVoltage(voltage);
   }
+
+  @Override
+  public void setPosition(double newValue) {
+    // TODO Auto-generated method stub
+    elevatorSim.setState(newValue, ElevatorConstants.MAX_VELOCITY);
+  }
 }
