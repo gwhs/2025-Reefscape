@@ -2,8 +2,11 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -15,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.EagleUtil;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import java.util.function.DoubleSupplier;
 
 public class DriveCommand extends Command {
   private static final double PID_MAX = 0.35;
@@ -68,7 +70,7 @@ public class DriveCommand extends Command {
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
           .withDeadband(maxSpeed * 0.1)
-          .withRotationalDeadband(maxAngularRate * 0.01) // Add a 10% deadband
+          .withRotationalDeadband(maxAngularRate * 0.1) // Add a 10% deadband
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
   private final SwerveRequest.RobotCentric robotCentricDrive =
       new SwerveRequest.RobotCentric()
@@ -151,9 +153,10 @@ public class DriveCommand extends Command {
     Pose2d currentRobotPose = drivetrain.getState().Pose;
     double currentRotation = currentRobotPose.getRotation().getDegrees();
 
-    double xVelocity = MathUtil.applyDeadband(-driverController.getLeftY(), 0.1);
-    double yVelocity = -MathUtil.applyDeadband(driverController.getLeftX(), 0.1);
-    double angularVelocity = MathUtil.applyDeadband(-driverController.getRightX(), 0.1);
+    double xVelocity = -driverController.getLeftY();
+    double yVelocity = -driverController.getLeftX();
+
+    double angularVelocity = -driverController.getRightX();
 
     if (isSlow) {
       xVelocity *= slowFactor;
