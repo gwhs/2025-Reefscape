@@ -111,7 +111,7 @@ public class ElevatorIOReal implements ElevatorIO {
     hardwareLimitSwitchConfigs.ReverseLimitEnable = true;
     hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyOpen;
     hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
-    hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionEnable = true;
+    hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionEnable = false;
     hardwareLimitSwitchConfigs.ReverseLimitAutosetPositionValue = 0;
 
     StatusCode backStatus = StatusCode.StatusCodeNotInitialized;
@@ -165,6 +165,11 @@ public class ElevatorIOReal implements ElevatorIO {
   public void setNeutralMode(NeutralModeValue mode) {
     m_frontElevatorMotor.setNeutralMode(mode);
     m_backElevatorMotor.setNeutralMode(mode);
+  }
+
+  public void setPosition(double newValue) {
+    m_frontElevatorMotor.setPosition(newValue);
+    m_backElevatorMotor.setPosition(newValue);
   }
 
   @Override
