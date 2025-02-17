@@ -43,6 +43,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     SmartDashboard.putData("Elevator to 0.25", setHeight(0.25));
     SmartDashboard.putData("Elevator to 0.7", setHeight(0.7));
     SmartDashboard.putData("Elevator to 0.5", setHeight(0.5));
+    SmartDashboard.putData("Elevator Commands/0 elevator", homingCommand());
   }
 
   @Override
@@ -79,6 +80,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   public Command homingCommand() {
     return this.runOnce(
             () -> {
+              elevatorIO.setPosition(metersToRotations(ElevatorConstants.TOP_METER));
               elevatorIO.setVoltage(-3);
             })
         .andThen(Commands.waitUntil(() -> elevatorIO.getReverseLimit()))
