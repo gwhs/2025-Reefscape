@@ -67,13 +67,13 @@ public class DriveCommand extends Command {
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
-          .withDeadband(maxSpeed * 0.1)
+          .withDeadband(maxSpeed * 0.01)
           .withRotationalDeadband(maxAngularRate * 0.01) // Add a 10% deadband
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
   private final SwerveRequest.RobotCentric robotCentricDrive =
       new SwerveRequest.RobotCentric()
-          .withDeadband(maxSpeed * 0.1)
-          .withRotationalDeadband(maxAngularRate * 0.1) // Add a 10% deadband
+          .withDeadband(maxSpeed * 0.01)
+          .withRotationalDeadband(maxAngularRate * 0.01) // Add a 10% deadband
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want robot-centric
 
   public DriveCommand(
@@ -150,9 +150,9 @@ public class DriveCommand extends Command {
   public void execute() {
     Pose2d currentRobotPose = drivetrain.getState().Pose;
     double currentRotation = currentRobotPose.getRotation().getDegrees();
-    double xVelocity = MathUtil.applyDeadband(-driverController.getLeftY(), 0.1);
+    double xVelocity = -MathUtil.applyDeadband(driverController.getLeftY(), 0.1);
     double yVelocity = -MathUtil.applyDeadband(driverController.getLeftX(), 0.1);
-    double angularVelocity = MathUtil.applyDeadband(-driverController.getRightX(), 0.1);
+    double angularVelocity = -MathUtil.applyDeadband(driverController.getRightX(), 0.1);
 
     if (isSlow) {
       xVelocity *= slowFactor;
