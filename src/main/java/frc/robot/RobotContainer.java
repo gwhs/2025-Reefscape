@@ -78,7 +78,12 @@ public class RobotContainer {
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
-  public final Trigger IS_NEAR_CORAL_STATION = new Trigger(() -> EagleUtil.getDistanceBetween(drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose())) < 0.2);
+  public final Trigger IS_NEAR_CORAL_STATION =
+      new Trigger(
+          () ->
+              EagleUtil.getDistanceBetween(
+                      drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
+                  < 0.2);
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
@@ -187,7 +192,10 @@ public class RobotContainer {
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Coral Station"));
 
-    m_driverController.x().and(IS_NEAR_CORAL_STATION).onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)));
+    m_driverController
+        .x()
+        .and(IS_NEAR_CORAL_STATION)
+        .onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)));
 
     m_driverController.x().onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0.25)));
 

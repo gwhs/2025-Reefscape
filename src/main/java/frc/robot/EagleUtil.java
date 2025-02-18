@@ -200,16 +200,15 @@ public class EagleUtil {
     return Commands.runOnce(() -> alert.set(false));
   }
 
-  public static Pose2d blueCoralStationProcessorSide = new Pose2d(1.0, 0.27, Rotation2d.kZero );
+  public static Pose2d blueCoralStationProcessorSide = new Pose2d(1.0, 0.27, Rotation2d.kZero);
   public static Pose2d blueCoralStationNonProcessorSide = new Pose2d(1.0, 7.313, Rotation2d.kZero);
-  public static Pose2d redCoralStationProcessorSide = new Pose2d(16.5,5.6, Rotation2d.kZero);
-  public static Pose2d redCoralStationNonProcessorSide = new Pose2d(16.5,7.415, Rotation2d.kZero);
-
+  public static Pose2d redCoralStationProcessorSide = new Pose2d(16.5, 5.6, Rotation2d.kZero);
+  public static Pose2d redCoralStationNonProcessorSide = new Pose2d(16.5, 7.415, Rotation2d.kZero);
 
   public static Pose2d getProcessorForAlliance() {
     if (isRedAlliance()) {
       return redCoralStationProcessorSide;
-    } 
+    }
     return blueCoralStationProcessorSide;
   }
 
@@ -221,10 +220,10 @@ public class EagleUtil {
   }
 
   public static Pose2d getClosetStationGen(Pose2d pose) {
-    if (getDistanceBetween(pose, getNonProcessorForAlliance()) < getDistanceBetween(pose, getProcessorForAlliance())) {
+    if (getDistanceBetween(pose, getNonProcessorForAlliance())
+        < getDistanceBetween(pose, getProcessorForAlliance())) {
       return getNonProcessorForAlliance();
     }
-      return getProcessorForAlliance();
+    return getProcessorForAlliance();
   }
-
 }
