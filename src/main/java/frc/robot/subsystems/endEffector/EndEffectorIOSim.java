@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 class EndEffectorIOSim implements EndEffectorIO {
   private FlywheelSim motor =
       new FlywheelSim(
-          LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60(1), 0.001, 1),
+          LinearSystemId.createFlywheelSystem(DCMotor.getFalcon500Foc(1), 0.001, 1),
           DCMotor.getKrakenX60(1));
 
   @Override
