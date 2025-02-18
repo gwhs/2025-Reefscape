@@ -199,8 +199,6 @@ public class RobotContainer {
 
     IS_NEAR_CORAL_STATION.onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0)));
 
-    m_driverController.x().onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0.25)));
-
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
 
     m_driverController
