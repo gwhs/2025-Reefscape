@@ -1,5 +1,6 @@
 package frc.robot.subsystems.climb;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,24 +18,33 @@ public class ClimbSubsystem extends SubsystemBase {
       climbIO = new ClimbIOReal();
     }
 
-    SmartDashboard.putData("Climb Command/turn to 60 degrees", setPosition(60));
-    SmartDashboard.putData("Climb Command/turn to 120 degrees", setPosition(120));
+    SmartDashboard.putData("Climb Command/extend", extend());
+    SmartDashboard.putData("Climb Command/retract", retract());
   }
 
   @Override
   public void periodic() {
     climbIO.update();
+    DogLog.log("Climb/Climb Position", getPosition());
   }
 
   public double getPosition() {
     return climbIO.getPosition();
   }
 
-  public Command setPosition(double desiredPos) {
+  public Command extend() {
     return this.runOnce(
             () -> {
-              climbIO.setPosition(desiredPos);
+              climbIO.setPosition(ClimbConstants.EXTEND_CLIMB_POSITION);
             })
-        .andThen(Commands.waitUntil(() -> MathUtil.isNear(desiredPos, climbIO.getPosition(), 0.1)));
+        .andThen(Commands.waitUntil(() -> MathUtil.isNear(ClimbConstants.EXTEND_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
+  }
+
+  public Command retract() {
+    return this.runOnce(
+            () -> {
+              climbIO.setPosition(ClimbConstants.RETRACT_CLIMB_POSITION);
+            })
+        .andThen(Commands.waitUntil(() -> MathUtil.isNear(ClimbConstants.RETRACT_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
   }
 }
