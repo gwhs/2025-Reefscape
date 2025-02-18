@@ -68,13 +68,13 @@ public class DriveCommand extends Command {
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
           .withDeadband(maxSpeed * 0.0)
-          .withRotationalDeadband(maxAngularRate * 0.0) // Add a 10% deadband
-          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+          .withRotationalDeadband(maxAngularRate * 0.0)
+          .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private final SwerveRequest.RobotCentric robotCentricDrive =
       new SwerveRequest.RobotCentric()
           .withDeadband(maxSpeed * 0.0)
-          .withRotationalDeadband(maxAngularRate * 0.0) // Add a 10% deadband
-          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want robot-centric
+          .withRotationalDeadband(maxAngularRate * 0.0)
+          .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
   public DriveCommand(
       CommandXboxController driverController,
