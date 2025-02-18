@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.DriveCommand.TargetMode;
 import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.commands.autonomous.*;
 import frc.robot.generated.TunerConstants;
@@ -78,14 +77,8 @@ public class RobotContainer {
   public static final Trigger IS_L3 = new Trigger(() -> coralLevel == CoralLevel.L3);
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
-  public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
-  public final Trigger IS_CLOSE_TO_REEF =
-      new Trigger(
-          () ->
-              EagleUtil.getDistanceBetween(
-                      drivetrain.getPose(), EagleUtil.getCachedReefPose(drivetrain.getPose()))
-                  < 1.25);
   public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
+  public final Trigger IS_NEAR_CORAL_STATION = new Trigger(() -> EagleUtil.getDistanceBetween(drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose())) < 0.2);
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
@@ -104,9 +97,6 @@ public class RobotContainer {
           drivetrain::addVisionMeasurent,
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
-
-  public final Trigger IS_REEFMODE =
-      new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -197,7 +187,7 @@ public class RobotContainer {
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Coral Station"));
 
-    m_driverController.x().onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)));
+    m_driverController.x().and(IS_NEAR_CORAL_STATION).onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)));
 
     m_driverController.x().onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0.25)));
 
@@ -208,12 +198,6 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
                 .withName("Back to Original State"));
-
-    // IS_TELEOP
-    //     .and(IS_REEFMODE)
-    //     .and(IS_CLOSE_TO_REEF)
-    //     .onTrue(
-    //         prepScoreCoral(ElevatorConstants.STOW_METER, 220).withName("auto prep score coral"));
 
     IS_L4
         .and(m_driverController.rightTrigger())
