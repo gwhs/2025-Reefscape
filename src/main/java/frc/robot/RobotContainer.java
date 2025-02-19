@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -131,14 +130,7 @@ public class RobotContainer {
 
     PathfindingCommand.warmupCommand().schedule();
 
-    SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
-    SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
-    SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
-    SmartDashboard.putData(
-        "Robot Command/prep score", prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
-    SmartDashboard.putData("Robot Command/Score L4", scoreCoralL4());
-    SmartDashboard.putData("Robot Command/Score Coral", scoreCoral());
-    SmartDashboard.putData("Robot Command/Prep Score Coral", prepScoreCoral(0, 0));
+    // SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
 
     // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();

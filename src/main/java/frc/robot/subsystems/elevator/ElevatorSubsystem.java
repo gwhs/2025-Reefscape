@@ -12,7 +12,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -38,11 +37,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     } else {
       elevatorIO = new ElevatorIOReal();
     }
-
-    SmartDashboard.putData("Elevator to 0", setHeight(0));
-    SmartDashboard.putData("Elevator to 0.25", setHeight(0.25));
-    SmartDashboard.putData("Elevator to 0.7", setHeight(0.7));
-    SmartDashboard.putData("Elevator to 0.5", setHeight(0.5));
   }
 
   @Override
