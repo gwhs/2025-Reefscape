@@ -67,8 +67,9 @@ public class ArmIOReal implements ArmIO {
     slot0Configs.kD = 8.4867; // A velocity error of 1 rps results in 0.1 V output
     slot0Configs.withGravityType(GravityTypeValue.Arm_Cosine);
 
+    feedbackConfigs.FeedbackRotorOffset = 0;
     feedbackConfigs.FeedbackRemoteSensorID = ArmConstants.ARM_ENCODER_ID;
-    feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     feedbackConfigs.RotorToSensorRatio = ArmConstants.ARM_GEAR_RATIO;
     feedbackConfigs.SensorToMechanismRatio = 1;
 
@@ -103,6 +104,7 @@ public class ArmIOReal implements ArmIO {
     cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
     cc_cfg.MagnetSensor.withMagnetOffset(Rotations.of(0.4));
     armEncoder.getConfigurator().apply(cc_cfg);
+    status = armEncoder.getConfigurator().apply(cc_cfg);
 
     SmartDashboard.putData(
         "Arm Command/reset to 90",
