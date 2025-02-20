@@ -159,10 +159,6 @@ public class DriveCommand extends Command {
     double yVelocity = MathUtil.applyDeadband(-driverController.getLeftX(), 0.1);
     double angularVelocity = MathUtil.applyDeadband(-driverController.getRightX(), 0.1);
 
-    // xVelocity = driverController.getLeftY();
-    // yVelocity = driverController.getLeftX();
-    // angularVelocity = driverController.getRightX();
-
     if (isSlow) {
       xVelocity *= slowFactor;
       yVelocity *= slowFactor;
