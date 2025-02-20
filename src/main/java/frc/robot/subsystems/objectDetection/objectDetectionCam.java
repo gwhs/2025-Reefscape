@@ -10,7 +10,11 @@ public class ObjectDetectionCam {
         cam = new PhotonCamera(name); 
     }
 
+    public void updateDetection(){
+        
+    }
+
     
 
 
-    }
+}
