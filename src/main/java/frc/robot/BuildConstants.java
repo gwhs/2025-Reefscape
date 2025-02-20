@@ -15,3 +15,4 @@ public final class BuildConstants {
 
   private BuildConstants() {}
 }
+
