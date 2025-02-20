@@ -198,12 +198,11 @@ public class RobotContainer {
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Coral Station"));
 
-    m_driverController
-        .x()
-        .and(IS_NEAR_CORAL_STATION)
-        .onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)));
-
-    IS_NEAR_CORAL_STATION.onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0)));
+    // m_driverController
+    //     .x()
+    //     .and(IS_NEAR_CORAL_STATION)
+    //     .onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)))
+    //     .onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0)));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
 
