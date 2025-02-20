@@ -33,16 +33,25 @@ public class Robot extends TimedRobot {
 
     m_robotContainer = new RobotContainer();
 
-        LiveWindow.disableAllTelemetry();
+    LiveWindow.disableAllTelemetry();
 
     // Setup DogLog
     DogLog.setOptions(
         new DogLogOptions().withNtPublish(true).withCaptureNt(true).withCaptureDs(true));
     DogLog.setPdh(new PowerDistribution());
-    
-    NetworkTableInstance.getDefault().getStringTopic("/Metadata/Branch").publish().set(BuildConstants.GIT_BRANCH);
-    NetworkTableInstance.getDefault().getStringTopic("/Metadata/SHA").publish().set(BuildConstants.GIT_SHA);
-    NetworkTableInstance.getDefault().getStringTopic("/Metadata/DIRTY").publish().set("" + BuildConstants.DIRTY);
+
+    NetworkTableInstance.getDefault()
+        .getStringTopic("/Metadata/Branch")
+        .publish()
+        .set(BuildConstants.GIT_BRANCH);
+    NetworkTableInstance.getDefault()
+        .getStringTopic("/Metadata/SHA")
+        .publish()
+        .set(BuildConstants.GIT_SHA);
+    NetworkTableInstance.getDefault()
+        .getStringTopic("/Metadata/DIRTY")
+        .publish()
+        .set("" + BuildConstants.DIRTY);
   }
 
   /**
