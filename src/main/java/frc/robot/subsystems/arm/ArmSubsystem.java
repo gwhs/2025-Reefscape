@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
 import dev.doglog.DogLog;
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -50,8 +51,11 @@ public class ArmSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    double startTime = HALUtil.getFPGATime();
+
     armIO.update();
     DogLog.log("Arm/arm angle", armIO.getPosition());
+    DogLog.log("Loop Time/Arm", (HALUtil.getFPGATime() - startTime) / 1000);
   }
 
   public double getAngle() {

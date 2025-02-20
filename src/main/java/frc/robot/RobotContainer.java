@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -270,12 +271,41 @@ public class RobotContainer {
   }
 
   public void periodic() {
+    double startTime = HALUtil.getFPGATime();
+
     DogLog.log("nearest", EagleUtil.closestReefSetPoint(drivetrain.getPose(), 0));
+    // 1
+    DogLog.log(
+        "Loop Time/Robot Container/Log Closest Reef Set Point",
+        (HALUtil.getFPGATime() - startTime) / 1000);
+
+    startTime = HALUtil.getFPGATime();
+
     robotVisualizer.update();
+    // 2
+    DogLog.log(
+        "Loop Time/Robot Container/Robot Visualizer", (HALUtil.getFPGATime() - startTime) / 1000);
+
+    startTime = HALUtil.getFPGATime();
+
     cam3.updatePoseEstim();
+    // 3
+    DogLog.log("Loop Time/Robot Container/Cam3", (HALUtil.getFPGATime() - startTime) / 1000);
+
+    startTime = HALUtil.getFPGATime();
+
     cam4.updatePoseEstim();
+    // 4
+    DogLog.log("Loop Time/Robot Container/Cam4", (HALUtil.getFPGATime() - startTime) / 1000);
+
+    startTime = HALUtil.getFPGATime();
+
     DogLog.log("Desired Reef", coralLevel);
-    DogLog.log("Canivore Bus Utilization", (TunerConstants.kCANBus.getStatus()).BusUtilization);
+    // DogLog.log("Canivore Bus Utilization", (TunerConstants.kCANBus.getStatus()).BusUtilization);
+    // 5
+    DogLog.log(
+        "Loop Time/Robot Container/Logging CAN and Coral Level",
+        (HALUtil.getFPGATime() - startTime) / 1000);
   }
 
   /**

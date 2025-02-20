@@ -185,7 +185,7 @@ public class ElevatorIOReal implements ElevatorIO {
         backElevatorMotorVoltage,
         backElevatorMotorStatorCurrent,
         backElevatorMotorPosition);
-    DogLog.log("Elevator/Limit Switch/enabled", limitSwitch.get());
+    // DogLog.log("Elevator/Limit Switch/enabled", limitSwitch.get());
     DogLog.log("Elevator/Front Motor/pid goal", frontElevatorMotorPIDGoal.getValueAsDouble());
     DogLog.log("Elevator/Front Motor/motor voltage", frontElevatorMotorVoltage.getValueAsDouble());
     DogLog.log(

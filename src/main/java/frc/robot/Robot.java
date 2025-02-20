@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
+import java.util.List;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -21,6 +24,7 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
   private double prevTime = HALUtil.getFPGATime();
+  private final GcStatsCollector gcStatsCollector = new GcStatsCollector();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -50,7 +54,6 @@ public class Robot extends TimedRobot {
     EagleUtil.clearCachedPose();
     double startTime = HALUtil.getFPGATime();
 
-
     CommandScheduler.getInstance().run();
 
     DogLog.log("Loop Time/Command Scheduler", (HALUtil.getFPGATime() - startTime) / 1000);
@@ -58,9 +61,10 @@ public class Robot extends TimedRobot {
     double endTime = HALUtil.getFPGATime();
 
     m_robotContainer.periodic();
-  
+
     DogLog.log("Loop Time/Robot Container", (HALUtil.getFPGATime() - endTime) / 1000);
 
+    gcStatsCollector.update();
 
     double currentTime = HALUtil.getFPGATime();
     DogLog.log("Loop Time/Total", (currentTime - prevTime) / 1000);
@@ -121,4 +125,27 @@ public class Robot extends TimedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {}
+
+  private static final class GcStatsCollector {
+    private List<GarbageCollectorMXBean> gcBeans = ManagementFactory.getGarbageCollectorMXBeans();
+    private final long[] lastTimes = new long[gcBeans.size()];
+    private final long[] lastCounts = new long[gcBeans.size()];
+
+    public void update() {
+      long accumTime = 0;
+      long accumCounts = 0;
+      for (int i = 0; i < gcBeans.size(); i++) {
+        long gcTime = gcBeans.get(i).getCollectionTime();
+        long gcCount = gcBeans.get(i).getCollectionCount();
+        accumTime += gcTime - lastTimes[i];
+        accumCounts += gcCount - lastCounts[i];
+
+        lastTimes[i] = gcTime;
+        lastCounts[i] = gcCount;
+      }
+
+      DogLog.log("GC/GCTimeMS", (double) accumTime);
+      DogLog.log("GC/GCCounts", (double) accumCounts);
+    }
+  }
 }

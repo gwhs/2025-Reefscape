@@ -1,5 +1,7 @@
 package frc.robot.subsystems.climb;
 
+import dev.doglog.DogLog;
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,7 +21,11 @@ public class ClimbSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    double startTime = HALUtil.getFPGATime();
+
     climbIO.update();
+
+    DogLog.log("Loop Time/Climb", (HALUtil.getFPGATime() - startTime) / 1000);
   }
 
   public double getPosition() {
