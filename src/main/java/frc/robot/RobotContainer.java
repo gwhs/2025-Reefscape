@@ -25,8 +25,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.commands.DriveCommand.TargetMode;
+import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.commands.autonomous.*;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -81,7 +81,8 @@ public class RobotContainer {
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
   public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
-  public final Trigger IS_REEF_MODE = new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
+  public final Trigger IS_REEF_MODE =
+      new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
   public final Trigger IS_CLOSE_TO_REEF =
       new Trigger(
           () ->
