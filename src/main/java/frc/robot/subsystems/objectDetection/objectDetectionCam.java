@@ -52,23 +52,21 @@ public class ObjectDetectionCam {
       for(PhotonPipelineResult result: results){
         PhotonTrackedTarget bestTarget = result.getBestTarget(); 
         Transform3d targetLocationToCamera = bestTarget.getBestCameraToTarget();
-        Transform3d targetLocationToField = this.getTargetLocInFieldSpace(targetLocationToCamera);
+        Pose3d targetLocationToField = this.getTargetLocInFieldSpace(targetLocationToCamera);
       }
 
     }
 
     //Transform (target location in camera space) by (camera location in field space) to get (target location in field space)
-    public Transform3d getTargetLocInFieldSpace(Transform3d targetLocationToCamera){
+    public Pose3d getTargetLocInFieldSpace(Transform3d targetLocationToCamera){
 
       Pose2d robotPose = this.robotPose.get();
       Pose3d robotPose3d = new Pose3d(robotPose);
       Pose3d cameraPose3d = robotPose3d.plus(robotToCam);
       DogLog.log(ntKey + "Camera Pose/", cameraPose3d);
 
-      Pose3d cameraToField = cameraPose3d.plus(targetLocationToCamera);
-      
-
-      return null ;
+      Pose3d targetToField = cameraPose3d.plus(targetLocationToCamera);
+      return targetToField; 
     }
 
 
