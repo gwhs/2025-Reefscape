@@ -1,7 +1,5 @@
 package frc.robot.subsystems.objectDetection;
 
-import javax.xml.crypto.dsig.Transform;
-
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
@@ -16,5 +14,4 @@ public class ObjectDetectionConstants {
           Units.inchesToMeters(8),
           new Rotation3d(
               Units.degreesToRadians(0), Units.degreesToRadians(-20), Units.degreesToRadians(-5)));
-
 }
