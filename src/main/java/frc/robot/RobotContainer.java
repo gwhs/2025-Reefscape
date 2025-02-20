@@ -9,16 +9,17 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
+<<<<<<< HEAD
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.hal.simulation.RoboRioDataJNI;
+=======
+>>>>>>> dev
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -113,15 +114,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    LiveWindow.disableAllTelemetry();
-
-    // Setup DogLog
-    DogLog.setOptions(
-        new DogLogOptions().withNtPublish(true).withCaptureNt(true).withCaptureDs(true));
-    DogLog.setPdh(new PowerDistribution());
-    DogLog.log("/Metadata/Branch", BuildConstants.GIT_BRANCH);
-    DogLog.log("/Metadata/SHA", BuildConstants.GIT_SHA);
-    DogLog.log("/Metadata/DIRTY", BuildConstants.DIRTY);
     configureBindings();
 
     configureAutonomous();
