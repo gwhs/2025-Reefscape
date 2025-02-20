@@ -9,11 +9,6 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
-<<<<<<< HEAD
-import dev.doglog.DogLogOptions;
-import edu.wpi.first.hal.simulation.RoboRioDataJNI;
-=======
->>>>>>> dev
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
