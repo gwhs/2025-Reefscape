@@ -53,8 +53,9 @@ public class FiveCycleProcessor extends PathPlannerAuto {
       event("atF")
           .onTrue(
               Commands.sequence(
-                robotContainer.prepScoreCoral(
-                    ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
+                      robotContainer
+                          .prepScoreCoral(
+                              ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
                           .deadlineFor(
                               robotContainer.alignToPose(
                                   () ->
@@ -74,8 +75,9 @@ public class FiveCycleProcessor extends PathPlannerAuto {
                                   robotContainer.prepScoreCoral(
                                       ElevatorConstants.L4_PREP_POSITION,
                                       ArmConstants.L4_PREP_POSITION))),
-                                      robotContainer.prepScoreCoral(
-                                        ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
+                      robotContainer
+                          .prepScoreCoral(
+                              ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
                           .deadlineFor(
                               robotContainer.alignToPose(
                                   () ->
@@ -95,8 +97,9 @@ public class FiveCycleProcessor extends PathPlannerAuto {
                                   robotContainer.prepScoreCoral(
                                       ElevatorConstants.L4_PREP_POSITION,
                                       ArmConstants.L4_PREP_POSITION))),
-                                      robotContainer.prepScoreCoral(
-                                        ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
+                      robotContainer
+                          .prepScoreCoral(
+                              ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
                           .deadlineFor(
                               robotContainer.alignToPose(
                                   () ->
@@ -116,8 +119,9 @@ public class FiveCycleProcessor extends PathPlannerAuto {
                                   robotContainer.prepScoreCoral(
                                       ElevatorConstants.L4_PREP_POSITION,
                                       ArmConstants.L4_PREP_POSITION))),
-                                      robotContainer.prepScoreCoral(
-                                        ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
+                      robotContainer
+                          .prepScoreCoral(
+                              ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
                           .deadlineFor(
                               robotContainer.alignToPose(
                                   () ->

@@ -41,8 +41,9 @@ public class TwoCycleProcessor extends PathPlannerAuto {
       event("atE")
           .onTrue(
               Commands.sequence(
-                      robotContainer.prepScoreCoral(
-                            ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
+                      robotContainer
+                          .prepScoreCoral(
+                              ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
                           .deadlineFor(
                               robotContainer.alignToPose(
                                   () ->
@@ -56,8 +57,9 @@ public class TwoCycleProcessor extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_D).alongWith(robotContainer.coralHandoff()),
-                     robotContainer.prepScoreCoral(
-                            ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
+                      robotContainer
+                          .prepScoreCoral(
+                              ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
                           .deadlineFor(
                               robotContainer.alignToPose(
                                   () ->

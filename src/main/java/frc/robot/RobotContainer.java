@@ -34,7 +34,6 @@ import frc.robot.subsystems.aprilTagCam.AprilTagCam;
 import frc.robot.subsystems.aprilTagCam.AprilTagCamConstants;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
-import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
@@ -58,7 +57,7 @@ public class RobotContainer {
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
   private final LedSubsystem led = new LedSubsystem();
-  private final ClimbSubsystem climb = new ClimbSubsystem();
+  // private final ClimbSubsystem climb = new ClimbSubsystem();
   private final DriveCommand driveCommand =
       new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
@@ -168,7 +167,7 @@ public class RobotContainer {
         Commands.runOnce(
                 () -> {
                   // drivetrain.configNeutralMode(NeutralModeValue.Brake);
-                  elevator.setNeutralMode(NeutralModeValue.Brake);
+                  // elevator.setNeutralMode(NeutralModeValue.Brake);
                 })
             .ignoringDisable(false));
 
@@ -346,9 +345,8 @@ public class RobotContainer {
   public Command scoreCoral() {
     return Commands.sequence(
             Commands.waitSeconds(0.2),
-            Commands.parallel(
-                arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(0.2),
-                elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.2)))
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(0.2),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.2))
         .withName("Score Coral");
   }
 }

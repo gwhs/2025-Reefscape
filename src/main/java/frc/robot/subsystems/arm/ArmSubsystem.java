@@ -51,7 +51,7 @@ public class ArmSubsystem extends SubsystemBase {
             () -> {
               armIO.setAngle(clampedAngle);
             })
-        .andThen(Commands.waitUntil(() -> MathUtil.isNear(clampedAngle, armIO.getPosition(), 0.1)));
+        .andThen(Commands.waitUntil(() -> MathUtil.isNear(clampedAngle, armIO.getPosition(), 1)));
   }
 
   @Override
