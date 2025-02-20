@@ -37,7 +37,11 @@ public class ClimbSubsystem extends SubsystemBase {
             () -> {
               climbIO.setPosition(ClimbConstants.EXTEND_CLIMB_POSITION);
             })
-        .andThen(Commands.waitUntil(() -> MathUtil.isNear(ClimbConstants.EXTEND_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
+        .andThen(
+            Commands.waitUntil(
+                () ->
+                    MathUtil.isNear(
+                        ClimbConstants.EXTEND_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
   }
 
   public Command retract() {
@@ -45,6 +49,10 @@ public class ClimbSubsystem extends SubsystemBase {
             () -> {
               climbIO.setPosition(ClimbConstants.RETRACT_CLIMB_POSITION);
             })
-        .andThen(Commands.waitUntil(() -> MathUtil.isNear(ClimbConstants.RETRACT_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
+        .andThen(
+            Commands.waitUntil(
+                () ->
+                    MathUtil.isNear(
+                        ClimbConstants.RETRACT_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
   }
 }

@@ -37,6 +37,7 @@ import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.Supplier;
 
@@ -59,6 +60,8 @@ public class RobotContainer {
   private final ArmSubsystem arm = new ArmSubsystem();
   private final LedSubsystem led = new LedSubsystem();
   private final ClimbSubsystem climb = new ClimbSubsystem();
+  private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
+
   private final DriveCommand driveCommand =
       new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();

@@ -1,20 +1,14 @@
 package frc.robot.subsystems.climb;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N2;
-import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.subsystems.arm.ArmConstants;
 
 public class ClimbIOSim implements ClimbIO {
 
- private SingleJointedArmSim climbSim =
+  private SingleJointedArmSim climbSim =
       new SingleJointedArmSim(
           DCMotor.getFalcon500Foc(1),
           ClimbConstants.CLIMB_GEAR_RATIO,
