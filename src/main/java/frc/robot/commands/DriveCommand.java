@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.EagleUtil;
-import frc.robot.generated.TunerConstants;
+import frc.robot.generated.TunerConstants_Comp;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.DoubleSupplier;
 
@@ -31,7 +31,7 @@ public class DriveCommand extends Command {
   private final double DEAD_BAND = 0.1;
   private boolean resetLimiter = true;
 
-  private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  private double maxSpeed = TunerConstants_Comp.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 3.5 * Math.PI;
 
   private final double RED_LEFT_STATION_ANGLE = 126;

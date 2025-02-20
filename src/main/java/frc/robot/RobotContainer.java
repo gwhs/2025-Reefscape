@@ -9,15 +9,12 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
-import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -31,7 +28,9 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.DriveCommand.TargetMode;
 import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.commands.autonomous.*;
-import frc.robot.generated.TunerConstants;
+import frc.robot.generated.TunerConstants_Comp;
+import frc.robot.generated.TunerConstants_WALLE;
+import frc.robot.generated.TunerConstants_practiceDrivetrain;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.aprilTagCam.AprilTagCam;
 import frc.robot.subsystems.aprilTagCam.AprilTagCamConstants;
@@ -51,20 +50,26 @@ import java.util.function.Supplier;
  */
 public class RobotContainer {
 
+  public enum Robot {
+    WALLE,
+    DEV,
+    COMP
+  }
+
+  public static Robot whichRobot = Robot.COMP;
+
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
   private final Alert batteryUnderTwelveVolts = new Alert("BATTERY UNDER 12V", AlertType.kWarning);
   private final Telemetry logger =
-      new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
+      new Telemetry(TunerConstants_Comp.kSpeedAt12Volts.in(MetersPerSecond));
 
-  private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  private final CommandSwerveDrivetrain drivetrain;
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
   private final LedSubsystem led = new LedSubsystem();
   private final ClimbSubsystem climb = new ClimbSubsystem();
-  private final DriveCommand driveCommand =
-      new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
-  private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+  private final DriveCommand driveCommand;
 
   public enum CoralLevel {
     L1,
@@ -80,49 +85,76 @@ public class RobotContainer {
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
-  public final Trigger IS_CLOSE_TO_REEF =
-      new Trigger(
-          () ->
-              EagleUtil.getDistanceBetween(
-                      drivetrain.getPose(), EagleUtil.getCachedReefPose(drivetrain.getPose()))
-                  < 1.25);
-  public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
+
+  private final SendableChooser<Command> autoChooser;
+
+  private final Trigger IS_AT_POSE;
+
+  private final Trigger IS_REEFMODE;
+
+  private final Trigger IS_CLOSE_TO_REEF;
+
+  private AprilTagCam cam3;
+
+  private AprilTagCam cam4;
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
-  private AprilTagCam cam3 =
-      new AprilTagCam(
-          AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
-          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
-          drivetrain::addVisionMeasurent,
-          () -> drivetrain.getState().Pose,
-          () -> drivetrain.getState().Speeds);
-
-  private AprilTagCam cam4 =
-      new AprilTagCam(
-          AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
-          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
-          drivetrain::addVisionMeasurent,
-          () -> drivetrain.getState().Pose,
-          () -> drivetrain.getState().Speeds);
-
-  public final Trigger IS_REEFMODE =
-      new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    LiveWindow.disableAllTelemetry();
 
-    // Setup DogLog
-    DogLog.setOptions(
-        new DogLogOptions().withNtPublish(true).withCaptureNt(true).withCaptureDs(true));
-    DogLog.setPdh(new PowerDistribution());
-    DogLog.log("/Metadata/Branch", BuildConstants.GIT_BRANCH);
-    DogLog.log("/Metadata/SHA", BuildConstants.GIT_SHA);
-    DogLog.log("/Metadata/DIRTY", BuildConstants.DIRTY);
-    configureBindings();
+    if (RobotController.getSerialNumber().equals("0323CA18")) {
+      whichRobot = Robot.COMP;
+    } else if (RobotController.getSerialNumber().equals("")) {
+      whichRobot = Robot.DEV;
+    } else if (RobotController.getSerialNumber().equals("")) {
+      whichRobot = Robot.WALLE;
+    }
 
-    configureAutonomous();
+    switch (whichRobot) {
+      case COMP:
+        drivetrain = TunerConstants_Comp.createDrivetrain();
+        break;
+      case DEV:
+        drivetrain = TunerConstants_practiceDrivetrain.createDrivetrain();
+        break;
+      case WALLE:
+        drivetrain = TunerConstants_WALLE.createDrivetrain();
+        break;
+      default:
+        drivetrain = TunerConstants_Comp.createDrivetrain(); // Fallback
+        break;
+    }
+    driveCommand =
+        new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
+    autoChooser = new SendableChooser<Command>();
+
+    IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
+
+    IS_REEFMODE = new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
+
+    IS_CLOSE_TO_REEF =
+        new Trigger(
+            () ->
+                EagleUtil.getDistanceBetween(
+                        drivetrain.getPose(), EagleUtil.getCachedReefPose(drivetrain.getPose()))
+                    < 1.25);
+
+    cam3 =
+        new AprilTagCam(
+            AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+            AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
+            drivetrain::addVisionMeasurent,
+            () -> drivetrain.getState().Pose,
+            () -> drivetrain.getState().Speeds);
+
+    cam4 =
+        new AprilTagCam(
+            AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+            AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
+            drivetrain::addVisionMeasurent,
+            () -> drivetrain.getState().Pose,
+            () -> drivetrain.getState().Speeds);
 
     // Default Commands
     drivetrain.setDefaultCommand(driveCommand);
@@ -283,7 +315,8 @@ public class RobotContainer {
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
     DogLog.log("Desired Reef", coralLevel);
-    DogLog.log("Canivore Bus Utilization", (TunerConstants.kCANBus.getStatus()).BusUtilization);
+    DogLog.log(
+        "Canivore Bus Utilization", (TunerConstants_Comp.kCANBus.getStatus()).BusUtilization);
   }
 
   /**

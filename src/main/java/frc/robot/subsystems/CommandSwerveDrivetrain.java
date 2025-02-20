@@ -23,8 +23,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.generated.TunerConstants;
-import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.generated.TunerConstants_Comp;
+import frc.robot.generated.TunerSwerveDrivetrain;
 import frc.robot.subsystems.aprilTagCam.AprilTagHelp;
 import java.util.function.Supplier;
 
@@ -56,11 +56,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   public final double DRIVE_BASE_RADIUS =
       Math.max(
           Math.max(
-              Math.hypot(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
-              Math.hypot(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY)),
+              Math.hypot(
+                  TunerConstants_Comp.FrontLeft.LocationX, TunerConstants_Comp.FrontLeft.LocationY),
+              Math.hypot(
+                  TunerConstants_Comp.FrontRight.LocationX,
+                  TunerConstants_Comp.FrontRight.LocationY)),
           Math.max(
-              Math.hypot(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
-              Math.hypot(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)));
+              Math.hypot(
+                  TunerConstants_Comp.BackLeft.LocationX, TunerConstants_Comp.BackLeft.LocationY),
+              Math.hypot(
+                  TunerConstants_Comp.BackRight.LocationX,
+                  TunerConstants_Comp.BackRight.LocationY)));
 
   /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
   private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
