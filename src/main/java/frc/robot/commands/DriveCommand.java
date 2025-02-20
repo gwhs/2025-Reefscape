@@ -51,7 +51,7 @@ public class DriveCommand extends Command {
     FIELD_CENTRIC
   }
 
-  DriveMode driveMode = DriveMode.FIELD_CENTRIC;
+  private DriveMode driveMode = DriveMode.FIELD_CENTRIC;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
@@ -67,14 +67,14 @@ public class DriveCommand extends Command {
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
-          .withDeadband(maxSpeed * 0.1)
-          .withRotationalDeadband(maxAngularRate * 0.1) // Add a 10% deadband
-          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+          .withDeadband(maxSpeed * 0.0)
+          .withRotationalDeadband(maxAngularRate * 0.0)
+          .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private final SwerveRequest.RobotCentric robotCentricDrive =
       new SwerveRequest.RobotCentric()
-          .withDeadband(maxSpeed * 0.1)
-          .withRotationalDeadband(maxAngularRate * 0.1) // Add a 10% deadband
-          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want robot-centric
+          .withDeadband(maxSpeed * 0.0)
+          .withRotationalDeadband(maxAngularRate * 0.0)
+          .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
   public DriveCommand(
       CommandXboxController driverController,
@@ -146,14 +146,18 @@ public class DriveCommand extends Command {
     this.driveMode = driveMode;
   }
 
+  public TargetMode getTargetMode() {
+    return this.mode;
+  }
+
   @Override
   public void execute() {
     Pose2d currentRobotPose = drivetrain.getState().Pose;
     double currentRotation = currentRobotPose.getRotation().getDegrees();
 
-    double xVelocity = -driverController.getLeftY();
-    double yVelocity = -driverController.getLeftX();
-    double angularVelocity = -driverController.getRightX();
+    double xVelocity = MathUtil.applyDeadband(-driverController.getLeftY(), 0.1);
+    double yVelocity = MathUtil.applyDeadband(-driverController.getLeftX(), 0.1);
+    double angularVelocity = MathUtil.applyDeadband(-driverController.getRightX(), 0.1);
 
     if (isSlow) {
       xVelocity *= slowFactor;
@@ -244,10 +248,8 @@ public class DriveCommand extends Command {
                     robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
   }
 
-  public Command stopDrivetrain() {
-    return drivetrain.run(
-        () ->
-            drivetrain.setControl(
-                robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
+  public void stopDrivetrain() {
+    drivetrain.setControl(
+        robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0));
   }
 }

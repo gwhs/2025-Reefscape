@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.EagleUtil;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 
 public class TwoCycleProcessor extends PathPlannerAuto {
   public TwoCycleProcessor(RobotContainer robotContainer) {
@@ -40,12 +42,13 @@ public class TwoCycleProcessor extends PathPlannerAuto {
           .onTrue(
               Commands.sequence(
                       robotContainer
-                          .prepScoreCoralL4()
+                          .prepScoreCoral(
+                              ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
                           .deadlineFor(
                               robotContainer.alignToPose(
                                   () ->
                                       EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
-                      robotContainer.scoreCoralL4Command(),
+                      robotContainer.scoreCoral(),
                       AutoBuilder.followPath(E_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("E to CSP"));
 
@@ -55,12 +58,13 @@ public class TwoCycleProcessor extends PathPlannerAuto {
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_D).alongWith(robotContainer.coralHandoff()),
                       robotContainer
-                          .prepScoreCoralL4()
+                          .prepScoreCoral(
+                              ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
                           .deadlineFor(
                               robotContainer.alignToPose(
                                   () ->
                                       EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
-                      robotContainer.scoreCoralL4Command(),
+                      robotContainer.scoreCoral(),
                       AutoBuilder.followPath(D_CSP).alongWith(robotContainer.prepCoralIntake()),
                       Commands.waitSeconds(waitTime),
                       robotContainer.coralHandoff())
