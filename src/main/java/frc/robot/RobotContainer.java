@@ -37,6 +37,7 @@ import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.Supplier;
 
@@ -59,6 +60,8 @@ public class RobotContainer {
   private final ArmSubsystem arm = new ArmSubsystem();
   private final LedSubsystem led = new LedSubsystem();
   private final ClimbSubsystem climb = new ClimbSubsystem();
+  private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
+
   private final DriveCommand driveCommand =
       new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
@@ -108,6 +111,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
     configureBindings();
 
     configureAutonomous();
@@ -272,6 +276,16 @@ public class RobotContainer {
     cam4.updatePoseEstim();
     DogLog.log("Desired Reef", coralLevel);
     DogLog.log("Canivore Bus Utilization", (TunerConstants.kCANBus.getStatus()).BusUtilization);
+
+    // Log Triggers
+    DogLog.log("Trigger/At L1", IS_L1.getAsBoolean());
+    DogLog.log("Trigger/At L2", IS_L2.getAsBoolean());
+    DogLog.log("Trigger/At L3", IS_L3.getAsBoolean());
+    DogLog.log("Trigger/At L4", IS_L4.getAsBoolean());
+    DogLog.log("Trigger/Is Disabled", IS_DISABLED.getAsBoolean());
+    DogLog.log("Trigger/Is Telop", IS_TELEOP.getAsBoolean());
+    DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
+    DogLog.log("Trigger/Is Reefmode", IS_REEFMODE.getAsBoolean());
   }
 
   /**
