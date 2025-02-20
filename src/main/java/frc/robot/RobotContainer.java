@@ -111,15 +111,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    LiveWindow.disableAllTelemetry();
-
-    // Setup DogLog
-    DogLog.setOptions(
-        new DogLogOptions().withNtPublish(true).withCaptureNt(true).withCaptureDs(true));
-    DogLog.setPdh(new PowerDistribution());
-    DogLog.log("/Metadata/Branch", BuildConstants.GIT_BRANCH);
-    DogLog.log("/Metadata/SHA", BuildConstants.GIT_SHA);
-    DogLog.log("/Metadata/DIRTY", BuildConstants.DIRTY);
     configureBindings();
 
     configureAutonomous();
