@@ -2,6 +2,7 @@ package frc.robot.subsystems.endEffector;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,6 +23,10 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     coralTriggered = new Trigger(() -> endEffectorIO.isSensorTriggered());
+
+    SmartDashboard.putData("End Effector Command/End Effector Shoot", setVoltage(3));
+    SmartDashboard.putData("End Effector Command/End Effector Intake", setVoltage(-2));
+    SmartDashboard.putData("End Effector Command/Stop End Effector", stopMotor());
   }
 
   public Command setVoltage(double voltage) {
@@ -35,7 +40,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     endEffectorIO.update();
-    DogLog.log("EndEffector/Velocity", endEffectorIO.getVoltage());
-    DogLog.log("EndEffector/Voltage", endEffectorIO.getVelocity());
+    DogLog.log("EndEffector/Voltage", endEffectorIO.getVoltage());
+    DogLog.log("EndEffector/Velocity", endEffectorIO.getVelocity());
   }
 }
