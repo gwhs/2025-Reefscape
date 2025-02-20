@@ -98,7 +98,7 @@ public class ElevatorSubsystem extends SubsystemBase {
               elevatorIO.setPosition(0);
             });
 
-    return Commands.either(whenNotAtBottom, whenAtBottom, () -> elevatorIO.getReverseLimit());
+    return Commands.either(whenNotAtBottom, whenAtBottom, () -> !elevatorIO.getReverseLimit());
   }
 
   public static double rotationsToMeters(double rotations) {
