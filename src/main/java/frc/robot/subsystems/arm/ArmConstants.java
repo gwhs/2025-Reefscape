@@ -5,8 +5,7 @@ public class ArmConstants {
 
   public static final int ARM_ENCODER_ID = 9;
   public static final double MAX_VELOCITY = 1.2; // rotation per second
-  public static final double MAX_ACCELERATION = 6
-  ; // rotation per second per second
+  public static final double MAX_ACCELERATION = 6.0; // rotation per second per second
   public static final double ARM_GEAR_RATIO = 64; // 68/12 * 84/20 * 48/18;
 
   // Position consntants: in degrees
