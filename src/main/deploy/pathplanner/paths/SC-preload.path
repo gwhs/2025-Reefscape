@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.35,
-        "y": 2.835
+        "x": 7.3490625,
+        "y": 3.1624573863636356
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.742488844899067,
-        "y": 2.4096161096518385
+        "x": 6.65705002961014,
+        "y": 2.895736561221072
       },
       "isLocked": false,
       "linkedName": "SC"
     },
     {
       "anchor": {
-        "x": 5.294,
-        "y": 2.936
+        "x": 5.4208333333333325,
+        "y": 2.74525641025641
       },
       "prevControl": {
-        "x": 5.960522046919591,
-        "y": 3.1785941855609128
+        "x": 6.081925443571072,
+        "y": 3.0022793658056317
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,10 +41,10 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 6.6,
+    "maxAcceleration": 7.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
-    "nominalVoltage": 9.0,
+    "nominalVoltage": 7.0,
     "unlimited": false
   },
   "goalEndState": {
@@ -55,7 +55,7 @@
   "folder": "Auton-C5 (F-E)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 145.0
+    "rotation": 119.99999999999999
   },
   "useDefaultConstraints": true
 }
