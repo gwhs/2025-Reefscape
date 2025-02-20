@@ -87,6 +87,7 @@ public class RobotContainer {
                       drivetrain.getPose(), EagleUtil.getCachedReefPose(drivetrain.getPose()))
                   < 1.25);
   public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
+  public final Trigger BROWN_OUT = new Trigger(() -> RobotController.isBrownedOut());
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
@@ -111,6 +112,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
     configureBindings();
 
     configureAutonomous();
@@ -155,6 +157,8 @@ public class RobotContainer {
         .IS_ALIGNING_TO_POSE
         .and(drivetrain.IS_AT_TARGET_POSE.negate())
         .onTrue(led.setPattern(LEDPattern.solid(Color.kBlack)));
+
+    BROWN_OUT.onTrue(Commands.runOnce(() -> drivetrain.setDriveMotorCurrentLimit()));
 
     IS_DISABLED.onTrue(
         Commands.runOnce(
@@ -275,6 +279,16 @@ public class RobotContainer {
     cam4.updatePoseEstim();
     DogLog.log("Desired Reef", coralLevel);
     DogLog.log("Canivore Bus Utilization", (TunerConstants.kCANBus.getStatus()).BusUtilization);
+
+    // Log Triggers
+    DogLog.log("Trigger/At L1", IS_L1.getAsBoolean());
+    DogLog.log("Trigger/At L2", IS_L2.getAsBoolean());
+    DogLog.log("Trigger/At L3", IS_L3.getAsBoolean());
+    DogLog.log("Trigger/At L4", IS_L4.getAsBoolean());
+    DogLog.log("Trigger/Is Disabled", IS_DISABLED.getAsBoolean());
+    DogLog.log("Trigger/Is Telop", IS_TELEOP.getAsBoolean());
+    DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
+    DogLog.log("Trigger/Is Reefmode", IS_REEFMODE.getAsBoolean());
   }
 
   /**
