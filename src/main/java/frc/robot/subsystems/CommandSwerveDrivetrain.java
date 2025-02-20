@@ -23,7 +23,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,22 +49,22 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             }
           });
 
-          SwerveModule<TalonFX, TalonFX, CANcoder> mod_1 = getModule(0);
-          SwerveModule<TalonFX, TalonFX, CANcoder> mod_2 = getModule(1);
-          SwerveModule<TalonFX, TalonFX, CANcoder> mod_3 = getModule(2);
-          SwerveModule<TalonFX, TalonFX, CANcoder> mod_4 = getModule(3);
-          TalonFX m_1 = mod_1.getDriveMotor();
-          TalonFX m_2 = mod_2.getDriveMotor();
-          TalonFX m_3 = mod_3.getDriveMotor();
-          TalonFX m_4 = mod_4.getDriveMotor();
-          TalonFXConfiguration m1_config = new TalonFXConfiguration();
-          TalonFXConfiguration m2_config = new TalonFXConfiguration();
-          TalonFXConfiguration m3_config = new TalonFXConfiguration();
-          TalonFXConfiguration m4_config = new TalonFXConfiguration();
-          CurrentLimitsConfigs m1_current_config = new CurrentLimitsConfigs();
-          CurrentLimitsConfigs m2_current_config = new CurrentLimitsConfigs();
-          CurrentLimitsConfigs m3_current_config = new CurrentLimitsConfigs();
-          CurrentLimitsConfigs m4_current_config = new CurrentLimitsConfigs();
+  SwerveModule<TalonFX, TalonFX, CANcoder> mod_1 = getModule(0);
+  SwerveModule<TalonFX, TalonFX, CANcoder> mod_2 = getModule(1);
+  SwerveModule<TalonFX, TalonFX, CANcoder> mod_3 = getModule(2);
+  SwerveModule<TalonFX, TalonFX, CANcoder> mod_4 = getModule(3);
+  TalonFX m_1 = mod_1.getDriveMotor();
+  TalonFX m_2 = mod_2.getDriveMotor();
+  TalonFX m_3 = mod_3.getDriveMotor();
+  TalonFX m_4 = mod_4.getDriveMotor();
+  TalonFXConfiguration m1_config = new TalonFXConfiguration();
+  TalonFXConfiguration m2_config = new TalonFXConfiguration();
+  TalonFXConfiguration m3_config = new TalonFXConfiguration();
+  TalonFXConfiguration m4_config = new TalonFXConfiguration();
+  CurrentLimitsConfigs m1_current_config = new CurrentLimitsConfigs();
+  CurrentLimitsConfigs m2_current_config = new CurrentLimitsConfigs();
+  CurrentLimitsConfigs m3_current_config = new CurrentLimitsConfigs();
+  CurrentLimitsConfigs m4_current_config = new CurrentLimitsConfigs();
 
   public PIDController PID_X = new PIDController(1.7, 0, 0);
   public PIDController PID_Y = new PIDController(1.7, 0, 0);
@@ -147,23 +146,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
   }
 
-
-
   public Command setDriveMotorCurrentLimit() {
 
-  
-
-    return Commands.runOnce( () -> {
-      m1_current_config.withStatorCurrentLimitEnable(true);
-      m1_current_config.withStatorCurrentLimit(35);
-      m_1.getConfigurator().apply(m1_current_config);
-      m_2.getConfigurator().apply(m1_current_config);
-      m_3.getConfigurator().apply(m1_current_config);
-      m_4.getConfigurator().apply(m1_current_config);
-    }  
-    );
+    return Commands.runOnce(
+        () -> {
+          m1_current_config.withStatorCurrentLimitEnable(true);
+          m1_current_config.withStatorCurrentLimit(35);
+          m_1.getConfigurator().apply(m1_current_config);
+          m_2.getConfigurator().apply(m1_current_config);
+          m_3.getConfigurator().apply(m1_current_config);
+          m_4.getConfigurator().apply(m1_current_config);
+        });
   }
-
 
   /**
    * Constructs a CTRE SwerveDrivetrain using the specified constants.

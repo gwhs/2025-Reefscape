@@ -154,8 +154,7 @@ public class RobotContainer {
         .and(drivetrain.IS_AT_TARGET_POSE.negate())
         .onTrue(led.setPattern(LEDPattern.solid(Color.kBlack)));
 
-
-    BROWN_OUT.onTrue( Commands.runOnce(() -> drivetrain.setDriveMotorCurrentLimit()));
+    BROWN_OUT.onTrue(Commands.runOnce(() -> drivetrain.setDriveMotorCurrentLimit()));
 
     IS_DISABLED.onTrue(
         Commands.runOnce(
