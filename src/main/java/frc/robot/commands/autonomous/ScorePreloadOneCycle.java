@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.EagleUtil;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 
 public class ScorePreloadOneCycle extends PathPlannerAuto {
   public ScorePreloadOneCycle(RobotContainer robotContainer) {
@@ -30,8 +32,8 @@ public class ScorePreloadOneCycle extends PathPlannerAuto {
               Commands.sequence(
                       AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
                       AutoBuilder.followPath(SCpreloadScore),
-                      robotContainer
-                          .prepScoreCoral(0, 227)
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
                           .deadlineFor(
                               robotContainer.alignToPose(
                                   () ->
