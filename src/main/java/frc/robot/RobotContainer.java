@@ -87,7 +87,6 @@ public class RobotContainer {
                       drivetrain.getPose(), EagleUtil.getCachedReefPose(drivetrain.getPose()))
                   < 1.25);
   public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
-  public final Trigger BROWN_OUT = new Trigger(() -> RobotController.isBrownedOut());
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
@@ -157,8 +156,6 @@ public class RobotContainer {
         .IS_ALIGNING_TO_POSE
         .and(drivetrain.IS_AT_TARGET_POSE.negate())
         .onTrue(led.setPattern(LEDPattern.solid(Color.kBlack)));
-
-    BROWN_OUT.onTrue(Commands.runOnce(() -> drivetrain.setDriveMotorCurrentLimit()));
 
     IS_DISABLED.onTrue(
         Commands.runOnce(
