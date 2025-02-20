@@ -11,6 +11,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 
 public class FiveCycleNonProcessor2 extends PathPlannerAuto {
 
@@ -39,28 +41,32 @@ public class FiveCycleNonProcessor2 extends PathPlannerAuto {
                       AutoBuilder.followPath(I_CS).alongWith(robotContainer.prepCoralIntake()))
                   .withName("I to Coral Station"));
 
-      event("atCS")
+      event("atCS") // 0, 0 values are supposed to be L4
           .onTrue(
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CS_J).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoralL4(),
-                      robotContainer.scoreCoralL4Command(),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
+                      robotContainer.scoreCoral(),
                       AutoBuilder.followPath(J_CS).alongWith(robotContainer.prepCoralIntake()),
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CS_K).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoralL4(),
-                      robotContainer.scoreCoralL4Command(),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
+                      robotContainer.scoreCoral(),
                       AutoBuilder.followPath(K_CS).alongWith(robotContainer.prepCoralIntake()),
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CS_L).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoralL4(),
-                      robotContainer.scoreCoralL4Command(),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
+                      robotContainer.scoreCoral(),
                       AutoBuilder.followPath(L_CS).alongWith(robotContainer.prepCoralIntake()),
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CS_A).alongWith(robotContainer.coralHandoff()),
-                      robotContainer.prepScoreCoralL4(),
-                      robotContainer.scoreCoralL4Command())
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
+                      robotContainer.scoreCoral())
                   .withName("CS to J to CS, CS to K to CS, CS to L to CS, CS to A"));
 
     } catch (Exception e) {
