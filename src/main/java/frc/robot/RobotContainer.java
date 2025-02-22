@@ -39,6 +39,7 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 /**
@@ -109,8 +110,16 @@ public class RobotContainer {
   public final Trigger IS_REEFMODE =
       new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
+  private final BiConsumer<Runnable, Double> addPeriodic;
+
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   *
+   * @param periodic
+   */
+  public RobotContainer(BiConsumer<Runnable, Double> addPeriodic) {
+
+    this.addPeriodic = addPeriodic;
 
     configureBindings();
 
@@ -135,6 +144,12 @@ public class RobotContainer {
     // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
     EagleUtil.calculateRedReefSetPoints();
+
+    addPeriodic.accept(
+        () ->
+            DogLog.log(
+                "Canivore Bus Utilization", TunerConstants.kCANBus.getStatus().BusUtilization),
+        0.5);
   }
 
   /**
@@ -275,7 +290,6 @@ public class RobotContainer {
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
     DogLog.log("Desired Reef", coralLevel);
-    DogLog.log("Canivore Bus Utilization", (TunerConstants.kCANBus.getStatus()).BusUtilization);
 
     // Log Triggers
     DogLog.log("Trigger/At L1", IS_L1.getAsBoolean());
@@ -287,6 +301,11 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
     DogLog.log("Trigger/Is Reefmode", IS_REEFMODE.getAsBoolean());
   }
+
+  //   public final void addPeriodic(Runnable callback, Time period) {
+  //       addPeriodic(DogLog.log("Canivore Bus Utilization",
+  // (TunerConstants.kCANBus.getStatus()).BusUtilization), period.in());
+  //   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
