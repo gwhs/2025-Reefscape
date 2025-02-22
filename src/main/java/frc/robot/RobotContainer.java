@@ -94,7 +94,7 @@ public class RobotContainer {
           () ->
               EagleUtil.getDistanceBetween(
                       drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
-                  < 0.2);
+                  < 0.4);
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
