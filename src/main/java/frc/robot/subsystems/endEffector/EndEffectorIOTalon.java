@@ -34,7 +34,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
     CurrentLimitsConfigs limitsConfigs = talonConfig.CurrentLimits;
 
     limitsConfigs.withStatorCurrentLimitEnable(true);
-    limitsConfigs.withStatorCurrentLimit(15);
+    limitsConfigs.withStatorCurrentLimit(60);
 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
 
