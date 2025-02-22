@@ -52,7 +52,6 @@ public class ElevatorIOSim implements ElevatorIO {
 
   @Override
   public void setPosition(double newValue) {
-    // TODO Auto-generated method stub
-    elevatorSim.setState(newValue, ElevatorConstants.MAX_VELOCITY);
+    elevatorSim.setState(newValue, 0);
   }
 }
