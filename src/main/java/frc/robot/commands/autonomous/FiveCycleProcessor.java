@@ -65,7 +65,6 @@ public class FiveCycleProcessor extends PathPlannerAuto {
                   autoHelper(CSP_D, D_CSP),
                   autoHelper(CSP_C, C_CSP)));
 
-
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
     }
