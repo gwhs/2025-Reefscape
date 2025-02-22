@@ -302,11 +302,6 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Reefmode", IS_REEFMODE.getAsBoolean());
   }
 
-  //   public final void addPeriodic(Runnable callback, Time period) {
-  //       addPeriodic(DogLog.log("Canivore Bus Utilization",
-  // (TunerConstants.kCANBus.getStatus()).BusUtilization), period.in());
-  //   }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
