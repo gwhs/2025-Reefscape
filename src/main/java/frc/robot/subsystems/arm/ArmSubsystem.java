@@ -46,7 +46,7 @@ public class ArmSubsystem extends SubsystemBase {
    *     information to param annotation
    */
   public Command setAngle(double angle) {
-    double clampedAngle = MathUtil.clamp(angle, 0, 360);
+    double clampedAngle = MathUtil.clamp(angle, 90, 330);
     return this.runOnce(
             () -> {
               armIO.setAngle(clampedAngle);
