@@ -124,7 +124,6 @@ public class RobotContainer {
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
-    SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
     SmartDashboard.putData(
         "Robot Command/prep score", prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
     SmartDashboard.putData("Robot Command/Score L4", scoreCoral());
@@ -197,7 +196,7 @@ public class RobotContainer {
 
     m_driverController.x().onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0.25)));
 
-    m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
+    m_driverController.x().whileTrue(prepCoralIntake()).onFalse(stopIntake());
 
     m_driverController
         .leftBumper()
@@ -318,22 +317,18 @@ public class RobotContainer {
     return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters());
   }
 
-  // grabs coral from the intake
-  public Command coralHandoff() {
-    return Commands.sequence(
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
-            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
-            elevator.setHeight(ElevatorConstants.INTAKE_METER).withTimeout(1),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(1))
-        .withName("Coral HandOff");
-  }
-
   // Sets it to the right height and arm postion to intake coral
   public Command prepCoralIntake() {
     return Commands.sequence(
+            endEffector.intake(),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake");
+  }
+
+  public Command stopIntake() {
+    return Commands.parallel(arm.setAngle(ArmConstants.ARM_STOW_ANGLE), endEffector.stopMotor())
+        .withName("stop Intake");
   }
 
   // Sets elevator and arm to postion
@@ -348,8 +343,11 @@ public class RobotContainer {
   // scores coral
   public Command scoreCoral() {
     return Commands.sequence(
-            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+            endEffector.shoot(),
+            Commands.waitSeconds(0.2),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(0.2),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.2),
+            endEffector.stopMotor())
         .withName("Score Coral");
   }
 }
