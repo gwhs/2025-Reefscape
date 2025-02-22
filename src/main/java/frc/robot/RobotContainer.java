@@ -89,27 +89,14 @@ public class RobotContainer {
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
-  public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
-  public final Trigger IS_REEF_MODE =
-      new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
-  public final Trigger IS_CLOSE_TO_REEF =
-      new Trigger(
-          () ->
-              EagleUtil.getDistanceBetween(
-                      drivetrain.getPose(), EagleUtil.getCachedReefPose(drivetrain.getPose()))
-                  < 1.25);
-  public final Trigger IS_NEAR_CORAL_STATION =
-      new Trigger(
-          () ->
-              EagleUtil.getDistanceBetween(
-                      drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
-                  < 0.4);
+
+  public final Trigger IS_NEAR_CORAL_STATION;
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
   private final Trigger IS_AT_POSE;
 
-  private final Trigger IS_REEFMODE;
+  private final Trigger IS_REEF_MODE;
 
   private final Trigger IS_CLOSE_TO_REEF;
 
@@ -161,7 +148,7 @@ public class RobotContainer {
 
     IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
 
-    IS_REEFMODE = new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
+    IS_REEF_MODE = new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
 
     IS_CLOSE_TO_REEF =
         new Trigger(
@@ -169,6 +156,13 @@ public class RobotContainer {
                 EagleUtil.getDistanceBetween(
                         drivetrain.getPose(), EagleUtil.getCachedReefPose(drivetrain.getPose()))
                     < 1.25);
+
+    IS_NEAR_CORAL_STATION =
+        new Trigger(
+            () ->
+                EagleUtil.getDistanceBetween(
+                        drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
+                    < 0.4);
 
     cam3 =
         new AprilTagCam(
@@ -209,7 +203,7 @@ public class RobotContainer {
     addPeriodic.accept(
         () ->
             DogLog.log(
-                "Canivore Bus Utilization", TunerConstants.kCANBus.getStatus().BusUtilization),
+                "Canivore Bus Utilization", TunerConstants_Comp.kCANBus.getStatus().BusUtilization),
         0.5);
   }
 
@@ -364,7 +358,6 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Disabled", IS_DISABLED.getAsBoolean());
     DogLog.log("Trigger/Is Telop", IS_TELEOP.getAsBoolean());
     DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
-    DogLog.log("Trigger/Is Reefmode", IS_REEFMODE.getAsBoolean());
     DogLog.log("Current Robot", whichRobot.toString());
     DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
   }
