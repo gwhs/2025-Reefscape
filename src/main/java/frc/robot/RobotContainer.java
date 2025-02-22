@@ -71,9 +71,9 @@ public class RobotContainer {
   private final LedSubsystem led = new LedSubsystem();
   private final ClimbSubsystem climb = new ClimbSubsystem();
   private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
-  
+
   private final DriveCommand driveCommand;
-  
+
   public enum CoralLevel {
     L1,
     L2,
@@ -105,7 +105,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    
+
     configureAutonomous();
     configureBindings();
 
@@ -334,6 +334,8 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Telop", IS_TELEOP.getAsBoolean());
     DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
     DogLog.log("Trigger/Is Reefmode", IS_REEFMODE.getAsBoolean());
+
+    DogLog.log("Current Robot", whichRobot.toString());
   }
 
   /**
