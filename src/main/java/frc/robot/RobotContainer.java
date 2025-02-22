@@ -129,38 +129,38 @@ public class RobotContainer {
       case COMP:
         drivetrain = TunerConstants_Comp.createDrivetrain();
         leftCam =
-        new AprilTagCam(
-            AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
-            AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
-            drivetrain::addVisionMeasurent,
-            () -> drivetrain.getState().Pose,
-            () -> drivetrain.getState().Speeds);
+            new AprilTagCam(
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
+                drivetrain::addVisionMeasurent,
+                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getState().Speeds);
 
-    rightCam =
-        new AprilTagCam(
-            AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
-            AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
-            drivetrain::addVisionMeasurent,
-            () -> drivetrain.getState().Pose,
-            () -> drivetrain.getState().Speeds);
+        rightCam =
+            new AprilTagCam(
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
+                drivetrain::addVisionMeasurent,
+                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getState().Speeds);
         break;
       case DEV:
         drivetrain = TunerConstants_practiceDrivetrain.createDrivetrain();
         leftCam =
-        new AprilTagCam(
-            AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
-            AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_DEV,
-            drivetrain::addVisionMeasurent,
-            () -> drivetrain.getState().Pose,
-            () -> drivetrain.getState().Speeds);
+            new AprilTagCam(
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_DEV,
+                drivetrain::addVisionMeasurent,
+                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getState().Speeds);
 
-    rightCam =
-        new AprilTagCam(
-            AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
-            AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_DEV,
-            drivetrain::addVisionMeasurent,
-            () -> drivetrain.getState().Pose,
-            () -> drivetrain.getState().Speeds);
+        rightCam =
+            new AprilTagCam(
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_DEV,
+                drivetrain::addVisionMeasurent,
+                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getState().Speeds);
         break;
       case WALLE:
         drivetrain = TunerConstants_WALLE.createDrivetrain();
@@ -358,11 +358,11 @@ public class RobotContainer {
   public void periodic() {
     DogLog.log("nearest", EagleUtil.closestReefSetPoint(drivetrain.getPose(), 0));
     robotVisualizer.update();
-    if (leftCam != null){
-    leftCam.updatePoseEstim();
+    if (leftCam != null) {
+      leftCam.updatePoseEstim();
     }
-    if (rightCam !=null) {
-    rightCam.updatePoseEstim();
+    if (rightCam != null) {
+      rightCam.updatePoseEstim();
     }
     DogLog.log("Desired Reef", coralLevel);
     DogLog.log(
