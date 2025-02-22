@@ -7,6 +7,7 @@ package frc.robot;
 import dev.doglog.DogLog;
 import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -51,6 +52,8 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
 
+    Threads.setCurrentThreadPriority(true, 99);
+
     EagleUtil.clearCachedPose();
     double startTime = HALUtil.getFPGATime();
 
@@ -69,6 +72,8 @@ public class Robot extends TimedRobot {
     double currentTime = HALUtil.getFPGATime();
     DogLog.log("Loop Time/Total", (currentTime - prevTime) / 1000);
     prevTime = currentTime;
+
+    Threads.setCurrentThreadPriority(false, 10);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
