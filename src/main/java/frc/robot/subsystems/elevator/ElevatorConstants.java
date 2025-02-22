@@ -25,7 +25,7 @@ public class ElevatorConstants {
   public static final double L2_PREP_POSITION =
       ElevatorSubsystem.rotationsToMeters(0 / GEAR_RATIO_DIFF);
   public static final double L3_PREP_POSITION =
-      ElevatorSubsystem.rotationsToMeters(5 / GEAR_RATIO_DIFF);
+      ElevatorSubsystem.rotationsToMeters(17 / GEAR_RATIO_DIFF);
   public static final double L4_PREP_POSITION =
       ElevatorSubsystem.rotationsToMeters(65 / GEAR_RATIO_DIFF);
 
