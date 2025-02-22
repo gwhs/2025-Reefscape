@@ -60,9 +60,12 @@ public class ObjectDetectionCam {
     Pose2d robotPose = this.robotPose.get();
     Pose3d robotPose3d = new Pose3d(robotPose);
     Pose3d cameraPose3d = robotPose3d.plus(robotToCam);
-    DogLog.log(ntKey + "Camera Pose/", cameraPose3d);
 
     Pose3d targetToField = cameraPose3d.plus(targetLocationToCamera);
+    
+    DogLog.log(ntKey + "Camera Pose/", cameraPose3d);
+    DogLog.log(ntKey + "Target Pose/", targetToField);
+
     return targetToField;
   }
 }
