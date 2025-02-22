@@ -89,7 +89,7 @@ public class RobotContainer {
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
 
-  private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
   private final Trigger IS_AT_POSE;
 
@@ -105,9 +105,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
-    configureAutonomous();
-    configureBindings();
 
     if (RobotController.getSerialNumber().equals("032414F0")) {
       whichRobot = Robot.COMP;
@@ -131,9 +128,12 @@ public class RobotContainer {
         drivetrain = TunerConstants_Comp.createDrivetrain(); // Fallback
         break;
     }
+
+    configureAutonomous();
+    configureBindings();
+
     driveCommand =
         new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
-    autoChooser = new SendableChooser<Command>();
 
     IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
 
