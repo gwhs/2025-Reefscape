@@ -29,7 +29,7 @@ public class AlignToPose extends Command {
 
   private CommandSwerveDrivetrain drivetrain;
 
-  private double maxSpeed = TunerConstants_Comp.kSpeedAt12Volts.in(MetersPerSecond);
+  private double maxSpeed = CommandSwerveDrivetrain.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 1.0 * Math.PI;
 
   public static final double PID_MAX = 0.44;

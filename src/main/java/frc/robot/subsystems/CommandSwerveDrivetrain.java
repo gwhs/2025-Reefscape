@@ -21,6 +21,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -32,6 +33,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.generated.TunerConstants_Comp;
 import frc.robot.generated.TunerSwerveDrivetrain;
 import frc.robot.subsystems.aprilTagCam.AprilTagHelp;
+
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import java.util.function.Supplier;
 
 /**
@@ -75,6 +79,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   private static final double kSimLoopPeriod = 0.005; // 5 ms
   private Notifier m_simNotifier = null;
   private double m_lastSimTime;
+  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.73);
 
   public final double DRIVE_BASE_RADIUS =
       Math.max(

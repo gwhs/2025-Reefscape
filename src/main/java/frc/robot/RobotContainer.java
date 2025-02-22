@@ -100,9 +100,9 @@ public class RobotContainer {
 
   private final Trigger IS_CLOSE_TO_REEF;
 
-  private AprilTagCam cam3;
+  private AprilTagCam leftCam;
 
-  private AprilTagCam cam4;
+  private AprilTagCam rightCam;
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
@@ -128,9 +128,39 @@ public class RobotContainer {
     switch (whichRobot) {
       case COMP:
         drivetrain = TunerConstants_Comp.createDrivetrain();
+        leftCam =
+        new AprilTagCam(
+            AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+            AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
+            drivetrain::addVisionMeasurent,
+            () -> drivetrain.getState().Pose,
+            () -> drivetrain.getState().Speeds);
+
+    rightCam =
+        new AprilTagCam(
+            AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+            AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
+            drivetrain::addVisionMeasurent,
+            () -> drivetrain.getState().Pose,
+            () -> drivetrain.getState().Speeds);
         break;
       case DEV:
         drivetrain = TunerConstants_practiceDrivetrain.createDrivetrain();
+        leftCam =
+        new AprilTagCam(
+            AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+            AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_DEV,
+            drivetrain::addVisionMeasurent,
+            () -> drivetrain.getState().Pose,
+            () -> drivetrain.getState().Speeds);
+
+    rightCam =
+        new AprilTagCam(
+            AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+            AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_DEV,
+            drivetrain::addVisionMeasurent,
+            () -> drivetrain.getState().Pose,
+            () -> drivetrain.getState().Speeds);
         break;
       case WALLE:
         drivetrain = TunerConstants_WALLE.createDrivetrain();
@@ -163,22 +193,6 @@ public class RobotContainer {
                 EagleUtil.getDistanceBetween(
                         drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
                     < 0.4);
-
-    cam3 =
-        new AprilTagCam(
-            AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
-            AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
-            drivetrain::addVisionMeasurent,
-            () -> drivetrain.getState().Pose,
-            () -> drivetrain.getState().Speeds);
-
-    cam4 =
-        new AprilTagCam(
-            AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
-            AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
-            drivetrain::addVisionMeasurent,
-            () -> drivetrain.getState().Pose,
-            () -> drivetrain.getState().Speeds);
 
     // Default Commands
     drivetrain.setDefaultCommand(driveCommand);
@@ -344,8 +358,12 @@ public class RobotContainer {
   public void periodic() {
     DogLog.log("nearest", EagleUtil.closestReefSetPoint(drivetrain.getPose(), 0));
     robotVisualizer.update();
-    cam3.updatePoseEstim();
-    cam4.updatePoseEstim();
+    if (leftCam != null){
+    leftCam.updatePoseEstim();
+    }
+    if (rightCam !=null) {
+    rightCam.updatePoseEstim();
+    }
     DogLog.log("Desired Reef", coralLevel);
     DogLog.log(
         "Canivore Bus Utilization", (TunerConstants_Comp.kCANBus.getStatus()).BusUtilization);
@@ -353,8 +371,6 @@ public class RobotContainer {
     // Log Triggers
     DogLog.log("Trigger/At L1", IS_L1.getAsBoolean());
     DogLog.log("Trigger/At L2", IS_L2.getAsBoolean());
-    DogLog.log("Trigger/At L3", IS_L3.getAsBoolean());
-    DogLog.log("Trigger/At L4", IS_L4.getAsBoolean());
     DogLog.log("Trigger/Is Disabled", IS_DISABLED.getAsBoolean());
     DogLog.log("Trigger/Is Telop", IS_TELEOP.getAsBoolean());
     DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
