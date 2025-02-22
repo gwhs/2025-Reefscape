@@ -39,6 +39,7 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 /**
@@ -114,8 +115,19 @@ public class RobotContainer {
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
+  public final Trigger IS_REEFMODE =
+      new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
+
+  private final BiConsumer<Runnable, Double> addPeriodic;
+
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   *
+   * @param periodic
+   */
+  public RobotContainer(BiConsumer<Runnable, Double> addPeriodic) {
+
+    this.addPeriodic = addPeriodic;
 
     configureBindings();
 
@@ -140,6 +152,12 @@ public class RobotContainer {
     // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
     EagleUtil.calculateRedReefSetPoints();
+
+    addPeriodic.accept(
+        () ->
+            DogLog.log(
+                "Canivore Bus Utilization", TunerConstants.kCANBus.getStatus().BusUtilization),
+        0.5);
   }
 
   /**
@@ -282,7 +300,6 @@ public class RobotContainer {
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
     DogLog.log("Desired Reef", coralLevel);
-    DogLog.log("Canivore Bus Utilization", (TunerConstants.kCANBus.getStatus()).BusUtilization);
 
     // Log Triggers
     DogLog.log("Trigger/At L1", IS_L1.getAsBoolean());
