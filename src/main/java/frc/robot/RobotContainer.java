@@ -39,6 +39,7 @@ import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.Supplier;
 
@@ -69,8 +70,10 @@ public class RobotContainer {
   private final ArmSubsystem arm = new ArmSubsystem();
   private final LedSubsystem led = new LedSubsystem();
   private final ClimbSubsystem climb = new ClimbSubsystem();
+  private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
+  
   private final DriveCommand driveCommand;
-
+  
   public enum CoralLevel {
     L1,
     L2,
@@ -102,6 +105,9 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    
+    configureAutonomous();
+    configureBindings();
 
     if (RobotController.getSerialNumber().equals("032414F0")) {
       whichRobot = Robot.COMP;
@@ -168,7 +174,7 @@ public class RobotContainer {
     SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
     SmartDashboard.putData(
         "Robot Command/prep score", prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
-    SmartDashboard.putData("Robot Command/Score L4", scoreCoralL4());
+    SmartDashboard.putData("Robot Command/Score L4", scoreCoral());
     SmartDashboard.putData("Robot Command/Score Coral", scoreCoral());
     SmartDashboard.putData("Robot Command/Prep Score Coral", prepScoreCoral(0, 0));
 
@@ -269,7 +275,7 @@ public class RobotContainer {
         .whileTrue(
             prepScoreCoral(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION));
 
-    IS_L4.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoralL4());
+    IS_L4.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
     IS_L3.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
     IS_L2.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
     IS_L1.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
@@ -315,8 +321,19 @@ public class RobotContainer {
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
     DogLog.log("Desired Reef", coralLevel);
+
     DogLog.log(
         "Canivore Bus Utilization", (TunerConstants_Comp.kCANBus.getStatus()).BusUtilization);
+
+    // Log Triggers
+    DogLog.log("Trigger/At L1", IS_L1.getAsBoolean());
+    DogLog.log("Trigger/At L2", IS_L2.getAsBoolean());
+    DogLog.log("Trigger/At L3", IS_L3.getAsBoolean());
+    DogLog.log("Trigger/At L4", IS_L4.getAsBoolean());
+    DogLog.log("Trigger/Is Disabled", IS_DISABLED.getAsBoolean());
+    DogLog.log("Trigger/Is Telop", IS_TELEOP.getAsBoolean());
+    DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
+    DogLog.log("Trigger/Is Reefmode", IS_REEFMODE.getAsBoolean());
   }
 
   /**
@@ -383,46 +400,5 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral");
-  }
-
-  public Command scoreCoralL4() {
-    return Commands.sequence(
-            arm.setAngle(ArmConstants.L4_SCORE_POSITION).withTimeout(1),
-            driveCommand.driveBackward(1).withTimeout(0.2),
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.5),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
-        .withName("Score L4");
-  }
-
-  public Command prepScoreCoraL3() {
-    double elevatorHeight = ElevatorConstants.L3_PREP_POSITION;
-    double armAngle = ElevatorConstants.L3_PREP_POSITION;
-    return Commands.sequence(
-            elevator.setHeight(elevatorHeight).withTimeout(0.5),
-            arm.setAngle(armAngle).withTimeout(1))
-        .withName("Prepare Score Coral L3");
-  }
-
-  public Command scoreCoralL3Command() {
-    return Commands.sequence(
-            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
-        .withName("Score Coral L3");
-  }
-
-  public Command prepScoreCoralL4() {
-    double elevatorHeight = ElevatorConstants.L4_PREP_POSITION;
-    double armAngle = ArmConstants.L4_PREP_POSITION;
-    return Commands.sequence(
-            elevator.setHeight(elevatorHeight).withTimeout(0.5),
-            arm.setAngle(armAngle).withTimeout(1))
-        .withName("Prepare Score Coral L4");
-  }
-
-  public Command scoreCoralL4Command() {
-    return Commands.sequence(
-            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
-        .withName("Score Coral L4");
   }
 }
