@@ -103,11 +103,11 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    if (RobotController.getSerialNumber().equals("0323CA18")) {
+    if (RobotController.getSerialNumber().equals("032414F0")) {
       whichRobot = Robot.COMP;
-    } else if (RobotController.getSerialNumber().equals("")) {
+    } else if (RobotController.getSerialNumber().equals("0323CA18")) {
       whichRobot = Robot.DEV;
-    } else if (RobotController.getSerialNumber().equals("")) {
+    } else if (RobotController.getSerialNumber().equals("03223849")) {
       whichRobot = Robot.WALLE;
     }
 
