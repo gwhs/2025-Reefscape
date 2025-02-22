@@ -38,6 +38,7 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 /**
@@ -79,13 +80,21 @@ public class RobotContainer {
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
+  public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
+  public final Trigger IS_REEF_MODE =
+      new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
   public final Trigger IS_CLOSE_TO_REEF =
       new Trigger(
           () ->
               EagleUtil.getDistanceBetween(
                       drivetrain.getPose(), EagleUtil.getCachedReefPose(drivetrain.getPose()))
                   < 1.25);
-  public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
+  public final Trigger IS_NEAR_CORAL_STATION =
+      new Trigger(
+          () ->
+              EagleUtil.getDistanceBetween(
+                      drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
+                  < 0.4);
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
@@ -108,8 +117,16 @@ public class RobotContainer {
   public final Trigger IS_REEFMODE =
       new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
+  private final BiConsumer<Runnable, Double> addPeriodic;
+
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   *
+   * @param periodic
+   */
+  public RobotContainer(BiConsumer<Runnable, Double> addPeriodic) {
+
+    this.addPeriodic = addPeriodic;
 
     configureBindings();
 
@@ -133,6 +150,12 @@ public class RobotContainer {
     // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
     EagleUtil.calculateRedReefSetPoints();
+
+    addPeriodic.accept(
+        () ->
+            DogLog.log(
+                "Canivore Bus Utilization", TunerConstants.kCANBus.getStatus().BusUtilization),
+        0.5);
   }
 
   /**
@@ -192,23 +215,25 @@ public class RobotContainer {
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Coral Station"));
 
-    m_driverController.x().onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)));
-
-    m_driverController.x().onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0.25)));
+    // m_driverController
+    //     .x()
+    //     .and(IS_NEAR_CORAL_STATION)
+    //     .onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)))
+    //     .onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0)));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(stopIntake());
-
-    m_driverController
-        .leftBumper()
-        .onTrue(
-            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
-                .withName("Back to Original State"));
 
     // IS_TELEOP
     //     .and(IS_REEFMODE)
     //     .and(IS_CLOSE_TO_REEF)
     //     .onTrue(
     //         prepScoreCoral(ElevatorConstants.STOW_METER, 220).withName("auto prep score coral"));
+
+    m_driverController
+        .leftBumper()
+        .onTrue(
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
+                .withName("Back to Original State"));
 
     IS_L4
         .and(m_driverController.rightTrigger())
@@ -273,7 +298,6 @@ public class RobotContainer {
     cam3.updatePoseEstim();
     cam4.updatePoseEstim();
     DogLog.log("Desired Reef", coralLevel);
-    DogLog.log("Canivore Bus Utilization", (TunerConstants.kCANBus.getStatus()).BusUtilization);
 
     // Log Triggers
     DogLog.log("Trigger/At L1", IS_L1.getAsBoolean());
@@ -283,7 +307,7 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Disabled", IS_DISABLED.getAsBoolean());
     DogLog.log("Trigger/Is Telop", IS_TELEOP.getAsBoolean());
     DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
-    DogLog.log("Trigger/Is Reefmode", IS_REEFMODE.getAsBoolean());
+    DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
   }
 
   /**
