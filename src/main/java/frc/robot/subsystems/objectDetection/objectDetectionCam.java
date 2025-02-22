@@ -62,7 +62,7 @@ public class ObjectDetectionCam {
     Pose3d cameraPose3d = robotPose3d.plus(robotToCam);
 
     Pose3d targetToField = cameraPose3d.plus(targetLocationToCamera);
-    
+
     DogLog.log(ntKey + "Camera Pose/", cameraPose3d);
     DogLog.log(ntKey + "Target Pose/", targetToField);
 
