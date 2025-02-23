@@ -67,8 +67,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   CurrentLimitsConfigs m3_current_config = new CurrentLimitsConfigs();
   CurrentLimitsConfigs m4_current_config = new CurrentLimitsConfigs();
 
-  public PIDController PID_X = new PIDController(1.7, 0.1, 0);
-  public PIDController PID_Y = new PIDController(1.7, 0.1, 0);
+  public PIDController PID_X = new PIDController(1.5, 0.01, 0.1);
+  public PIDController PID_Y = new PIDController(1.5, 0.01, 0.1);
   public PIDController PID_Rotation = new PIDController(0.1, 0, 0);
   public Trigger IS_AT_TARGET_POSE =
       new Trigger(() -> PID_X.atSetpoint() && PID_Y.atSetpoint() && PID_Rotation.atSetpoint());
