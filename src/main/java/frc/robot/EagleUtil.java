@@ -41,6 +41,11 @@ public class EagleUtil {
   private static Pose2d cachedPose = null;
   private static Alliance red = DriverStation.Alliance.Red;
 
+  /**
+   * 
+   * @return returns the calculated set points
+   */
+
   public static ArrayList<Pose2d> calculateBlueReefSetPoints() {
     if (m_bluePoses != null) {
       return m_bluePoses;
@@ -85,6 +90,11 @@ public class EagleUtil {
     m_bluePoses = new ArrayList<Pose2d>(Arrays.asList(bluePoses));
     return m_bluePoses;
   }
+
+  /**
+   * 
+   * @return returns calculated setpoints
+   */
 
   public static ArrayList<Pose2d> calculateRedReefSetPoints() {
     if (m_redPoses != null) {
@@ -132,6 +142,9 @@ public class EagleUtil {
     return m_redPoses;
   }
 
+
+  
+
   private static Pose2d getNearestReefPoint(Pose2d pose) {
     if (DriverStation.getAlliance().isPresent()
         && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
@@ -141,6 +154,13 @@ public class EagleUtil {
     }
   }
 
+
+  /**
+   * 
+   * @param pose the pose to compare to
+   * @return cached Pose2d
+   */
+
   public static Pose2d getCachedReefPose(Pose2d pose) {
     if (cachedPose == null) {
       cachedPose = getNearestReefPoint(pose);
@@ -148,9 +168,17 @@ public class EagleUtil {
     return cachedPose;
   }
 
+ 
   public static void clearCachedPose() {
     cachedPose = null;
   }
+
+  /**
+   * 
+   * @param poseA first pose
+   * @param poseB second pose
+   * @return distance in between
+   */
 
   public static double getDistanceBetween(Pose2d poseA, Pose2d poseB) {
     return poseA.getTranslation().getDistance(poseB.getTranslation());
@@ -175,6 +203,13 @@ public class EagleUtil {
     }
   }
 
+  /**
+   * 
+   * @param pose the pose to compare
+   * @param n how many from closest
+   * @return the pose with is nth away from closest
+   */
+
   public static Pose2d closestReefSetPoint(Pose2d pose, int n) {
     n = MathUtil.clamp(n, 0, 23);
     if (isRedAlliance()) {
@@ -188,15 +223,75 @@ public class EagleUtil {
     return blue.get(n);
   }
 
+  /**
+   * 
+   * @return if your on red alliance
+   */
+
   public static boolean isRedAlliance() {
     return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == red;
   }
+
+  /**
+   * 
+   * @param alert what alert to trigger
+   * @return run the command
+   */
 
   public static Command triggerAlert(Alert alert) {
     return Commands.runOnce(() -> alert.set(true));
   }
 
+  /**
+   * @param alert what alert to untrigger
+   * @return run the command
+   */
+
   public static Command detriggerAlert(Alert alert) {
     return Commands.runOnce(() -> alert.set(false));
+  }
+
+  public static Pose2d blueCoralStationProcessorSide = new Pose2d(1.0, 0.27, Rotation2d.kZero);
+  public static Pose2d blueCoralStationNonProcessorSide = new Pose2d(1.0, 7.313, Rotation2d.kZero);
+  public static Pose2d redCoralStationProcessorSide = new Pose2d(16.5, 0.27, Rotation2d.kZero);
+  public static Pose2d redCoralStationNonProcessorSide = new Pose2d(16.5, 7.415, Rotation2d.kZero);
+
+
+  /**
+   * 
+   * @return the pose for your processor
+   */
+
+  public static Pose2d getProcessorForAlliance() {
+    if (isRedAlliance()) {
+      return redCoralStationProcessorSide;
+    }
+    return blueCoralStationProcessorSide;
+  }
+
+  /**
+   * 
+   * @return the pose for your non-processor
+   */
+
+  public static Pose2d getNonProcessorForAlliance() {
+    if (isRedAlliance()) {
+      return redCoralStationNonProcessorSide;
+    }
+    return blueCoralStationNonProcessorSide;
+  }
+
+  /**
+   * 
+   * @param pose compare to this pose
+   * @return the closest one's pose
+   */
+
+  public static Pose2d getClosetStationGen(Pose2d pose) {
+    if (getDistanceBetween(pose, getNonProcessorForAlliance())
+        < getDistanceBetween(pose, getProcessorForAlliance())) {
+      return getNonProcessorForAlliance();
+    }
+    return getProcessorForAlliance();
   }
 }

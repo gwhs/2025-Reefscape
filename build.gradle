@@ -213,3 +213,15 @@ task(eventDeploy) {
     }
 }
 createVersionFile.dependsOn(eventDeploy)
+
+task docs(type: Javadoc) {
+    // Specify the source directory containing your Java files
+    source = fileTree(dir: 'src', include: '**/*.java')
+
+    // Set the classpath to include the project's compile-time dependencies
+    classpath = sourceSets.main.compileClasspath
+
+
+    // Specify the output directory for the generated Javadoc
+    destinationDir = file("docs/")
+}
