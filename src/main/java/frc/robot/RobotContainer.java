@@ -252,10 +252,7 @@ public class RobotContainer {
         .whileTrue(
             prepScoreCoral(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION));
 
-    IS_L4.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
-    IS_L3.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
-    IS_L2.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
-    IS_L1.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
+    m_driverController.rightTrigger().onFalse(scoreCoral());
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 

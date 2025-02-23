@@ -33,7 +33,7 @@ public class EagleUtil {
 
   private static double X = -REEF_LENGTH - ROBOT_AWAY_FROM_REEF;
   private static double Y = REEF_TO_REEF_DISTANCE / 2;
-  private static double Y_OFFSET = Units.inchesToMeters(0.4);
+  private static double Y_OFFSET = Units.inchesToMeters(0.5);
 
   private static Pose2d[] bluePoses = new Pose2d[12];
   private static Pose2d[] redPoses = new Pose2d[12];
@@ -63,7 +63,7 @@ public class EagleUtil {
     };
 
     bluePoses[0] = new Pose2d(X, Y + Y_OFFSET, Rotation2d.kZero);
-    bluePoses[1] = new Pose2d(X, -Y - Y_OFFSET, Rotation2d.kZero);
+    bluePoses[1] = new Pose2d(X, -Y + Y_OFFSET, Rotation2d.kZero);
 
     Rotation2d sixty = Rotation2d.fromDegrees(60);
 
