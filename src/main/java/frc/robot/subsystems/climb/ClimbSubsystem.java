@@ -17,6 +17,9 @@ public class ClimbSubsystem extends SubsystemBase {
     } else {
       climbIO = new ClimbIOReal();
     }
+
+    SmartDashboard.putData("Climb Command/extend", extend());
+    SmartDashboard.putData("Climb Command/retract", retract());
   }
 
   @Override
@@ -24,6 +27,7 @@ public class ClimbSubsystem extends SubsystemBase {
     double startTime = HALUtil.getFPGATime();
 
     climbIO.update();
+    DogLog.log("Climb/Climb Position", getPosition());
 
     DogLog.log("Loop Time/Climb", (HALUtil.getFPGATime() - startTime) / 1000);
   }
@@ -32,11 +36,27 @@ public class ClimbSubsystem extends SubsystemBase {
     return climbIO.getPosition();
   }
 
-  public Command setPosition(double desiredPos) {
+  public Command extend() {
     return this.runOnce(
             () -> {
-              climbIO.setPosition(desiredPos);
+              climbIO.setPosition(ClimbConstants.EXTEND_CLIMB_POSITION);
             })
-        .andThen(Commands.waitUntil(() -> MathUtil.isNear(desiredPos, climbIO.getPosition(), 0.1)));
+        .andThen(
+            Commands.waitUntil(
+                () ->
+                    MathUtil.isNear(
+                        ClimbConstants.EXTEND_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
+  }
+
+  public Command retract() {
+    return this.runOnce(
+            () -> {
+              climbIO.setPosition(ClimbConstants.RETRACT_CLIMB_POSITION);
+            })
+        .andThen(
+            Commands.waitUntil(
+                () ->
+                    MathUtil.isNear(
+                        ClimbConstants.RETRACT_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
   }
 }

@@ -76,17 +76,28 @@ public class ElevatorSubsystem extends SubsystemBase {
    * flag)
    */
   public Command homingCommand() {
-    return this.runOnce(
-            () -> {
-              elevatorIO.setVoltage(-3);
-            })
-        .andThen(Commands.waitUntil(() -> elevatorIO.getReverseLimit()))
-        .andThen(
-            Commands.runOnce(
+    Command whenNotAtBottom =
+        this.runOnce(
                 () -> {
-                  elevatorIO.setVoltage(0);
-                  elevatorIO.setPosition(0);
-                }));
+                  elevatorIO.setPosition(metersToRotations(ElevatorConstants.TOP_METER));
+                  ;
+                  elevatorIO.setVoltage(-3);
+                })
+            .andThen(
+                Commands.waitUntil(() -> elevatorIO.getReverseLimit()),
+                Commands.runOnce(
+                    () -> {
+                      elevatorIO.setVoltage(0);
+                      elevatorIO.setPosition(0);
+                    }));
+
+    Command whenAtBottom =
+        Commands.runOnce(
+            () -> {
+              elevatorIO.setPosition(0);
+            });
+
+    return Commands.either(whenNotAtBottom, whenAtBottom, () -> !elevatorIO.getReverseLimit());
   }
 
   public static double rotationsToMeters(double rotations) {

@@ -9,16 +9,13 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
-import dev.doglog.DogLogOptions;
 import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -41,7 +38,9 @@ import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 /**
@@ -63,6 +62,8 @@ public class RobotContainer {
   private final ArmSubsystem arm = new ArmSubsystem();
   private final LedSubsystem led = new LedSubsystem();
   private final ClimbSubsystem climb = new ClimbSubsystem();
+  private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
+
   private final DriveCommand driveCommand =
       new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
@@ -81,13 +82,21 @@ public class RobotContainer {
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
+  public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
+  public final Trigger IS_REEF_MODE =
+      new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
   public final Trigger IS_CLOSE_TO_REEF =
       new Trigger(
           () ->
               EagleUtil.getDistanceBetween(
                       drivetrain.getPose(), EagleUtil.getCachedReefPose(drivetrain.getPose()))
                   < 1.25);
-  public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
+  public final Trigger IS_NEAR_CORAL_STATION =
+      new Trigger(
+          () ->
+              EagleUtil.getDistanceBetween(
+                      drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
+                  < 0.4);
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
@@ -110,17 +119,17 @@ public class RobotContainer {
   public final Trigger IS_REEFMODE =
       new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    LiveWindow.disableAllTelemetry();
+  private final BiConsumer<Runnable, Double> addPeriodic;
 
-    // Setup DogLog
-    DogLog.setOptions(
-        new DogLogOptions().withNtPublish(true).withCaptureNt(true).withCaptureDs(true));
-    DogLog.setPdh(new PowerDistribution());
-    DogLog.log("/Metadata/Branch", BuildConstants.GIT_BRANCH);
-    DogLog.log("/Metadata/SHA", BuildConstants.GIT_SHA);
-    DogLog.log("/Metadata/DIRTY", BuildConstants.DIRTY);
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   *
+   * @param periodic
+   */
+  public RobotContainer(BiConsumer<Runnable, Double> addPeriodic) {
+
+    this.addPeriodic = addPeriodic;
+
     configureBindings();
 
     configureAutonomous();
@@ -137,6 +146,12 @@ public class RobotContainer {
     // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
     EagleUtil.calculateRedReefSetPoints();
+
+    addPeriodic.accept(
+        () ->
+            DogLog.log(
+                "Canivore Bus Utilization", TunerConstants.kCANBus.getStatus().BusUtilization),
+        0.5);
   }
 
   /**
@@ -196,23 +211,25 @@ public class RobotContainer {
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Coral Station"));
 
-    m_driverController.x().onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)));
-
-    m_driverController.x().onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0.25)));
+    // m_driverController
+    //     .x()
+    //     .and(IS_NEAR_CORAL_STATION)
+    //     .onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)))
+    //     .onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0)));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
-
-    m_driverController
-        .leftBumper()
-        .onTrue(
-            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
-                .withName("Back to Original State"));
 
     // IS_TELEOP
     //     .and(IS_REEFMODE)
     //     .and(IS_CLOSE_TO_REEF)
     //     .onTrue(
     //         prepScoreCoral(ElevatorConstants.STOW_METER, 220).withName("auto prep score coral"));
+
+    m_driverController
+        .leftBumper()
+        .onTrue(
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
+                .withName("Back to Original State"));
 
     IS_L4
         .and(m_driverController.rightTrigger())
@@ -231,7 +248,7 @@ public class RobotContainer {
         .whileTrue(
             prepScoreCoral(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION));
 
-    IS_L4.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoralL4());
+    IS_L4.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
     IS_L3.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
     IS_L2.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
     IS_L1.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
@@ -302,11 +319,16 @@ public class RobotContainer {
     startTime = HALUtil.getFPGATime();
 
     DogLog.log("Desired Reef", coralLevel);
-    // DogLog.log("Canivore Bus Utilization", (TunerConstants.kCANBus.getStatus()).BusUtilization);
-    // 5
-    DogLog.log(
-        "Loop Time/Robot Container/Logging CAN and Coral Level",
-        (HALUtil.getFPGATime() - startTime) / 1000);
+
+    // Log Triggers
+    DogLog.log("Trigger/At L1", IS_L1.getAsBoolean());
+    DogLog.log("Trigger/At L2", IS_L2.getAsBoolean());
+    DogLog.log("Trigger/At L3", IS_L3.getAsBoolean());
+    DogLog.log("Trigger/At L4", IS_L4.getAsBoolean());
+    DogLog.log("Trigger/Is Disabled", IS_DISABLED.getAsBoolean());
+    DogLog.log("Trigger/Is Telop", IS_TELEOP.getAsBoolean());
+    DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
+    DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
   }
 
   /**
@@ -373,46 +395,5 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral");
-  }
-
-  public Command scoreCoralL4() {
-    return Commands.sequence(
-            arm.setAngle(ArmConstants.L4_SCORE_POSITION).withTimeout(1),
-            driveCommand.driveBackward(1).withTimeout(0.2),
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.5),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
-        .withName("Score L4");
-  }
-
-  public Command prepScoreCoraL3() {
-    double elevatorHeight = ElevatorConstants.L3_PREP_POSITION;
-    double armAngle = ElevatorConstants.L3_PREP_POSITION;
-    return Commands.sequence(
-            elevator.setHeight(elevatorHeight).withTimeout(0.5),
-            arm.setAngle(armAngle).withTimeout(1))
-        .withName("Prepare Score Coral L3");
-  }
-
-  public Command scoreCoralL3Command() {
-    return Commands.sequence(
-            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
-        .withName("Score Coral L3");
-  }
-
-  public Command prepScoreCoralL4() {
-    double elevatorHeight = ElevatorConstants.L4_PREP_POSITION;
-    double armAngle = ArmConstants.L4_PREP_POSITION;
-    return Commands.sequence(
-            elevator.setHeight(elevatorHeight).withTimeout(0.5),
-            arm.setAngle(armAngle).withTimeout(1))
-        .withName("Prepare Score Coral L4");
-  }
-
-  public Command scoreCoralL4Command() {
-    return Commands.sequence(
-            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
-        .withName("Score Coral L4");
   }
 }
