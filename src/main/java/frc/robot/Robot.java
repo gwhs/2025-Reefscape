@@ -5,8 +5,12 @@
 package frc.robot;
 
 import dev.doglog.DogLog;
+import dev.doglog.DogLogOptions;
 import edu.wpi.first.hal.HALUtil;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -27,7 +31,27 @@ public class Robot extends TimedRobot {
    */
   public Robot() {
 
-    m_robotContainer = new RobotContainer();
+    m_robotContainer = new RobotContainer(this::addPeriodic);
+
+    LiveWindow.disableAllTelemetry();
+
+    // Setup DogLog
+    DogLog.setOptions(
+        new DogLogOptions().withNtPublish(true).withCaptureNt(true).withCaptureDs(true));
+    DogLog.setPdh(new PowerDistribution());
+
+    NetworkTableInstance.getDefault()
+        .getStringTopic("/Metadata/Branch")
+        .publish()
+        .set(BuildConstants.GIT_BRANCH);
+    NetworkTableInstance.getDefault()
+        .getStringTopic("/Metadata/SHA")
+        .publish()
+        .set(BuildConstants.GIT_SHA);
+    NetworkTableInstance.getDefault()
+        .getStringTopic("/Metadata/DIRTY")
+        .publish()
+        .set("" + BuildConstants.DIRTY);
   }
 
   /**
