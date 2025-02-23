@@ -365,12 +365,12 @@ public class RobotContainer {
       rightCam.updatePoseEstim();
     }
     DogLog.log("Desired Reef", coralLevel);
-    DogLog.log(
-        "Canivore Bus Utilization", (TunerConstants_Comp.kCANBus.getStatus()).BusUtilization);
 
     // Log Triggers
     DogLog.log("Trigger/At L1", IS_L1.getAsBoolean());
     DogLog.log("Trigger/At L2", IS_L2.getAsBoolean());
+    DogLog.log("Trigger/At L3", IS_L3.getAsBoolean());
+    DogLog.log("Trigger/At L4", IS_L4.getAsBoolean());
     DogLog.log("Trigger/Is Disabled", IS_DISABLED.getAsBoolean());
     DogLog.log("Trigger/Is Telop", IS_TELEOP.getAsBoolean());
     DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
