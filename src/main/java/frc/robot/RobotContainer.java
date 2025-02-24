@@ -37,6 +37,7 @@ import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.endEffector.EndEffectorSensor;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.BiConsumer;
@@ -62,6 +63,7 @@ public class RobotContainer {
   private final LedSubsystem led = new LedSubsystem();
   private final ClimbSubsystem climb = new ClimbSubsystem();
   private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
+  private final EndEffectorSensor endEffectorSensor = new EndEffectorSensor();
 
   private final DriveCommand driveCommand =
       new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
@@ -301,6 +303,7 @@ public class RobotContainer {
     cam4.updatePoseEstim();
     DogLog.log("Desired Reef", coralLevel);
 
+
     // Log Triggers
     DogLog.log("Trigger/At L1", IS_L1.getAsBoolean());
     DogLog.log("Trigger/At L2", IS_L2.getAsBoolean());
@@ -310,6 +313,9 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Telop", IS_TELEOP.getAsBoolean());
     DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
     DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
+
+    endEffectorSensor.robotPeriodic();
+    
   }
 
   /**
