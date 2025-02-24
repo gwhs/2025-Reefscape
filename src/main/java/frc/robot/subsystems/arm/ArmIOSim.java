@@ -20,7 +20,7 @@ public class ArmIOSim implements ArmIO {
 
   private TrapezoidProfile.Constraints constraints =
       new TrapezoidProfile.Constraints(
-          ArmConstants.MAX_VELOCITY * 360 / 60, ArmConstants.MAX_ACCELERATION * 360 / 60);
+          ArmConstants.MAX_VELOCITY * 360, ArmConstants.MAX_ACCELERATION * 360);
   private ProfiledPIDController pidController = new ProfiledPIDController(.1, 0, 0, constraints);
 
   public ArmIOSim() {
@@ -34,6 +34,10 @@ public class ArmIOSim implements ArmIO {
   @Override
   public void setAngle(double angle) {
     pidController.setGoal(angle);
+  }
+
+  public void setVoltage(double volts) {
+    armSim.setInputVoltage(volts);
   }
 
   public void update() {
