@@ -8,8 +8,11 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
+<<<<<<< HEAD
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.revrobotics.ColorSensorV3;
+=======
+>>>>>>> bd4cb4a (adds sensor and moving averages for dist and stan deviation)
 import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -17,15 +20,14 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.I2C;
 
 class EndEffectorIOTalon implements EndEffectorIO {
 
-  private final I2C.Port i2cPort = I2C.Port.kOnboard;
+  // private final I2C.Port i2cPort = I2C.Port.kOnboard;
 
-  private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
+  // private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
 
-  private final EndEffectorSensor m_endEffectorSensor = new EndEffectorSensor();
+  public TOFSensor m_endEffectorSensor = new TOFSensor();
 
   private TalonFX motor = new TalonFX(EndEffectorConstants.deviceID, "rio");
   private final StatusSignal<Voltage> volts = motor.getMotorVoltage();
