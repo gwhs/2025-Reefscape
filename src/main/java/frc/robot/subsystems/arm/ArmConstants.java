@@ -8,7 +8,7 @@ public class ArmConstants {
   public static final double MAX_ACCELERATION = 6.0; // rotation per second per second
   public static final double ARM_GEAR_RATIO = 64; // 68/12 * 84/20 * 48/18;
 
-  // Position consntants: in degrees
+  // Position constants: in degrees
   public static final double L1_PREP_POSITION = 313;
   public static final double L2_PREP_POSITION = 313;
   public static final double L3_PREP_POSITION = 313;

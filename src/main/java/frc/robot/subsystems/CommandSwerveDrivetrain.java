@@ -140,12 +140,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     configureAutoBuilder();
   }
 
+  /**
+   * @param targetPose the pose to go to
+   */
   public void goToPoseWithPID(Pose2d targetPose) {
     PID_X.setSetpoint(targetPose.getX());
     PID_Y.setSetpoint(targetPose.getY());
     PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
   }
 
+  /**
+   * @return run the command NOTE: this sets it to 35 DO NOT CHANGE THE VALUE!!!! NOTE: this only
+   *     exists so that a thing in the RobotContainer.java file works NOTE: don't use this in the
+   *     actual code there is a 99% chance this isn't the function you want
+   */
   public Command setDriveMotorCurrentLimit() {
 
     return Commands.runOnce(
@@ -271,6 +279,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     m_simNotifier.startPeriodic(kSimLoopPeriod);
   }
 
+  /**
+   * @param helper the apriltag helper object NOTE: Look at the AprilTagCam stuff if you want to
+   *     know about this
+   */
   public void addVisionMeasurent(AprilTagHelp helper) {
 
     Pose2d pos = helper.pos;
@@ -280,15 +292,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     super.addVisionMeasurement(pos, timestamp, sd);
   }
 
+  /**
+   * @return the Pose2d of the robot
+   */
   public Pose2d getPose() {
     return getState().Pose;
   }
 
+  /**
+   * @return the Rotation2d of the robot NOTE: does not return the angle as a double. It returns it
+   *     as Rotation2d object
+   */
   public Rotation2d getRotation() {
     return getPose().getRotation();
   }
 
-  /** Returns the position of each module in radians. */
+  /**
+   * @return Returns the position of each module in radians.
+   */
   public double[] getWheelRadiusCharacterizationPositions() {
     double[] values = new double[4];
     for (int i = 0; i < 4; i++) {
@@ -300,6 +321,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     return values;
   }
 
+  /**
+   * @param speeds the chassis speeds
+   */
   public void runVelocity(ChassisSpeeds speeds) {
     setControl(m_pathApplyRobotSpeeds.withSpeeds(speeds));
   }

@@ -193,7 +193,7 @@ public class EagleUtil {
   /**
    * @param pose the pose to compare
    * @param n how many from closest
-   * @return the pose with is nth away from closest
+   * @return the pose which is nth away from closest
    */
   public static Pose2d closestReefSetPoint(Pose2d pose, int n) {
     n = MathUtil.clamp(n, 0, 23);

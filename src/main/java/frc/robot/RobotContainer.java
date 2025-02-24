@@ -42,12 +42,6 @@ import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer {
 
   private final CommandXboxController m_driverController = new CommandXboxController(0);
@@ -120,11 +114,6 @@ public class RobotContainer {
 
   private final BiConsumer<Runnable, Double> addPeriodic;
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   *
-   * @param periodic
-   */
   public RobotContainer(BiConsumer<Runnable, Double> addPeriodic) {
 
     this.addPeriodic = addPeriodic;

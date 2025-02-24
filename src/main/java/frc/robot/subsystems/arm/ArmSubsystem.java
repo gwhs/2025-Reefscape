@@ -42,8 +42,7 @@ public class ArmSubsystem extends SubsystemBase {
   /**
    * drives the arm until it reaches the given provided angle
    *
-   * @param angle Angle to drive the arm to in degrees TODO: Morgan add sign information/0 position
-   *     information to param annotation
+   * @param angle Angle to drive the arm to in degrees
    */
   public Command setAngle(double angle) {
     double clampedAngle = MathUtil.clamp(angle, 0, 360);
@@ -60,6 +59,9 @@ public class ArmSubsystem extends SubsystemBase {
     DogLog.log("Arm/arm angle", armIO.getPosition());
   }
 
+  /**
+   * @return the arm's angle
+   */
   public double getAngle() {
     return armIO.getPosition();
   }
