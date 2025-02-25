@@ -1,6 +1,7 @@
 package frc.robot.subsystems.endEffector;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,8 +51,12 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    double startTime = HALUtil.getFPGATime();
+
     endEffectorIO.update();
     DogLog.log("EndEffector/Voltage", endEffectorIO.getVoltage());
     DogLog.log("EndEffector/Velocity", endEffectorIO.getVelocity());
+
+    DogLog.log("Loop Time/End Effector", (HALUtil.getFPGATime() - startTime) / 1000);
   }
 }
