@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Volts;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import dev.doglog.DogLog;
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -47,6 +48,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    double startTime = HALUtil.getFPGATime();
+
     elevatorIO.update();
     DogLog.log("Elevator/rotation", elevatorIO.getRotation());
     DogLog.log("Elevator/meters", rotationsToMeters(elevatorIO.getRotation()));
@@ -54,6 +57,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     DogLog.log("Elevator/Limit Switch Value (Forward)", elevatorIO.getForwardLimit());
 
     DogLog.log("Elevator/Max Height (meter)", ElevatorConstants.TOP_METER);
+
+    DogLog.log("Loop Time/Elevator", (HALUtil.getFPGATime() - startTime) / 1000);
   }
 
   /**

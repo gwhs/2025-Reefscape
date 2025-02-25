@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -199,13 +200,6 @@ public class RobotContainer {
     PathfindingCommand.warmupCommand().schedule();
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
-    SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
-    SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
-    SmartDashboard.putData(
-        "Robot Command/prep score", prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
-    SmartDashboard.putData("Robot Command/Score L4", scoreCoral());
-    SmartDashboard.putData("Robot Command/Score Coral", scoreCoral());
-    SmartDashboard.putData("Robot Command/Prep Score Coral", prepScoreCoral(0, 0));
 
     // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
@@ -353,14 +347,38 @@ public class RobotContainer {
   }
 
   public void periodic() {
+    double startTime = HALUtil.getFPGATime();
+
     DogLog.log("nearest", EagleUtil.closestReefSetPoint(drivetrain.getPose(), 0));
+    // 1
+    DogLog.log(
+        "Loop Time/Robot Container/Log Closest Reef Set Point",
+        (HALUtil.getFPGATime() - startTime) / 1000);
+
+    startTime = HALUtil.getFPGATime();
+
     robotVisualizer.update();
+    // 2
+    DogLog.log(
+        "Loop Time/Robot Container/Robot Visualizer", (HALUtil.getFPGATime() - startTime) / 1000);
+
+    startTime = HALUtil.getFPGATime();
+
     if (leftCam != null) {
       leftCam.updatePoseEstim();
+      // 3
+      DogLog.log("Loop Time/Robot Container/Cam3", (HALUtil.getFPGATime() - startTime) / 1000);
+
+      startTime = HALUtil.getFPGATime();
     }
     if (rightCam != null) {
       rightCam.updatePoseEstim();
     }
+    // 4
+    DogLog.log("Loop Time/Robot Container/Cam4", (HALUtil.getFPGATime() - startTime) / 1000);
+
+    startTime = HALUtil.getFPGATime();
+
     DogLog.log("Desired Reef", coralLevel);
 
     // Log Triggers
