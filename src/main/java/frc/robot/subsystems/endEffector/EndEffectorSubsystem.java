@@ -16,7 +16,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
   public EndEffectorSubsystem() {
 
-    if (RobotBase.isSimulation() || true) {
+    if (RobotBase.isSimulation()) {
       endEffectorIO = new EndEffectorIOSim();
     } else {
       // endEffectorIO = new EndEffectorIOSparkMax();
