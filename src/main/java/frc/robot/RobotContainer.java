@@ -39,9 +39,8 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
-import frc.robot.subsystems.objectDetection.ObjectDetectionConstants;
 import frc.robot.subsystems.objectDetection.ObjectDetectionCam;
-
+import frc.robot.subsystems.objectDetection.ObjectDetectionConstants;
 import java.util.function.Supplier;
 
 /**
@@ -109,10 +108,9 @@ public class RobotContainer {
           () -> drivetrain.getState().Pose,
           () -> drivetrain.getState().Speeds);
 
-  private ObjectDetectionCam yay = 
-    new ObjectDetectionCam(
-            "obj_cam", ObjectDetectionConstants.robotToCam,
-            () -> drivetrain.getState().Pose);
+  private ObjectDetectionCam yay =
+      new ObjectDetectionCam(
+          "obj_cam", ObjectDetectionConstants.robotToCam, () -> drivetrain.getState().Pose);
 
   public final Trigger IS_REEFMODE =
       new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
