@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.Supplier;
@@ -19,6 +20,7 @@ public class AlignToPose extends Command {
   private PIDController PID_X;
   private PIDController PID_Y;
   private PIDController PID_Rotation;
+  private CommandXboxController driverController;
 
   private CommandSwerveDrivetrain drivetrain;
 
@@ -33,11 +35,15 @@ public class AlignToPose extends Command {
           .withRotationalDeadband(maxAngularRate * 0.05)
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-  public AlignToPose(Supplier<Pose2d> Pose, CommandSwerveDrivetrain drivetrain) {
+  public AlignToPose(
+      Supplier<Pose2d> Pose,
+      CommandSwerveDrivetrain drivetrain,
+      CommandXboxController driverController) {
     addRequirements(drivetrain);
 
     this.drivetrain = drivetrain;
     this.targetPose = Pose;
+    this.driverController = driverController;
 
     PID_X = new PIDController(2.7, 0, 0); // same for now tune later
     PID_X.setTolerance(0.02);
@@ -65,6 +71,20 @@ public class AlignToPose extends Command {
     DogLog.log("Align/atRotation", isAtRotation);
 
     if (isAtX && isAtY && isAtRotation) {
+      return true;
+    }
+    return false;
+  }
+
+  public boolean isJoystickActive() {
+    // get joystick x and y
+    // if between certain values (absolute value of y > something), report true
+    // repeat for absolute value of x, report true
+    // else report false
+    double xVelocity = driverController.getLeftY();
+    double yVelocity = driverController.getLeftX();
+
+    if (Math.abs(yVelocity) > 0.1 || Math.abs(xVelocity) > 0.1) {
       return true;
     }
     return false;
@@ -127,6 +147,9 @@ public class AlignToPose extends Command {
   @Override
   public boolean isFinished() {
     if (isAtTargetPose()) {
+      return true;
+    }
+    if (isJoystickActive()) {
       return true;
     }
     return false;
