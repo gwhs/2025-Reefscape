@@ -28,10 +28,16 @@ public class ClimbSubsystem extends SubsystemBase {
     DogLog.log("Climb/Climb Position", getPosition());
   }
 
+  /**
+   * @return the climb's position
+   */
   public double getPosition() {
     return climbIO.getPosition();
   }
 
+  /**
+   * @return extend the climb NOTE: see ClimbConstants for the position
+   */
   public Command extend() {
     return this.runOnce(
             () -> {
@@ -44,6 +50,9 @@ public class ClimbSubsystem extends SubsystemBase {
                         ClimbConstants.EXTEND_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
   }
 
+  /**
+   * @return retract the climb NOTE: see ClimbConstants for the position
+   */
   public Command retract() {
     return this.runOnce(
             () -> {

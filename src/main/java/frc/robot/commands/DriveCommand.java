@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.EagleUtil;
-import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.DoubleSupplier;
 
@@ -31,7 +30,7 @@ public class DriveCommand extends Command {
   private final double DEAD_BAND = 0.1;
   private boolean resetLimiter = true;
 
-  private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  private double maxSpeed = CommandSwerveDrivetrain.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 3.5 * Math.PI;
 
   private final double RED_LEFT_STATION_ANGLE = 126;
@@ -100,6 +99,10 @@ public class DriveCommand extends Command {
    * @param currentRobotPose the current pose of the robot via drivetrain.getpose();
    * @return returns the angle?
    */
+  /**
+   * @param currentRobotPose the current pose of the robot via drivetrain.getpose();
+   * @return returns the angle?
+   */
   public double calculateSetpoint(Pose2d currentRobotPose) {
     if (mode == TargetMode.CORAL_STATION) {
       if (DriverStation.getAlliance().isPresent()
@@ -143,11 +146,6 @@ public class DriveCommand extends Command {
     this.mode = mode;
   }
 
-  /**
-   * @param isSlow is it slow?
-   * @param factor how slow?
-   * NOTE: the value is clamped between 0 and 1
-   */
   public void setSlowMode(boolean isSlow, double factor) {
     this.isSlow = isSlow;
     factor = MathUtil.clamp(factor, 0, 1);

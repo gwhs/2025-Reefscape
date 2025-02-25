@@ -28,7 +28,9 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.DriveCommand.TargetMode;
 import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.commands.autonomous.*;
-import frc.robot.generated.TunerConstants;
+import frc.robot.generated.TunerConstants_Comp;
+import frc.robot.generated.TunerConstants_WALLE;
+import frc.robot.generated.TunerConstants_practiceDrivetrain;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.aprilTagCam.AprilTagCam;
 import frc.robot.subsystems.aprilTagCam.AprilTagCamConstants;
@@ -42,30 +44,46 @@ import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer {
+
+  private static Alert roborioError =
+      new Alert(
+          "roborio unrecognized. here is the serial number:" + RobotController.getSerialNumber(),
+          Alert.AlertType.kError);
+
+  public enum Robot {
+    WALLE,
+    DEV,
+    COMP
+  }
+
+  public static Robot getRobot() {
+    if (RobotController.getSerialNumber().equals("032414F0")) {
+      return Robot.COMP;
+    } else if (RobotController.getSerialNumber().equals("0323CA18")) {
+      return Robot.DEV;
+    } else if (RobotController.getSerialNumber().equals("03223849")) {
+      return Robot.WALLE;
+    } else {
+      roborioError.set(true);
+      return Robot.COMP;
+    }
+  }
 
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
   private final Alert batteryUnderTwelveVolts = new Alert("BATTERY UNDER 12V", AlertType.kWarning);
   private final Telemetry logger =
-      new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
+      new Telemetry(TunerConstants_Comp.kSpeedAt12Volts.in(MetersPerSecond));
 
-  private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  private final CommandSwerveDrivetrain drivetrain;
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
   private final LedSubsystem led = new LedSubsystem();
   private final ClimbSubsystem climb = new ClimbSubsystem();
   private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
 
-  private final DriveCommand driveCommand =
-      new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
-  private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+  private final DriveCommand driveCommand;
 
   public enum CoralLevel {
     L1,
@@ -81,57 +99,97 @@ public class RobotContainer {
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
-  public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
-  public final Trigger IS_REEF_MODE =
-      new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
-  public final Trigger IS_CLOSE_TO_REEF =
-      new Trigger(
-          () ->
-              EagleUtil.getDistanceBetween(
-                      drivetrain.getPose(), EagleUtil.getCachedReefPose(drivetrain.getPose()))
-                  < 1.25);
-  public final Trigger IS_NEAR_CORAL_STATION =
-      new Trigger(
-          () ->
-              EagleUtil.getDistanceBetween(
-                      drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
-                  < 0.4);
+
+  public final Trigger IS_NEAR_CORAL_STATION;
+
+  private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+
+  private final Trigger IS_AT_POSE;
+
+  private final Trigger IS_REEF_MODE;
+
+  private final Trigger IS_CLOSE_TO_REEF;
+
+  private AprilTagCam leftCam;
+
+  private AprilTagCam rightCam;
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
-  private AprilTagCam cam3 =
-      new AprilTagCam(
-          AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
-          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
-          drivetrain::addVisionMeasurent,
-          () -> drivetrain.getState().Pose,
-          () -> drivetrain.getState().Speeds);
-
-  private AprilTagCam cam4 =
-      new AprilTagCam(
-          AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
-          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
-          drivetrain::addVisionMeasurent,
-          () -> drivetrain.getState().Pose,
-          () -> drivetrain.getState().Speeds);
-
-  public final Trigger IS_REEFMODE =
-      new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
-
   private final BiConsumer<Runnable, Double> addPeriodic;
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   *
-   * @param periodic
-   */
   public RobotContainer(BiConsumer<Runnable, Double> addPeriodic) {
 
     this.addPeriodic = addPeriodic;
 
-    configureBindings();
+    switch (getRobot()) {
+      case COMP:
+        drivetrain = TunerConstants_Comp.createDrivetrain();
+        leftCam =
+            new AprilTagCam(
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
+                drivetrain::addVisionMeasurent,
+                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getState().Speeds);
+
+        rightCam =
+            new AprilTagCam(
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
+                drivetrain::addVisionMeasurent,
+                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getState().Speeds);
+        break;
+      case DEV:
+        drivetrain = TunerConstants_practiceDrivetrain.createDrivetrain();
+        leftCam =
+            new AprilTagCam(
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_DEV,
+                drivetrain::addVisionMeasurent,
+                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getState().Speeds);
+
+        rightCam =
+            new AprilTagCam(
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_DEV,
+                drivetrain::addVisionMeasurent,
+                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getState().Speeds);
+        break;
+      case WALLE:
+        drivetrain = TunerConstants_WALLE.createDrivetrain();
+        break;
+      default:
+        drivetrain = TunerConstants_Comp.createDrivetrain(); // Fallback
+        break;
+    }
 
     configureAutonomous();
+    configureBindings();
+
+    driveCommand =
+        new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
+
+    IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
+
+    IS_REEF_MODE = new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
+
+    IS_CLOSE_TO_REEF =
+        new Trigger(
+            () ->
+                EagleUtil.getDistanceBetween(
+                        drivetrain.getPose(), EagleUtil.getCachedReefPose(drivetrain.getPose()))
+                    < 1.25);
+
+    IS_NEAR_CORAL_STATION =
+        new Trigger(
+            () ->
+                EagleUtil.getDistanceBetween(
+                        drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
+                    < 0.4);
 
     // Default Commands
     drivetrain.setDefaultCommand(driveCommand);
@@ -156,7 +214,7 @@ public class RobotContainer {
     addPeriodic.accept(
         () ->
             DogLog.log(
-                "Canivore Bus Utilization", TunerConstants.kCANBus.getStatus().BusUtilization),
+                "Canivore Bus Utilization", TunerConstants_Comp.kCANBus.getStatus().BusUtilization),
         0.5);
   }
 
@@ -297,8 +355,12 @@ public class RobotContainer {
   public void periodic() {
     DogLog.log("nearest", EagleUtil.closestReefSetPoint(drivetrain.getPose(), 0));
     robotVisualizer.update();
-    cam3.updatePoseEstim();
-    cam4.updatePoseEstim();
+    if (leftCam != null) {
+      leftCam.updatePoseEstim();
+    }
+    if (rightCam != null) {
+      rightCam.updatePoseEstim();
+    }
     DogLog.log("Desired Reef", coralLevel);
 
     // Log Triggers
@@ -309,6 +371,7 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Disabled", IS_DISABLED.getAsBoolean());
     DogLog.log("Trigger/Is Telop", IS_TELEOP.getAsBoolean());
     DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
+    DogLog.log("Current Robot", getRobot().toString());
     DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
   }
 
@@ -339,11 +402,19 @@ public class RobotContainer {
     SmartDashboard.putData("autonomous", autoChooser);
   }
 
+  /**
+   * this is a wrapper for the command of the same name
+   *
+   * @param Pose pose to go to
+   * @return run the command
+   */
   public Command alignToPose(Supplier<Pose2d> Pose) {
     return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters());
   }
 
-  // grabs coral from the intake
+  /**
+   * @return hand off the coral
+   */
   public Command coralHandoff() {
     return Commands.sequence(
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
@@ -353,7 +424,9 @@ public class RobotContainer {
         .withName("Coral HandOff");
   }
 
-  // Sets it to the right height and arm postion to intake coral
+  /**
+   * @return prep to pickup coral
+   */
   public Command prepCoralIntake() {
     return Commands.sequence(
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
@@ -361,7 +434,11 @@ public class RobotContainer {
         .withName("Prepare Coral Intake");
   }
 
-  // Sets elevator and arm to postion
+  /**
+   * @param elevatorHeight how tall should the elavator be?
+   * @param armAngle what angle should the arm be at
+   * @return run the command
+   */
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
     return Commands.sequence(
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
@@ -370,11 +447,69 @@ public class RobotContainer {
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
 
-  // scores coral
+  /**
+   * @return score the coral
+   */
   public Command scoreCoral() {
     return Commands.sequence(
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral");
+  }
+
+  /**
+   * @return score the coral on L4
+   */
+  public Command scoreCoralL4() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.L4_SCORE_POSITION).withTimeout(1),
+            driveCommand.driveBackward(1).withTimeout(0.2),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.5),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+        .withName("Score L4");
+  }
+
+  /**
+   * @return get ready to score L3 coral
+   */
+  public Command prepScoreCoraL3() {
+    double elevatorHeight = ElevatorConstants.L3_PREP_POSITION;
+    double armAngle = ElevatorConstants.L3_PREP_POSITION;
+    return Commands.sequence(
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
+            arm.setAngle(armAngle).withTimeout(1))
+        .withName("Prepare Score Coral L3");
+  }
+
+  /**
+   * @return score L3 coral
+   */
+  public Command scoreCoralL3Command() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+        .withName("Score Coral L3");
+  }
+
+  /**
+   * @return prep to score L4 coral
+   */
+  public Command prepScoreCoralL4() {
+    double elevatorHeight = ElevatorConstants.L4_PREP_POSITION;
+    double armAngle = ArmConstants.L4_PREP_POSITION;
+    return Commands.sequence(
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
+            arm.setAngle(armAngle).withTimeout(1))
+        .withName("Prepare Score Coral L4");
+  }
+
+  /**
+   * @return score L4 coral
+   */
+  public Command scoreCoralL4Command() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+        .withName("Score Coral L4");
   }
 }

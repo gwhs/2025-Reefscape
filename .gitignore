@@ -187,8 +187,5 @@ compile_commands.json
 .factorypath
 
 simgui*.json
-
-# added by Emma K
 *pid.log
-src/main/java/frc/robot/BuildConstants.java
 **/BuildConstants.java
