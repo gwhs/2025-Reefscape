@@ -10,7 +10,6 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -29,7 +28,7 @@ public class AlignToPose extends Command {
 
   private CommandSwerveDrivetrain drivetrain;
 
-  private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  private double maxSpeed = CommandSwerveDrivetrain.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 1.0 * Math.PI;
 
   public static final double PID_MAX = 0.44;
