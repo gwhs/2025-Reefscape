@@ -36,6 +36,9 @@ public class ArmIOSim implements ArmIO {
     pidController.setGoal(angle);
   }
 
+  /**
+   * @param volts how many volts to set to
+   */
   public void setVoltage(double volts) {
     armSim.setInputVoltage(volts);
   }
