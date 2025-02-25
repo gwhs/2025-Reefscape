@@ -26,7 +26,7 @@ public class TwoCycleProcessor extends PathPlannerAuto {
       PathPlannerPath CSP_D = PathPlannerPath.fromPathFile("CSP-D");
       PathPlannerPath D_CSP = PathPlannerPath.fromPathFile("D-CSP");
 
-      double waitTime = 0.5;
+      double waitTime = 1.0;
 
       Pose2d startingPose =
           new Pose2d(SP_E.getPoint(0).position, SP_E.getIdealStartingState().rotation());

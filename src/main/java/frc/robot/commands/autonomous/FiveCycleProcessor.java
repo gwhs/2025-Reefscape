@@ -20,7 +20,7 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 public class FiveCycleProcessor extends PathPlannerAuto {
 
   private RobotContainer robotContainer;
-  private double waitTime = 0.3;
+  private double waitTime = 2.0;
 
   public FiveCycleProcessor(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
@@ -61,9 +61,9 @@ public class FiveCycleProcessor extends PathPlannerAuto {
                               () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
                   robotContainer.scoreCoral(),
                   AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntake()),
-                  autoHelper(CSP_E, E_CSP),
+                  autoHelper(CSP_E, E_CSP)/*,
                   autoHelper(CSP_D, D_CSP),
-                  autoHelper(CSP_C, C_CSP)));
+                  autoHelper(CSP_C, C_CSP)*/));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
