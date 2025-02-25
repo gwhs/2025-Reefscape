@@ -48,8 +48,10 @@ public class ObjectDetectionCam {
 
     for (PhotonPipelineResult result : results) {
       PhotonTrackedTarget bestTarget = result.getBestTarget();
-      Transform3d targetLocationToCamera = bestTarget.getBestCameraToTarget();
-      Pose3d targetLocationToField = this.getTargetLocInFieldSpace(targetLocationToCamera);
+      if (bestTarget != null) {
+        Transform3d targetLocationToCamera = bestTarget.getBestCameraToTarget();
+        Pose3d targetLocationToField = this.getTargetLocInFieldSpace(targetLocationToCamera);
+      }
     }
   }
 
