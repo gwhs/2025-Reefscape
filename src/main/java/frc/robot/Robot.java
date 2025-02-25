@@ -8,23 +8,31 @@ import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
+import java.util.List;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
   private double prevTime = HALUtil.getFPGATime();
+  private final GcStatsCollector gcStatsCollector = new GcStatsCollector();
 
   public Robot() {
 
     m_robotContainer = new RobotContainer(this::addPeriodic);
 
     LiveWindow.disableAllTelemetry();
+
+    DriverStation.silenceJoystickConnectionWarning(true);
 
     // Setup DogLog
     DogLog.setOptions(
@@ -52,15 +60,28 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
 
+    Threads.setCurrentThreadPriority(true, 99);
+
     EagleUtil.clearCachedPose();
+    double startTime = HALUtil.getFPGATime();
 
     CommandScheduler.getInstance().run();
 
+    DogLog.log("Loop Time/Command Scheduler", (HALUtil.getFPGATime() - startTime) / 1000);
+
+    double endTime = HALUtil.getFPGATime();
+
     m_robotContainer.periodic();
 
+    DogLog.log("Loop Time/Robot Container", (HALUtil.getFPGATime() - endTime) / 1000);
+
+    gcStatsCollector.update();
+
     double currentTime = HALUtil.getFPGATime();
-    DogLog.log("Loop Time", (currentTime - prevTime) / 1000);
+    DogLog.log("Loop Time/Total", (currentTime - prevTime) / 1000);
     prevTime = currentTime;
+
+    Threads.setCurrentThreadPriority(false, 10);
   }
 
   @Override
@@ -110,4 +131,27 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationPeriodic() {}
+
+  private static final class GcStatsCollector {
+    private List<GarbageCollectorMXBean> gcBeans = ManagementFactory.getGarbageCollectorMXBeans();
+    private final long[] lastTimes = new long[gcBeans.size()];
+    private final long[] lastCounts = new long[gcBeans.size()];
+
+    public void update() {
+      long accumTime = 0;
+      long accumCounts = 0;
+      for (int i = 0; i < gcBeans.size(); i++) {
+        long gcTime = gcBeans.get(i).getCollectionTime();
+        long gcCount = gcBeans.get(i).getCollectionCount();
+        accumTime += gcTime - lastTimes[i];
+        accumCounts += gcCount - lastCounts[i];
+
+        lastTimes[i] = gcTime;
+        lastCounts[i] = gcCount;
+      }
+
+      DogLog.log("GC/GCTimeMS", (double) accumTime);
+      DogLog.log("GC/GCCounts", (double) accumCounts);
+    }
+  }
 }
