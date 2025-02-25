@@ -341,8 +341,8 @@ public class RobotContainer {
   // Sets it to the right height and arm postion to intake coral
   public Command prepCoralIntake() {
     return Commands.sequence(
-            endEffector.intake(),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
+            endEffector.intake(),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake");
   }
