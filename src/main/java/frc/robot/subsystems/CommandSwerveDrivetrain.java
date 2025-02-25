@@ -17,12 +17,15 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -69,8 +72,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   CurrentLimitsConfigs m3_current_config = new CurrentLimitsConfigs();
   CurrentLimitsConfigs m4_current_config = new CurrentLimitsConfigs();
 
-  public PIDController PID_X = new PIDController(1.7, 0, 0);
-  public PIDController PID_Y = new PIDController(1.7, 0, 0);
+  public Constraints constraints = new TrapezoidProfile.Constraints(1, 1);
+  public ProfiledPIDController PID_X = new ProfiledPIDController(1.7, 0, 0, constraints);
+  public ProfiledPIDController PID_Y = new ProfiledPIDController(1.7, 0, 0, constraints);
+
   public PIDController PID_Rotation = new PIDController(0.1, 0, 0);
   public Trigger IS_AT_TARGET_POSE =
       new Trigger(() -> PID_X.atSetpoint() && PID_Y.atSetpoint() && PID_Rotation.atSetpoint());
@@ -150,8 +155,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    * @param targetPose the pose to go to
    */
   public void goToPoseWithPID(Pose2d targetPose) {
-    PID_X.setSetpoint(targetPose.getX());
-    PID_Y.setSetpoint(targetPose.getY());
+    PID_X.reset(getPose().getX(), getState().Speeds.vxMetersPerSecond);
+    PID_Y.reset(getPose().getY(), getState().Speeds.vyMetersPerSecond);
+    PID_X.setGoal(targetPose.getX());
+    PID_Y.setGoal(targetPose.getY());
     PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
   }
 
