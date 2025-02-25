@@ -29,8 +29,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     coralTriggered = new Trigger(() -> endEffectorIO.isSensorTriggered());
 
-    SmartDashboard.putData("End Effector Command/End Effector Shoot", setVoltage(3));
-    SmartDashboard.putData("End Effector Command/End Effector Intake", setVoltage(-2));
+    SmartDashboard.putData("End Effector Command/End Effector Shoot", shoot());
+    SmartDashboard.putData("End Effector Command/End Effector Intake", intake());
     SmartDashboard.putData("End Effector Command/Stop End Effector", stopMotor());
   }
 
@@ -40,6 +40,18 @@ public class EndEffectorSubsystem extends SubsystemBase {
    */
   public Command setVoltage(double voltage) {
     return Commands.runOnce(() -> endEffectorIO.setVoltage(voltage));
+  }
+
+  public Command shoot() {
+    return Commands.runOnce(() -> endEffectorIO.setVoltage(-12));
+  }
+
+  public Command intake() {
+    return Commands.runOnce(() -> endEffectorIO.setVoltage(6));
+  }
+
+  public Command holdCoral() {
+    return Commands.runOnce(() -> endEffectorIO.setVoltage(1));
   }
 
   /**

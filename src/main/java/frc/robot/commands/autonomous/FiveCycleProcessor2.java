@@ -45,7 +45,7 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
           .onTrue(
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
-                      AutoBuilder.followPath(CSP_E).alongWith(robotContainer.coralHandoff()),
+                      AutoBuilder.followPath(CSP_E),
                       robotContainer.prepScoreCoral(
                           ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
@@ -56,7 +56,7 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
           .onTrue(
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
-                      AutoBuilder.followPath(CSP_D).alongWith(robotContainer.coralHandoff()),
+                      AutoBuilder.followPath(CSP_D),
                       robotContainer.prepScoreCoral(
                           ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
@@ -67,7 +67,7 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
           .onTrue(
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
-                      AutoBuilder.followPath(CSP_C).alongWith(robotContainer.coralHandoff()),
+                      AutoBuilder.followPath(CSP_C),
                       robotContainer.prepScoreCoral(
                           ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
@@ -78,7 +78,7 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
           .onTrue(
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
-                      AutoBuilder.followPath(CSP_B).alongWith(robotContainer.coralHandoff()),
+                      AutoBuilder.followPath(CSP_B),
                       robotContainer.prepScoreCoral(
                           ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
