@@ -52,13 +52,29 @@ import java.util.function.Supplier;
  */
 public class RobotContainer {
 
+  private static Alert roborioError =
+      new Alert(
+          "roborio unrecognized. here is the serial number:" + RobotController.getSerialNumber(),
+          Alert.AlertType.kError);
+
   public enum Robot {
     WALLE,
     DEV,
     COMP
   }
 
-  public static Robot whichRobot = Robot.COMP;
+  public static Robot getRobot() {
+    if (RobotController.getSerialNumber().equals("032414F0")) {
+      return Robot.COMP;
+    } else if (RobotController.getSerialNumber().equals("0323CA18")) {
+      return Robot.DEV;
+    } else if (RobotController.getSerialNumber().equals("03223849")) {
+      return Robot.WALLE;
+    } else {
+      roborioError.set(true);
+      return Robot.COMP;
+    }
+  }
 
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
@@ -117,15 +133,7 @@ public class RobotContainer {
 
     this.addPeriodic = addPeriodic;
 
-    if (RobotController.getSerialNumber().equals("032414F0")) {
-      whichRobot = Robot.COMP;
-    } else if (RobotController.getSerialNumber().equals("0323CA18")) {
-      whichRobot = Robot.DEV;
-    } else if (RobotController.getSerialNumber().equals("03223849")) {
-      whichRobot = Robot.WALLE;
-    }
-
-    switch (whichRobot) {
+    switch (getRobot()) {
       case COMP:
         drivetrain = TunerConstants_Comp.createDrivetrain();
         leftCam =
@@ -374,7 +382,7 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Disabled", IS_DISABLED.getAsBoolean());
     DogLog.log("Trigger/Is Telop", IS_TELEOP.getAsBoolean());
     DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
-    DogLog.log("Current Robot", whichRobot.toString());
+    DogLog.log("Current Robot", getRobot().toString());
     DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
   }
 

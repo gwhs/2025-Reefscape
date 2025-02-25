@@ -19,6 +19,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -32,7 +33,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.generated.TunerConstants_Comp;
 import frc.robot.generated.TunerSwerveDrivetrain;
 import frc.robot.subsystems.aprilTagCam.AprilTagHelp;
 import java.util.function.Supplier;
@@ -80,20 +80,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   private double m_lastSimTime;
   public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.73);
 
-  public final double DRIVE_BASE_RADIUS =
-      Math.max(
-          Math.max(
-              Math.hypot(
-                  TunerConstants_Comp.FrontLeft.LocationX, TunerConstants_Comp.FrontLeft.LocationY),
-              Math.hypot(
-                  TunerConstants_Comp.FrontRight.LocationX,
-                  TunerConstants_Comp.FrontRight.LocationY)),
-          Math.max(
-              Math.hypot(
-                  TunerConstants_Comp.BackLeft.LocationX, TunerConstants_Comp.BackLeft.LocationY),
-              Math.hypot(
-                  TunerConstants_Comp.BackRight.LocationX,
-                  TunerConstants_Comp.BackRight.LocationY)));
+  public double getDriveBaseRadius() {
+    Translation2d[] moduleLocations = getModuleLocations();
+    return Math.max(
+        Math.max(
+            Math.hypot(moduleLocations[0].getX(), moduleLocations[0].getY()),
+            Math.hypot(moduleLocations[1].getX(), moduleLocations[1].getY())),
+        Math.max(
+            Math.hypot(moduleLocations[2].getX(), moduleLocations[1].getY()),
+            Math.hypot(moduleLocations[3].getX(), moduleLocations[3].getY())));
+  }
 
   /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
   private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
