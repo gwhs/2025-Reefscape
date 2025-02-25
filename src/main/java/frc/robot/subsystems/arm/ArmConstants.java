@@ -14,6 +14,9 @@ public class ArmConstants {
   public static final double L3_PREP_POSITION = 300;
   public static final double L4_PREP_POSITION = 300;
 
+  public static final double ARM_UPPER_BOUND = 330;
+  public static final double ARM_LOWER_BOUND = 90;
+
   public static final double ARM_INTAKE_ANGLE = 130.0;
   public static final double ARM_STOW_ANGLE = 75.0;
 }
