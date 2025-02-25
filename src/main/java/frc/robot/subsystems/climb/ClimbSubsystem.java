@@ -13,7 +13,7 @@ public class ClimbSubsystem extends SubsystemBase {
   private ClimbIO climbIO;
 
   public ClimbSubsystem() {
-    if (RobotBase.isSimulation() || true) {
+    if (RobotBase.isSimulation()) {
       climbIO = new ClimbIOSim();
     } else {
       climbIO = new ClimbIOReal();
