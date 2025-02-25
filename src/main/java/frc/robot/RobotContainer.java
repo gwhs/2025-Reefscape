@@ -438,7 +438,7 @@ public class RobotContainer {
   }
 
   public Command stopIntake() {
-    return Commands.parallel(arm.setAngle(ArmConstants.ARM_STOW_ANGLE), endEffector.stopMotor())
+    return Commands.parallel(arm.setAngle(ArmConstants.ARM_STOW_ANGLE), endEffector.holdCoral())
         .withName("stop Intake");
   }
 
@@ -448,7 +448,7 @@ public class RobotContainer {
    * @return run the command
    */
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
-    return Commands.sequence(
+    return Commands.parallel(
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
             arm.setAngle(armAngle).withTimeout(1))
         .withName(
@@ -462,7 +462,7 @@ public class RobotContainer {
     return Commands.sequence(
             endEffector.shoot(),
             Commands.waitSeconds(0.2),
-            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(0.2),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.2),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.2),
             endEffector.stopMotor())
         .withName("Score Coral");

@@ -18,7 +18,7 @@ public class AlignToPose extends Command {
 
   Supplier<Pose2d> targetPose;
 
-  private final double ELEVATOR_UP_SLEW_RATE = 0.5;
+  private final double ELEVATOR_UP_SLEW_RATE = 1;
 
   private final SlewRateLimiter angularVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
   private final SlewRateLimiter xVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
@@ -111,9 +111,9 @@ public class AlignToPose extends Command {
         yVelocityLimiter.reset(yVelocity);
         angularVelocityLimiter.reset(angularVelocity);
       }
-      xVelocity = MathUtil.clamp(xVelocity, -0.1, 0.1);
-      yVelocity = MathUtil.clamp(yVelocity, -0.1, 0.1);
-      angularVelocity = MathUtil.clamp(angularVelocity, -0.1, 0.1);
+      xVelocity = MathUtil.clamp(xVelocity, -0.2, 0.2);
+      yVelocity = MathUtil.clamp(yVelocity, -0.2, 0.2);
+      angularVelocity = MathUtil.clamp(angularVelocity, -0.2, 0.2);
 
       xVelocity = xVelocityLimiter.calculate(xVelocity);
       yVelocity = yVelocityLimiter.calculate(yVelocity);

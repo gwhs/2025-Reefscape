@@ -50,9 +50,16 @@ public class EndEffectorSubsystem extends SubsystemBase {
     return Commands.runOnce(() -> endEffectorIO.setVoltage(6));
   }
 
+<<<<<<< HEAD
   /**
    * @return stop the motor
    */
+=======
+  public Command holdCoral() {
+    return Commands.runOnce(() -> endEffectorIO.setVoltage(1));
+  }
+
+>>>>>>> c97c46b2113aadc2cdaee494ccc8978739e5c6a0
   public Command stopMotor() {
     return Commands.runOnce(() -> endEffectorIO.stopMotor());
   }
