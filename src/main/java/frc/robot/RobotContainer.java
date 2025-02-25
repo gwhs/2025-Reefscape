@@ -45,12 +45,6 @@ import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer {
 
   private static Alert roborioError =
@@ -125,11 +119,6 @@ public class RobotContainer {
 
   private final BiConsumer<Runnable, Double> addPeriodic;
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   *
-   * @param periodic
-   */
   public RobotContainer(BiConsumer<Runnable, Double> addPeriodic) {
 
     this.addPeriodic = addPeriodic;
@@ -432,11 +421,19 @@ public class RobotContainer {
     SmartDashboard.putData("autonomous", autoChooser);
   }
 
+  /**
+   * this is a wrapper for the command of the same name
+   *
+   * @param Pose pose to go to
+   * @return run the command
+   */
   public Command alignToPose(Supplier<Pose2d> Pose) {
     return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters());
   }
 
-  // grabs coral from the intake
+  /**
+   * @return hand off the coral
+   */
   public Command coralHandoff() {
     return Commands.sequence(
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
@@ -446,7 +443,9 @@ public class RobotContainer {
         .withName("Coral HandOff");
   }
 
-  // Sets it to the right height and arm postion to intake coral
+  /**
+   * @return prep to pickup coral
+   */
   public Command prepCoralIntake() {
     return Commands.sequence(
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
@@ -454,7 +453,11 @@ public class RobotContainer {
         .withName("Prepare Coral Intake");
   }
 
-  // Sets elevator and arm to postion
+  /**
+   * @param elevatorHeight how tall should the elavator be?
+   * @param armAngle what angle should the arm be at
+   * @return run the command
+   */
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
     return Commands.sequence(
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
@@ -463,11 +466,69 @@ public class RobotContainer {
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
 
-  // scores coral
+  /**
+   * @return score the coral
+   */
   public Command scoreCoral() {
     return Commands.sequence(
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
         .withName("Score Coral");
+  }
+
+  /**
+   * @return score the coral on L4
+   */
+  public Command scoreCoralL4() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.L4_SCORE_POSITION).withTimeout(1),
+            driveCommand.driveBackward(1).withTimeout(0.2),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.5),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+        .withName("Score L4");
+  }
+
+  /**
+   * @return get ready to score L3 coral
+   */
+  public Command prepScoreCoraL3() {
+    double elevatorHeight = ElevatorConstants.L3_PREP_POSITION;
+    double armAngle = ElevatorConstants.L3_PREP_POSITION;
+    return Commands.sequence(
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
+            arm.setAngle(armAngle).withTimeout(1))
+        .withName("Prepare Score Coral L3");
+  }
+
+  /**
+   * @return score L3 coral
+   */
+  public Command scoreCoralL3Command() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+        .withName("Score Coral L3");
+  }
+
+  /**
+   * @return prep to score L4 coral
+   */
+  public Command prepScoreCoralL4() {
+    double elevatorHeight = ElevatorConstants.L4_PREP_POSITION;
+    double armAngle = ArmConstants.L4_PREP_POSITION;
+    return Commands.sequence(
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
+            arm.setAngle(armAngle).withTimeout(1))
+        .withName("Prepare Score Coral L4");
+  }
+
+  /**
+   * @return score L4 coral
+   */
+  public Command scoreCoralL4Command() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+        .withName("Score Coral L4");
   }
 }

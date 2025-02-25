@@ -15,6 +15,7 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class AlignToPose extends Command {
+
   Supplier<Pose2d> targetPose;
 
   private final double ELEVATOR_UP_SLEW_RATE = 0.5;
@@ -48,12 +49,19 @@ public class AlignToPose extends Command {
     this.elevatorHeight = elevatorHeight;
   }
 
+  /**
+   * @param targetPose Specify the Pose2d to go to.
+   */
   public void goToPoseWithPID(Pose2d targetPose) {
+
     drivetrain.PID_X.setSetpoint(targetPose.getX());
     drivetrain.PID_Y.setSetpoint(targetPose.getY());
     drivetrain.PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
   }
 
+  /**
+   * @return if it is at pose true if not false
+   */
   public boolean isAtTargetPose() {
     boolean isAtX = drivetrain.PID_X.atSetpoint();
     boolean isAtY = drivetrain.PID_Y.atSetpoint();
