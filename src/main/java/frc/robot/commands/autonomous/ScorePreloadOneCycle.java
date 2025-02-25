@@ -31,6 +31,7 @@ public class ScorePreloadOneCycle extends PathPlannerAuto {
           .onTrue(
               Commands.sequence(
                       AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
+                      robotContainer.zeroElevator().onlyIf(() -> RobotBase.isReal()),
                       AutoBuilder.followPath(SCpreloadScore),
                       robotContainer
                           .prepScoreCoral(
