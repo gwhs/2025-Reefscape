@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.EagleUtil;
-import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.DoubleSupplier;
 
@@ -26,13 +25,12 @@ public class DriveCommand extends Command {
   private final SlewRateLimiter xVelocityLimiter;
   private final SlewRateLimiter yVelocityLimiter;
   private final PIDController PID;
-
+  private double slowFactor = 0.25;
   private boolean isSlow = true;
   private final double DEAD_BAND = 0.1;
-
   private boolean resetLimiter = true;
 
-  private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  private double maxSpeed = CommandSwerveDrivetrain.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 3.5 * Math.PI;
 
   private final double RED_LEFT_STATION_ANGLE = 126;
@@ -43,7 +41,7 @@ public class DriveCommand extends Command {
   private final double BLUE_CAGE_ANGLE = 90;
   private final double RED_CAGE_ANGLE = -90;
 
-  private final double ELEVATOR_UP_SLEW_RATE = 0.5;
+  private final double ELEVATOR_UP_SLEW_RATE = 1;
 
   private final DoubleSupplier elevatorHeight;
 
@@ -52,7 +50,7 @@ public class DriveCommand extends Command {
     FIELD_CENTRIC
   }
 
-  DriveMode driveMode = DriveMode.FIELD_CENTRIC;
+  private DriveMode driveMode = DriveMode.FIELD_CENTRIC;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
@@ -64,18 +62,18 @@ public class DriveCommand extends Command {
     CAGE
   }
 
-  private TargetMode mode = TargetMode.CAGE;
+  private TargetMode mode = TargetMode.NORMAL;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
-          .withDeadband(maxSpeed * 0.1)
-          .withRotationalDeadband(maxAngularRate * 0.1) // Add a 10% deadband
-          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+          .withDeadband(maxSpeed * 0.0)
+          .withRotationalDeadband(maxAngularRate * 0.0)
+          .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private final SwerveRequest.RobotCentric robotCentricDrive =
       new SwerveRequest.RobotCentric()
-          .withDeadband(maxSpeed * 0.1)
-          .withRotationalDeadband(maxAngularRate * 0.1) // Add a 10% deadband
-          .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want robot-centric
+          .withDeadband(maxSpeed * 0.0)
+          .withRotationalDeadband(maxAngularRate * 0.0)
+          .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
   public DriveCommand(
       CommandXboxController driverController,
@@ -97,6 +95,10 @@ public class DriveCommand extends Command {
     addRequirements(drivetrain);
   }
 
+  /**
+   * @param currentRobotPose the current pose of the robot via drivetrain.getpose();
+   * @return returns the angle?
+   */
   public double calculateSetpoint(Pose2d currentRobotPose) {
     if (mode == TargetMode.CORAL_STATION) {
       if (DriverStation.getAlliance().isPresent()
@@ -133,16 +135,36 @@ public class DriveCommand extends Command {
     }
   }
 
+  /**
+   * @param mode what mode should it set to?
+   */
   public void setTargetMode(TargetMode mode) {
     this.mode = mode;
   }
 
-  public void setSlowMode(boolean isSlow) {
+  /**
+   * @param isSlow is it slow?
+   * @param factor how slow?
+   *     <p>NOTE: the value is clamped between 0 and 1
+   */
+  public void setSlowMode(boolean isSlow, double factor) {
     this.isSlow = isSlow;
+    factor = MathUtil.clamp(factor, 0, 1);
+    slowFactor = factor;
   }
 
+  /**
+   * @param driveMode what mode should the drive be in?
+   */
   public void setDriveMode(DriveMode driveMode) {
     this.driveMode = driveMode;
+  }
+
+  /**
+   * @return the target mode we have
+   */
+  public TargetMode getTargetMode() {
+    return this.mode;
   }
 
   @Override
@@ -150,30 +172,14 @@ public class DriveCommand extends Command {
     Pose2d currentRobotPose = drivetrain.getState().Pose;
     double currentRotation = currentRobotPose.getRotation().getDegrees();
 
-    double xVelocity = -driverController.getLeftY();
-    double yVelocity = -driverController.getLeftX();
-
-    double angularVelocity = -driverController.getRightX();
+    double xVelocity = MathUtil.applyDeadband(-driverController.getLeftY(), 0.1);
+    double yVelocity = MathUtil.applyDeadband(-driverController.getLeftX(), 0.1);
+    double angularVelocity = MathUtil.applyDeadband(-driverController.getRightX(), 0.1);
 
     if (isSlow) {
-      double slowFactor = 0.25;
       xVelocity *= slowFactor;
       yVelocity *= slowFactor;
       angularVelocity *= slowFactor;
-    }
-
-    if (elevatorHeight.getAsDouble() > 1) {
-      if (resetLimiter) {
-        resetLimiter = false;
-        xVelocityLimiter.reset(xVelocity);
-        yVelocityLimiter.reset(yVelocity);
-        angularVelocityLimiter.reset(angularVelocity);
-      }
-      xVelocity = xVelocityLimiter.calculate(xVelocity);
-      yVelocity = yVelocityLimiter.calculate(yVelocity);
-      angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
-    } else {
-      resetLimiter = true;
     }
 
     if (Math.abs(driverController.getRightX()) < DEAD_BAND && mode != TargetMode.NORMAL) {
@@ -182,6 +188,24 @@ public class DriveCommand extends Command {
       pidOutput = MathUtil.clamp(pidOutput, -PID_MAX, PID_MAX);
       angularVelocity = pidOutput;
       DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
+    }
+
+    if (elevatorHeight.getAsDouble() > 0.3) {
+      if (resetLimiter) {
+        resetLimiter = false;
+        xVelocityLimiter.reset(xVelocity);
+        yVelocityLimiter.reset(yVelocity);
+        angularVelocityLimiter.reset(angularVelocity);
+      }
+      xVelocity = MathUtil.clamp(xVelocity, -0.2, 0.2);
+      yVelocity = MathUtil.clamp(yVelocity, -0.2, 0.2);
+      angularVelocity = MathUtil.clamp(angularVelocity, -0.2, 0.2);
+
+      xVelocity = xVelocityLimiter.calculate(xVelocity);
+      yVelocity = yVelocityLimiter.calculate(yVelocity);
+      angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
+    } else {
+      resetLimiter = true;
     }
 
     xVelocity *= maxSpeed;
@@ -195,7 +219,7 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/isSlow", isSlow);
     DogLog.log("Drive Command/targetMode", mode);
     DogLog.log("Drive Command/Drive Mode", driveMode);
-
+    DogLog.log("Drive Command/slowFactor", slowFactor);
     if (driveMode == DriveMode.ROBOT_CENTRIC) {
       drivetrain.setControl(
           robotCentricDrive
@@ -211,11 +235,45 @@ public class DriveCommand extends Command {
     }
   }
 
+  /**
+   * @return is the robot at the setpoint?
+   */
+  public boolean isAtSetPoint() {
+    if (this.mode == TargetMode.CORAL_STATION || this.mode == TargetMode.REEF) {
+      return PID.atSetpoint();
+    }
+    return false;
+  }
+
   @Override
   public void end(boolean interrupted) {}
 
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  /**
+   * @param velocity how fast should it drive?
+   * @return do an MJ (minus the little boys)
+   */
+  public Command driveBackward(double velocity) {
+    return drivetrain
+        .run(
+            () ->
+                drivetrain.setControl(
+                    robotCentricDrive
+                        .withVelocityX(-velocity)
+                        .withVelocityY(0)
+                        .withRotationalRate(0)))
+        .finallyDo(
+            () ->
+                drivetrain.setControl(
+                    robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
+  }
+
+  public void stopDrivetrain() {
+    drivetrain.setControl(
+        robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0));
   }
 }

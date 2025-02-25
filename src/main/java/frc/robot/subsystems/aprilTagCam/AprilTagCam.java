@@ -6,7 +6,6 @@ package frc.robot.subsystems.aprilTagCam;
 import com.ctre.phoenix6.Utils;
 import dev.doglog.DogLog;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -15,6 +14,12 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.Filesystem;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +33,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** Add your docs here. */
 public class AprilTagCam {
-  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
+
+  AprilTagFieldLayout aprilTagFieldLayout;
 
   private final PhotonCamera cam;
   private final Consumer<AprilTagHelp> addVisionMeasurement;
@@ -36,25 +42,39 @@ public class AprilTagCam {
   private final Transform3d robotToCam;
   private final Supplier<Pose2d> currRobotPose;
   private final Supplier<ChassisSpeeds> currRobotSpeed;
-  private AprilTagHelp helper;
   private int counter;
-
   private final String ntKey;
+  private boolean isConnected;
+
+  private final Alert visionNotConnected;
 
   Optional<EstimatedRobotPose> optionalEstimPose;
+  private AprilTagHelp helper = new AprilTagHelp(null, 0, null);
 
-  //
   public AprilTagCam(
       String str,
       Transform3d robotToCam,
       Consumer<AprilTagHelp> addVisionMeasurement,
       Supplier<Pose2d> currRobotPose,
       Supplier<ChassisSpeeds> currRobotSpeed) {
+
+    PortForwarder.add(5800, "photonvision.local", 5800);
+    try {
+      aprilTagFieldLayout =
+          new AprilTagFieldLayout(
+              Path.of(Filesystem.getDeployDirectory().getPath(), "welded/2025-reef.json"));
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
     cam = new PhotonCamera(str);
     this.addVisionMeasurement = addVisionMeasurement;
     this.robotToCam = robotToCam;
     this.currRobotPose = currRobotPose;
     this.currRobotSpeed = currRobotSpeed;
+
+    visionNotConnected = new Alert(str + " NOT CONNECTED", AlertType.kError);
 
     photonEstimator =
         new PhotonPoseEstimator(
@@ -67,10 +87,13 @@ public class AprilTagCam {
     counter = 0;
   }
 
+  /**
+   * updates the pose estimations <br>
+   * NOTE: also updates the connection check for the camera
+   */
   public void updatePoseEstim() {
-
     counter++;
-
+    isConnected = cam.isConnected();
     Pose2d robotPose = currRobotPose.get();
     Pose3d robotPose3d = new Pose3d(robotPose);
     Pose3d cameraPose3d = robotPose3d.plus(robotToCam);
@@ -111,28 +134,53 @@ public class AprilTagCam {
       Pose3d estimPose3d = optionalEstimPose.get().estimatedPose;
       tagListFiltered = filterTags(tagListUnfiltered, estimPose3d);
 
-      if (!filterResults(estimPose3d, optionalEstimPose.get(), tagListFiltered)) {
+      if (!filterResults(
+          estimPose3d, optionalEstimPose.get(), tagListFiltered, currRobotSpeed.get())) {
         continue;
       }
 
       Pose2d pos = estimPose3d.toPose2d(); // yay :0 im so happy
       double timestamp = Utils.fpgaToCurrentTime(targetPose.getTimestampSeconds());
       Matrix<N3, N1> sd = findSD(optionalEstimPose, optionalEstimPose.get().targetsUsed);
-
-      helper = new AprilTagHelp(pos, timestamp, sd);
+      helper.update(pos, timestamp, sd);
 
       DogLog.log(ntKey + "Accepted Pose/", pos);
       DogLog.log(ntKey + "Accepted Time Stamp/", timestamp);
-      DogLog.log(ntKey + "Accepted Stdev/", sd);
+      DogLog.log(ntKey + "Accepted Stdev/", getSDArray(sd));
       DogLog.log(ntKey + "Unfiltered April Tags/", tagListUnfiltered.toArray(new Pose3d[0]));
       DogLog.log(ntKey + "Filtered April Tags/", tagListFiltered.toArray(new Pose3d[0]));
 
       addVisionMeasurement.accept(helper);
     }
+
+    DogLog.log(ntKey + "April Tag Cam Connected/", isConnected);
+    visionNotConnected.set(!isConnected);
   }
 
+  /**
+   * @param sd standard deviation
+   * @return the array
+   */
+  public static double[] getSDArray(Matrix<N3, N1> sd) {
+    double[] sdArray = new double[3];
+    for (int i = 0; i < 3; i++) {
+      sdArray[i] = sd.get(i, 0);
+    }
+    return sdArray;
+  }
+
+  /**
+   * @param estimPose3d estimated Pose3d
+   * @param optionalEstimPose optional estimated pose
+   * @param filteredTags tags to filter
+   * @param speed how fast are the chassis'
+   * @return are they filtered?
+   */
   public boolean filterResults(
-      Pose3d estimPose3d, EstimatedRobotPose optionalEstimPose, ArrayList<Pose3d> filteredTags) {
+      Pose3d estimPose3d,
+      EstimatedRobotPose optionalEstimPose,
+      ArrayList<Pose3d> filteredTags,
+      ChassisSpeeds speed) {
 
     // If vision’s pose estimation is above/below the ground
     double upperZBound = AprilTagCamConstants.Z_TOLERANCE;
@@ -172,10 +220,10 @@ public class AprilTagCam {
     }
 
     // if velocity or rotaion is too high
-    double xVel = currRobotSpeed.get().vxMetersPerSecond;
-    double yVel = currRobotSpeed.get().vyMetersPerSecond;
+    double xVel = speed.vxMetersPerSecond;
+    double yVel = speed.vyMetersPerSecond;
     double vel = Math.sqrt(Math.pow(yVel, 2) + Math.pow(xVel, 2));
-    double rotation = currRobotSpeed.get().omegaRadiansPerSecond;
+    double rotation = speed.omegaRadiansPerSecond;
 
     if (vel > AprilTagCamConstants.MAX_VELOCITY || rotation > AprilTagCamConstants.MAX_ROTATION) {
       DogLog.log(ntKey + "Rejected Pose", estimPose3d);
@@ -186,6 +234,11 @@ public class AprilTagCam {
     return true;
   }
 
+  /**
+   * @param unfilteredTags tags to filter
+   * @param robotPose the robot position
+   * @return the tags
+   */
   public ArrayList<Pose3d> filterTags(ArrayList<Pose3d> unfilteredTags, Pose3d robotPose) {
 
     // If the tag is too far away
@@ -200,6 +253,11 @@ public class AprilTagCam {
     return filteredTags;
   }
 
+  /**
+   * @param estimatedPose the estimated position
+   * @param targets the targets
+   * @return the standard deviation
+   */
   private Matrix<N3, N1> findSD(
       Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
 

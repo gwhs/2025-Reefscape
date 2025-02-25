@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -65,7 +66,8 @@ public class WheelRadiusCharacterization {
                       for (int i = 0; i < 4; i++) {
                         wheelDelta += Math.abs(positions[i] - state.positions[i]) / 4.0;
                       }
-                      double wheelRadius = (state.gyroDelta * drive.DRIVE_BASE_RADIUS) / wheelDelta;
+                      double wheelRadius =
+                          (state.gyroDelta * drive.getDriveBaseRadius()) / wheelDelta;
 
                       NumberFormat formatter = new DecimalFormat("#0.000");
                       System.out.println(
@@ -80,6 +82,10 @@ public class WheelRadiusCharacterization {
                               + " meters, "
                               + formatter.format(Units.metersToInches(wheelRadius))
                               + " inches");
+
+                      DogLog.log(
+                          "WheelRadiusCharacteirzation in Inches",
+                          Units.metersToInches(wheelRadius));
                     })));
   }
 

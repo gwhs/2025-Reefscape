@@ -11,6 +11,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 
 public class ScorePreloadOneCycle extends PathPlannerAuto {
   public ScorePreloadOneCycle(RobotContainer robotContainer) {
@@ -26,7 +28,11 @@ public class ScorePreloadOneCycle extends PathPlannerAuto {
       isRunning()
           .onTrue(
               Commands.sequence(
-                      AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SCpreloadScore))
+                      AutoBuilder.resetOdom(startingPose),
+                      AutoBuilder.followPath(SCpreloadScore),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
+                      robotContainer.scoreCoral())
                   .withName("Leave and score preload coral"));
 
     } catch (Exception e) {

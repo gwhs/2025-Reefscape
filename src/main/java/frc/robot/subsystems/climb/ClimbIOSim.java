@@ -1,4 +1,4 @@
-package frc.robot.subsystems.arm;
+package frc.robot.subsystems.climb;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -6,48 +6,42 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
-public class ArmIOSim implements ArmIO {
-  private SingleJointedArmSim armSim =
+public class ClimbIOSim implements ClimbIO {
+
+  private SingleJointedArmSim climbSim =
       new SingleJointedArmSim(
           DCMotor.getFalcon500Foc(1),
-          ArmConstants.ARM_GEAR_RATIO,
+          ClimbConstants.CLIMB_GEAR_RATIO,
           0.1,
-          1,
-          Units.degreesToRadians(ArmConstants.ARM_LOWER_BOUND),
-          Units.degreesToRadians(ArmConstants.ARM_UPPER_BOUND),
+          0.1,
+          Units.degreesToRadians(0),
+          Units.degreesToRadians(300),
           false,
           Units.degreesToRadians(90));
 
+  public ClimbIOSim() {}
+
   private TrapezoidProfile.Constraints constraints =
       new TrapezoidProfile.Constraints(
-          ArmConstants.MAX_VELOCITY * 360, ArmConstants.MAX_ACCELERATION * 360);
+          ClimbConstants.MAX_VELOCITY * 360 / 60, ClimbConstants.MAX_ACCELERATION * 360 / 60);
   private ProfiledPIDController pidController = new ProfiledPIDController(.1, 0, 0, constraints);
 
-  public ArmIOSim() {
-    pidController.setGoal(90);
-  }
-
+  @Override
   public double getPosition() {
-    return Units.radiansToDegrees(armSim.getAngleRads());
+    return Units.radiansToDegrees(climbSim.getAngleRads());
   }
 
   @Override
-  public void setAngle(double angle) {
+  public void setPosition(double angle) {
     pidController.setGoal(angle);
   }
 
-  /**
-   * @param volts how many volts to set to
-   */
-  public void setVoltage(double volts) {
-    armSim.setInputVoltage(volts);
-  }
-
+  @Override
   public void update() {
-    armSim.update(0.20);
+    climbSim.update(0.20);
 
     double pidOutput = pidController.calculate(getPosition());
 
-    armSim.setInputVoltage(pidOutput);
+    climbSim.setInputVoltage(pidOutput);
   }
 }

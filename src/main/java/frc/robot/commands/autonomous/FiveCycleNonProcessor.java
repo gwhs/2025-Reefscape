@@ -11,6 +11,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 
 public class FiveCycleNonProcessor extends PathPlannerAuto {
   public FiveCycleNonProcessor(RobotContainer robotContainer) {
@@ -27,8 +29,9 @@ public class FiveCycleNonProcessor extends PathPlannerAuto {
               Commands.sequence(
                       AutoBuilder.resetOdom(startingPose),
                       AutoBuilder.followPath(SL_I),
-                      robotContainer.prepScoreCoralL4(),
-                      robotContainer.scoreCoralL4Command(),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
+                      robotContainer.scoreCoral(),
                       Commands.runOnce(() -> new FiveCycleNonProcessor2(robotContainer).schedule()))
                   .withName("Leave SL, score preload at I"));
 

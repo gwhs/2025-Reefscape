@@ -11,6 +11,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 
 public class FiveCycleProcessor extends PathPlannerAuto {
   public FiveCycleProcessor(RobotContainer robotContainer) {
@@ -18,9 +20,6 @@ public class FiveCycleProcessor extends PathPlannerAuto {
 
     try {
       PathPlannerPath SC_F = PathPlannerPath.fromPathFile("SC-F");
-
-      double waitTime = 0.1;
-      double scoringTime = 0.3;
 
       Pose2d startingPose =
           new Pose2d(SC_F.getPoint(0).position, SC_F.getIdealStartingState().rotation());
@@ -30,7 +29,9 @@ public class FiveCycleProcessor extends PathPlannerAuto {
               Commands.sequence(
                       AutoBuilder.resetOdom(startingPose),
                       AutoBuilder.followPath(SC_F),
-                      Commands.waitSeconds(scoringTime),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
+                      robotContainer.scoreCoral(),
                       Commands.runOnce(() -> new FiveCycleProcessor2(robotContainer).schedule()))
                   .withName("Leave SC to score preload at F"));
 

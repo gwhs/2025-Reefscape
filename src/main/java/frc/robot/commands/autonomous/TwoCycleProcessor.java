@@ -11,6 +11,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 
 public class TwoCycleProcessor extends PathPlannerAuto {
   public TwoCycleProcessor(RobotContainer robotContainer) {
@@ -24,7 +26,13 @@ public class TwoCycleProcessor extends PathPlannerAuto {
 
       isRunning()
           .onTrue(
-              Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(SP_E))
+              Commands.sequence(
+                      AutoBuilder.resetOdom(startingPose),
+                      AutoBuilder.followPath(SP_E),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
+                      robotContainer.scoreCoral(),
+                      Commands.runOnce(() -> new TwoCycleProcessor2(robotContainer).schedule()))
                   .withName("Leave SP to score preload at E"));
 
     } catch (Exception e) {

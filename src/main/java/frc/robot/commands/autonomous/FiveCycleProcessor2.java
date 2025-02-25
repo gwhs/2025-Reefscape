@@ -11,6 +11,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 
 public class FiveCycleProcessor2 extends PathPlannerAuto {
   public FiveCycleProcessor2(RobotContainer robotContainer) {
@@ -28,14 +30,15 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
       PathPlannerPath B_CSP = PathPlannerPath.fromPathFile("B-CSP");
 
       double waitTime = 0.05;
-      double scoringTime = 0.2;
 
       Pose2d startingPose =
           new Pose2d(F_CSP.getPoint(0).position, F_CSP.getIdealStartingState().rotation());
 
       isRunning()
           .onTrue(
-              Commands.sequence(AutoBuilder.resetOdom(startingPose), AutoBuilder.followPath(F_CSP))
+              Commands.sequence(
+                      AutoBuilder.resetOdom(startingPose),
+                      AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("F to CSP"));
 
       event("atCSP_F")
@@ -43,10 +46,10 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_E),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
-                      Commands.waitSeconds(scoringTime),
-                      AutoBuilder.followPath(E_CSP),
-                      robotContainer.coralHandoff())
+                      AutoBuilder.followPath(E_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("CSP to E"));
 
       event("atCSP_E")
@@ -54,10 +57,10 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_D),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
-                      Commands.waitSeconds(scoringTime),
-                      AutoBuilder.followPath(D_CSP),
-                      robotContainer.coralHandoff())
+                      AutoBuilder.followPath(D_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("CSP to D"));
 
       event("atCSP_D")
@@ -65,10 +68,10 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_C),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
-                      Commands.waitSeconds(scoringTime),
-                      AutoBuilder.followPath(C_CSP),
-                      robotContainer.coralHandoff())
+                      AutoBuilder.followPath(C_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("CSP to C"));
 
       event("atCSP_C")
@@ -76,10 +79,10 @@ public class FiveCycleProcessor2 extends PathPlannerAuto {
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
                       AutoBuilder.followPath(CSP_B),
+                      robotContainer.prepScoreCoral(
+                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
-                      Commands.waitSeconds(scoringTime),
-                      AutoBuilder.followPath(B_CSP),
-                      robotContainer.coralHandoff())
+                      AutoBuilder.followPath(B_CSP).alongWith(robotContainer.prepCoralIntake()))
                   .withName("CSP to B"));
 
     } catch (Exception e) {
