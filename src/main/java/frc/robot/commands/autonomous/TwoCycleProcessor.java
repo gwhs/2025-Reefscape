@@ -54,20 +54,16 @@ public class TwoCycleProcessor extends PathPlannerAuto {
 
       event("atCSP_E")
           .onTrue(
-              Commands.sequence(
-                      Commands.waitSeconds(waitTime),
-                      AutoBuilder.followPath(CSP_D)),
-                      robotContainer
-                          .prepScoreCoral(
-                              ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
-                          .deadlineFor(
-                              robotContainer.alignToPose(
-                                  () ->
-                                      EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
-                      robotContainer.scoreCoral(),
-                      AutoBuilder.followPath(D_CSP).alongWith(robotContainer.prepCoralIntake()),
-                      Commands.waitSeconds(waitTime))
-                  .withName("CSP to D");
+              Commands.sequence(Commands.waitSeconds(waitTime), AutoBuilder.followPath(CSP_D),
+              robotContainer
+                  .prepScoreCoral(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
+                  .deadlineFor(
+                      robotContainer.alignToPose(
+                          () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
+              robotContainer.scoreCoral(),
+              AutoBuilder.followPath(D_CSP).alongWith(robotContainer.prepCoralIntake()),
+              Commands.waitSeconds(waitTime))
+          .withName("CSP to D"));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
