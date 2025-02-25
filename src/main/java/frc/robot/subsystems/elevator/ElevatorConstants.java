@@ -29,20 +29,10 @@ public class ElevatorConstants {
   public static final double L4_PREP_POSITION =
       ElevatorSubsystem.rotationsToMeters(65 / GEAR_RATIO_DIFF);
 
-  public static final double L1_SCORE_POSITION =
-      ElevatorSubsystem.rotationsToMeters(0 / GEAR_RATIO_DIFF);
-  public static final double L2_SCORE_POSITION =
-      ElevatorSubsystem.rotationsToMeters(0 / GEAR_RATIO_DIFF);
-
-  public static final double L3_SCORE_POSITION =
-      ElevatorSubsystem.rotationsToMeters(5 / GEAR_RATIO_DIFF);
-  public static final double L4_SCORE_POSITION =
-      ElevatorSubsystem.rotationsToMeters(59 / GEAR_RATIO_DIFF);
-
   public static final double INTAKE_METER =
       ElevatorSubsystem.rotationsToMeters(0 / GEAR_RATIO_DIFF);
   public static final double STOW_METER = ElevatorSubsystem.rotationsToMeters(15 / GEAR_RATIO_DIFF);
 
   public static final double MAX_VELOCITY = 90; // rps
-  public static final double MAX_ACCELERATION = 200; // rps
+  public static final double MAX_ACCELERATION = 250; // rps
 }
