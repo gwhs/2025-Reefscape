@@ -156,9 +156,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   }
 
   /**
-   * @return run the command NOTE: this sets it to 35 DO NOT CHANGE THE VALUE!!!! NOTE: this only
-   *     exists so that a thing in the RobotContainer.java file works NOTE: don't use this in the
-   *     actual code there is a 99% chance this isn't the function you want
+   * @return run the command NOTE: this sets it to 35 DO NOT CHANGE THE VALUE!!!! <br>
+   *     NOTE: this only exists so that a thing in the RobotContainer.java file works <br>
+   *     NOTE: don't use this in the actual code there is a 99% chance this isn't the function you
+   *     want
    */
   public Command setDriveMotorCurrentLimit() {
 
@@ -239,6 +240,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   /**
    * Returns a command that applies the specified control request to this swerve drivetrain.
    *
+   * @param requestSupplier Function returning the request to apply
    * @param requestSupplier Function returning the request to apply
    * @return Command to run
    */

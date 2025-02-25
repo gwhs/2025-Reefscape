@@ -87,7 +87,10 @@ public class AprilTagCam {
     counter = 0;
   }
 
-  /** updates the pose estimations NOTE: also updates the connection check for the camera */
+  /**
+   * updates the pose estimations <br>
+   * NOTE: also updates the connection check for the camera
+   */
   public void updatePoseEstim() {
     counter++;
     isConnected = cam.isConnected();
