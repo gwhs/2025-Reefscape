@@ -118,12 +118,14 @@ public class ArmIOReal implements ArmIO {
     armMotor.setControl(m_request.withPosition(Units.degreesToRotations(angle)));
   }
 
-  // geta arm position in degrees
   @Override
   public double getPosition() {
     return Units.rotationsToDegrees(armPosition.getValueAsDouble());
   }
 
+  /**
+   * @param volts the voltage to set to
+   */
   public void setVoltage(double volts) {
     armMotor.setControl(m_voltReq.withOutput(volts));
   }

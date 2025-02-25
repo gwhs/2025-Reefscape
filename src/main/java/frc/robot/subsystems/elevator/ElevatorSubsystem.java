@@ -61,7 +61,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     DogLog.log("Loop Time/Elevator", (HALUtil.getFPGATime() - startTime) / 1000);
   }
 
-  /** Drives the elevator to the give elevation in meters */
+  /**
+   * Drives the elevator to the give elevation in meters
+   *
+   * @param meters how high?
+   * @return move it to that height
+   */
   public Command setHeight(double meters) {
     double clampedMeters = MathUtil.clamp(meters, 0, ElevatorConstants.TOP_METER);
     return this.runOnce(
@@ -80,6 +85,8 @@ public class ElevatorSubsystem extends SubsystemBase {
    * limit switch is triggered then we stop the elevator the motor automatically sets the internal
    * encoder to zero when the reverse limit switch is triggered (see ElevatorIOReal for this config
    * flag)
+   *
+   * @return run the command
    */
   public Command homingCommand() {
     Command whenNotAtBottom =
@@ -106,6 +113,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     return Commands.either(whenNotAtBottom, whenAtBottom, () -> !elevatorIO.getReverseLimit());
   }
 
+  /**
+   * @param rotations the amount of rotations
+   * @return the rotations in equivalent meters
+   */
   public static double rotationsToMeters(double rotations) {
     return rotations
         / ElevatorConstants.GEAR_RATIO
@@ -113,6 +124,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         * 1;
   }
 
+  /**
+   * @param meters the amount of meters
+   * @return the meters in equivalent rotations
+   */
   public static double metersToRotations(double meters) {
     return meters
         / (ElevatorConstants.SPROCKET_DIAMETER * Math.PI)
@@ -120,10 +135,16 @@ public class ElevatorSubsystem extends SubsystemBase {
         / 1;
   }
 
+  /**
+   * @return the height in meters
+   */
   public double getHeightMeters() {
     return rotationsToMeters(elevatorIO.getRotation());
   }
 
+  /**
+   * @param mode the mode to go to?s
+   */
   public void setNeutralMode(NeutralModeValue mode) {
     elevatorIO.setNeutralMode(mode);
   }
