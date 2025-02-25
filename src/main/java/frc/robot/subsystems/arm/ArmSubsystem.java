@@ -46,7 +46,8 @@ public class ArmSubsystem extends SubsystemBase {
    * @param angle Angle to drive the arm to in degrees
    */
   public Command setAngle(double angle) {
-    double clampedAngle = MathUtil.clamp(angle, ArmConstants.ARM_LOWER_BOUND, ArmConstants.ARM_UPPER_BOUND);
+    double clampedAngle =
+        MathUtil.clamp(angle, ArmConstants.ARM_LOWER_BOUND, ArmConstants.ARM_UPPER_BOUND);
     return this.runOnce(
             () -> {
               armIO.setAngle(clampedAngle);
