@@ -83,7 +83,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
         (BaseStatusSignal.refreshAll(volts, velocity, temperature)).isOK();
     DogLog.log("EndEffector/Temperature", temperature.getValueAsDouble());
     DogLog.log("EndEffector/Connected", endEffectorConnected);
-    DogLog.log("EndEffector/StatorCurrent", );
+ 
     endEffectorMotorConnectedAlert.set(!endEffectorConnected);
   }
 }

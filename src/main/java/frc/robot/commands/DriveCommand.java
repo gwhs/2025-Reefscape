@@ -99,10 +99,6 @@ public class DriveCommand extends Command {
    * @param currentRobotPose the current pose of the robot via drivetrain.getpose();
    * @return returns the angle?
    */
-  /**
-   * @param currentRobotPose the current pose of the robot via drivetrain.getpose();
-   * @return returns the angle?
-   */
   public double calculateSetpoint(Pose2d currentRobotPose) {
     if (mode == TargetMode.CORAL_STATION) {
       if (DriverStation.getAlliance().isPresent()
@@ -146,6 +142,11 @@ public class DriveCommand extends Command {
     this.mode = mode;
   }
 
+  /**
+   * @param isSlow is it slow?
+   * @param factor how slow?
+   *     <p>NOTE: the value is clamped between 0 and 1
+   */
   public void setSlowMode(boolean isSlow, double factor) {
     this.isSlow = isSlow;
     factor = MathUtil.clamp(factor, 0, 1);
