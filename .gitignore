@@ -189,4 +189,3 @@ compile_commands.json
 simgui*.json
 *pid.log
 **/BuildConstants.java
-docs/
