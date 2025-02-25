@@ -13,6 +13,10 @@ public class EndEffectorSubsystem extends SubsystemBase {
   EndEffectorIO endEffectorIO;
   public final Trigger coralTriggered;
 
+  /**
+   * there are two implemenations for talon motors and sparkmax motors we are probably going to use
+   * talon tho
+   */
   public EndEffectorSubsystem() {
 
     if (RobotBase.isSimulation()) {
@@ -29,10 +33,17 @@ public class EndEffectorSubsystem extends SubsystemBase {
     SmartDashboard.putData("End Effector Command/Stop End Effector", stopMotor());
   }
 
+  /**
+   * @param voltage the voltage to set to
+   * @return set the motor to the voltage
+   */
   public Command setVoltage(double voltage) {
     return Commands.runOnce(() -> endEffectorIO.setVoltage(voltage));
   }
 
+  /**
+   * @return stop the motor
+   */
   public Command stopMotor() {
     return Commands.runOnce(() -> endEffectorIO.stopMotor());
   }
