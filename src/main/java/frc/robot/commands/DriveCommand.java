@@ -96,6 +96,10 @@ public class DriveCommand extends Command {
     addRequirements(drivetrain);
   }
 
+  /**
+   * @param currentRobotPose the current pose of the robot via drivetrain.getpose();
+   * @return returns the angle?
+   */
   public double calculateSetpoint(Pose2d currentRobotPose) {
     if (mode == TargetMode.CORAL_STATION) {
       if (DriverStation.getAlliance().isPresent()
@@ -132,20 +136,34 @@ public class DriveCommand extends Command {
     }
   }
 
+  /**
+   * @param mode what mode should it set to?
+   */
   public void setTargetMode(TargetMode mode) {
     this.mode = mode;
   }
 
+  /**
+   * @param isSlow is it slow?
+   * @param factor how slow?
+   * NOTE: the value is clamped between 0 and 1
+   */
   public void setSlowMode(boolean isSlow, double factor) {
     this.isSlow = isSlow;
     factor = MathUtil.clamp(factor, 0, 1);
     slowFactor = factor;
   }
 
+  /**
+   * @param driveMode what mode should the drive be in?
+   */
   public void setDriveMode(DriveMode driveMode) {
     this.driveMode = driveMode;
   }
 
+  /**
+   * @return the target mode we have
+   */
   public TargetMode getTargetMode() {
     return this.mode;
   }
@@ -218,6 +236,9 @@ public class DriveCommand extends Command {
     }
   }
 
+  /**
+   * @return is the robot at the setpoint?
+   */
   public boolean isAtSetPoint() {
     if (this.mode == TargetMode.CORAL_STATION || this.mode == TargetMode.REEF) {
       return PID.atSetpoint();
@@ -233,6 +254,10 @@ public class DriveCommand extends Command {
     return false;
   }
 
+  /**
+   * @param velocity how fast should it drive?
+   * @return do an MJ (minus the little boys)
+   */
   public Command driveBackward(double velocity) {
     return drivetrain
         .run(

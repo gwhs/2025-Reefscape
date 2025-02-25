@@ -32,7 +32,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
   public EndEffectorIOTalon() {
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
     CurrentLimitsConfigs limitsConfigs = talonConfig.CurrentLimits;
-
+    
     limitsConfigs.withStatorCurrentLimitEnable(true);
     limitsConfigs.withStatorCurrentLimit(15);
 
@@ -82,8 +82,8 @@ class EndEffectorIOTalon implements EndEffectorIO {
     boolean endEffectorConnected =
         (BaseStatusSignal.refreshAll(volts, velocity, temperature)).isOK();
     DogLog.log("EndEffector/Temperature", temperature.getValueAsDouble());
-    DogLog.log("endEffector/Connected", endEffectorConnected);
-
+    DogLog.log("EndEffector/Connected", endEffectorConnected);
+    DogLog.log("EndEffector/StatorCurrent", );
     endEffectorMotorConnectedAlert.set(!endEffectorConnected);
   }
 }
