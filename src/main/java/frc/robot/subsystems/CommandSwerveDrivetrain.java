@@ -72,7 +72,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   CurrentLimitsConfigs m3_current_config = new CurrentLimitsConfigs();
   CurrentLimitsConfigs m4_current_config = new CurrentLimitsConfigs();
 
-  public Constraints constraints = new TrapezoidProfile.Constraints(1, 1);
+  public Constraints constraints = new TrapezoidProfile.Constraints(5, 5);
   public ProfiledPIDController PID_X = new ProfiledPIDController(1.7, 0, 0, constraints);
   public ProfiledPIDController PID_Y = new ProfiledPIDController(1.7, 0, 0, constraints);
 
