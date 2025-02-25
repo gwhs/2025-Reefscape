@@ -45,25 +45,25 @@ public class FiveCycleNonProcessor2 extends PathPlannerAuto {
           .onTrue(
               Commands.sequence(
                       Commands.waitSeconds(waitTime),
-                      AutoBuilder.followPath(CS_J).alongWith(robotContainer.coralHandoff()),
+                      AutoBuilder.followPath(CS_J),
                       robotContainer.prepScoreCoral(
                           ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
                       AutoBuilder.followPath(J_CS).alongWith(robotContainer.prepCoralIntake()),
                       Commands.waitSeconds(waitTime),
-                      AutoBuilder.followPath(CS_K).alongWith(robotContainer.coralHandoff()),
+                      AutoBuilder.followPath(CS_K),
                       robotContainer.prepScoreCoral(
                           ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
                       AutoBuilder.followPath(K_CS).alongWith(robotContainer.prepCoralIntake()),
                       Commands.waitSeconds(waitTime),
-                      AutoBuilder.followPath(CS_L).alongWith(robotContainer.coralHandoff()),
+                      AutoBuilder.followPath(CS_L),
                       robotContainer.prepScoreCoral(
                           ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral(),
                       AutoBuilder.followPath(L_CS).alongWith(robotContainer.prepCoralIntake()),
                       Commands.waitSeconds(waitTime),
-                      AutoBuilder.followPath(CS_A).alongWith(robotContainer.coralHandoff()),
+                      AutoBuilder.followPath(CS_A),
                       robotContainer.prepScoreCoral(
                           ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
                       robotContainer.scoreCoral())

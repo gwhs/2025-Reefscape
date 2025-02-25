@@ -44,6 +44,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     SmartDashboard.putData("Elevator to 0.25", setHeight(0.25));
     SmartDashboard.putData("Elevator to 0.7", setHeight(0.7));
     SmartDashboard.putData("Elevator to 0.5", setHeight(0.5));
+    SmartDashboard.putData("Elevator/Homing command", homingCommand());
   }
 
   @Override
