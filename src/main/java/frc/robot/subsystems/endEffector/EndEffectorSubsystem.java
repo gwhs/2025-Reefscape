@@ -1,6 +1,7 @@
 package frc.robot.subsystems.endEffector;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,6 +14,10 @@ public class EndEffectorSubsystem extends SubsystemBase {
   EndEffectorIO endEffectorIO;
   public final Trigger coralTriggered;
 
+  /**
+   * there are two implemenations for talon motors and sparkmax motors we are probably going to use
+   * talon tho
+   */
   public EndEffectorSubsystem() {
 
     if (RobotBase.isSimulation()) {
@@ -29,6 +34,10 @@ public class EndEffectorSubsystem extends SubsystemBase {
     SmartDashboard.putData("End Effector Command/Stop End Effector", stopMotor());
   }
 
+  /**
+   * @param voltage the voltage to set to
+   * @return set the motor to the voltage
+   */
   public Command setVoltage(double voltage) {
     return Commands.runOnce(() -> endEffectorIO.setVoltage(voltage));
   }
@@ -41,14 +50,21 @@ public class EndEffectorSubsystem extends SubsystemBase {
     return Commands.runOnce(() -> endEffectorIO.setVoltage(6));
   }
 
+  /**
+   * @return stop the motor
+   */
   public Command stopMotor() {
     return Commands.runOnce(() -> endEffectorIO.stopMotor());
   }
 
   @Override
   public void periodic() {
+    double startTime = HALUtil.getFPGATime();
+
     endEffectorIO.update();
     DogLog.log("EndEffector/Voltage", endEffectorIO.getVoltage());
     DogLog.log("EndEffector/Velocity", endEffectorIO.getVelocity());
+
+    DogLog.log("Loop Time/End Effector", (HALUtil.getFPGATime() - startTime) / 1000);
   }
 }
