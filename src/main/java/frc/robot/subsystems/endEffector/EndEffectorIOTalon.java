@@ -9,6 +9,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.ColorSensorV3;
 import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
@@ -25,6 +26,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
   private final StatusSignal<Voltage> volts = motor.getMotorVoltage();
   private final StatusSignal<AngularVelocity> velocity = motor.getVelocity();
   private final StatusSignal<Temperature> temperature = motor.getDeviceTemp();
+  private final StatusSignal<Current> statorCurrent = motor.getStatorCurrent();
 
   private final Alert endEffectorMotorConnectedAlert =
       new Alert("End Effector Motor Not Connected", AlertType.kError);
@@ -32,7 +34,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
   public EndEffectorIOTalon() {
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
     CurrentLimitsConfigs limitsConfigs = talonConfig.CurrentLimits;
-    
+
     limitsConfigs.withStatorCurrentLimitEnable(true);
     limitsConfigs.withStatorCurrentLimit(15);
 
@@ -80,10 +82,10 @@ class EndEffectorIOTalon implements EndEffectorIO {
   @Override
   public void update() {
     boolean endEffectorConnected =
-        (BaseStatusSignal.refreshAll(volts, velocity, temperature)).isOK();
+        (BaseStatusSignal.refreshAll(volts, velocity, temperature, statorCurrent)).isOK();
     DogLog.log("EndEffector/Temperature", temperature.getValueAsDouble());
     DogLog.log("EndEffector/Connected", endEffectorConnected);
- 
+    DogLog.log("EndEffector/StatorCurrent", statorCurrent.getValueAsDouble());
     endEffectorMotorConnectedAlert.set(!endEffectorConnected);
   }
 }
