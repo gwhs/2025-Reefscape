@@ -10,15 +10,15 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class AlignToPose extends Command {
+
   Supplier<Pose2d> targetPose;
 
-  private final double ELEVATOR_UP_SLEW_RATE = 0.5;
+  private final double ELEVATOR_UP_SLEW_RATE = 1;
 
   private final SlewRateLimiter angularVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
   private final SlewRateLimiter xVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
@@ -29,7 +29,7 @@ public class AlignToPose extends Command {
 
   private CommandSwerveDrivetrain drivetrain;
 
-  private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  private double maxSpeed = CommandSwerveDrivetrain.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 1.0 * Math.PI;
 
   public static final double PID_MAX = 0.44;
@@ -49,12 +49,19 @@ public class AlignToPose extends Command {
     this.elevatorHeight = elevatorHeight;
   }
 
+  /**
+   * @param targetPose Specify the Pose2d to go to.
+   */
   public void goToPoseWithPID(Pose2d targetPose) {
+
     drivetrain.PID_X.setSetpoint(targetPose.getX());
     drivetrain.PID_Y.setSetpoint(targetPose.getY());
     drivetrain.PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
   }
 
+  /**
+   * @return if it is at pose true if not false
+   */
   public boolean isAtTargetPose() {
     boolean isAtX = drivetrain.PID_X.atSetpoint();
     boolean isAtY = drivetrain.PID_Y.atSetpoint();
@@ -104,9 +111,9 @@ public class AlignToPose extends Command {
         yVelocityLimiter.reset(yVelocity);
         angularVelocityLimiter.reset(angularVelocity);
       }
-      xVelocity = MathUtil.clamp(xVelocity, -0.1, 0.1);
-      yVelocity = MathUtil.clamp(yVelocity, -0.1, 0.1);
-      angularVelocity = MathUtil.clamp(angularVelocity, -0.1, 0.1);
+      xVelocity = MathUtil.clamp(xVelocity, -0.2, 0.2);
+      yVelocity = MathUtil.clamp(yVelocity, -0.2, 0.2);
+      angularVelocity = MathUtil.clamp(angularVelocity, -0.2, 0.2);
 
       xVelocity = xVelocityLimiter.calculate(xVelocity);
       yVelocity = yVelocityLimiter.calculate(yVelocity);

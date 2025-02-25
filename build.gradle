@@ -185,7 +185,7 @@ gversion {
 task(eventDeploy) {
     doLast {
         if (project.gradle.startParameter.taskNames.any({ it.toLowerCase().contains("deploy") })) {
-            def branchPrefix = "event"
+            def branchPrefix = ""
             def branch = 'git branch --show-current'.execute().text.trim()
             def commitMessage = "Update at '${new Date().toString()}'"
 
@@ -213,3 +213,15 @@ task(eventDeploy) {
     }
 }
 createVersionFile.dependsOn(eventDeploy)
+
+task docs(type: Javadoc) {
+    // Specify the source directory containing your Java files
+    source = fileTree(dir: 'src', include: '**/*.java')
+
+    // Set the classpath to include the project's compile-time dependencies
+    classpath = sourceSets.main.compileClasspath
+
+
+    // Specify the output directory for the generated Javadoc
+    destinationDir = file("docs/")
+}
