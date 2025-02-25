@@ -341,14 +341,14 @@ public class RobotContainer {
   // Sets it to the right height and arm postion to intake coral
   public Command prepCoralIntake() {
     return Commands.sequence(
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
             endEffector.intake(),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake");
   }
 
   public Command stopIntake() {
-    return Commands.parallel(arm.setAngle(ArmConstants.ARM_STOW_ANGLE), endEffector.stopMotor())
+    return Commands.parallel(arm.setAngle(ArmConstants.ARM_STOW_ANGLE), endEffector.holdCoral())
         .withName("stop Intake");
   }
 
