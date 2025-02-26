@@ -1,7 +1,5 @@
 package frc.robot.subsystems.arm;
 
-import static edu.wpi.first.units.Units.Rotations;
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
@@ -104,8 +102,16 @@ public class ArmIOReal implements ArmIO {
     CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
     cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.25;
     cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-    cc_cfg.MagnetSensor.withMagnetOffset(0);
-    status = armEncoder.getConfigurator().apply(cc_cfg);
+    cc_cfg.MagnetSensor.withMagnetOffset(Units.degreesToRotations(-307.96875));
+
+    for (int i = 0; i < 5; i++) {
+      status = armEncoder.getConfigurator().apply(cc_cfg);
+      if (status.isOK()) break;
+    }
+    if (!status.isOK()) {
+      System.out.println("Could not configure device. Error: " + status.toString());
+    }
+
 
     SmartDashboard.putData(
         "Arm Command/reset to 90",
