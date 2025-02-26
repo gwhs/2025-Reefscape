@@ -82,7 +82,6 @@ public class RobotContainer {
   // private final ClimbSubsystem climb = new ClimbSubsystem();
   private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
   private final LedSubsystem led = new LedSubsystem();
-  // private final ClimbSubsystem climb = new ClimbSubsystem();
 
   private final DriveCommand driveCommand;
 
