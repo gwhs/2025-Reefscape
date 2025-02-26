@@ -104,8 +104,6 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
-  private final Trigger IS_AT_POSE;
-
   private final Trigger IS_REEF_MODE;
 
   private final Trigger IS_CLOSE_TO_REEF;
@@ -172,8 +170,6 @@ public class RobotContainer {
 
     driveCommand =
         new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
-
-    IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
 
     IS_REEF_MODE = new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
 
