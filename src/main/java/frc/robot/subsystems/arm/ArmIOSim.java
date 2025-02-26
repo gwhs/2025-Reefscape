@@ -13,14 +13,14 @@ public class ArmIOSim implements ArmIO {
           ArmConstants.ARM_GEAR_RATIO,
           0.1,
           1,
-          Units.degreesToRadians(0),
-          Units.degreesToRadians(300),
+          Units.degreesToRadians(ArmConstants.ARM_LOWER_BOUND),
+          Units.degreesToRadians(ArmConstants.ARM_UPPER_BOUND),
           false,
           Units.degreesToRadians(90));
 
   private TrapezoidProfile.Constraints constraints =
       new TrapezoidProfile.Constraints(
-          ArmConstants.MAX_VELOCITY * 360 / 60, ArmConstants.MAX_ACCELERATION * 360 / 60);
+          ArmConstants.MAX_VELOCITY * 360, ArmConstants.MAX_ACCELERATION * 360);
   private ProfiledPIDController pidController = new ProfiledPIDController(.1, 0, 0, constraints);
 
   public ArmIOSim() {
@@ -36,6 +36,9 @@ public class ArmIOSim implements ArmIO {
     pidController.setGoal(angle);
   }
 
+  /**
+   * @param volts how many volts to set to
+   */
   public void setVoltage(double volts) {
     armSim.setInputVoltage(volts);
   }

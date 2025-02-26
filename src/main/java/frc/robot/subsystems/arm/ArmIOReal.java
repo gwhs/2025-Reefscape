@@ -78,12 +78,14 @@ public class ArmIOReal implements ArmIO {
     motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
     motorOutput.NeutralMode = NeutralModeValue.Coast;
-    motorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     softwareLimitSwitch.ForwardSoftLimitEnable = true;
-    softwareLimitSwitch.ForwardSoftLimitThreshold = Units.degreesToRotations(330);
+    softwareLimitSwitch.ForwardSoftLimitThreshold =
+        Units.degreesToRotations(ArmConstants.ARM_UPPER_BOUND);
     softwareLimitSwitch.ReverseSoftLimitEnable = true;
-    softwareLimitSwitch.ReverseSoftLimitThreshold = Units.degreesToRotations(20);
+    softwareLimitSwitch.ReverseSoftLimitThreshold =
+        Units.degreesToRotations(ArmConstants.ARM_LOWER_BOUND);
 
     currentConfig.withStatorCurrentLimitEnable(true);
     currentConfig.withStatorCurrentLimit(20);
@@ -118,12 +120,14 @@ public class ArmIOReal implements ArmIO {
     armMotor.setControl(m_request.withPosition(Units.degreesToRotations(angle)));
   }
 
-  // geta arm position in degrees
   @Override
   public double getPosition() {
     return Units.rotationsToDegrees(armPosition.getValueAsDouble());
   }
 
+  /**
+   * @param volts the voltage to set to
+   */
   public void setVoltage(double volts) {
     armMotor.setControl(m_voltReq.withOutput(volts));
   }

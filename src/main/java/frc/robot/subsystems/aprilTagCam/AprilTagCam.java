@@ -87,6 +87,10 @@ public class AprilTagCam {
     counter = 0;
   }
 
+  /**
+   * updates the pose estimations <br>
+   * NOTE: also updates the connection check for the camera
+   */
   public void updatePoseEstim() {
     counter++;
     isConnected = cam.isConnected();
@@ -130,7 +134,8 @@ public class AprilTagCam {
       Pose3d estimPose3d = optionalEstimPose.get().estimatedPose;
       tagListFiltered = filterTags(tagListUnfiltered, estimPose3d);
 
-      if (!filterResults(estimPose3d, optionalEstimPose.get(), tagListFiltered)) {
+      if (!filterResults(
+          estimPose3d, optionalEstimPose.get(), tagListFiltered, currRobotSpeed.get())) {
         continue;
       }
 
@@ -152,6 +157,10 @@ public class AprilTagCam {
     visionNotConnected.set(!isConnected);
   }
 
+  /**
+   * @param sd standard deviation
+   * @return the array
+   */
   public static double[] getSDArray(Matrix<N3, N1> sd) {
     double[] sdArray = new double[3];
     for (int i = 0; i < 3; i++) {
@@ -160,8 +169,18 @@ public class AprilTagCam {
     return sdArray;
   }
 
+  /**
+   * @param estimPose3d estimated Pose3d
+   * @param optionalEstimPose optional estimated pose
+   * @param filteredTags tags to filter
+   * @param speed how fast are the chassis'
+   * @return are they filtered?
+   */
   public boolean filterResults(
-      Pose3d estimPose3d, EstimatedRobotPose optionalEstimPose, ArrayList<Pose3d> filteredTags) {
+      Pose3d estimPose3d,
+      EstimatedRobotPose optionalEstimPose,
+      ArrayList<Pose3d> filteredTags,
+      ChassisSpeeds speed) {
 
     // If vision’s pose estimation is above/below the ground
     double upperZBound = AprilTagCamConstants.Z_TOLERANCE;
@@ -201,10 +220,10 @@ public class AprilTagCam {
     }
 
     // if velocity or rotaion is too high
-    double xVel = currRobotSpeed.get().vxMetersPerSecond;
-    double yVel = currRobotSpeed.get().vyMetersPerSecond;
+    double xVel = speed.vxMetersPerSecond;
+    double yVel = speed.vyMetersPerSecond;
     double vel = Math.sqrt(Math.pow(yVel, 2) + Math.pow(xVel, 2));
-    double rotation = currRobotSpeed.get().omegaRadiansPerSecond;
+    double rotation = speed.omegaRadiansPerSecond;
 
     if (vel > AprilTagCamConstants.MAX_VELOCITY || rotation > AprilTagCamConstants.MAX_ROTATION) {
       DogLog.log(ntKey + "Rejected Pose", estimPose3d);
@@ -215,6 +234,11 @@ public class AprilTagCam {
     return true;
   }
 
+  /**
+   * @param unfilteredTags tags to filter
+   * @param robotPose the robot position
+   * @return the tags
+   */
   public ArrayList<Pose3d> filterTags(ArrayList<Pose3d> unfilteredTags, Pose3d robotPose) {
 
     // If the tag is too far away
@@ -229,6 +253,11 @@ public class AprilTagCam {
     return filteredTags;
   }
 
+  /**
+   * @param estimatedPose the estimated position
+   * @param targets the targets
+   * @return the standard deviation
+   */
   private Matrix<N3, N1> findSD(
       Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
 
