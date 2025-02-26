@@ -15,6 +15,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import dev.doglog.DogLog;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -73,9 +74,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   CurrentLimitsConfigs m3_current_config = new CurrentLimitsConfigs();
   CurrentLimitsConfigs m4_current_config = new CurrentLimitsConfigs();
 
-  public Constraints constraints = new TrapezoidProfile.Constraints(5, 5);
-  public ProfiledPIDController PID_X = new ProfiledPIDController(1.7, 0, 0, constraints);
-  public ProfiledPIDController PID_Y = new ProfiledPIDController(1.7, 0, 0, constraints);
+  public Constraints constraints = new TrapezoidProfile.Constraints(5, 4);
+  public ProfiledPIDController PID_X = new ProfiledPIDController(3, 0, 0, constraints);
+  public ProfiledPIDController PID_Y = new ProfiledPIDController(3, 0, 0, constraints);
 
   public PIDController PID_Rotation = new PIDController(0.1, 0, 0);
   public Trigger IS_AT_TARGET_POSE =
@@ -279,6 +280,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
               });
     }
+
+    DogLog.log("Swerve/current X setpoint", PID_X.getSetpoint().position);
+    DogLog.log("Swerve/current Y setpoint", PID_Y.getSetpoint().position);
   }
 
   private void startSimThread() {
