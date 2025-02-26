@@ -102,10 +102,9 @@ public class ArmIOReal implements ArmIO {
     BaseStatusSignal.setUpdateFrequencyForAll(50.0, armPIDGoal, armStatorCurrent);
 
     CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
-    cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0;
-    cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    cc_cfg.MagnetSensor.withMagnetOffset(Rotations.of(0.4));
-    armEncoder.getConfigurator().apply(cc_cfg);
+    cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.25;
+    cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+    cc_cfg.MagnetSensor.withMagnetOffset(0);
     status = armEncoder.getConfigurator().apply(cc_cfg);
 
     SmartDashboard.putData(
