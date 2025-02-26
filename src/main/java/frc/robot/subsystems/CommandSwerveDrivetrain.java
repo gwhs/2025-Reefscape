@@ -157,8 +157,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    * @param targetPose the pose to go to
    */
   public void goToPoseWithPID(Pose2d targetPose) {
-    PID_X.reset(getPose().getX(), getState().Speeds.vxMetersPerSecond);
-    PID_Y.reset(getPose().getY(), getState().Speeds.vyMetersPerSecond);
     PID_X.setGoal(targetPose.getX());
     PID_Y.setGoal(targetPose.getY());
     PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
