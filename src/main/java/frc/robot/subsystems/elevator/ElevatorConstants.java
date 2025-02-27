@@ -33,10 +33,6 @@ public class ElevatorConstants {
   public static final double DEALGAE_LOW_POSITION = 0;
   public static final double DEALGAE_HIGH_POSITION = 30;
   public static final double DEALGAE_STOW_POSITION = 0;
-  // placeh
-
-  public static final double INTAKE_METER =
-      ElevatorSubsystem.rotationsToMeters(0 / GEAR_RATIO_DIFF);
 
   public static final double STOW_METER = ElevatorSubsystem.rotationsToMeters(15 / GEAR_RATIO_DIFF);
 
