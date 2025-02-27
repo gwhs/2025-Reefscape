@@ -5,7 +5,6 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.ColorSensorV3;
@@ -33,11 +32,12 @@ class EndEffectorIOTalon implements EndEffectorIO {
   private final Alert endEffectorMotorConnectedAlert =
       new Alert("End Effector Motor Not Connected", AlertType.kError);
 
-  TorqueCurrentConfigs configs;
-
   public EndEffectorIOTalon() {
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
     CurrentLimitsConfigs limitsConfigs = talonConfig.CurrentLimits;
+
+    talonConfig.TorqueCurrent.withPeakForwardTorqueCurrent(40);
+    talonConfig.TorqueCurrent.withPeakReverseTorqueCurrent(-40);
 
     limitsConfigs.withStatorCurrentLimitEnable(true);
     limitsConfigs.withStatorCurrentLimit(60);
@@ -51,13 +51,6 @@ class EndEffectorIOTalon implements EndEffectorIO {
     if (!status.isOK()) {
       System.out.println("Could not configure device. Error: " + status.toString());
     }
-
-    configs = new TorqueCurrentConfigs();
-    configs
-        .withPeakForwardTorqueCurrent(configs.PeakForwardTorqueCurrent)
-        .withPeakReverseTorqueCurrent(configs.PeakReverseTorqueCurrent)
-        .withTorqueNeutralDeadband(configs.TorqueNeutralDeadband);
-    motor.getConfigurator().apply(configs);
   }
 
   @Override
