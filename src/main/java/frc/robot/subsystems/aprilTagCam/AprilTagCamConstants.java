@@ -9,7 +9,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 public class AprilTagCamConstants {
-  public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(0.5, 0.5, 8);
+  public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(0.8, 0.8, 8);
   public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.2, 0.2, 1);
 
   public static final String FRONT_LEFT_CAMERA_COMP_NAME = "cam1";
