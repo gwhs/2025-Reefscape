@@ -484,19 +484,19 @@ public class RobotContainer {
   public Command prepDealgaeLow() {
     return Commands.parallel(
         elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
-        arm.setAngle(ArmConstants.DEALGAE_LOW_ANGLE),
-        endEffector.setVoltage(12));
+        arm.setAngle(ArmConstants.DEALGAE_LOW_ANGLE));
   }
 
   public Command prepDealgaeHigh() {
     return Commands.parallel(
         elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
-        arm.setAngle(ArmConstants.DEALGAE_HIGH_ANGLE),
-        endEffector.setVoltage(12));
+        arm.setAngle(ArmConstants.DEALGAE_HIGH_ANGLE));
   }
 
   public Command stow() {
-    return Commands.parallel(
+    return Commands.sequence(
+        arm.setAngle(340),
+        driveCommand.driveBackward(1).withTimeout(0.2),
         elevator.setHeight(ElevatorConstants.STOW_METER),
         arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
         endEffector.stopMotor());
