@@ -362,17 +362,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    * @return do an MJ (minus the little boys)
    */
   public Command driveBackward(double velocity) {
-    return this.
+    return this
         .run(
             () ->
-                drivetrain.setControl(
+                this.setControl(
                     robotCentricDrive
                         .withVelocityX(-velocity)
                         .withVelocityY(0)
                         .withRotationalRate(0)))
         .finallyDo(
             () ->
-                drivetrain.setControl(
+                this.setControl(
                     robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
   }
 }
