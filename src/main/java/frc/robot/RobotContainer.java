@@ -113,8 +113,6 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
-  private final Trigger IS_AT_POSE;
-
   private final Trigger IS_REEF_MODE;
 
   private final Trigger IS_CLOSE_TO_REEF;
@@ -181,8 +179,6 @@ public class RobotContainer {
 
     driveCommand =
         new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
-
-    IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
 
     IS_REEF_MODE = new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
 
@@ -434,13 +430,16 @@ public class RobotContainer {
   public Command prepCoralIntake() {
     return Commands.sequence(
             endEffector.intake(),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
+            elevator.setHeight(ElevatorConstants.INTAKE_METER).withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake");
   }
 
   public Command stopIntake() {
-    return Commands.parallel(arm.setAngle(ArmConstants.ARM_STOW_ANGLE), endEffector.holdCoral())
+    return Commands.parallel(
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
+            elevator.setHeight(ElevatorConstants.STOW_METER),
+            endEffector.holdCoral())
         .withName("stop Intake");
   }
 
@@ -486,14 +485,14 @@ public class RobotContainer {
     return Commands.parallel(
         elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
         arm.setAngle(ArmConstants.DEALGAE_LOW_ANGLE),
-        endEffector.setVoltage(1));
+        endEffector.setVoltage(6));
   }
 
   public Command prepDealgaeHigh() {
     return Commands.parallel(
         elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
         arm.setAngle(ArmConstants.DEALGAE_HIGH_ANGLE),
-        endEffector.setVoltage(1));
+        endEffector.setVoltage(6));
   }
 
   public Command stow() {
