@@ -93,6 +93,7 @@ public class RobotContainer {
   }
 
   public static CoralLevel coralLevel = CoralLevel.L4;
+
   public static final Trigger IS_L1 = new Trigger(() -> coralLevel == CoralLevel.L1);
   public static final Trigger IS_L2 = new Trigger(() -> coralLevel == CoralLevel.L2);
   public static final Trigger IS_L3 = new Trigger(() -> coralLevel == CoralLevel.L3);
@@ -288,6 +289,11 @@ public class RobotContainer {
             Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
                 .withName("Back to Original State"));
 
+    IS_L2.and(m_driverController.leftTrigger()).onTrue(prepDealgaeLow());
+    IS_L3.and(m_driverController.leftTrigger()).onTrue(prepDealgaeHigh());
+
+    m_driverController.leftTrigger().onFalse(stow());
+
     IS_L4
         .and(m_driverController.rightTrigger())
         .whileTrue(
@@ -466,5 +472,27 @@ public class RobotContainer {
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.2),
             endEffector.stopMotor())
         .withName("Score Coral");
+  }
+
+  // DeAlgae Commands
+  public Command prepDealgaeLow() {
+    return Commands.parallel(
+        elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
+        arm.setAngle(ArmConstants.DEALGAE_LOW_ANGLE),
+        endEffector.setVoltage(1));
+  }
+
+  public Command prepDealgaeHigh() {
+    return Commands.parallel(
+        elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
+        arm.setAngle(ArmConstants.DEALGAE_HIGH_ANGLE),
+        endEffector.setVoltage(1));
+  }
+
+  public Command stow() {
+    return Commands.parallel(
+        elevator.setHeight(ElevatorConstants.STOW_METER),
+        arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
+        endEffector.stopMotor());
   }
 }
