@@ -35,6 +35,13 @@ class EndEffectorIOSim implements EndEffectorIO {
     return motor.getInputVoltage();
   }
 
+  @Override
+  public void setControl(double current) {
+    double resistance = DCMotor.getFalcon500(1).rOhms;
+    double voltage = current * resistance;
+    motor.setInputVoltage(voltage);
+  }
+
   private boolean coralSensor = false;
 
   public EndEffectorIOSim() {

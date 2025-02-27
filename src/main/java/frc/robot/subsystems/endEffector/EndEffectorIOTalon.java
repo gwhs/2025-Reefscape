@@ -5,6 +5,8 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.ColorSensorV3;
 import dev.doglog.DogLog;
@@ -68,6 +70,17 @@ class EndEffectorIOTalon implements EndEffectorIO {
   public double getVoltage() {
 
     return volts.getValueAsDouble();
+  }
+
+  @Override
+  public void setControl(double current) {
+    TorqueCurrentConfigs configs = new TorqueCurrentConfigs();
+    configs
+        .withPeakForwardTorqueCurrent(configs.PeakForwardTorqueCurrent)
+        .withPeakReverseTorqueCurrent(configs.PeakReverseTorqueCurrent)
+        .withTorqueNeutralDeadband(configs.TorqueNeutralDeadband);
+    motor.getConfigurator().apply(configs);
+    motor.setControl(new TorqueCurrentFOC(current));
   }
 
   public boolean isSensorTriggered() {

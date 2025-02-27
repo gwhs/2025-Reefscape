@@ -51,7 +51,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
   }
 
   public Command holdCoral() {
-    return Commands.runOnce(() -> endEffectorIO.setVoltage(1));
+    return Commands.runOnce(
+        () -> endEffectorIO.setControl(EndEffectorConstants.HOLD_CORAL_CURRENT));
   }
 
   /**
