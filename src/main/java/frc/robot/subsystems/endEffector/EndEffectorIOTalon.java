@@ -33,6 +33,8 @@ class EndEffectorIOTalon implements EndEffectorIO {
   private final Alert endEffectorMotorConnectedAlert =
       new Alert("End Effector Motor Not Connected", AlertType.kError);
 
+  TorqueCurrentConfigs configs;
+
   public EndEffectorIOTalon() {
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
     CurrentLimitsConfigs limitsConfigs = talonConfig.CurrentLimits;
@@ -49,6 +51,13 @@ class EndEffectorIOTalon implements EndEffectorIO {
     if (!status.isOK()) {
       System.out.println("Could not configure device. Error: " + status.toString());
     }
+
+    configs = new TorqueCurrentConfigs();
+    configs
+        .withPeakForwardTorqueCurrent(configs.PeakForwardTorqueCurrent)
+        .withPeakReverseTorqueCurrent(configs.PeakReverseTorqueCurrent)
+        .withTorqueNeutralDeadband(configs.TorqueNeutralDeadband);
+    motor.getConfigurator().apply(configs);
   }
 
   @Override
@@ -73,8 +82,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
   }
 
   @Override
-  public void setControl(double current) {
-    TorqueCurrentConfigs configs = new TorqueCurrentConfigs();
+  public void setAmps(double current) {
     configs
         .withPeakForwardTorqueCurrent(configs.PeakForwardTorqueCurrent)
         .withPeakReverseTorqueCurrent(configs.PeakReverseTorqueCurrent)
