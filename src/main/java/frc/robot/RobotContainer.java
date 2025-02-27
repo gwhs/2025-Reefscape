@@ -248,8 +248,8 @@ public class RobotContainer {
     IS_DISABLED.onFalse(
         Commands.runOnce(
                 () -> {
-                  // drivetrain.configNeutralMode(NeutralModeValue.Brake);
-                  // elevator.setNeutralMode(NeutralModeValue.Brake);
+                  drivetrain.configNeutralMode(NeutralModeValue.Brake);
+                  elevator.setNeutralMode(NeutralModeValue.Brake);
                 })
             .ignoringDisable(false));
 
