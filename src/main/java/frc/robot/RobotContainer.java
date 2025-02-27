@@ -432,13 +432,16 @@ public class RobotContainer {
   public Command prepCoralIntake() {
     return Commands.sequence(
             endEffector.intake(),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
+            elevator.setHeight(ElevatorConstants.INTAKE_METER).withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake");
   }
 
   public Command stopIntake() {
-    return Commands.parallel(arm.setAngle(ArmConstants.ARM_STOW_ANGLE), endEffector.holdCoral())
+    return Commands.parallel(
+      arm.setAngle(ArmConstants.ARM_STOW_ANGLE), 
+      el
+      endEffector.holdCoral())
         .withName("stop Intake");
   }
 
