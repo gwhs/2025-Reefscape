@@ -97,6 +97,7 @@ public class RobotContainer {
       double armAngle;
   
 
+
     private CoralLevel(double elevatorHeight, double armAngle) {
         this.elevatorHeight = elevatorHeight;
         this.armAngle = armAngle;
@@ -309,19 +310,19 @@ public class RobotContainer {
     IS_L4
         .and(m_driverController.rightTrigger())
         .whileTrue(
-            prepScoreCoral(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION));
+            prepScoreCoral(CoralLevel.L4));
     IS_L3
         .and(m_driverController.rightTrigger())
         .whileTrue(
-            prepScoreCoral(ElevatorConstants.L3_PREP_POSITION, ArmConstants.L3_PREP_POSITION));
+            prepScoreCoral(CoralLevel.L3));
     IS_L2
         .and(m_driverController.rightTrigger())
         .whileTrue(
-            prepScoreCoral(ElevatorConstants.L2_PREP_POSITION, ArmConstants.L2_PREP_POSITION));
+            prepScoreCoral(CoralLevel.L2));
     IS_L1
-        .and(m_driverController.rightTrigger())
+        .and(m_driverController.rightTrigger()) 
         .whileTrue(
-            prepScoreCoral(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION));
+            prepScoreCoral(CoralLevel.L1));
 
     m_driverController.rightTrigger().onFalse(scoreCoral());
 
@@ -465,12 +466,12 @@ public class RobotContainer {
    * @param armAngle what angle should the arm be at
    * @return run the command
    */
-  public Command prepScoreCoral(double elevatorHeight, double armAngle) {
+  public Command prepScoreCoral(CoralLevel level) {
     return Commands.parallel(
-            elevator.setHeight(elevatorHeight).withTimeout(0.5),
-            arm.setAngle(armAngle).withTimeout(1))
+            elevator.setHeight(level.elevatorHeight).withTimeout(0.5),
+            arm.setAngle(level.armAngle).withTimeout(1))
         .withName(
-            "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
+            "Prepare Score Coral; Elevator Height: " + level.elevatorHeight + " Arm Angle: " + level.armAngle);
   }
 
   /**
