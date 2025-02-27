@@ -21,5 +21,5 @@ public class ArmConstants {
   public static final double ARM_STOW_ANGLE = 90.0;
 
   public static final double DEALGAE_LOW_ANGLE = 335;
-  public static final double DEALGAE_HIGH_ANGLE = 310;
+  public static final double DEALGAE_HIGH_ANGLE = 300;
 }
