@@ -83,11 +83,6 @@ class EndEffectorIOTalon implements EndEffectorIO {
 
   @Override
   public void setAmps(double current) {
-    configs
-        .withPeakForwardTorqueCurrent(configs.PeakForwardTorqueCurrent)
-        .withPeakReverseTorqueCurrent(configs.PeakReverseTorqueCurrent)
-        .withTorqueNeutralDeadband(configs.TorqueNeutralDeadband);
-    motor.getConfigurator().apply(configs);
     motor.setControl(new TorqueCurrentFOC(current));
   }
 
