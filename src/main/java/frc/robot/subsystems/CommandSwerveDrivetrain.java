@@ -110,10 +110,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds =
       new SwerveRequest.ApplyRobotSpeeds();
 
-
-     private final SwerveRequest.RobotCentric robotCentricDrive =
-      new SwerveRequest.RobotCentric()
-          .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+  private final SwerveRequest.RobotCentric robotCentricDrive =
+      new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
   /**
    * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -362,8 +360,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    * @return do an MJ (minus the little boys)
    */
   public Command driveBackward(double velocity) {
-    return this
-        .run(
+    return this.run(
             () ->
                 this.setControl(
                     robotCentricDrive
