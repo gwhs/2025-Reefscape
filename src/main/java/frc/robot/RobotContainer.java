@@ -303,7 +303,6 @@ public class RobotContainer {
     cam4.updatePoseEstim();
     DogLog.log("Desired Reef", coralLevel);
 
-
     // Log Triggers
     DogLog.log("Trigger/At L1", IS_L1.getAsBoolean());
     DogLog.log("Trigger/At L2", IS_L2.getAsBoolean());
@@ -315,7 +314,6 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
 
     endEffectorSensor.robotPeriodic();
-    
   }
 
   /**
