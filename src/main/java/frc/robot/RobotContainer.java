@@ -303,7 +303,19 @@ public class RobotContainer {
     IS_L1
         .and(m_driverController.rightTrigger())
         .whileTrue(
-            prepScoreCoral(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION));
+            Commands.sequence(
+                Commands.runOnce(
+                    () -> {
+                      driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
+                      driveCommand.BACK_REEF = true;
+                    }),
+                Commands.waitUntil(() -> driveCommand.isAtSetPoint()),
+                prepScoreCoral(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION)))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  driveCommand.BACK_REEF = false;
+                }));
 
     m_driverController.rightTrigger().onFalse(scoreCoral());
 
