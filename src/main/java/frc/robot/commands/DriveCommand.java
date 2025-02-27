@@ -235,16 +235,6 @@ public class DriveCommand extends Command {
     }
   }
 
-  /**
-   * @return is the robot at the setpoint?
-   */
-  public boolean isAtSetPoint() {
-    if (this.mode == TargetMode.CORAL_STATION || this.mode == TargetMode.REEF) {
-      return PID.atSetpoint();
-    }
-    return false;
-  }
-
   @Override
   public void end(boolean interrupted) {}
 
