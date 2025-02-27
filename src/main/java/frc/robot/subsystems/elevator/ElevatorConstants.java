@@ -29,8 +29,7 @@ public class ElevatorConstants {
   public static final double L4_PREP_POSITION =
       ElevatorSubsystem.rotationsToMeters(65 / GEAR_RATIO_DIFF);
 
-  public static final double INTAKE_METER =
-      ElevatorSubsystem.rotationsToMeters(0 / GEAR_RATIO_DIFF);
+  public static final double INTAKE_METER = Units.inchesToMeters(9.825);
   public static final double STOW_METER = ElevatorSubsystem.rotationsToMeters(15 / GEAR_RATIO_DIFF);
 
   public static final double MAX_VELOCITY = 90; // rps
