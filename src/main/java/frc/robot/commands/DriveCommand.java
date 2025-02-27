@@ -43,8 +43,8 @@ public class DriveCommand extends Command {
 
   private final double ELEVATOR_UP_SLEW_RATE = 1;
 
-  private boolean SIDE_REEF = true;
-  private boolean BACK_REEF = false;
+  private boolean SIDE_REEF = false;
+  private boolean BACK_REEF = true;
 
   private final DoubleSupplier elevatorHeight;
 
