@@ -43,6 +43,9 @@ public class DriveCommand extends Command {
 
   private final double ELEVATOR_UP_SLEW_RATE = 1;
 
+  private boolean SIDE_REEF = true;
+  private boolean BACK_REEF = true;
+
   private final DoubleSupplier elevatorHeight;
 
   public enum DriveMode {
@@ -59,10 +62,10 @@ public class DriveCommand extends Command {
     NORMAL,
     CORAL_STATION,
     REEF,
-    CAGE
+    CAGE,
   }
 
-  private TargetMode mode = TargetMode.NORMAL;
+  private TargetMode mode = TargetMode.REEF;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
@@ -121,8 +124,18 @@ public class DriveCommand extends Command {
       }
 
     } else if (mode == TargetMode.REEF) {
-      Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
-      return nearest.getRotation().getDegrees();
+      if (SIDE_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees() + 90;
+      } else if(BACK_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees() + 180;
+
+      } else {
+
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees();
+      }
     } else if (mode == TargetMode.CAGE) {
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
