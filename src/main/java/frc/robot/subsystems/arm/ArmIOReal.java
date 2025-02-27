@@ -1,7 +1,5 @@
 package frc.robot.subsystems.arm;
 
-import static edu.wpi.first.units.Units.Rotations;
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
@@ -67,12 +65,11 @@ public class ArmIOReal implements ArmIO {
     slot0Configs.kD = 8.4867; // A velocity error of 1 rps results in 0.1 V output
     slot0Configs.withGravityType(GravityTypeValue.Arm_Cosine);
 
-    // feedbackConfigs.FeedbackRemoteSensorID = 0;
-    // feedbackConfigs.FeedbackRotorOffset = 0;
-    feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-    feedbackConfigs.RotorToSensorRatio = 1; // TODO: Need to change to gear ratio with cancoder
-    feedbackConfigs.SensorToMechanismRatio =
-        ArmConstants.ARM_GEAR_RATIO; // TODO: Need to change to 1 with cancoder
+    feedbackConfigs.FeedbackRotorOffset = 0;
+    feedbackConfigs.FeedbackRemoteSensorID = ArmConstants.ARM_ENCODER_ID;
+    feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+    feedbackConfigs.RotorToSensorRatio = ArmConstants.ARM_GEAR_RATIO;
+    feedbackConfigs.SensorToMechanismRatio = 1;
 
     motionMagicConfigs.MotionMagicCruiseVelocity = ArmConstants.MAX_VELOCITY;
     motionMagicConfigs.MotionMagicAcceleration = ArmConstants.MAX_ACCELERATION;
@@ -103,10 +100,17 @@ public class ArmIOReal implements ArmIO {
     BaseStatusSignal.setUpdateFrequencyForAll(50.0, armPIDGoal, armStatorCurrent);
 
     CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
-    cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0;
-    cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    cc_cfg.MagnetSensor.withMagnetOffset(Rotations.of(0.4));
-    armEncoder.getConfigurator().apply(cc_cfg);
+    cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.25;
+    cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+    cc_cfg.MagnetSensor.withMagnetOffset(Units.degreesToRotations(307.96875));
+
+    for (int i = 0; i < 5; i++) {
+      status = armEncoder.getConfigurator().apply(cc_cfg);
+      if (status.isOK()) break;
+    }
+    if (!status.isOK()) {
+      System.out.println("Could not configure device. Error: " + status.toString());
+    }
 
     SmartDashboard.putData(
         "Arm Command/reset to 90",
