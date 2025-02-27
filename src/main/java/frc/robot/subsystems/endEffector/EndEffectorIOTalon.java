@@ -28,6 +28,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
   private final StatusSignal<AngularVelocity> velocity = motor.getVelocity();
   private final StatusSignal<Temperature> temperature = motor.getDeviceTemp();
   private final StatusSignal<Current> statorCurrent = motor.getStatorCurrent();
+  private TorqueCurrentFOC currentControl = new TorqueCurrentFOC(0);
 
   private final Alert endEffectorMotorConnectedAlert =
       new Alert("End Effector Motor Not Connected", AlertType.kError);
@@ -76,7 +77,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
 
   @Override
   public void setAmps(double current) {
-    motor.setControl(new TorqueCurrentFOC(current));
+    motor.setControl(currentControl.withOutput(current));
   }
 
   public boolean isSensorTriggered() {
