@@ -1,17 +1,17 @@
 package frc.robot.subsystems.groundIntake;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.*;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.*;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import com.ctre.phoenix6.configs.*;
-import com.ctre.phoenix6.signals.*;
-import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import edu.wpi.first.math.util.Units;
 
 public class groundIntakeIOReal implements groundIntakeIO {
 
@@ -23,7 +23,7 @@ public class groundIntakeIOReal implements groundIntakeIO {
   StatusSignal<Temperature> pivotMotorTemperature = pivotMotor.getDeviceTemp();
   StatusSignal<Current> spinMotorStatorCurrent = spinMotor.getStatorCurrent();
   StatusSignal<Current> pivotMotorStatorCurrent = pivotMotor.getStatorCurrent();
-  
+
   private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
   private final StatusSignal<Double> groundIntakePIDGoal = pivotMotor.getClosedLoopReference();
 
@@ -45,7 +45,6 @@ public class groundIntakeIOReal implements groundIntakeIO {
     slot0Configs.kD = 8.4867; // A velocity error of 1 rps results in 0.1 V output
     slot0Configs.withGravityType(GravityTypeValue.Arm_Cosine);
 
-    
     feedbackConfigs.FeedbackRotorOffset = 0;
     feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     feedbackConfigs.RotorToSensorRatio = groundIntakeConstants.PIVOT_GEAR_RATIO;
@@ -68,7 +67,6 @@ public class groundIntakeIOReal implements groundIntakeIO {
     currentConfig.withStatorCurrentLimitEnable(true);
     currentConfig.withStatorCurrentLimit(20);
 
-    
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; i++) {
       status = pivotMotor.getConfigurator().apply(talonFXConfigs);
@@ -79,7 +77,6 @@ public class groundIntakeIOReal implements groundIntakeIO {
     }
 
     BaseStatusSignal.setUpdateFrequencyForAll(50.0, groundIntakePIDGoal, pivotMotorStatorCurrent);
-
   }
 
   @Override

@@ -4,17 +4,13 @@ import edu.wpi.first.wpilibj.RobotBase;
 
 public class groundIntakeSubsystem {
 
-	groundIntakeIO groundintakeIO;
+  groundIntakeIO groundintakeIO;
 
-	public groundIntakeSubsystem() {
-		if (RobotBase.isSimulation()) {
-			groundintakeIO = new groundIntakeIOSim();
-		}
-		else {
-			groundintakeIO = new groundIntakeIOReal();
-		}
-	}
-
-
-	
+  public groundIntakeSubsystem() {
+    if (RobotBase.isSimulation()) {
+      groundintakeIO = new groundIntakeIOSim();
+    } else {
+      groundintakeIO = new groundIntakeIOReal();
+    }
+  }
 }
