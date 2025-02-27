@@ -31,7 +31,6 @@ public class groundIntakeIOReal implements groundIntakeIO {
     pivotMotor.setVoltage(voltage);
   }
 
-
   @Override
   public void update() {
     boolean groundIntakeisConnected =
