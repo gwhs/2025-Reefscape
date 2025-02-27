@@ -14,7 +14,7 @@ public class ElevatorConstants {
 
   public static final double GEAR_RATIO_DIFF = 1; // * 12 / 16
 
-  public static final int GEAR_RATIO = 16;
+  public static final int GEAR_RATIO = 12;
   public static final double SPROCKET_DIAMETER = Units.inchesToMeters(1.7567);
 
   public static final double TOP_METER = ElevatorSubsystem.rotationsToMeters(65 / GEAR_RATIO_DIFF);

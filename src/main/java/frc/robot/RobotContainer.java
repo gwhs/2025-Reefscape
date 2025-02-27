@@ -439,9 +439,9 @@ public class RobotContainer {
 
   public Command stopIntake() {
     return Commands.parallel(
-      arm.setAngle(ArmConstants.ARM_STOW_ANGLE), 
-      elevator.setHeight(ElevatorConstants.STOW_METER),
-      endEffector.holdCoral())
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
+            elevator.setHeight(ElevatorConstants.STOW_METER),
+            endEffector.holdCoral())
         .withName("stop Intake");
   }
 
