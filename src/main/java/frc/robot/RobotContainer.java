@@ -93,18 +93,6 @@ public class RobotContainer {
   }
 
   public static CoralLevel coralLevel = CoralLevel.L4;
-
-  public enum DeAlgae {
-    DEALGAELOW,
-    DEALGAEHIGH,
-    DEALGAESTOW
-  }
-
-  public static DeAlgae dealgae = DeAlgae.DEALGAEHIGH;
-
-  public static final Trigger IS_DEALGAE_LOW = new Trigger(() -> dealgae == DeAlgae.DEALGAELOW);
-  public static final Trigger IS_DEALGAE_HIGH = new Trigger(() -> dealgae == DeAlgae.DEALGAEHIGH);
-  public static final Trigger IS_DEALGAE_STOW = new Trigger(() -> dealgae == DeAlgae.DEALGAESTOW);
   
   public static final Trigger IS_L1 = new Trigger(() -> coralLevel == CoralLevel.L1);
   public static final Trigger IS_L2 = new Trigger(() -> coralLevel == CoralLevel.L2);
@@ -301,18 +289,17 @@ public class RobotContainer {
             Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
                 .withName("Back to Original State"));
     
-    IS_DEALGAE_LOW
+    IS_L2
         .and(m_driverController.leftTrigger())
-        .whileTrue(
+        .onTrue(
             prepDealgaeLow());
-    IS_DEALGAE_HIGH
+    IS_L3
         .and(m_driverController.leftTrigger())
-        .whileTrue(
-              prepDealgaeHigh());
-    IS_DEALGAE_STOW
-        .and(m_driverController.leftTrigger().onFalse(scoreCoral()));
+        .onTrue(
+          prepDealgaeHigh());
 
-        
+    m_driverController.leftTrigger().onFalse(stow());
+
     IS_L4
         .and(m_driverController.rightTrigger())
         .whileTrue(
