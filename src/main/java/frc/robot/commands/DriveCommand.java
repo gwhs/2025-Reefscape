@@ -44,7 +44,7 @@ public class DriveCommand extends Command {
   private final double ELEVATOR_UP_SLEW_RATE = 1;
 
   private boolean SIDE_REEF = true;
-  private boolean BACK_REEF = true;
+  private boolean BACK_REEF = false;
 
   private final DoubleSupplier elevatorHeight;
 
@@ -127,7 +127,7 @@ public class DriveCommand extends Command {
       if (SIDE_REEF) {
         Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
         return nearest.getRotation().getDegrees() + 90;
-      } else if(BACK_REEF) {
+      } else if (BACK_REEF) {
         Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
         return nearest.getRotation().getDegrees() + 180;
 
