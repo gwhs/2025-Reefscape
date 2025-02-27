@@ -496,7 +496,7 @@ public class RobotContainer {
   public Command stow() {
     return Commands.sequence(
         arm.setAngle(340),
-        driveCommand.driveBackward(1).withTimeout(0.2),
+        drivetrain.driveBackward(1).withTimeout(0.2),
         elevator.setHeight(ElevatorConstants.STOW_METER),
         arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
         endEffector.stopMotor());

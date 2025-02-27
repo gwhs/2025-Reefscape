@@ -9,6 +9,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -108,6 +109,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   /** Swerve request to apply during robot-centric path following */
   private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds =
       new SwerveRequest.ApplyRobotSpeeds();
+
+
+     private final SwerveRequest.RobotCentric robotCentricDrive =
+      new SwerveRequest.RobotCentric()
+          .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
   /**
    * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -349,5 +355,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    */
   public void runVelocity(ChassisSpeeds speeds) {
     setControl(m_pathApplyRobotSpeeds.withSpeeds(speeds));
+  }
+
+  /**
+   * @param velocity how fast should it drive?
+   * @return do an MJ (minus the little boys)
+   */
+  public Command driveBackward(double velocity) {
+    return this.
+        .run(
+            () ->
+                drivetrain.setControl(
+                    robotCentricDrive
+                        .withVelocityX(-velocity)
+                        .withVelocityY(0)
+                        .withRotationalRate(0)))
+        .finallyDo(
+            () ->
+                drivetrain.setControl(
+                    robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
   }
 }
