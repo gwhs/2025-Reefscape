@@ -92,7 +92,7 @@ public class RobotContainer {
     L4(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION);
 
     public final double elevatorHeight;
-    double armAngle;
+    public final double armAngle;
 
     private CoralLevel(double elevatorHeight, double armAngle) {
       this.elevatorHeight = elevatorHeight;
