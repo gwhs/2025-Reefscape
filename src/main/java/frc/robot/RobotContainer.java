@@ -86,10 +86,18 @@ public class RobotContainer {
   private final DriveCommand driveCommand;
 
   public enum CoralLevel {
-    L1,
-    L2,
-    L3,
-    L4
+    L1(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION),
+    L2(ElevatorConstants.L2_PREP_POSITION, ArmConstants.L2_PREP_POSITION),
+    L3(ElevatorConstants.L3_PREP_POSITION, ArmConstants.L3_PREP_POSITION),
+    L4(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION);
+
+    public final double elevatorHeight;
+    public final double armAngle;
+
+    private CoralLevel(double elevatorHeight, double armAngle) {
+      this.elevatorHeight = elevatorHeight;
+      this.armAngle = armAngle;
+    }
   }
 
   public static CoralLevel coralLevel = CoralLevel.L4;
@@ -290,22 +298,10 @@ public class RobotContainer {
 
     m_driverController.leftTrigger().onFalse(dealgae());
 
-    IS_L4
-        .and(m_driverController.rightTrigger())
-        .whileTrue(
-            prepScoreCoral(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION));
-    IS_L3
-        .and(m_driverController.rightTrigger())
-        .whileTrue(
-            prepScoreCoral(ElevatorConstants.L3_PREP_POSITION, ArmConstants.L3_PREP_POSITION));
-    IS_L2
-        .and(m_driverController.rightTrigger())
-        .whileTrue(
-            prepScoreCoral(ElevatorConstants.L2_PREP_POSITION, ArmConstants.L2_PREP_POSITION));
-    IS_L1
-        .and(m_driverController.rightTrigger())
-        .whileTrue(
-            prepScoreCoral(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION));
+    IS_L4.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L4));
+    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L3));
+    IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L2));
+    IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L1));
 
     m_driverController.rightTrigger().onFalse(scoreCoral());
 
@@ -460,6 +456,10 @@ public class RobotContainer {
             arm.setAngle(armAngle).withTimeout(1))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
+  }
+
+  public Command prepScoreCoral(CoralLevel level) {
+    return prepScoreCoral(level.elevatorHeight, level.armAngle);
   }
 
   /**
