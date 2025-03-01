@@ -100,7 +100,7 @@ public class ArmIOReal implements ArmIO {
     BaseStatusSignal.setUpdateFrequencyForAll(50.0, armPIDGoal, armStatorCurrent);
 
     CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
-    cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.25;
+    cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
     cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
     cc_cfg.MagnetSensor.withMagnetOffset(Units.degreesToRotations(307.96875));
 
