@@ -457,14 +457,7 @@ public class RobotContainer {
   }
 
   public Command prepScoreCoral(CoralLevel level) {
-    return Commands.parallel(
-            elevator.setHeight(level.elevatorHeight).withTimeout(0.5),
-            arm.setAngle(level.armAngle).withTimeout(1))
-        .withName(
-            "Prepare Score Coral; Elevator Height: "
-                + level.elevatorHeight
-                + " Arm Angle: "
-                + level.armAngle);
+    return prepScoreCoral(level.elevatorHeight, level.armAngle);
   }
 
   /**
