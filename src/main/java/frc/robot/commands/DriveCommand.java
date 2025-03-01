@@ -43,8 +43,13 @@ public class DriveCommand extends Command {
 
   private final double ELEVATOR_UP_SLEW_RATE = 1;
 
-  private boolean SIDE_REEF = false;
-  private boolean BACK_REEF = true;
+  public enum ReefPositions {
+    SIDE_REEF,
+    BACK_REEF,
+    FRONT_REEF
+  }
+
+  private ReefPositions reefMode = ReefPositions.BACK_REEF;
 
   private final DoubleSupplier elevatorHeight;
 
@@ -124,17 +129,17 @@ public class DriveCommand extends Command {
       }
 
     } else if (mode == TargetMode.REEF) {
-      if (SIDE_REEF) {
-        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
-        return nearest.getRotation().getDegrees() + 90;
-      } else if (BACK_REEF) {
-        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
-        return nearest.getRotation().getDegrees() + 180;
-
-      } else {
-
+      if (reefMode == ReefPositions.FRONT_REEF) {
         Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
         return nearest.getRotation().getDegrees();
+      } else if (reefMode == ReefPositions.SIDE_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees() + 90;
+      } else if (reefMode == ReefPositions.BACK_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees() + 180;
+      } else {
+        return 0;
       }
     } else if (mode == TargetMode.CAGE) {
       if (DriverStation.getAlliance().isPresent()
