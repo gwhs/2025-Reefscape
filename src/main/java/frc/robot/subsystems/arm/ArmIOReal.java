@@ -102,7 +102,7 @@ public class ArmIOReal implements ArmIO {
     CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
     cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
     cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-    cc_cfg.MagnetSensor.withMagnetOffset(Units.degreesToRotations(311.96875));
+    cc_cfg.MagnetSensor.withMagnetOffset(Units.degreesToRotations(311.46875 ));
 
     for (int i = 0; i < 5; i++) {
       status = armEncoder.getConfigurator().apply(cc_cfg);
