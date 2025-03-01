@@ -38,5 +38,5 @@ public class ElevatorConstants {
   public static final double STOW_METER = ElevatorSubsystem.rotationsToMeters(15 / GEAR_RATIO_DIFF);
 
   public static final double MAX_VELOCITY = 90; // rps
-  public static final double MAX_ACCELERATION = 250; // rps
+  public static final double MAX_ACCELERATION = 500; // rps
 }
