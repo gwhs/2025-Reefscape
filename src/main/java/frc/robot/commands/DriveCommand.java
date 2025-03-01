@@ -26,7 +26,7 @@ public class DriveCommand extends Command {
   private final SlewRateLimiter yVelocityLimiter;
   private final PIDController PID;
   private double slowFactor = 0.25;
-  private boolean isSlow = true;
+  private boolean isSlow = false;
   private final double DEAD_BAND = 0.1;
   private boolean resetLimiter = true;
 
