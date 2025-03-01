@@ -108,6 +108,7 @@ public class RobotContainer {
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
+  public static final Trigger BATTERY_BROWN_OUT = new Trigger(() -> RobotController.isBrownedOut()); 
 
   public final Trigger IS_NEAR_CORAL_STATION;
 
@@ -195,6 +196,8 @@ public class RobotContainer {
                 EagleUtil.getDistanceBetween(
                         drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
                     < 0.4);
+
+  BATTERY_BROWN_OUT.onTrue(drivetrain.setDriveMotorCurrentLimit()); 
 
     // Default Commands
     drivetrain.setDefaultCommand(driveCommand);
