@@ -342,6 +342,14 @@ public class RobotContainer {
     // m_operatorController.b().whileTrue(elevator.sysIdQuasistatic(Direction.kReverse));
     // m_operatorController.a().whileTrue(elevator.sysIdDynamic(Direction.kForward));
     // m_operatorController.x().whileTrue(elevator.sysIdDynamic(Direction.kReverse));
+
+    m_operatorController.povRight().onTrue(arm.increaseAngle(1.0));
+
+    m_operatorController.povLeft().onTrue(arm.decreaseAngle(1.0));
+
+    m_operatorController.povUp().onTrue(elevator.increaseHeight(1.0));
+
+    m_operatorController.povDown().onTrue(elevator.decreaseHeight(1.0));
   }
 
   public void periodic() {

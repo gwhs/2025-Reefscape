@@ -78,4 +78,20 @@ public class ArmSubsystem extends SubsystemBase {
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.dynamic(direction);
   }
+
+  /**
+   * @param degrees the degrees to add
+   * @return run the command
+   */
+  public Command increaseAngle(double degrees) {
+    return Commands.runOnce(() -> armIO.setAngle(armIO.getPosition() + degrees));
+  }
+
+  /**
+   * @param degrees the degrees to decrease to
+   * @return run the command
+   */
+  public Command decreaseAngle(double degrees) {
+    return Commands.runOnce(() -> armIO.setAngle(armIO.getPosition() - degrees));
+  }
 }
