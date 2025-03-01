@@ -10,8 +10,8 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 
-public class pushOneCycle extends PathPlannerAuto {
-  public pushOneCycle(RobotContainer robotContainer) {
+public class PushOneCycle extends PathPlannerAuto {
+  public PushOneCycle(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
 
     /* All your code should go inside this try-catch block */
