@@ -243,25 +243,6 @@ public class DriveCommand extends Command {
     return false;
   }
 
-  /**
-   * @param velocity how fast should it drive?
-   * @return do an MJ (minus the little boys)
-   */
-  public Command driveBackward(double velocity) {
-    return drivetrain
-        .run(
-            () ->
-                drivetrain.setControl(
-                    robotCentricDrive
-                        .withVelocityX(-velocity)
-                        .withVelocityY(0)
-                        .withRotationalRate(0)))
-        .finallyDo(
-            () ->
-                drivetrain.setControl(
-                    robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
-  }
-
   public void stopDrivetrain() {
     drivetrain.setControl(
         robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0));
