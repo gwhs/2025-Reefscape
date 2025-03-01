@@ -347,9 +347,9 @@ public class RobotContainer {
 
     m_operatorController.povLeft().onTrue(arm.decreaseAngle(1.0));
 
-    m_operatorController.povUp().onTrue(elevator.increaseHeight(1.0));
+    m_operatorController.povUp().onTrue(elevator.increaseHeight(0.1));
 
-    m_operatorController.povDown().onTrue(elevator.decreaseHeight(1.0));
+    m_operatorController.povDown().onTrue(elevator.decreaseHeight(0.1));
   }
 
   public void periodic() {
