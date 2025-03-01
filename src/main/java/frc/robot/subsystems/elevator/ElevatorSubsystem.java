@@ -156,7 +156,8 @@ public class ElevatorSubsystem extends SubsystemBase {
    * @return run the command
    */
   public Command increaseHeight(double meters) {
-    return Commands.runOnce(() -> elevatorIO.setRotation(metersToRotations(getHeightMeters() + meters)));
+    return Commands.runOnce(
+        () -> elevatorIO.setRotation(metersToRotations(getHeightMeters() + meters)));
   }
 
   /**
@@ -164,6 +165,7 @@ public class ElevatorSubsystem extends SubsystemBase {
    * @return run the command
    */
   public Command decreaseHeight(double meters) {
-    return Commands.runOnce(() -> elevatorIO.setRotation(metersToRotations(getHeightMeters() - meters)));
+    return Commands.runOnce(
+        () -> elevatorIO.setRotation(metersToRotations(getHeightMeters() - meters)));
   }
 }
