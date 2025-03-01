@@ -33,11 +33,6 @@ public class ArmSubsystem extends SubsystemBase {
     } else {
       armIO = new ArmIOReal();
     }
-
-    SmartDashboard.putData("Arm Command/turn to 60 degrees", setAngle(60));
-    SmartDashboard.putData("Arm Command/turn to 120 degrees", setAngle(120));
-    SmartDashboard.putData("Arm Command/turn to 270 degrees", setAngle(270));
-    SmartDashboard.putData("Arm Command/turn to 0 degrees", setAngle(0));
   }
 
   /**

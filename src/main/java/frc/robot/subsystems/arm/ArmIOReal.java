@@ -111,11 +111,6 @@ public class ArmIOReal implements ArmIO {
     if (!status.isOK()) {
       System.out.println("Could not configure device. Error: " + status.toString());
     }
-
-    SmartDashboard.putData(
-        "Arm Command/reset to 90",
-        Commands.runOnce(() -> armMotor.setPosition(Units.degreesToRotations(90)))
-            .ignoringDisable(true));
   }
 
   // set arm angle in degrees

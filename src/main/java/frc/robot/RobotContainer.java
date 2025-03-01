@@ -333,8 +333,7 @@ public class RobotContainer {
         .b()
         .whileTrue(alignToPose(() -> EagleUtil.closestReefSetPoint(drivetrain.getPose(), 1)));
 
-
-        m_operatorController.start().onTrue(elevator.homingCommand()); 
+    m_operatorController.start().onTrue(elevator.homingCommand());
 
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
