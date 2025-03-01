@@ -164,6 +164,6 @@ public class ElevatorSubsystem extends SubsystemBase {
    * @return run the command
    */
   public Command decreaseHeight(double meters) {
-    return Commands.runOnce(() -> elevatorIO.setPosition(getHeightMeters() + meters));
+    return Commands.runOnce(() -> elevatorIO.setPosition(getHeightMeters() - meters));
   }
 }
