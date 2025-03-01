@@ -495,8 +495,8 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.DEALGAE_ANGLE).withTimeout(0.2),
             drivetrain.driveBackward(1).withTimeout(0.6),
             Commands.parallel(
-                elevator.setHeight(ElevatorConstants.STOW_METER),
-                arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
+                elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(.1),
+                arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(.1),
                 endEffector.stopMotor()))
         .withName("Dealgae");
   }
