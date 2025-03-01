@@ -20,7 +20,7 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 public class FiveCycleProcessor extends PathPlannerAuto {
 
   private RobotContainer robotContainer;
-  private double waitTime = .5;
+  private double waitTime = .4;
 
   public FiveCycleProcessor(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
