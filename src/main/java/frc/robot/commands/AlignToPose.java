@@ -50,16 +50,6 @@ public class AlignToPose extends Command {
   }
 
   /**
-   * @param targetPose Specify the Pose2d to go to.
-   */
-  public void goToPoseWithPID(Pose2d targetPose) {
-
-    drivetrain.PID_X.setSetpoint(targetPose.getX());
-    drivetrain.PID_Y.setSetpoint(targetPose.getY());
-    drivetrain.PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
-  }
-
-  /**
    * @return if it is at pose true if not false
    */
   public boolean isAtTargetPose() {
@@ -78,8 +68,7 @@ public class AlignToPose extends Command {
 
   @Override
   public void initialize() {
-    goToPoseWithPID(targetPose.get());
-
+    drivetrain.goToPoseWithPID(targetPose.get());
     DogLog.log("Align/Target Pose", targetPose.get());
   }
 
