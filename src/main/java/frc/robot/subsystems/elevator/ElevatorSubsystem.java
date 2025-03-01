@@ -137,7 +137,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   /**
-   * @param mode the mode to go to?s
+   * @param mode the mode to go to
    */
   public void setNeutralMode(NeutralModeValue mode) {
     elevatorIO.setNeutralMode(mode);
@@ -149,5 +149,23 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.dynamic(direction);
+  }
+
+  /**
+   * @param meters the amount of meters to add
+   * @return run the command
+   */
+  public Command increaseHeight(double meters) {
+    return Commands.runOnce(
+        () -> elevatorIO.setRotation(metersToRotations(getHeightMeters() + meters)));
+  }
+
+  /**
+   * @param meters the amount of meters to remove
+   * @return run the command
+   */
+  public Command decreaseHeight(double meters) {
+    return Commands.runOnce(
+        () -> elevatorIO.setRotation(metersToRotations(getHeightMeters() - meters)));
   }
 }
