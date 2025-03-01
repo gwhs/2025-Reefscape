@@ -77,7 +77,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
 
   @Override
   public void setAmps(double current) {
-    motor.setControl(currentControl.withOutput(current).withMaxAbsDutyCycle(.1));
+    motor.setControl(currentControl.withOutput(current).withMaxAbsDutyCycle(.2));
   }
 
   public boolean isSensorTriggered() {
