@@ -20,7 +20,7 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 public class FiveCycleProcessor extends PathPlannerAuto {
 
   private RobotContainer robotContainer;
-  private double waitTime = 2.0;
+  private double waitTime = .5;
 
   public FiveCycleProcessor(RobotContainer robotContainer) {
     super(Commands.run(() -> {}));
@@ -62,7 +62,7 @@ public class FiveCycleProcessor extends PathPlannerAuto {
                   robotContainer.scoreCoral(),
                   AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntake()),
                   autoHelper(CSP_E, E_CSP),
-                  autoHelper(CSP_D, D_CSP)/*, 
+                  autoHelper(CSP_D, D_CSP) /*,
                   autoHelper(CSP_C, C_CSP)*/));
 
     } catch (Exception e) {
