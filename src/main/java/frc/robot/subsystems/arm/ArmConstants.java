@@ -3,7 +3,7 @@ package frc.robot.subsystems.arm;
 public class ArmConstants {
   public static final int ARM_MOTOR_ID = 15;
 
-  public static final int ARM_ENCODER_ID = 9;
+  public static final int ARM_ENCODER_ID = 20;
   public static final double MAX_VELOCITY = 1.2; // rotation per second
   public static final double MAX_ACCELERATION = 1.5; // rotation per second per second
   public static final double ARM_GEAR_RATIO = 68.0 / 12 * 84 / 20 * 48 / 18; // 64
@@ -20,6 +20,6 @@ public class ArmConstants {
   public static final double ARM_INTAKE_ANGLE = 105.0;
   public static final double ARM_STOW_ANGLE = 90.0;
 
-  public static final double DEALGAE_LOW_ANGLE = 335;
-  public static final double DEALGAE_HIGH_ANGLE = 300;
+  public static final double PRE_DEALGAE_ANGLE = 335;
+  public static final double DEALGAE_ANGLE = 350;
 }

@@ -355,10 +355,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     setControl(m_pathApplyRobotSpeeds.withSpeeds(speeds));
   }
 
-  /**
-   * @param velocity how fast should it drive?
-   * @return do an MJ (minus the little boys)
-   */
   public Command driveBackward(double velocity) {
     return this.run(
             () ->
