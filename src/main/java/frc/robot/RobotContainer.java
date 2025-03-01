@@ -307,14 +307,17 @@ public class RobotContainer {
                 Commands.runOnce(
                     () -> {
                       driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
-                      driveCommand.BACK_REEF = true;
+                      driveCommand.reefMode =
+                          DriveCommand.ReefPositions.SIDE_REEF; // Align sideways
                     }),
-                Commands.waitUntil(() -> driveCommand.isAtSetPoint()),
+                Commands.waitUntil(
+                    () -> driveCommand.isAtSetPoint()), // Wait until alignment is complete
                 prepScoreCoral(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION)))
         .onFalse(
             Commands.runOnce(
                 () -> {
-                  driveCommand.BACK_REEF = false;
+                  driveCommand.reefMode =
+                      DriveCommand.ReefPositions.BACK_REEF; // Reset to normal after scoring
                 }));
 
     m_driverController.rightTrigger().onFalse(scoreCoral());
