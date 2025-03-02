@@ -307,6 +307,7 @@ public class RobotContainer {
         .and(m_driverController.rightTrigger())
         .whileTrue(
             prepScoreCoral(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION));
+
     IS_L1
         .and(IS_REEF_MODE)
         .onTrue(
@@ -314,6 +315,7 @@ public class RobotContainer {
                 () -> {
                   driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
                 }));
+                
     IS_L2
         .or(IS_L3)
         .or(IS_L4)

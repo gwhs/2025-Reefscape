@@ -67,10 +67,10 @@ public class DriveCommand extends Command {
     NORMAL,
     CORAL_STATION,
     REEF,
-    CAGE,
+    CAGE
   }
 
-  private TargetMode mode = TargetMode.REEF;
+  private TargetMode mode = TargetMode.NORMAL;
 
   private final SwerveRequest.FieldCentric fieldCentricDrive =
       new SwerveRequest.FieldCentric()
