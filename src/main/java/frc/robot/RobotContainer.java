@@ -471,7 +471,7 @@ public class RobotContainer {
     return Commands.parallel(
             endEffector.holdCoral(),
             elevator.setHeight(elevatorHeight).withTimeout(.5),
-            arm.setAngle(armAngle).withTimeout(1))
+            arm.setAngle(armAngle).withTimeout(.5))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
