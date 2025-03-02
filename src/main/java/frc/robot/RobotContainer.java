@@ -108,6 +108,7 @@ public class RobotContainer {
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
+  public static final Trigger BATTERY_BROWN_OUT = new Trigger(() -> RobotController.isBrownedOut());
 
   public final Trigger IS_NEAR_CORAL_STATION;
 
@@ -195,6 +196,8 @@ public class RobotContainer {
                 EagleUtil.getDistanceBetween(
                         drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
                     < 0.4);
+
+    BATTERY_BROWN_OUT.onTrue(drivetrain.setDriveMotorCurrentLimit());
 
     // Default Commands
     drivetrain.setDefaultCommand(driveCommand);
@@ -407,21 +410,24 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("FIVE_CYCLE_PROCESSOR", new FiveCycleProcessor(this));
-    autoChooser.addOption("Five_Cycle_Processor_2", new FiveCycleProcessor2(this));
-    autoChooser.addOption("Two_Cycle_Processor", new TwoCycleProcessor(this));
-    autoChooser.addOption("Two_Cycle_Processor_2", new TwoCycleProcessor2(this));
+    autoChooser.setDefaultOption("Five_Cycle_Processor", new FiveCycle(this, false));
+    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycle(this, true));
     autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
     autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
-    autoChooser.addOption("Drivetrain_Practice", new DrivetrainPractice(this));
     autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
-    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycleNonProcessor(this));
-    autoChooser.addOption("Five_Cycle_Non_Processor_2", new FiveCycleNonProcessor2(this));
     autoChooser.addOption(
         "Wheel_Radius_Chracterizaton",
         WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
 
     SmartDashboard.putData("autonomous", autoChooser);
+  }
+
+  public Pose2d getRobotPose() {
+    return drivetrain.getPose();
+  }
+
+  public Command zeroElevator() {
+    return elevator.homingCommand();
   }
 
   /**
@@ -460,8 +466,9 @@ public class RobotContainer {
    */
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
     return Commands.parallel(
-            elevator.setHeight(elevatorHeight).withTimeout(0.5),
-            arm.setAngle(armAngle).withTimeout(1))
+            endEffector.holdCoral(),
+            elevator.setHeight(elevatorHeight).withTimeout(.5),
+            arm.setAngle(armAngle).withTimeout(.5))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
