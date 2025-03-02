@@ -160,6 +160,10 @@ public class DriveCommand extends Command {
     this.mode = mode;
   }
 
+  public void setReefMode(ReefPositions mode) {
+    reefMode = mode;
+  }
+
   /**
    * @param isSlow is it slow?
    * @param factor how slow?

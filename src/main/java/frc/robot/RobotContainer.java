@@ -265,7 +265,10 @@ public class RobotContainer {
         .whileTrue(
             Commands.startEnd(
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
+                    () -> {
+                      driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
+                      driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+                    })
                 .withName("Face Coral Station"));
 
     // m_driverController
@@ -303,21 +306,22 @@ public class RobotContainer {
     IS_L1
         .and(m_driverController.rightTrigger())
         .whileTrue(
-            Commands.sequence(
-                Commands.runOnce(
-                    () -> {
-                      driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
-                      driveCommand.reefMode =
-                          DriveCommand.ReefPositions.SIDE_REEF; // Align sideways
-                    }),
-                Commands.waitUntil(
-                    () -> driveCommand.isAtSetPoint()), // Wait until alignment is complete
-                prepScoreCoral(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION)))
-        .onFalse(
+            prepScoreCoral(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION));
+    IS_L1
+        .and(IS_REEF_MODE)
+        .onTrue(
             Commands.runOnce(
                 () -> {
-                  driveCommand.reefMode =
-                      DriveCommand.ReefPositions.BACK_REEF; // Reset to normal after scoring
+                  driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
+                }));
+    IS_L2
+        .or(IS_L3)
+        .or(IS_L4)
+        .and(IS_REEF_MODE)
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
                 }));
 
     m_driverController.rightTrigger().onFalse(scoreCoral());
