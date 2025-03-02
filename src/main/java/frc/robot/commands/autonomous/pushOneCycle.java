@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.EagleUtil;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.arm.ArmConstants;
-import frc.robot.subsystems.elevator.ElevatorConstants;
 
 public class PushOneCycle extends PathPlannerAuto {
   public PushOneCycle(RobotContainer robotContainer) {
