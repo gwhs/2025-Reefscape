@@ -297,7 +297,7 @@ public class RobotContainer {
                 .withName("Back to Original State"));
 
     IS_L2.and(m_driverController.leftTrigger()).onTrue(prepDealgaeLow());
-    IS_L3.and(m_driverController.leftTrigger()).onTrue(prepDealgaeHigh());
+    IS_L3.or(IS_L4).and(m_driverController.leftTrigger()).onTrue(prepDealgaeHigh());
 
     m_driverController.leftTrigger().onFalse(dealgae());
 
