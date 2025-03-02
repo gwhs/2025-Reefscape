@@ -509,16 +509,4 @@ public class RobotContainer {
                 endEffector.stopMotor()))
         .withName("Dealgae");
   }
-
-  public Command latch() {
-    return Commands.sequence(climb.latch().withName("Latch Cage"));
-  }
-
-  public Command climb() {
-    return Commands.sequence(climb.climb().withName("Climb Cage"));
-  }
-
-  public Command stow() {
-    return Commands.sequence(climb.stow().withName("Stow Climb"));
-  }
 }
