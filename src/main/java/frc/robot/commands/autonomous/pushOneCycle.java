@@ -26,10 +26,12 @@ public class PushOneCycle extends PathPlannerAuto {
               Commands.sequence(
                       AutoBuilder.resetOdom(startingPose),
                       AutoBuilder.followPath(startLn_H),
-                      robotContainer.prepScoreCoral(
-                          RobotContainer.CoralLevel.L4).deadlineFor(
-                            robotContainer.alignToPose(
-                                () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
+                      robotContainer
+                          .prepScoreCoral(RobotContainer.CoralLevel.L4)
+                          .deadlineFor(
+                              robotContainer.alignToPose(
+                                  () ->
+                                      EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
                       robotContainer.scoreCoral())
                   .withName("Leave Startline (Push) and score L1 at H"));
 
