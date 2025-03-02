@@ -37,6 +37,7 @@ import frc.robot.subsystems.aprilTagCam.AprilTagCam;
 import frc.robot.subsystems.aprilTagCam.AprilTagCamConstants;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
@@ -82,7 +83,7 @@ public class RobotContainer {
   // private final ClimbSubsystem climb = new ClimbSubsystem();
   private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
   private final LedSubsystem led = new LedSubsystem();
-
+  private final ClimbSubsystem climb = new ClimbSubsystem();
   private final DriveCommand driveCommand;
 
   public enum CoralLevel {
@@ -507,5 +508,17 @@ public class RobotContainer {
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(.1),
                 endEffector.stopMotor()))
         .withName("Dealgae");
+  }
+
+  public Command latch() {
+    return Commands.sequence(climb.latch().withName("Latch Cage"));
+  }
+
+  public Command climb() {
+    return Commands.sequence(climb.climb().withName("Climb Cage"));
+  }
+
+  public Command stow() {
+    return Commands.sequence(climb.stow().withName("Stow Climb"));
   }
 }

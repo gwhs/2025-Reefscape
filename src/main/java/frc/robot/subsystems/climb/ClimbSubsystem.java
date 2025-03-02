@@ -19,8 +19,9 @@ public class ClimbSubsystem extends SubsystemBase {
       climbIO = new ClimbIOReal();
     }
 
-    SmartDashboard.putData("Climb Command/extend", extend());
-    SmartDashboard.putData("Climb Command/retract", retract());
+    SmartDashboard.putData("Climb Command/extend", climb());
+    SmartDashboard.putData("Climb Command/retract", stow());
+    SmartDashboard.putData("Climb Command/retract", latch());
   }
 
   @Override
@@ -43,7 +44,7 @@ public class ClimbSubsystem extends SubsystemBase {
   /**
    * @return extend the climb NOTE: see ClimbConstants for the position
    */
-  public Command extend() {
+  public Command climb() {
     return this.runOnce(
             () -> {
               climbIO.setPosition(ClimbConstants.EXTEND_CLIMB_POSITION);
@@ -58,7 +59,7 @@ public class ClimbSubsystem extends SubsystemBase {
   /**
    * @return retract the climb NOTE: see ClimbConstants for the position
    */
-  public Command retract() {
+  public Command stow() {
     return this.runOnce(
             () -> {
               climbIO.setPosition(ClimbConstants.RETRACT_CLIMB_POSITION);
@@ -68,5 +69,17 @@ public class ClimbSubsystem extends SubsystemBase {
                 () ->
                     MathUtil.isNear(
                         ClimbConstants.RETRACT_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
+  }
+
+  public Command latch() {
+    return this.runOnce(
+            () -> {
+              climbIO.setPosition(ClimbConstants.LATCH_CLIMB_POSITION);
+            })
+        .andThen(
+            Commands.waitUntil(
+                () ->
+                    MathUtil.isNear(
+                        ClimbConstants.LATCH_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
   }
 }
