@@ -17,12 +17,12 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 
-public class FiveCycleProcessor extends PathPlannerAuto {
+public class FiveCycle extends PathPlannerAuto {
 
   private RobotContainer robotContainer;
   private double waitTime = .340;
 
-  public FiveCycleProcessor(RobotContainer robotContainer) {
+  public FiveCycle(RobotContainer robotContainer, boolean nonProcessorSide) {
     super(Commands.run(() -> {}));
 
     this.robotContainer = robotContainer;
@@ -38,6 +38,19 @@ public class FiveCycleProcessor extends PathPlannerAuto {
       PathPlannerPath C_CSP = PathPlannerPath.fromPathFile("C-CSP");
       PathPlannerPath CSP_B = PathPlannerPath.fromPathFile("CSP-B");
       PathPlannerPath B_CSP = PathPlannerPath.fromPathFile("B-CSP");
+
+      if (nonProcessorSide) {
+        SC_F = SC_F.mirrorPath();
+        F_CSP = F_CSP.mirrorPath();
+        CSP_E = CSP_E.mirrorPath();
+        E_CSP = E_CSP.mirrorPath();
+        CSP_D = CSP_D.mirrorPath();
+        D_CSP = D_CSP.mirrorPath();
+        CSP_C = CSP_C.mirrorPath();
+        C_CSP = C_CSP.mirrorPath();
+        CSP_B = CSP_B.mirrorPath();
+        B_CSP = B_CSP.mirrorPath();
+      }
 
       Pose2d startingPose =
           new Pose2d(SC_F.getPoint(0).position, SC_F.getIdealStartingState().rotation());

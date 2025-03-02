@@ -410,14 +410,11 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("Five_Cycle_Processor", new FiveCycleProcessor(this));
-    autoChooser.addOption("Two_Cycle_Processor", new TwoCycleProcessor(this));
+    autoChooser.setDefaultOption("Five_Cycle_Processor", new FiveCycle(this, false));
+    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycle(this, true));
     autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
     autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
-    autoChooser.addOption("Drivetrain_Practice", new DrivetrainPractice(this));
     autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
-    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycleNonProcessor(this));
-    autoChooser.addOption("Five_Cycle_Non_Processor_2", new FiveCycleNonProcessor2(this));
     autoChooser.addOption(
         "Wheel_Radius_Chracterizaton",
         WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
