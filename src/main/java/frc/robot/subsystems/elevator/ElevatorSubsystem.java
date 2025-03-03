@@ -13,7 +13,6 @@ import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -39,12 +38,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     } else {
       elevatorIO = new ElevatorIOReal();
     }
-
-    SmartDashboard.putData("Elevator to 0", setHeight(0));
-    SmartDashboard.putData("Elevator to 0.25", setHeight(0.25));
-    SmartDashboard.putData("Elevator to 0.7", setHeight(0.7));
-    SmartDashboard.putData("Elevator to 0.5", setHeight(0.5));
-    SmartDashboard.putData("Elevator/Homing command", homingCommand());
   }
 
   @Override
@@ -144,7 +137,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   /**
-   * @param mode the mode to go to?s
+   * @param mode the mode to go to
    */
   public void setNeutralMode(NeutralModeValue mode) {
     elevatorIO.setNeutralMode(mode);
@@ -156,5 +149,23 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.dynamic(direction);
+  }
+
+  /**
+   * @param meters the amount of meters to add
+   * @return run the command
+   */
+  public Command increaseHeight(double meters) {
+    return Commands.runOnce(
+        () -> elevatorIO.setRotation(metersToRotations(getHeightMeters() + meters)));
+  }
+
+  /**
+   * @param meters the amount of meters to remove
+   * @return run the command
+   */
+  public Command decreaseHeight(double meters) {
+    return Commands.runOnce(
+        () -> elevatorIO.setRotation(metersToRotations(getHeightMeters() - meters)));
   }
 }

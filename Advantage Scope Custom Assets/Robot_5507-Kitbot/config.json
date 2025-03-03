@@ -22,7 +22,7 @@
       "rotations": [
         {
           "axis": "z",
-          "degrees": -5
+          "degrees": -18
         },
         {
           "axis": "y",
@@ -45,7 +45,7 @@
       "rotations": [
         {
           "axis": "z",
-          "degrees": 5
+          "degrees": 18
         },
         {
           "axis": "y",
