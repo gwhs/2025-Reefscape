@@ -9,23 +9,27 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 public class groundIntakeIOReal implements groundIntakeIO {
 
-  TalonFX spinMotor = new TalonFX(0, "rio");
-  TalonFX pivotMotor = new TalonFX(0, "rio");
-  StatusSignal<Voltage> spinMotorVoltage = spinMotor.getMotorVoltage();
-  StatusSignal<Voltage> pivotMotorVoltage = pivotMotor.getMotorVoltage();
-  StatusSignal<Temperature> spinMotorTemperature = spinMotor.getDeviceTemp();
-  StatusSignal<Temperature> pivotMotorTemperature = pivotMotor.getDeviceTemp();
-  StatusSignal<Current> spinMotorStatorCurrent = spinMotor.getStatorCurrent();
-  StatusSignal<Current> pivotMotorStatorCurrent = pivotMotor.getStatorCurrent();
-
-  private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
+  private final TalonFX spinMotor = new TalonFX(groundIntakeConstants.SPIN_MOTOR_ID, "rio");
+  private final TalonFX pivotMotor = new TalonFX(groundIntakeConstants.PIVOT_MOTOR_ID, "rio");
+  private final DutyCycleEncoder pivotEncoder =
+      new DutyCycleEncoder(groundIntakeConstants.PIVOT_ENCODER_ID);
+  private final StatusSignal<Voltage> spinMotorVoltage = spinMotor.getMotorVoltage();
+  private final StatusSignal<Voltage> pivotMotorVoltage = pivotMotor.getMotorVoltage();
+  private final StatusSignal<Temperature> spinMotorTemperature = spinMotor.getDeviceTemp();
+  private final StatusSignal<Temperature> pivotMotorTemperature = pivotMotor.getDeviceTemp();
+  private final StatusSignal<Current> spinMotorStatorCurrent = spinMotor.getStatorCurrent();
+  private final StatusSignal<Current> pivotMotorStatorCurrent = pivotMotor.getStatorCurrent();
+  private final StatusSignal<Angle> pivotMotorPosition = pivotMotor.getPosition();
   private final StatusSignal<Double> groundIntakePIDGoal = pivotMotor.getClosedLoopReference();
+  private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
 
   public groundIntakeIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
@@ -46,7 +50,7 @@ public class groundIntakeIOReal implements groundIntakeIO {
     slot0Configs.withGravityType(GravityTypeValue.Arm_Cosine);
 
     feedbackConfigs.FeedbackRotorOffset = 0;
-    feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+    feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     feedbackConfigs.RotorToSensorRatio = groundIntakeConstants.PIVOT_GEAR_RATIO;
     feedbackConfigs.SensorToMechanismRatio = 1;
 
@@ -76,7 +80,7 @@ public class groundIntakeIOReal implements groundIntakeIO {
       System.out.println("Could not configure device. Error: " + status.toString());
     }
 
-    BaseStatusSignal.setUpdateFrequencyForAll(50.0, groundIntakePIDGoal, pivotMotorStatorCurrent);
+    BaseStatusSignal.setUpdateFrequencyForAll(50.0, spinMotorStatorCurrent, pivotMotorPosition);
   }
 
   @Override
@@ -98,7 +102,8 @@ public class groundIntakeIOReal implements groundIntakeIO {
                 pivotMotorTemperature,
                 spinMotorTemperature,
                 pivotMotorStatorCurrent,
-                spinMotorStatorCurrent))
+                spinMotorStatorCurrent,
+                pivotMotorPosition))
             .isOK();
     DogLog.log("groundIntake/Spin/voltage", spinMotorVoltage.getValueAsDouble());
     DogLog.log("groundIntake/Pivot/voltage", pivotMotorVoltage.getValueAsDouble());
@@ -106,6 +111,8 @@ public class groundIntakeIOReal implements groundIntakeIO {
     DogLog.log("groundIntake/Pivot/temperature", pivotMotorTemperature.getValueAsDouble());
     DogLog.log("groundIntake/Spin/statorCurrent", spinMotorStatorCurrent.getValueAsDouble());
     DogLog.log("groundIntake/Pivot/statorCurrent", pivotMotorStatorCurrent.getValueAsDouble());
+    DogLog.log("groundIntake/Pivot/PIDGoal", groundIntakePIDGoal.getValueAsDouble());
+    DogLog.log("groundIntake/Pivot/position", pivotMotorPosition.getValueAsDouble());
     DogLog.log("groundIntake/Connected", groundIntakeisConnected);
   }
 }

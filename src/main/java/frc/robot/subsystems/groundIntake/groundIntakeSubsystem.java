@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class groundIntakeSubsystem extends SubsystemBase {
 
-  groundIntakeIO groundintakeIO;
+  private final groundIntakeIO groundintakeIO;
 
   public groundIntakeSubsystem() {
     if (RobotBase.isSimulation()) {
