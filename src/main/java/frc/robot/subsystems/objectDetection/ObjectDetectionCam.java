@@ -3,12 +3,17 @@ package frc.robot.subsystems.objectDetection;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import java.util.List;
 import java.util.function.Supplier;
 import org.photonvision.PhotonCamera;
+import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.simulation.VisionTargetSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.estimation.TargetModel;
+
 
 public class ObjectDetectionCam {
 
@@ -18,6 +23,11 @@ public class ObjectDetectionCam {
   private int counter;
   private final String ntKey;
   private final Transform3d robotToCam;
+  private VisionSystemSim visionSim;
+  private final TargetModel simTargetModel;
+  private final Pose3d simTargetPose;
+  private VisionTargetSim meow;
+
 
   public ObjectDetectionCam(String name, Transform3d robotToCam, Supplier<Pose2d> robotPose) {
 
@@ -26,6 +36,12 @@ public class ObjectDetectionCam {
     this.robotPose = robotPose;
     this.robotToCam = robotToCam;
     ntKey = "/Object Detection/" + name + "/";
+
+    visionSim = new VisionSystemSim("main");
+    simTargetModel = new TargetModel(0.2);
+    simTargetPose = new Pose3d(16, 4, 2, new Rotation3d(0, 0, Math.PI)); //placeholder, change later
+    meow = new VisionTargetSim(simTargetPose, simTargetModel);
+
   }
 
   // 1. Get all results from the camera

@@ -388,7 +388,7 @@ public class RobotContainer {
 
     startTime = HALUtil.getFPGATime();
 
-    yay.updateDetection();
+   
     DogLog.log("Desired Reef", coralLevel);
 
     // Log Triggers
