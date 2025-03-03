@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -28,99 +29,177 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.DriveCommand.TargetMode;
 import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.commands.autonomous.*;
-import frc.robot.generated.TunerConstants;
+import frc.robot.generated.TunerConstants_Comp;
+import frc.robot.generated.TunerConstants_WALLE;
+import frc.robot.generated.TunerConstants_practiceDrivetrain;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.aprilTagCam.AprilTagCam;
 import frc.robot.subsystems.aprilTagCam.AprilTagCamConstants;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
-import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
 import frc.robot.subsystems.objectDetection.ObjectDetectionCam;
 import frc.robot.subsystems.objectDetection.ObjectDetectionConstants;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer {
+
+  private static Alert roborioError =
+      new Alert(
+          "roborio unrecognized. here is the serial number:" + RobotController.getSerialNumber(),
+          Alert.AlertType.kError);
+
+  public enum Robot {
+    WALLE,
+    DEV,
+    COMP
+  }
+
+  public static Robot getRobot() {
+    if (RobotController.getSerialNumber().equals("032414F0")) {
+      return Robot.COMP;
+    } else if (RobotController.getSerialNumber().equals("0323CA18")) {
+      return Robot.DEV;
+    } else if (RobotController.getSerialNumber().equals("03223849")) {
+      return Robot.WALLE;
+    } else {
+      roborioError.set(true);
+      return Robot.COMP;
+    }
+  }
 
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
   private final Alert batteryUnderTwelveVolts = new Alert("BATTERY UNDER 12V", AlertType.kWarning);
   private final Telemetry logger =
-      new Telemetry(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond));
+      new Telemetry(TunerConstants_Comp.kSpeedAt12Volts.in(MetersPerSecond));
 
-  private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  private final CommandSwerveDrivetrain drivetrain;
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
-  private final LedSubsystem led = new LedSubsystem();
-  private final ClimbSubsystem climb = new ClimbSubsystem();
+  // private final ClimbSubsystem climb = new ClimbSubsystem();
   private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
+  private final LedSubsystem led = new LedSubsystem();
 
-  private final DriveCommand driveCommand =
-      new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
-  private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+  private final DriveCommand driveCommand;
 
   public enum CoralLevel {
-    L1,
-    L2,
-    L3,
-    L4
+    L1(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION),
+    L2(ElevatorConstants.L2_PREP_POSITION, ArmConstants.L2_PREP_POSITION),
+    L3(ElevatorConstants.L3_PREP_POSITION, ArmConstants.L3_PREP_POSITION),
+    L4(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION);
+
+    public final double elevatorHeight;
+    public final double armAngle;
+
+    private CoralLevel(double elevatorHeight, double armAngle) {
+      this.elevatorHeight = elevatorHeight;
+      this.armAngle = armAngle;
+    }
   }
 
   public static CoralLevel coralLevel = CoralLevel.L4;
+
   public static final Trigger IS_L1 = new Trigger(() -> coralLevel == CoralLevel.L1);
   public static final Trigger IS_L2 = new Trigger(() -> coralLevel == CoralLevel.L2);
   public static final Trigger IS_L3 = new Trigger(() -> coralLevel == CoralLevel.L3);
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
-  public final Trigger IS_CLOSE_TO_REEF =
-      new Trigger(
-          () ->
-              EagleUtil.getDistanceBetween(
-                      drivetrain.getPose(), EagleUtil.getCachedReefPose(drivetrain.getPose()))
-                  < 1.25);
-  public final Trigger IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
+  public static final Trigger BATTERY_BROWN_OUT = new Trigger(() -> RobotController.isBrownedOut());
+
+  public final Trigger IS_NEAR_CORAL_STATION;
+
+  private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+
+  private final Trigger IS_REEF_MODE;
+
+  private final Trigger IS_CLOSE_TO_REEF;
+
+  private AprilTagCam leftCam;
+
+  private AprilTagCam rightCam;
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
-  private AprilTagCam cam3 =
-      new AprilTagCam(
-          AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
-          AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
-          drivetrain::addVisionMeasurent,
-          () -> drivetrain.getState().Pose,
-          () -> drivetrain.getState().Speeds);
+  private final BiConsumer<Runnable, Double> addPeriodic;
 
-  private AprilTagCam cam4 =
-      new AprilTagCam(
-          AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
-          AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
-          drivetrain::addVisionMeasurent,
-          () -> drivetrain.getState().Pose,
-          () -> drivetrain.getState().Speeds);
+  public RobotContainer(BiConsumer<Runnable, Double> addPeriodic) {
 
-  private ObjectDetectionCam yay =
-      new ObjectDetectionCam(
-          "obj_cam", ObjectDetectionConstants.robotToCam, () -> drivetrain.getState().Pose);
+    this.addPeriodic = addPeriodic;
 
-  public final Trigger IS_REEFMODE =
-      new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
+    switch (getRobot()) {
+      case COMP:
+        drivetrain = TunerConstants_Comp.createDrivetrain();
+        leftCam =
+            new AprilTagCam(
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
+                drivetrain::addVisionMeasurent,
+                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getState().Speeds);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
+        rightCam =
+            new AprilTagCam(
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
+                drivetrain::addVisionMeasurent,
+                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getState().Speeds);
+        break;
+      case DEV:
+        drivetrain = TunerConstants_practiceDrivetrain.createDrivetrain();
+        leftCam =
+            new AprilTagCam(
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_DEV,
+                drivetrain::addVisionMeasurent,
+                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getState().Speeds);
 
-    configureBindings();
+        rightCam =
+            new AprilTagCam(
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_DEV,
+                drivetrain::addVisionMeasurent,
+                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getState().Speeds);
+        break;
+      case WALLE:
+        drivetrain = TunerConstants_WALLE.createDrivetrain();
+        break;
+      default:
+        drivetrain = TunerConstants_Comp.createDrivetrain(); // Fallback
+        break;
+    }
 
     configureAutonomous();
+    configureBindings();
+
+    driveCommand =
+        new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
+
+    IS_REEF_MODE = new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
+
+    IS_CLOSE_TO_REEF =
+        new Trigger(
+            () ->
+                EagleUtil.getDistanceBetween(
+                        drivetrain.getPose(), EagleUtil.getCachedReefPose(drivetrain.getPose()))
+                    < 1.25);
+
+    IS_NEAR_CORAL_STATION =
+        new Trigger(
+            () ->
+                EagleUtil.getDistanceBetween(
+                        drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
+                    < 0.4);
+
+    BATTERY_BROWN_OUT.onTrue(drivetrain.setDriveMotorCurrentLimit());
 
     // Default Commands
     drivetrain.setDefaultCommand(driveCommand);
@@ -130,17 +209,16 @@ public class RobotContainer {
     PathfindingCommand.warmupCommand().schedule();
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
-    SmartDashboard.putData("Robot Command/Prep Coral Intake", prepCoralIntake());
-    SmartDashboard.putData("Robot Command/Coral Handoff", coralHandoff());
-    SmartDashboard.putData(
-        "Robot Command/prep score", prepScoreCoral(ElevatorSubsystem.rotationsToMeters(57), 210));
-    SmartDashboard.putData("Robot Command/Score L4", scoreCoral());
-    SmartDashboard.putData("Robot Command/Score Coral", scoreCoral());
-    SmartDashboard.putData("Robot Command/Prep Score Coral", prepScoreCoral(0, 0));
 
     // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
     EagleUtil.calculateRedReefSetPoints();
+
+    addPeriodic.accept(
+        () ->
+            DogLog.log(
+                "Canivore Bus Utilization", TunerConstants_Comp.kCANBus.getStatus().BusUtilization),
+        0.5);
   }
 
   /**
@@ -200,17 +278,13 @@ public class RobotContainer {
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Coral Station"));
 
-    m_driverController.x().onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)));
+    // m_driverController
+    //     .x()
+    //     .and(IS_NEAR_CORAL_STATION)
+    //     .onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)))
+    //     .onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0)));
 
-    m_driverController.x().onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0.25)));
-
-    m_driverController.x().whileTrue(prepCoralIntake()).onFalse(coralHandoff());
-
-    m_driverController
-        .leftBumper()
-        .onTrue(
-            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
-                .withName("Back to Original State"));
+    m_driverController.x().whileTrue(prepCoralIntake()).onFalse(stopIntake());
 
     // IS_TELEOP
     //     .and(IS_REEFMODE)
@@ -218,27 +292,23 @@ public class RobotContainer {
     //     .onTrue(
     //         prepScoreCoral(ElevatorConstants.STOW_METER, 220).withName("auto prep score coral"));
 
-    IS_L4
-        .and(m_driverController.rightTrigger())
-        .whileTrue(
-            prepScoreCoral(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION));
-    IS_L3
-        .and(m_driverController.rightTrigger())
-        .whileTrue(
-            prepScoreCoral(ElevatorConstants.L3_PREP_POSITION, ArmConstants.L3_PREP_POSITION));
-    IS_L2
-        .and(m_driverController.rightTrigger())
-        .whileTrue(
-            prepScoreCoral(ElevatorConstants.L2_PREP_POSITION, ArmConstants.L2_PREP_POSITION));
-    IS_L1
-        .and(m_driverController.rightTrigger())
-        .whileTrue(
-            prepScoreCoral(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION));
+    m_driverController
+        .leftBumper()
+        .onTrue(
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
+                .withName("Back to Original State"));
 
-    IS_L4.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
-    IS_L3.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
-    IS_L2.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
-    IS_L1.and(m_driverController.rightTrigger().negate()).onTrue(scoreCoral());
+    IS_L2.and(m_driverController.leftTrigger()).onTrue(prepDealgaeLow());
+    IS_L3.or(IS_L4).and(m_driverController.leftTrigger()).onTrue(prepDealgaeHigh());
+
+    m_driverController.leftTrigger().onFalse(dealgae());
+
+    IS_L4.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L4));
+    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L3));
+    IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L2));
+    IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L1));
+
+    m_driverController.rightTrigger().onFalse(scoreCoral());
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
@@ -264,6 +334,8 @@ public class RobotContainer {
         .b()
         .whileTrue(alignToPose(() -> EagleUtil.closestReefSetPoint(drivetrain.getPose(), 1)));
 
+    m_operatorController.start().onTrue(elevator.homingCommand());
+
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
     m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
@@ -273,16 +345,51 @@ public class RobotContainer {
     // m_operatorController.b().whileTrue(elevator.sysIdQuasistatic(Direction.kReverse));
     // m_operatorController.a().whileTrue(elevator.sysIdDynamic(Direction.kForward));
     // m_operatorController.x().whileTrue(elevator.sysIdDynamic(Direction.kReverse));
+
+    m_operatorController.povRight().onTrue(arm.increaseAngle(3.0));
+
+    m_operatorController.povLeft().onTrue(arm.decreaseAngle(3.0));
+
+    m_operatorController.povUp().onTrue(elevator.increaseHeight(0.02));
+
+    m_operatorController.povDown().onTrue(elevator.decreaseHeight(0.02));
   }
 
   public void periodic() {
+    double startTime = HALUtil.getFPGATime();
+
     DogLog.log("nearest", EagleUtil.closestReefSetPoint(drivetrain.getPose(), 0));
+    // 1
+    DogLog.log(
+        "Loop Time/Robot Container/Log Closest Reef Set Point",
+        (HALUtil.getFPGATime() - startTime) / 1000);
+
+    startTime = HALUtil.getFPGATime();
+
     robotVisualizer.update();
-    cam3.updatePoseEstim();
-    cam4.updatePoseEstim();
+    // 2
+    DogLog.log(
+        "Loop Time/Robot Container/Robot Visualizer", (HALUtil.getFPGATime() - startTime) / 1000);
+
+    startTime = HALUtil.getFPGATime();
+
+    if (leftCam != null) {
+      leftCam.updatePoseEstim();
+      // 3
+      DogLog.log("Loop Time/Robot Container/Cam3", (HALUtil.getFPGATime() - startTime) / 1000);
+
+      startTime = HALUtil.getFPGATime();
+    }
+    if (rightCam != null) {
+      rightCam.updatePoseEstim();
+    }
+    // 4
+    DogLog.log("Loop Time/Robot Container/Cam4", (HALUtil.getFPGATime() - startTime) / 1000);
+
+    startTime = HALUtil.getFPGATime();
+
     yay.updateDetection();
     DogLog.log("Desired Reef", coralLevel);
-    DogLog.log("Canivore Bus Utilization", (TunerConstants.kCANBus.getStatus()).BusUtilization);
 
     // Log Triggers
     DogLog.log("Trigger/At L1", IS_L1.getAsBoolean());
@@ -292,7 +399,8 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Disabled", IS_DISABLED.getAsBoolean());
     DogLog.log("Trigger/Is Telop", IS_TELEOP.getAsBoolean());
     DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
-    DogLog.log("Trigger/Is Reefmode", IS_REEFMODE.getAsBoolean());
+    DogLog.log("Current Robot", getRobot().toString());
+    DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
   }
 
   /**
@@ -305,16 +413,11 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("FIVE_CYCLE_PROCESSOR", new FiveCycleProcessor(this));
-    autoChooser.addOption("Five_Cycle_Processor_2", new FiveCycleProcessor2(this));
-    autoChooser.addOption("Two_Cycle_Processor", new TwoCycleProcessor(this));
-    autoChooser.addOption("Two_Cycle_Processor_2", new TwoCycleProcessor2(this));
+    autoChooser.setDefaultOption("Five_Cycle_Processor", new FiveCycle(this, false));
+    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycle(this, true));
     autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
     autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
-    autoChooser.addOption("Drivetrain_Practice", new DrivetrainPractice(this));
     autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
-    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycleNonProcessor(this));
-    autoChooser.addOption("Five_Cycle_Non_Processor_2", new FiveCycleNonProcessor2(this));
     autoChooser.addOption(
         "Wheel_Radius_Chracterizaton",
         WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
@@ -322,42 +425,97 @@ public class RobotContainer {
     SmartDashboard.putData("autonomous", autoChooser);
   }
 
+  public Pose2d getRobotPose() {
+    return drivetrain.getPose();
+  }
+
+  public Command zeroElevator() {
+    return elevator.homingCommand();
+  }
+
+  /**
+   * this is a wrapper for the command of the same name
+   *
+   * @param Pose pose to go to
+   * @return run the command
+   */
   public Command alignToPose(Supplier<Pose2d> Pose) {
     return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters());
   }
 
-  // grabs coral from the intake
-  public Command coralHandoff() {
-    return Commands.sequence(
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
-            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
-            elevator.setHeight(ElevatorConstants.INTAKE_METER).withTimeout(1),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(1))
-        .withName("Coral HandOff");
-  }
-
-  // Sets it to the right height and arm postion to intake coral
+  /**
+   * @return prep to pickup coral
+   */
   public Command prepCoralIntake() {
     return Commands.sequence(
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
+            endEffector.intake(),
+            elevator.setHeight(ElevatorConstants.INTAKE_METER).withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake");
   }
 
-  // Sets elevator and arm to postion
+  public Command stopIntake() {
+    return Commands.parallel(
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
+            elevator.setHeight(ElevatorConstants.STOW_METER),
+            endEffector.holdCoral())
+        .withName("stop Intake");
+  }
+
+  /**
+   * @param elevatorHeight how tall should the elavator be?
+   * @param armAngle what angle should the arm be at
+   * @return run the command
+   */
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
-    return Commands.sequence(
-            elevator.setHeight(elevatorHeight).withTimeout(0.5),
-            arm.setAngle(armAngle).withTimeout(1))
+    return Commands.parallel(
+            endEffector.holdCoral(),
+            elevator.setHeight(elevatorHeight).withTimeout(.5),
+            arm.setAngle(armAngle).withTimeout(.5))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
 
-  // scores coral
+  public Command prepScoreCoral(CoralLevel level) {
+    return prepScoreCoral(level.elevatorHeight, level.armAngle);
+  }
+
+  /**
+   * @return score the coral
+   */
   public Command scoreCoral() {
     return Commands.sequence(
-            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5))
+            endEffector.shoot(),
+            Commands.waitSeconds(0.2),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.2),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.2),
+            endEffector.stopMotor())
         .withName("Score Coral");
+  }
+
+  // DeAlgae Commands
+  public Command prepDealgaeLow() {
+    return Commands.parallel(
+        elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
+        arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
+        endEffector.setVoltage(0));
+  }
+
+  public Command prepDealgaeHigh() {
+    return Commands.parallel(
+        elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
+        arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
+        endEffector.setVoltage(0));
+  }
+
+  public Command dealgae() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.DEALGAE_ANGLE).withTimeout(0.2),
+            drivetrain.driveBackward(1).withTimeout(0.6),
+            Commands.parallel(
+                elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(.1),
+                arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(.1),
+                endEffector.stopMotor()))
+        .withName("Dealgae");
   }
 }

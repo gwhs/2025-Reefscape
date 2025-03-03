@@ -5,10 +5,12 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.ColorSensorV3;
 import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
@@ -25,6 +27,8 @@ class EndEffectorIOTalon implements EndEffectorIO {
   private final StatusSignal<Voltage> volts = motor.getMotorVoltage();
   private final StatusSignal<AngularVelocity> velocity = motor.getVelocity();
   private final StatusSignal<Temperature> temperature = motor.getDeviceTemp();
+  private final StatusSignal<Current> statorCurrent = motor.getStatorCurrent();
+  private TorqueCurrentFOC currentControl = new TorqueCurrentFOC(0);
 
   private final Alert endEffectorMotorConnectedAlert =
       new Alert("End Effector Motor Not Connected", AlertType.kError);
@@ -33,8 +37,11 @@ class EndEffectorIOTalon implements EndEffectorIO {
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
     CurrentLimitsConfigs limitsConfigs = talonConfig.CurrentLimits;
 
+    talonConfig.TorqueCurrent.withPeakForwardTorqueCurrent(40);
+    talonConfig.TorqueCurrent.withPeakReverseTorqueCurrent(-40);
+
     limitsConfigs.withStatorCurrentLimitEnable(true);
-    limitsConfigs.withStatorCurrentLimit(15);
+    limitsConfigs.withStatorCurrentLimit(60);
 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
 
@@ -68,6 +75,11 @@ class EndEffectorIOTalon implements EndEffectorIO {
     return volts.getValueAsDouble();
   }
 
+  @Override
+  public void setAmps(double current) {
+    motor.setControl(currentControl.withOutput(current).withMaxAbsDutyCycle(.2));
+  }
+
   public boolean isSensorTriggered() {
     double distance = m_colorSensor.getProximity();
     if (distance > 1500) {
@@ -80,10 +92,10 @@ class EndEffectorIOTalon implements EndEffectorIO {
   @Override
   public void update() {
     boolean endEffectorConnected =
-        (BaseStatusSignal.refreshAll(volts, velocity, temperature)).isOK();
+        (BaseStatusSignal.refreshAll(volts, velocity, temperature, statorCurrent)).isOK();
     DogLog.log("EndEffector/Temperature", temperature.getValueAsDouble());
-    DogLog.log("endEffector/Connected", endEffectorConnected);
-
+    DogLog.log("EndEffector/Connected", endEffectorConnected);
+    DogLog.log("EndEffector/StatorCurrent", statorCurrent.getValueAsDouble());
     endEffectorMotorConnectedAlert.set(!endEffectorConnected);
   }
 }
