@@ -1,7 +1,9 @@
 package frc.robot.subsystems.groundIntake;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -18,6 +20,11 @@ public class GroundIntakeIOSim implements GroundIntakeIO {
           Units.degreesToRadians(GroundIntakeConstants.GROUND_INTAKE_UPPER_BOUND),
           false,
           Units.degreesToRadians(90));
+
+  private TrapezoidProfile.Constraints contraints = 
+      new TrapezoidProfile.Constraints(
+        GroundIntakeConstants.MAX_VELOCITY * 360, GroundIntakeConstants.MAX_ACCELERATION * 360);
+  private ProfiledPIDController pidController = new ProfiledPIDController(.1, 0, 0, contraints);
 
   private FlywheelSim spinMotorSim =
       new FlywheelSim(
@@ -36,8 +43,22 @@ public class GroundIntakeIOSim implements GroundIntakeIO {
   }
 
   @Override
+  public void setAngle(double angle) {
+    pidController.setGoal(angle);
+  }
+
+  @Override
+  public double getPivotAngle() {
+    return Units.radiansToDegrees(pivotMotorSim.getAngleRads());
+  }
+
+  @Override
   public void update() {
     spinMotorSim.update(0.20);
     pivotMotorSim.update(0.20);
+
+    double pidOutput = pidController.calculate(getPivotAngle());
+
+    pivotMotorSim.setInputVoltage(pidOutput);
   }
 }

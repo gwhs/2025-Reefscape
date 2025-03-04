@@ -130,6 +130,12 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     pivotMotor.setVoltage(voltage);
   }
 
+  @Override
+  public double getPivotAngle() {
+    return Units.rotationsToDegrees(pivotEncoder.get());
+  }
+
+  @Override
   public void setAngle(double angle) {
     pivotMotor.setControl(m_request.withPosition(Units.degreesToRotations(angle)));
   }

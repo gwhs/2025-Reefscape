@@ -8,5 +8,7 @@ public interface GroundIntakeIO {
 
   public void setAngle(double angle);
 
+  public double getPivotAngle();
+
   public void update();
 }
