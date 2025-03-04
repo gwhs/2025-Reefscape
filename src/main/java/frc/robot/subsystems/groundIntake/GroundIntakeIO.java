@@ -10,5 +10,7 @@ public interface GroundIntakeIO {
 
   public double getPivotAngle();
 
+  public void resetPivotEncoder();
+
   public void update();
 }

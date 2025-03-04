@@ -172,4 +172,10 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     pivotMotorConnected.set(!pivotMotor.isConnected());
     pivotEncoderConnected.set(!pivotEncoder.isConnected());
   }
+
+  @Override
+  public void resetPivotEncoder() {
+    double encoderAngle = pivotEncoder.get();
+    pivotMotor.setPosition(encoderAngle);
+  }
 }

@@ -1,5 +1,8 @@
 package frc.robot.subsystems.groundIntake;
 
+import static edu.wpi.first.units.Units.Degrees;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -21,10 +24,10 @@ public class GroundIntakeIOSim implements GroundIntakeIO {
           false,
           Units.degreesToRadians(90));
 
-  private TrapezoidProfile.Constraints contraints =
+  private TrapezoidProfile.Constraints constraints =
       new TrapezoidProfile.Constraints(
           GroundIntakeConstants.MAX_VELOCITY * 360, GroundIntakeConstants.MAX_ACCELERATION * 360);
-  private ProfiledPIDController pidController = new ProfiledPIDController(.1, 0, 0, contraints);
+  private ProfiledPIDController pidController = new ProfiledPIDController(.1, 0, 0, constraints);
 
   private FlywheelSim spinMotorSim =
       new FlywheelSim(
@@ -60,5 +63,11 @@ public class GroundIntakeIOSim implements GroundIntakeIO {
     double pidOutput = pidController.calculate(getPivotAngle());
 
     pivotMotorSim.setInputVoltage(pidOutput);
+
+    DogLog.log("groundIntake/Spin/voltage", spinMotorSim.getInputVoltage());
+    DogLog.log("groundIntake/Pivot/position", Units.radiansToDegrees(pivotMotorSim.getAngleRads()));
   }
+
+  @Override
+  public void resetPivotEncoder() {}
 }
