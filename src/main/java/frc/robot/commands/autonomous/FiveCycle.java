@@ -74,8 +74,8 @@ public class FiveCycle extends PathPlannerAuto {
                               () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
                   robotContainer.scoreCoral(),
                   AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntake()),
-                  autoHelper(CSP_E, E_CSP),
-                  autoHelper(CSP_D, D_CSP) /*,
+                  autoHelper(CSP_D, D_CSP),
+                  autoHelper(CSP_C, C_CSP) /*,
                   autoHelper(CSP_C, C_CSP)*/));
 
     } catch (Exception e) {
