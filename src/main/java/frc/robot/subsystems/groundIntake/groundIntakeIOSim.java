@@ -6,23 +6,23 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
-public class groundIntakeIOSim implements groundIntakeIO {
+public class GroundIntakeIOSim implements GroundIntakeIO {
 
   private SingleJointedArmSim pivotMotorSim =
       new SingleJointedArmSim(
           DCMotor.getFalcon500Foc(1),
-          groundIntakeConstants.PIVOT_GEAR_RATIO,
+          GroundIntakeConstants.PIVOT_GEAR_RATIO,
           0.1,
           1,
-          Units.degreesToRadians(groundIntakeConstants.GROUND_INTAKE_LOWER_BOUND),
-          Units.degreesToRadians(groundIntakeConstants.GROUND_INTAKE_UPPER_BOUND),
+          Units.degreesToRadians(GroundIntakeConstants.GROUND_INTAKE_LOWER_BOUND),
+          Units.degreesToRadians(GroundIntakeConstants.GROUND_INTAKE_UPPER_BOUND),
           false,
           Units.degreesToRadians(90));
 
   private FlywheelSim spinMotorSim =
       new FlywheelSim(
           LinearSystemId.createFlywheelSystem(
-              DCMotor.getFalcon500Foc(1), 0.0001, groundIntakeConstants.SPIN_GEAR_RATIO),
+              DCMotor.getFalcon500Foc(1), 0.0001, GroundIntakeConstants.SPIN_GEAR_RATIO),
           DCMotor.getFalcon500Foc(1));
 
   @Override

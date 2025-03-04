@@ -5,15 +5,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class groundIntakeSubsystem extends SubsystemBase {
+public class GroundIntakeSubsystem extends SubsystemBase {
 
-  private final groundIntakeIO groundintakeIO;
+  private final GroundIntakeIO groundintakeIO;
 
-  public groundIntakeSubsystem() {
+  public GroundIntakeSubsystem() {
     if (RobotBase.isSimulation()) {
-      groundintakeIO = new groundIntakeIOSim();
+      groundintakeIO = new GroundIntakeIOSim();
     } else {
-      groundintakeIO = new groundIntakeIOReal();
+      groundintakeIO = new GroundIntakeIOReal();
     }
   }
 

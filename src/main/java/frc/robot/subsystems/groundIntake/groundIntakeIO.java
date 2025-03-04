@@ -1,10 +1,12 @@
 package frc.robot.subsystems.groundIntake;
 
-public interface groundIntakeIO {
+public interface GroundIntakeIO {
 
-  void setPivotMotorVoltage(double voltage);
+  public void setPivotMotorVoltage(double voltage);
 
-  void setSpinMotorVoltage(double voltage);
+  public void setSpinMotorVoltage(double voltage);
 
-  void update();
+  public void setAngle(double angle);
+
+  public void update();
 }
