@@ -24,14 +24,14 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
   private final DutyCycleEncoder pivotEncoder =
       new DutyCycleEncoder(GroundIntakeConstants.PIVOT_ENCODER_ID);
 
-  private final Alert spinMotorConnected = 
-    new Alert("ground intake spin motor not connected", AlertType.kError);
+  private final Alert spinMotorConnected =
+      new Alert("ground intake spin motor not connected", AlertType.kError);
 
-  private final Alert pivotMotorConnected = 
-    new Alert("ground intake pivot motor not connected", AlertType.kError);
+  private final Alert pivotMotorConnected =
+      new Alert("ground intake pivot motor not connected", AlertType.kError);
 
-  private final Alert pivotEncoderConnected = 
-    new Alert("ground intake pivot encoder not connected", AlertType.kError);
+  private final Alert pivotEncoderConnected =
+      new Alert("ground intake pivot encoder not connected", AlertType.kError);
 
   private final StatusSignal<Voltage> spinMotorVoltage = spinMotor.getMotorVoltage();
   private final StatusSignal<Voltage> pivotMotorVoltage = pivotMotor.getMotorVoltage();
@@ -45,7 +45,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
   private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
 
   public GroundIntakeIOReal() {
-    //configuration for the pivot motor
+    // configuration for the pivot motor
 
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
     MotorOutputConfigs motorOutput = talonFXConfigs.MotorOutput;
@@ -96,7 +96,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
       System.out.println("Could not configure device. Error: " + status.toString());
     }
 
-    //configuration for the spin motor
+    // configuration for the spin motor
 
     talonFXConfigs = new TalonFXConfiguration();
     motorOutput = talonFXConfigs.MotorOutput;
@@ -117,7 +117,12 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
       System.out.println("Could not configure device. Error: " + status.toString());
     }
 
-    BaseStatusSignal.setUpdateFrequencyForAll(50.0, spinMotorStatorCurrent, pivotMotorPosition, pivotMotorStatorCurrent, groundIntakePIDGoal);
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50.0,
+        spinMotorStatorCurrent,
+        pivotMotorPosition,
+        pivotMotorStatorCurrent,
+        groundIntakePIDGoal);
   }
 
   @Override
@@ -143,13 +148,13 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
   @Override
   public void update() {
     BaseStatusSignal.refreshAll(
-                spinMotorVoltage,
-                pivotMotorVoltage,
-                pivotMotorTemperature,
-                spinMotorTemperature,
-                pivotMotorStatorCurrent,
-                spinMotorStatorCurrent,
-                pivotMotorPosition);
+        spinMotorVoltage,
+        pivotMotorVoltage,
+        pivotMotorTemperature,
+        spinMotorTemperature,
+        pivotMotorStatorCurrent,
+        spinMotorStatorCurrent,
+        pivotMotorPosition);
 
     DogLog.log("groundIntake/Spin/voltage", spinMotorVoltage.getValueAsDouble());
     DogLog.log("groundIntake/Pivot/voltage", pivotMotorVoltage.getValueAsDouble());

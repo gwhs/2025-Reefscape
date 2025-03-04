@@ -21,9 +21,9 @@ public class GroundIntakeIOSim implements GroundIntakeIO {
           false,
           Units.degreesToRadians(90));
 
-  private TrapezoidProfile.Constraints contraints = 
+  private TrapezoidProfile.Constraints contraints =
       new TrapezoidProfile.Constraints(
-        GroundIntakeConstants.MAX_VELOCITY * 360, GroundIntakeConstants.MAX_ACCELERATION * 360);
+          GroundIntakeConstants.MAX_VELOCITY * 360, GroundIntakeConstants.MAX_ACCELERATION * 360);
   private ProfiledPIDController pidController = new ProfiledPIDController(.1, 0, 0, contraints);
 
   private FlywheelSim spinMotorSim =
