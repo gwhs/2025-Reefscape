@@ -21,17 +21,21 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.arm.ArmConstants;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 
 public class ClimbIOReal implements ClimbIO {
-  private TalonFX climbMotor = new TalonFX(ClimbConstants.CLIMB_ID, "rio");
-  private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
+  private final TalonFX climbMotor = new TalonFX(ClimbConstants.CLIMB_ID, "rio");
+
+  private final MotionMagicVoltage m_request = new MotionMagicVoltage(0).withEnableFOC(true);
+
   private final StatusSignal<Double> climbPIDGoal = climbMotor.getClosedLoopReference();
   private final StatusSignal<Voltage> climbMotorVoltage = climbMotor.getMotorVoltage();
   private final StatusSignal<Current> climbStatorCurrent = climbMotor.getStatorCurrent();
   private final StatusSignal<Angle> climbPosition = climbMotor.getPosition();
+
+  private final Alert climbMotorConnectedAlert =
+      new Alert("Climb motor not connected", AlertType.kError);
 
   public ClimbIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
@@ -42,33 +46,32 @@ public class ClimbIOReal implements ClimbIO {
     CurrentLimitsConfigs currentConfig = talonFXConfigs.CurrentLimits;
     FeedbackConfigs feedbackConfigs = talonFXConfigs.Feedback;
 
-    slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
-    slot0Configs.kG = 0; // Add 0 V to overcome gravity
-    slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
-    slot0Configs.kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
-    slot0Configs.kP = 100; // A position error of 2.5 rotations results in 12 V output
+    slot0Configs.kS = 0.18205; // Add 0.25 V output to overcome static friction
+    slot0Configs.kG = 0.09885; // Add 0 V to overcome gravity
+    slot0Configs.kV = 7.2427; // A velocity target of 1 rps results in 0.12 V output
+    slot0Configs.kA = 0.086264; // An acceleration of 1 rps/s requires 0.01 V output
+    slot0Configs.kP = 57.759; // A position error of 2.5 rotations results in 12 V output
     slot0Configs.kI = 0; // no output for integrated error
-    slot0Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
+    slot0Configs.kD = 8.4867; // A velocity error of 1 rps results in 0.1 V output
     slot0Configs.withGravityType(GravityTypeValue.Arm_Cosine);
 
-    // feedbackConfigs.FeedbackRemoteSensorID = 0;
-    // feedbackConfigs.FeedbackRotorOffset = 0;
     feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-    feedbackConfigs.RotorToSensorRatio = 1; // TODO: Need to change to gear ratio with cancoder
-    feedbackConfigs.SensorToMechanismRatio =
-        ArmConstants.ARM_GEAR_RATIO; // TODO: Need to change to 1 with cancoder
+    feedbackConfigs.RotorToSensorRatio = 1;
+    feedbackConfigs.SensorToMechanismRatio = ClimbConstants.CLIMB_GEAR_RATIO;
 
-    motionMagicConfigs.MotionMagicCruiseVelocity = ArmConstants.MAX_VELOCITY;
-    motionMagicConfigs.MotionMagicAcceleration = ArmConstants.MAX_ACCELERATION;
-    motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
+    motionMagicConfigs.MotionMagicCruiseVelocity = ClimbConstants.MAX_VELOCITY;
+    motionMagicConfigs.MotionMagicAcceleration = ClimbConstants.MAX_ACCELERATION;
+    motionMagicConfigs.MotionMagicJerk = 0;
 
-    motorOutput.NeutralMode = NeutralModeValue.Coast;
+    motorOutput.NeutralMode = NeutralModeValue.Brake;
     motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     softwareLimitSwitch.ForwardSoftLimitEnable = true;
-    softwareLimitSwitch.ForwardSoftLimitThreshold = Units.degreesToRotations(330);
+    softwareLimitSwitch.ForwardSoftLimitThreshold =
+        Units.degreesToRotations(ClimbConstants.CLIMB_CLIMB_POSITION + 5);
     softwareLimitSwitch.ReverseSoftLimitEnable = true;
-    softwareLimitSwitch.ReverseSoftLimitThreshold = Units.degreesToRotations(20);
+    softwareLimitSwitch.ReverseSoftLimitThreshold =
+        Units.degreesToRotations(ClimbConstants.STOW_CLIMB_POSITION);
 
     currentConfig.withStatorCurrentLimitEnable(true);
     currentConfig.withStatorCurrentLimit(20);
@@ -83,11 +86,6 @@ public class ClimbIOReal implements ClimbIO {
     }
 
     BaseStatusSignal.setUpdateFrequencyForAll(50.0, climbPIDGoal, climbStatorCurrent);
-
-    SmartDashboard.putData(
-        "Arm Command/reset to 90",
-        Commands.runOnce(() -> climbMotor.setPosition(Units.degreesToRotations(90)))
-            .ignoringDisable(true));
   }
 
   @Override
@@ -111,5 +109,8 @@ public class ClimbIOReal implements ClimbIO {
     DogLog.log("Climb/Motor/motor voltage", climbMotorVoltage.getValueAsDouble());
     DogLog.log("Climb/Motor/stator current", climbStatorCurrent.getValueAsDouble());
     DogLog.log("Climb/Motor/Connected", armConnected);
+
+    climbMotorConnectedAlert.set(!climbMotor.isConnected());
+
   }
 }

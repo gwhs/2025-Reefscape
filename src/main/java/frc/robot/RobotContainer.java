@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -343,12 +344,11 @@ public class RobotContainer {
     // m_operatorController.x().whileTrue(elevator.sysIdDynamic(Direction.kReverse));
 
     m_operatorController.povRight().onTrue(arm.increaseAngle(3.0));
-
     m_operatorController.povLeft().onTrue(arm.decreaseAngle(3.0));
-
     m_operatorController.povUp().onTrue(elevator.increaseHeight(0.02));
-
     m_operatorController.povDown().onTrue(elevator.decreaseHeight(0.02));
+
+    m_operatorController.leftTrigger().onTrue(climb());
   }
 
   public void periodic() {
@@ -508,5 +508,36 @@ public class RobotContainer {
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(.1),
                 endEffector.stopMotor()))
         .withName("Dealgae");
+  }
+
+  public Command climb() {
+    Trigger unprepclimbTrigger = m_operatorController.leftTrigger().negate();
+    Trigger climbTrigger = m_operatorController.rightTrigger();
+
+    Command unPrepClimbCommand =
+        Commands.sequence(
+            Commands.parallel(
+                    climb.stow(),
+                    elevator.setHeight(0),
+                    arm.setAngle(90),
+                    Commands.runOnce(
+                        () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)))
+                .withTimeout(.5));
+
+    Command climbCommand =
+        Commands.parallel(climb.climb(), elevator.setHeight(0), arm.setAngle(90)).withTimeout(0.5);
+
+    return Commands.sequence(
+            Commands.parallel(
+                    climb.latch(),
+                    elevator.setHeight(0),
+                    arm.setAngle(90),
+                    Commands.runOnce(
+                        () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE)))
+                .withTimeout(0.01),
+            Commands.waitUntil(unprepclimbTrigger.or(climbTrigger)),
+            Commands.either(unPrepClimbCommand, climbCommand, unprepclimbTrigger))
+        .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+        .withName("Climb");
   }
 }

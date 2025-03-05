@@ -19,9 +19,9 @@ public class ClimbSubsystem extends SubsystemBase {
       climbIO = new ClimbIOReal();
     }
 
-    SmartDashboard.putData("Climb Command/extend", climb());
-    SmartDashboard.putData("Climb Command/retract", stow());
-    SmartDashboard.putData("Climb Command/retract", latch());
+    SmartDashboard.putData("Climb Command/climb", climb());
+    SmartDashboard.putData("Climb Command/stow", stow());
+    SmartDashboard.putData("Climb Command/latch", latch());
   }
 
   @Override
@@ -47,13 +47,13 @@ public class ClimbSubsystem extends SubsystemBase {
   public Command climb() {
     return this.runOnce(
             () -> {
-              climbIO.setPosition(ClimbConstants.EXTEND_CLIMB_POSITION);
+              climbIO.setPosition(ClimbConstants.CLIMB_CLIMB_POSITION);
             })
         .andThen(
             Commands.waitUntil(
                 () ->
                     MathUtil.isNear(
-                        ClimbConstants.EXTEND_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
+                        ClimbConstants.CLIMB_CLIMB_POSITION, climbIO.getPosition(), 2)));
   }
 
   /**
@@ -62,13 +62,12 @@ public class ClimbSubsystem extends SubsystemBase {
   public Command stow() {
     return this.runOnce(
             () -> {
-              climbIO.setPosition(ClimbConstants.RETRACT_CLIMB_POSITION);
+              climbIO.setPosition(ClimbConstants.STOW_CLIMB_POSITION);
             })
         .andThen(
             Commands.waitUntil(
                 () ->
-                    MathUtil.isNear(
-                        ClimbConstants.RETRACT_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
+                    MathUtil.isNear(ClimbConstants.STOW_CLIMB_POSITION, climbIO.getPosition(), 2)));
   }
 
   public Command latch() {
@@ -80,6 +79,6 @@ public class ClimbSubsystem extends SubsystemBase {
             Commands.waitUntil(
                 () ->
                     MathUtil.isNear(
-                        ClimbConstants.LATCH_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
+                        ClimbConstants.LATCH_CLIMB_POSITION, climbIO.getPosition(), 2)));
   }
 }
