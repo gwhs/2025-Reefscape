@@ -26,7 +26,7 @@ public class ObjectDetectionCam {
   private VisionSystemSim visionSim;
   private final TargetModel simTargetModel;
   private final Pose3d simTargetPose;
-  private VisionTargetSim meow;
+  private VisionTargetSim visionTarget;
 
 
   public ObjectDetectionCam(String name, Transform3d robotToCam, Supplier<Pose2d> robotPose) {
@@ -40,7 +40,8 @@ public class ObjectDetectionCam {
     visionSim = new VisionSystemSim("main");
     simTargetModel = new TargetModel(0.2);
     simTargetPose = new Pose3d(16, 4, 2, new Rotation3d(0, 0, Math.PI)); //placeholder, change later
-    meow = new VisionTargetSim(simTargetPose, simTargetModel);
+    visionTarget = new VisionTargetSim(simTargetPose, simTargetModel);
+    visionSim.addVisionTargets(visionTarget);
 
   }
 
