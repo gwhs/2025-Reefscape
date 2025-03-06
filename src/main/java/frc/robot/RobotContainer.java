@@ -309,16 +309,17 @@ public class RobotContainer {
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
-    m_driverController.rightBumper().whileTrue(
-      Commands.startEnd(
-              () -> {
-                driveCommand.setSlowMode(true, 0.25);
-              },
-              () -> {
-                driveCommand.setSlowMode(false, 0.25);
-              })
-          .withName("Slow Mode"));
-
+    m_driverController
+        .rightBumper()
+        .whileTrue(
+            Commands.startEnd(
+                    () -> {
+                      driveCommand.setSlowMode(true, 0.25);
+                    },
+                    () -> {
+                      driveCommand.setSlowMode(false, 0.25);
+                    })
+                .withName("Slow Mode"));
 
     m_driverController
         .rightTrigger()
