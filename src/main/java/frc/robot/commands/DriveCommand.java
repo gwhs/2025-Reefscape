@@ -59,7 +59,8 @@ public class DriveCommand extends Command {
     NORMAL,
     CORAL_STATION,
     REEF,
-    CAGE
+    CAGE,
+    PROCESSOR
   }
 
   private TargetMode mode = TargetMode.NORMAL;
@@ -129,6 +130,13 @@ public class DriveCommand extends Command {
         return BLUE_CAGE_ANGLE;
       } else {
         return RED_CAGE_ANGLE;
+      }
+    } else if (mode == TargetMode.PROCESSOR) {
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        return -90;
+      } else {
+        return 90;
       }
     } else {
       return 0;
