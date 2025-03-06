@@ -6,8 +6,14 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.robot.subsystems.aprilTagCam.AprilTagCamConstants;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.estimation.TargetModel;
 import org.photonvision.simulation.PhotonCameraSim;
@@ -76,6 +82,7 @@ public class ObjectDetectionCam {
       if (bestTarget != null) {
         Transform3d targetLocationToCamera = bestTarget.getBestCameraToTarget();
         Pose3d targetLocationToField = this.getTargetLocInFieldSpace(targetLocationToCamera);
+
       }
     }
   }
@@ -95,4 +102,56 @@ public class ObjectDetectionCam {
 
     return targetToField;
   }
+
+  public boolean filterResults(
+      Pose3d estimPose3d,
+      EstimatedRobotPose optionalEstimPose,
+      ChassisSpeeds speed){
+
+    // If vision’s pose estimation is above/below the ground
+    double upperZBound = AprilTagCamConstants.Z_TOLERANCE;
+    double lowerZBound = -(AprilTagCamConstants.Z_TOLERANCE);
+    if (estimPose3d.getZ() > upperZBound
+        || estimPose3d.getZ()
+            < lowerZBound) { // change if we find out that z starts from camera height
+      DogLog.log(ntKey + "Rejected Pose", estimPose3d);
+      DogLog.log(ntKey + "Rejected Reason", "out of Z bounds", "Z: " + estimPose3d.getZ());
+      return false;
+    }
+
+
+  // If vision's pose estimation is outside the field
+  double upperXBound = AprilTagCamConstants.MAX_X_VALUE + AprilTagCamConstants.XY_TOLERANCE;
+  double upperYBound = AprilTagCamConstants.MAX_Y_VALUE + AprilTagCamConstants.XY_TOLERANCE;
+  double lowerXYBound = -(AprilTagCamConstants.XY_TOLERANCE);
+  if (estimPose3d.getX() < lowerXYBound || estimPose3d.getY() < lowerXYBound) {
+    DogLog.log(ntKey + "Rejected Pose", estimPose3d);
+    DogLog.log(ntKey + "Rejected Reason", "Y or X is less than 0");
+    return false;
+  }
+  if (estimPose3d.getX() > upperXBound || estimPose3d.getY() > upperYBound) {
+    DogLog.log(ntKey + "Rejected Pose", estimPose3d);
+    DogLog.log(
+        ntKey + "Rejected Reason",
+        "Y or X is out of bounds",
+        "X: " + estimPose3d.getX() + "," + "Y: " + estimPose3d.getX());
+
+    return false;
+  }
+
+         // if velocity or rotaion is too high
+    double xVel = speed.vxMetersPerSecond;
+    double yVel = speed.vyMetersPerSecond;
+    double vel = Math.sqrt(Math.pow(yVel, 2) + Math.pow(xVel, 2));
+    double rotation = speed.omegaRadiansPerSecond;
+
+    if (vel > AprilTagCamConstants.MAX_VELOCITY || rotation > AprilTagCamConstants.MAX_ROTATION) {
+      DogLog.log(ntKey + "Rejected Pose", estimPose3d);
+      DogLog.log(ntKey + "Rejected Reason", "Velocity/Rotation is too fast");
+      return false;
+    }
+
+        return true; 
+      }
+ 
 }
