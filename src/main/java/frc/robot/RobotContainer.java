@@ -398,6 +398,8 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
     DogLog.log("Current Robot", getRobot().toString());
     DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
+
+    DogLog.log("Match Timer", DriverStation.getMatchTime());
   }
 
   /**
