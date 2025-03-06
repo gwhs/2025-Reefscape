@@ -44,7 +44,7 @@ public class DriveCommand extends Command {
   private final double ELEVATOR_UP_SLEW_RATE = 1;
 
   public enum ReefPositions {
-    SIDE_REEF,
+    RIGHT_SIDE_REEF,
     BACK_REEF,
     FRONT_REEF
   }
@@ -132,7 +132,7 @@ public class DriveCommand extends Command {
       if (reefMode == ReefPositions.FRONT_REEF) {
         Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
         return nearest.getRotation().getDegrees();
-      } else if (reefMode == ReefPositions.SIDE_REEF) {
+      } else if (reefMode == ReefPositions.RIGHT_SIDE_REEF) {
         Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
         return nearest.getRotation().getDegrees() + 90;
       } else if (reefMode == ReefPositions.BACK_REEF) {
