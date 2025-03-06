@@ -109,8 +109,8 @@ public class ObjectDetectionCam {
       ChassisSpeeds speed){
 
     // If vision’s pose estimation is above/below the ground
-    double upperZBound = AprilTagCamConstants.Z_TOLERANCE;
-    double lowerZBound = -(AprilTagCamConstants.Z_TOLERANCE);
+    double upperZBound = ObjectDetectionConstants.Z_TOLERANCE;
+    double lowerZBound = -(ObjectDetectionConstants.Z_TOLERANCE);
     if (estimPose3d.getZ() > upperZBound
         || estimPose3d.getZ()
             < lowerZBound) { // change if we find out that z starts from camera height
@@ -121,9 +121,9 @@ public class ObjectDetectionCam {
 
 
   // If vision's pose estimation is outside the field
-  double upperXBound = AprilTagCamConstants.MAX_X_VALUE + AprilTagCamConstants.XY_TOLERANCE;
-  double upperYBound = AprilTagCamConstants.MAX_Y_VALUE + AprilTagCamConstants.XY_TOLERANCE;
-  double lowerXYBound = -(AprilTagCamConstants.XY_TOLERANCE);
+  double upperXBound = ObjectDetectionConstants.MAX_X_VALUE + ObjectDetectionConstants.XY_TOLERANCE;
+  double upperYBound = ObjectDetectionConstants.MAX_Y_VALUE + ObjectDetectionConstants.XY_TOLERANCE;
+  double lowerXYBound = -(ObjectDetectionConstants.XY_TOLERANCE);
   if (estimPose3d.getX() < lowerXYBound || estimPose3d.getY() < lowerXYBound) {
     DogLog.log(ntKey + "Rejected Pose", estimPose3d);
     DogLog.log(ntKey + "Rejected Reason", "Y or X is less than 0");
@@ -145,7 +145,7 @@ public class ObjectDetectionCam {
     double vel = Math.sqrt(Math.pow(yVel, 2) + Math.pow(xVel, 2));
     double rotation = speed.omegaRadiansPerSecond;
 
-    if (vel > AprilTagCamConstants.MAX_VELOCITY || rotation > AprilTagCamConstants.MAX_ROTATION) {
+    if (vel > ObjectDetectionConstants.MAX_VELOCITY || rotation > ObjectDetectionConstants.MAX_ROTATION) {
       DogLog.log(ntKey + "Rejected Pose", estimPose3d);
       DogLog.log(ntKey + "Rejected Reason", "Velocity/Rotation is too fast");
       return false;
