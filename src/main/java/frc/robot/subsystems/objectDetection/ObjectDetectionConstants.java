@@ -7,7 +7,7 @@ import edu.wpi.first.math.util.Units;
 public class ObjectDetectionConstants {
 
   private final double minConfindence = 0.75;
-  public static final Transform3d robotToCam = //placeholder values, change later
+  public static final Transform3d robotToCam = // placeholder values, change later
       new Transform3d(
           Units.inchesToMeters(9.6),
           Units.inchesToMeters(11.2),

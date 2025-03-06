@@ -41,8 +41,6 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
-import frc.robot.subsystems.objectDetection.ObjectDetectionCam;
-import frc.robot.subsystems.objectDetection.ObjectDetectionConstants;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -388,7 +386,6 @@ public class RobotContainer {
 
     startTime = HALUtil.getFPGATime();
 
-   
     DogLog.log("Desired Reef", coralLevel);
 
     // Log Triggers
