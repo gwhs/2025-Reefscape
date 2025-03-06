@@ -79,7 +79,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
 
     softwareLimitSwitch.ForwardSoftLimitEnable = true;
     softwareLimitSwitch.ForwardSoftLimitThreshold =
-        Units.degreesToRotations(GroundIntakeConstants.GROUND_INTAKE_LOWER_BOUND);
+        Units.degreesToRotations(GroundIntakeConstants.GROUND_INTAKE_UPPER_BOUND);
     softwareLimitSwitch.ReverseSoftLimitEnable = true;
     softwareLimitSwitch.ReverseSoftLimitThreshold =
         Units.degreesToRotations(GroundIntakeConstants.GROUND_INTAKE_LOWER_BOUND);
