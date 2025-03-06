@@ -36,14 +36,18 @@ public class ObjectDetectionCam {
   private final Pose3d simTargetPose;
   private VisionTargetSim visionTarget;
   private SimCameraProperties cameraProp;
-  private PhotonCameraSim cameraSim;
+  private PhotonCameraSim cameraSim; 
 
-  public ObjectDetectionCam(String name, Transform3d robotToCam, Supplier<Pose2d> robotPose) {
+  public ObjectDetectionCam(
+    String name, 
+    Transform3d robotToCam,
+     Supplier<Pose2d> robotPose) {
 
     cam = new PhotonCamera(name);
     counter = 0;
     this.robotPose = robotPose;
     this.robotToCam = robotToCam;
+
     ntKey = "/Object Detection/" + name + "/";
 
     visionSim = new VisionSystemSim("main");
@@ -82,7 +86,11 @@ public class ObjectDetectionCam {
       if (bestTarget != null) {
         Transform3d targetLocationToCamera = bestTarget.getBestCameraToTarget();
         Pose3d targetLocationToField = this.getTargetLocInFieldSpace(targetLocationToCamera);
-
+        if(!filterResults(targetLocationToField)){
+          DogLog.log(ntKey + "Rejected Target Pose/", targetLocationToField);
+          break; 
+        }
+        DogLog.log(ntKey + "Accepted Target Pose/", targetLocationToField);
       }
     }
   }
@@ -97,25 +105,21 @@ public class ObjectDetectionCam {
 
     Pose3d targetToField = cameraPose3d.plus(targetLocationToCamera);
 
-    DogLog.log(ntKey + "Camera Pose/", cameraPose3d);
-    DogLog.log(ntKey + "Target Pose/", targetToField);
-
+    DogLog.log(ntKey + "Camera Pose/", targetLocationToCamera);
     return targetToField;
   }
 
   public boolean filterResults(
-      Pose3d estimPose3d,
-      EstimatedRobotPose optionalEstimPose,
-      ChassisSpeeds speed){
+      Pose3d estimTargetPosePose3d){
 
     // If vision’s pose estimation is above/below the ground
     double upperZBound = ObjectDetectionConstants.Z_TOLERANCE;
     double lowerZBound = -(ObjectDetectionConstants.Z_TOLERANCE);
-    if (estimPose3d.getZ() > upperZBound
-        || estimPose3d.getZ()
+    if (estimTargetPosePose3d.getZ() > upperZBound
+        || estimTargetPosePose3d.getZ()
             < lowerZBound) { // change if we find out that z starts from camera height
-      DogLog.log(ntKey + "Rejected Pose", estimPose3d);
-      DogLog.log(ntKey + "Rejected Reason", "out of Z bounds", "Z: " + estimPose3d.getZ());
+      DogLog.log(ntKey + "Rejected Pose", estimTargetPosePose3d);
+      DogLog.log(ntKey + "Rejected Reason", "out of Z bounds", "Z: " + estimTargetPosePose3d.getZ());
       return false;
     }
 
@@ -124,32 +128,21 @@ public class ObjectDetectionCam {
   double upperXBound = ObjectDetectionConstants.MAX_X_VALUE + ObjectDetectionConstants.XY_TOLERANCE;
   double upperYBound = ObjectDetectionConstants.MAX_Y_VALUE + ObjectDetectionConstants.XY_TOLERANCE;
   double lowerXYBound = -(ObjectDetectionConstants.XY_TOLERANCE);
-  if (estimPose3d.getX() < lowerXYBound || estimPose3d.getY() < lowerXYBound) {
-    DogLog.log(ntKey + "Rejected Pose", estimPose3d);
+  if (estimTargetPosePose3d.getX() < lowerXYBound || estimTargetPosePose3d.getY() < lowerXYBound) {
+    DogLog.log(ntKey + "Rejected Pose", estimTargetPosePose3d);
     DogLog.log(ntKey + "Rejected Reason", "Y or X is less than 0");
     return false;
   }
-  if (estimPose3d.getX() > upperXBound || estimPose3d.getY() > upperYBound) {
-    DogLog.log(ntKey + "Rejected Pose", estimPose3d);
+  if (estimTargetPosePose3d.getX() > upperXBound || estimTargetPosePose3d.getY() > upperYBound) {
+    DogLog.log(ntKey + "Rejected Pose", estimTargetPosePose3d);
     DogLog.log(
         ntKey + "Rejected Reason",
         "Y or X is out of bounds",
-        "X: " + estimPose3d.getX() + "," + "Y: " + estimPose3d.getX());
+        "X: " + estimTargetPosePose3d.getX() + "," + "Y: " + estimTargetPosePose3d.getX());
 
     return false;
   }
 
-         // if velocity or rotaion is too high
-    double xVel = speed.vxMetersPerSecond;
-    double yVel = speed.vyMetersPerSecond;
-    double vel = Math.sqrt(Math.pow(yVel, 2) + Math.pow(xVel, 2));
-    double rotation = speed.omegaRadiansPerSecond;
-
-    if (vel > ObjectDetectionConstants.MAX_VELOCITY || rotation > ObjectDetectionConstants.MAX_ROTATION) {
-      DogLog.log(ntKey + "Rejected Pose", estimPose3d);
-      DogLog.log(ntKey + "Rejected Reason", "Velocity/Rotation is too fast");
-      return false;
-    }
 
         return true; 
       }
