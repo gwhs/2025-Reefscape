@@ -28,8 +28,6 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Commands;
 
 public class ArmIOReal implements ArmIO {
   private TalonFX armMotor = new TalonFX(ArmConstants.ARM_MOTOR_ID, "rio");
@@ -75,7 +73,7 @@ public class ArmIOReal implements ArmIO {
     motionMagicConfigs.MotionMagicAcceleration = ArmConstants.MAX_ACCELERATION;
     motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
-    motorOutput.NeutralMode = NeutralModeValue.Coast;
+    motorOutput.NeutralMode = NeutralModeValue.Brake;
     motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     softwareLimitSwitch.ForwardSoftLimitEnable = true;
@@ -100,9 +98,9 @@ public class ArmIOReal implements ArmIO {
     BaseStatusSignal.setUpdateFrequencyForAll(50.0, armPIDGoal, armStatorCurrent);
 
     CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
-    cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.25;
+    cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
     cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-    cc_cfg.MagnetSensor.withMagnetOffset(Units.degreesToRotations(307.96875));
+    cc_cfg.MagnetSensor.withMagnetOffset(Units.degreesToRotations(311.46875));
 
     for (int i = 0; i < 5; i++) {
       status = armEncoder.getConfigurator().apply(cc_cfg);
@@ -111,11 +109,6 @@ public class ArmIOReal implements ArmIO {
     if (!status.isOK()) {
       System.out.println("Could not configure device. Error: " + status.toString());
     }
-
-    SmartDashboard.putData(
-        "Arm Command/reset to 90",
-        Commands.runOnce(() -> armMotor.setPosition(Units.degreesToRotations(90)))
-            .ignoringDisable(true));
   }
 
   // set arm angle in degrees

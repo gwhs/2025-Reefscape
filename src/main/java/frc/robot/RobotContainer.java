@@ -86,25 +86,33 @@ public class RobotContainer {
   private final DriveCommand driveCommand;
 
   public enum CoralLevel {
-    L1,
-    L2,
-    L3,
-    L4
+    L1(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION),
+    L2(ElevatorConstants.L2_PREP_POSITION, ArmConstants.L2_PREP_POSITION),
+    L3(ElevatorConstants.L3_PREP_POSITION, ArmConstants.L3_PREP_POSITION),
+    L4(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION);
+
+    public final double elevatorHeight;
+    public final double armAngle;
+
+    private CoralLevel(double elevatorHeight, double armAngle) {
+      this.elevatorHeight = elevatorHeight;
+      this.armAngle = armAngle;
+    }
   }
 
   public static CoralLevel coralLevel = CoralLevel.L4;
+
   public static final Trigger IS_L1 = new Trigger(() -> coralLevel == CoralLevel.L1);
   public static final Trigger IS_L2 = new Trigger(() -> coralLevel == CoralLevel.L2);
   public static final Trigger IS_L3 = new Trigger(() -> coralLevel == CoralLevel.L3);
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
+  public static final Trigger BATTERY_BROWN_OUT = new Trigger(() -> RobotController.isBrownedOut());
 
   public final Trigger IS_NEAR_CORAL_STATION;
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-
-  private final Trigger IS_AT_POSE;
 
   private final Trigger IS_REEF_MODE;
 
@@ -170,8 +178,6 @@ public class RobotContainer {
     driveCommand =
         new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
 
-    IS_AT_POSE = new Trigger(() -> driveCommand.isAtSetPoint());
-
     IS_REEF_MODE = new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
 
     IS_CLOSE_TO_REEF =
@@ -221,6 +227,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    BATTERY_BROWN_OUT.onTrue(drivetrain.setDriveMotorCurrentLimit());
 
     drivetrain
         .IS_ALIGNING_TO_POSE
@@ -291,22 +298,15 @@ public class RobotContainer {
             Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
                 .withName("Back to Original State"));
 
-    IS_L4
-        .and(m_driverController.rightTrigger())
-        .whileTrue(
-            prepScoreCoral(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION));
-    IS_L3
-        .and(m_driverController.rightTrigger())
-        .whileTrue(
-            prepScoreCoral(ElevatorConstants.L3_PREP_POSITION, ArmConstants.L3_PREP_POSITION));
-    IS_L2
-        .and(m_driverController.rightTrigger())
-        .whileTrue(
-            prepScoreCoral(ElevatorConstants.L2_PREP_POSITION, ArmConstants.L2_PREP_POSITION));
-    IS_L1
-        .and(m_driverController.rightTrigger())
-        .whileTrue(
-            prepScoreCoral(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION));
+    IS_L2.and(m_driverController.leftTrigger()).onTrue(prepDealgaeLow());
+    IS_L3.or(IS_L4).and(m_driverController.leftTrigger()).onTrue(prepDealgaeHigh());
+
+    m_driverController.leftTrigger().onFalse(dealgae());
+
+    IS_L4.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L4));
+    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L3));
+    IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L2));
+    IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L1));
 
     IS_L1
         .and(IS_REEF_MODE)
@@ -352,6 +352,8 @@ public class RobotContainer {
         .b()
         .whileTrue(alignToPose(() -> EagleUtil.closestReefSetPoint(drivetrain.getPose(), 1)));
 
+    m_operatorController.start().onTrue(elevator.homingCommand());
+
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
     m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
@@ -361,6 +363,14 @@ public class RobotContainer {
     // m_operatorController.b().whileTrue(elevator.sysIdQuasistatic(Direction.kReverse));
     // m_operatorController.a().whileTrue(elevator.sysIdDynamic(Direction.kForward));
     // m_operatorController.x().whileTrue(elevator.sysIdDynamic(Direction.kReverse));
+
+    m_operatorController.povRight().onTrue(arm.increaseAngle(3.0));
+
+    m_operatorController.povLeft().onTrue(arm.decreaseAngle(3.0));
+
+    m_operatorController.povUp().onTrue(elevator.increaseHeight(0.02));
+
+    m_operatorController.povDown().onTrue(elevator.decreaseHeight(0.02));
   }
 
   public void periodic() {
@@ -408,6 +418,8 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
     DogLog.log("Current Robot", getRobot().toString());
     DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
+
+    DogLog.log("Match Timer", DriverStation.getMatchTime());
   }
 
   /**
@@ -420,21 +432,24 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("FIVE_CYCLE_PROCESSOR", new FiveCycleProcessor(this));
-    autoChooser.addOption("Five_Cycle_Processor_2", new FiveCycleProcessor2(this));
-    autoChooser.addOption("Two_Cycle_Processor", new TwoCycleProcessor(this));
-    autoChooser.addOption("Two_Cycle_Processor_2", new TwoCycleProcessor2(this));
+    autoChooser.setDefaultOption("Five_Cycle_Processor", new FiveCycle(this, false));
+    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycle(this, true));
     autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
     autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
-    autoChooser.addOption("Drivetrain_Practice", new DrivetrainPractice(this));
     autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
-    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycleNonProcessor(this));
-    autoChooser.addOption("Five_Cycle_Non_Processor_2", new FiveCycleNonProcessor2(this));
     autoChooser.addOption(
         "Wheel_Radius_Chracterizaton",
         WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
 
     SmartDashboard.putData("autonomous", autoChooser);
+  }
+
+  public Pose2d getRobotPose() {
+    return drivetrain.getPose();
+  }
+
+  public Command zeroElevator() {
+    return elevator.homingCommand();
   }
 
   /**
@@ -453,13 +468,16 @@ public class RobotContainer {
   public Command prepCoralIntake() {
     return Commands.sequence(
             endEffector.intake(),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.5),
+            elevator.setHeight(ElevatorConstants.INTAKE_METER).withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake");
   }
 
   public Command stopIntake() {
-    return Commands.parallel(arm.setAngle(ArmConstants.ARM_STOW_ANGLE), endEffector.holdCoral())
+    return Commands.parallel(
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
+            elevator.setHeight(ElevatorConstants.STOW_METER),
+            endEffector.holdCoral())
         .withName("stop Intake");
   }
 
@@ -470,10 +488,15 @@ public class RobotContainer {
    */
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
     return Commands.parallel(
-            elevator.setHeight(elevatorHeight).withTimeout(0.5),
-            arm.setAngle(armAngle).withTimeout(1))
+            endEffector.holdCoral(),
+            elevator.setHeight(elevatorHeight).withTimeout(.5),
+            arm.setAngle(armAngle).withTimeout(.5))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
+  }
+
+  public Command prepScoreCoral(CoralLevel level) {
+    return prepScoreCoral(level.elevatorHeight, level.armAngle);
   }
 
   /**
@@ -487,5 +510,31 @@ public class RobotContainer {
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.2),
             endEffector.stopMotor())
         .withName("Score Coral");
+  }
+
+  // DeAlgae Commands
+  public Command prepDealgaeLow() {
+    return Commands.parallel(
+        elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
+        arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
+        endEffector.setVoltage(0));
+  }
+
+  public Command prepDealgaeHigh() {
+    return Commands.parallel(
+        elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
+        arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
+        endEffector.setVoltage(0));
+  }
+
+  public Command dealgae() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.DEALGAE_ANGLE).withTimeout(0.2),
+            drivetrain.driveBackward(1).withTimeout(0.6),
+            Commands.parallel(
+                elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(.1),
+                arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(.1),
+                endEffector.stopMotor()))
+        .withName("Dealgae");
   }
 }

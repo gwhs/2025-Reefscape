@@ -5,6 +5,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.ColorSensorV3;
 import dev.doglog.DogLog;
@@ -27,6 +28,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
   private final StatusSignal<AngularVelocity> velocity = motor.getVelocity();
   private final StatusSignal<Temperature> temperature = motor.getDeviceTemp();
   private final StatusSignal<Current> statorCurrent = motor.getStatorCurrent();
+  private TorqueCurrentFOC currentControl = new TorqueCurrentFOC(0);
 
   private final Alert endEffectorMotorConnectedAlert =
       new Alert("End Effector Motor Not Connected", AlertType.kError);
@@ -34,6 +36,9 @@ class EndEffectorIOTalon implements EndEffectorIO {
   public EndEffectorIOTalon() {
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
     CurrentLimitsConfigs limitsConfigs = talonConfig.CurrentLimits;
+
+    talonConfig.TorqueCurrent.withPeakForwardTorqueCurrent(40);
+    talonConfig.TorqueCurrent.withPeakReverseTorqueCurrent(-40);
 
     limitsConfigs.withStatorCurrentLimitEnable(true);
     limitsConfigs.withStatorCurrentLimit(60);
@@ -68,6 +73,11 @@ class EndEffectorIOTalon implements EndEffectorIO {
   public double getVoltage() {
 
     return volts.getValueAsDouble();
+  }
+
+  @Override
+  public void setAmps(double current) {
+    motor.setControl(currentControl.withOutput(current).withMaxAbsDutyCycle(.2));
   }
 
   public boolean isSensorTriggered() {

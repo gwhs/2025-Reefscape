@@ -257,41 +257,12 @@ public class DriveCommand extends Command {
     }
   }
 
-  /**
-   * @return is the robot at the setpoint?
-   */
-  public boolean isAtSetPoint() {
-    if (this.mode == TargetMode.CORAL_STATION || this.mode == TargetMode.REEF) {
-      return PID.atSetpoint();
-    }
-    return false;
-  }
-
   @Override
   public void end(boolean interrupted) {}
 
   @Override
   public boolean isFinished() {
     return false;
-  }
-
-  /**
-   * @param velocity how fast should it drive?
-   * @return do an MJ (minus the little boys)
-   */
-  public Command driveBackward(double velocity) {
-    return drivetrain
-        .run(
-            () ->
-                drivetrain.setControl(
-                    robotCentricDrive
-                        .withVelocityX(-velocity)
-                        .withVelocityY(0)
-                        .withRotationalRate(0)))
-        .finallyDo(
-            () ->
-                drivetrain.setControl(
-                    robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
   }
 
   public void stopDrivetrain() {
