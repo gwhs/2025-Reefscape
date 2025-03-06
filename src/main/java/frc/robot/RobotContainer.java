@@ -178,9 +178,6 @@ public class RobotContainer {
         break;
     }
 
-    configureAutonomous();
-    configureBindings();
-
     driveCommand =
         new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
 
@@ -200,7 +197,8 @@ public class RobotContainer {
                         drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
                     < 0.4);
 
-    BATTERY_BROWN_OUT.onTrue(drivetrain.setDriveMotorCurrentLimit());
+    configureAutonomous();
+    configureBindings();
 
     // Default Commands
     drivetrain.setDefaultCommand(driveCommand);
@@ -232,6 +230,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    BATTERY_BROWN_OUT.onTrue(drivetrain.setDriveMotorCurrentLimit());
 
     drivetrain
         .IS_ALIGNING_TO_POSE
@@ -276,7 +275,10 @@ public class RobotContainer {
         .whileTrue(
             Commands.startEnd(
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
+                    () -> {
+                      driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
+                      driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+                    })
                 .withName("Face Coral Station"));
 
     // m_driverController
@@ -314,6 +316,25 @@ public class RobotContainer {
     m_driverController
         .rightTrigger()
         .onFalse(Commands.either(scoreCoral(), groundIntakeScoreL1(), IS_L1.negate()));
+    IS_L1
+        .and(IS_REEF_MODE)
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+                }));
+
+    IS_L2
+        .or(IS_L3)
+        .or(IS_L4)
+        .and(IS_REEF_MODE)
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+                }));
+
+    m_driverController.rightTrigger().onFalse(scoreCoral());
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
@@ -411,6 +432,8 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
     DogLog.log("Current Robot", getRobot().toString());
     DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
+
+    DogLog.log("Match Timer", DriverStation.getMatchTime());
   }
 
   /**
