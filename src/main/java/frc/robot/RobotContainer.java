@@ -316,6 +316,25 @@ public class RobotContainer {
     m_driverController
         .rightTrigger()
         .onFalse(Commands.either(scoreCoral(), groundIntakeScoreL1(), IS_L1.negate()));
+
+    m_operatorController
+        .leftStick()
+        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_ALGAE_ANGLE, -6))
+        .onFalse(groundIntake.setAngleAndVoltage(GroundIntakeConstants.ALGAE_STOW_ANGLE, -1));
+
+    m_operatorController
+        .rightStick()
+        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, -1))
+        .onFalse(scoreAlgae());
+
+    m_operatorController
+        .rightStick()
+        .whileTrue(
+            Commands.startEnd(
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.PROCESSOR),
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
+                .withName("Face Processor"));
+
     IS_L1
         .and(IS_REEF_MODE)
         .onTrue(
@@ -333,8 +352,6 @@ public class RobotContainer {
                 () -> {
                   driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
                 }));
-
-    m_driverController.rightTrigger().onFalse(scoreCoral());
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
@@ -497,10 +514,26 @@ public class RobotContainer {
 
   public Command groundIntakeScoreL1() {
     return Commands.sequence(
-            groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_CORAL_ANGLE, 6),
+            groundIntake
+                .setAngleAndVoltage(GroundIntakeConstants.SCORE_CORAL_ANGLE, 6)
+                .withTimeout(0.5),
             Commands.waitSeconds(0.1),
-            groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 0))
+            groundIntake
+                .setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 0)
+                .withTimeout(0.5))
         .withName("Ground Intake Score Coral L1");
+  }
+
+  public Command scoreAlgae() {
+    return Commands.sequence(
+            groundIntake
+                .setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, 5)
+                .withTimeout(0.5),
+            Commands.waitSeconds(0.1),
+            groundIntake
+                .setAngleAndVoltage(GroundIntakeConstants.ALGAE_STOW_ANGLE, 0)
+                .withTimeout(0.5))
+        .withName("Score Algae");
   }
 
   /**
