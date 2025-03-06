@@ -437,6 +437,7 @@ public class RobotContainer {
     autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
     autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
     autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
+    autoChooser.addOption("Push_One_Cycle", new PushOneCycle(this));
     autoChooser.addOption(
         "Wheel_Radius_Chracterizaton",
         WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
@@ -489,8 +490,8 @@ public class RobotContainer {
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
     return Commands.parallel(
             endEffector.holdCoral(),
-            elevator.setHeight(elevatorHeight).withTimeout(.5),
-            arm.setAngle(armAngle).withTimeout(.5))
+            elevator.setHeight(elevatorHeight).withTimeout(1.5),
+            arm.setAngle(armAngle).withTimeout(1.5))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
