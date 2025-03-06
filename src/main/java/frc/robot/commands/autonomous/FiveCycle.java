@@ -75,8 +75,8 @@ public class FiveCycle extends PathPlannerAuto {
                   robotContainer.scoreCoral(),
                   AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntake()),
                   autoHelper(CSP_D, D_CSP),
-                  autoHelper(CSP_C, C_CSP) /*,
-                  autoHelper(CSP_C, C_CSP)*/));
+                  autoHelper(CSP_C, C_CSP),
+                  autoHelper(CSP_E, E_CSP)));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
@@ -89,7 +89,7 @@ public class FiveCycle extends PathPlannerAuto {
         AutoBuilder.followPath(pathOne)
             .deadlineFor(
                 Commands.sequence(
-                    Commands.waitSeconds(1),
+                    Commands.waitSeconds(0.5),
                     robotContainer.prepScoreCoral(
                         ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION))),
         robotContainer
