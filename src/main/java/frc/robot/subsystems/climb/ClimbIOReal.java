@@ -111,6 +111,5 @@ public class ClimbIOReal implements ClimbIO {
     DogLog.log("Climb/Motor/Connected", armConnected);
 
     climbMotorConnectedAlert.set(!climbMotor.isConnected());
-
   }
 }
