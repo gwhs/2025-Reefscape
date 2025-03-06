@@ -21,7 +21,7 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   }
 
   public Command setAngleAndVoltage(double pivotAngle, double voltage) {
-    double volt = MathUtil.clamp(voltage, 0, 12);
+    double volt = MathUtil.clamp(voltage, -12, 12);
     double piv =
         MathUtil.clamp(
             pivotAngle,

@@ -517,7 +517,7 @@ public class RobotContainer {
             groundIntake
                 .setAngleAndVoltage(GroundIntakeConstants.SCORE_CORAL_ANGLE, 6)
                 .withTimeout(0.5),
-            Commands.waitSeconds(0.1),
+            Commands.waitSeconds(0.3),
             groundIntake
                 .setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 0)
                 .withTimeout(0.5))
@@ -529,7 +529,7 @@ public class RobotContainer {
             groundIntake
                 .setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, 5)
                 .withTimeout(0.5),
-            Commands.waitSeconds(0.1),
+            Commands.waitSeconds(0.3),
             groundIntake
                 .setAngleAndVoltage(GroundIntakeConstants.ALGAE_STOW_ANGLE, 0)
                 .withTimeout(0.5))
