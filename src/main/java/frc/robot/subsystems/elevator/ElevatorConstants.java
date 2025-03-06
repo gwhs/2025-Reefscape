@@ -31,5 +31,5 @@ public class ElevatorConstants {
   public static final double STOW_METER = .1752;
 
   public static final double MAX_VELOCITY = 90; // rps
-  public static final double MAX_ACCELERATION = 500; // rps
+  public static final double MAX_ACCELERATION = 1000; // rps
 }
