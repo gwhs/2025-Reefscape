@@ -307,9 +307,13 @@ public class RobotContainer {
     IS_L4.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L4));
     IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L3));
     IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L2));
-    IS_L1.and(m_driverController.rightTrigger()).whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_CORAL_ANGLE, -1));
+    IS_L1
+        .and(m_driverController.rightTrigger())
+        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_CORAL_ANGLE, -1));
 
-    m_driverController.rightTrigger().onFalse(Commands.either(scoreCoral(), groundIntakeScoreL1(), IS_L1.negate()));
+    m_driverController
+        .rightTrigger()
+        .onFalse(Commands.either(scoreCoral(), groundIntakeScoreL1(), IS_L1.negate()));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
@@ -337,7 +341,11 @@ public class RobotContainer {
 
     m_operatorController.start().onTrue(elevator.homingCommand());
 
-    m_operatorController.x().whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_CORAL_ANGLE, -12)).onFalse(groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, -1)); //TODO
+    m_operatorController
+        .x()
+        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_CORAL_ANGLE, -12))
+        .onFalse(
+            groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, -1)); // TODO
 
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
@@ -466,10 +474,10 @@ public class RobotContainer {
 
   public Command groundIntakeScoreL1() {
     return Commands.sequence(
-      groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_CORAL_ANGLE, 6),
-      Commands.waitSeconds(0.1),
-      groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 0)
-    ).withName("Ground Intake Score Coral L1");
+            groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_CORAL_ANGLE, 6),
+            Commands.waitSeconds(0.1),
+            groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 0))
+        .withName("Ground Intake Score Coral L1");
   }
 
   /**

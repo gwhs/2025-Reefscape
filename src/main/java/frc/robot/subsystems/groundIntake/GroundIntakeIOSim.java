@@ -1,7 +1,5 @@
 package frc.robot.subsystems.groundIntake;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
