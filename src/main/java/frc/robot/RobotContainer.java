@@ -40,6 +40,7 @@ import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
+import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.BiConsumer;
@@ -298,7 +299,7 @@ public class RobotContainer {
             Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
                 .withName("Back to Original State"));
 
-    IS_L2.and(m_driverController.leftTrigger()).onTrue(prepDealgaeLow());
+    IS_L2.or(IS_L1).and(m_driverController.leftTrigger()).onTrue(prepDealgaeLow());
     IS_L3.or(IS_L4).and(m_driverController.leftTrigger()).onTrue(prepDealgaeHigh());
 
     m_driverController.leftTrigger().onFalse(dealgae());
@@ -306,9 +307,9 @@ public class RobotContainer {
     IS_L4.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L4));
     IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L3));
     IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L2));
-    IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L1));
+    IS_L1.and(m_driverController.rightTrigger()).whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_CORAL_ANGLE, -1));
 
-    m_driverController.rightTrigger().onFalse(scoreCoral());
+    m_driverController.rightTrigger().onFalse(Commands.either(scoreCoral(), groundIntakeScoreL1(), IS_L1.negate()));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
@@ -335,6 +336,8 @@ public class RobotContainer {
         .whileTrue(alignToPose(() -> EagleUtil.closestReefSetPoint(drivetrain.getPose(), 1)));
 
     m_operatorController.start().onTrue(elevator.homingCommand());
+
+    m_operatorController.x().whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_CORAL_ANGLE, -12)).onFalse(groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, -1)); //TODO
 
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
@@ -459,6 +462,14 @@ public class RobotContainer {
             elevator.setHeight(ElevatorConstants.STOW_METER),
             endEffector.holdCoral())
         .withName("stop Intake");
+  }
+
+  public Command groundIntakeScoreL1() {
+    return Commands.sequence(
+      groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_CORAL_ANGLE, 6),
+      Commands.waitSeconds(0.1),
+      groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 0)
+    ).withName("Ground Intake Score Coral L1");
   }
 
   /**

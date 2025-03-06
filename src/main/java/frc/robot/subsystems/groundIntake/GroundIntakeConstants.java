@@ -20,4 +20,7 @@ public class GroundIntakeConstants {
 
   public static final double INTAKE_ALGAE_ANGLE = 45; // TODO
   public static final double ALGAE_STOW_ANGLE = 0; // TODO
+
+  public static final double SCORE_ALGAE_ANGLE = 45; // TODO
+  public static final double SCORE_CORAL_ANGLE = 5; // TODO
 }
