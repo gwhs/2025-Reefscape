@@ -49,7 +49,7 @@ public class DriveCommand extends Command {
     FRONT_REEF
   }
 
-  public ReefPositions reefMode = ReefPositions.BACK_REEF;
+  public ReefPositions reefMode = ReefPositions.FRONT_REEF;
 
   private final DoubleSupplier elevatorHeight;
 

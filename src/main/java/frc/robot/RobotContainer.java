@@ -167,9 +167,6 @@ public class RobotContainer {
         break;
     }
 
-    configureAutonomous();
-    configureBindings();
-
     driveCommand =
         new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
 
@@ -190,6 +187,9 @@ public class RobotContainer {
                 EagleUtil.getDistanceBetween(
                         drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
                     < 0.4);
+
+    configureAutonomous();
+    configureBindings();
 
     // Default Commands
     drivetrain.setDefaultCommand(driveCommand);
@@ -313,9 +313,9 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
+                  driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
                 }));
-                
+
     IS_L2
         .or(IS_L3)
         .or(IS_L4)
