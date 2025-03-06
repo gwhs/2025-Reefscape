@@ -175,9 +175,6 @@ public class RobotContainer {
         break;
     }
 
-    configureAutonomous();
-    configureBindings();
-
     driveCommand =
         new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
 
@@ -197,7 +194,8 @@ public class RobotContainer {
                         drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
                     < 0.4);
 
-    BATTERY_BROWN_OUT.onTrue(drivetrain.setDriveMotorCurrentLimit());
+    configureAutonomous();
+    configureBindings();
 
     // Default Commands
     drivetrain.setDefaultCommand(driveCommand);
@@ -229,6 +227,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    BATTERY_BROWN_OUT.onTrue(drivetrain.setDriveMotorCurrentLimit());
 
     drivetrain
         .IS_ALIGNING_TO_POSE
@@ -273,7 +272,10 @@ public class RobotContainer {
         .whileTrue(
             Commands.startEnd(
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
+                    () -> {
+                      driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
+                      driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+                    })
                 .withName("Face Coral Station"));
 
     // m_driverController
@@ -305,6 +307,24 @@ public class RobotContainer {
     IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L3));
     IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L2));
     IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L1));
+
+    IS_L1
+        .and(IS_REEF_MODE)
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+                }));
+
+    IS_L2
+        .or(IS_L3)
+        .or(IS_L4)
+        .and(IS_REEF_MODE)
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+                }));
 
     m_driverController.rightTrigger().onFalse(scoreCoral());
 
