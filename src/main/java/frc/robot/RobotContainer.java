@@ -468,8 +468,10 @@ public class RobotContainer {
   }
 
   public Command prepScoreCoral(CoralLevel level) {
-    DoubleSupplier elevatorHeightSupplier = () -> getOffsetElevatorHeight(level);
-    DoubleSupplier armAngleSupplier = () -> getOffsetArmAngle(level);
+    DoubleSupplier elevatorHeightSupplier =
+        () -> EagleUtil.getOffsetElevatorHeight(level, drivetrain.getPose());
+    DoubleSupplier armAngleSupplier =
+        () -> EagleUtil.getOffsetArmAngle(level, drivetrain.getPose());
     return prepScoreCoral(elevatorHeightSupplier, armAngleSupplier);
   }
 
@@ -477,93 +479,6 @@ public class RobotContainer {
       DoubleSupplier elevatorHeightSupplier, DoubleSupplier armAngleSupplier) {
     return prepScoreCoral(elevatorHeightSupplier.getAsDouble(), armAngleSupplier.getAsDouble())
         .repeatedly();
-  }
-
-  public double getOffsetArmAngle(CoralLevel level) {
-    double armAngle = level.armAngle;
-    int reefIndex = EagleUtil.findClosestReefIndex(drivetrain.getPose());
-    if (level != CoralLevel.L4) {
-      return armAngle;
-    }
-    double[] redReefOffsets = {
-      // in degrees
-      0, // reef G
-      0, // reef H
-      0, // reef I
-      0, // reef J
-      0, // reef K
-      0, // reef L
-      0, // reef A
-      0, // reef B
-      0, // reef C
-      0, // reef D
-      0, // reef E
-      0 // reef F
-    };
-    double[] blueReefOffsets = {
-      // in degrees
-      0, // reef A
-      0, // reef B
-      0, // reef C
-      0, // reef D
-      0, // reef E
-      0, // reef F
-      0, // reef G
-      0, // reef H
-      0, // reef I
-      0, // reef J
-      0, // reef K
-      0, // reef L
-    };
-
-    if (EagleUtil.isRedAlliance()) {
-      return armAngle + redReefOffsets[reefIndex];
-    }
-    return armAngle + blueReefOffsets[reefIndex];
-  }
-
-  public double getOffsetElevatorHeight(CoralLevel level) {
-    double elevatorHeight = level.elevatorHeight;
-    if (level != CoralLevel.L4) {
-      return elevatorHeight;
-    }
-    int reefIndex = EagleUtil.findClosestReefIndex(drivetrain.getPose());
-
-    double[] redReefOffsets = {
-      // in meters
-      0, // reef G
-      0, // reef H
-      0, // reef I
-      0, // reef J
-      0, // reef K
-      0, // reef L
-      0, // reef A
-      0, // reef B
-      0, // reef C
-      0, // reef D
-      0, // reef E
-      0 // reef F
-    };
-    double[] blueReefOffsets = {
-      // in meters
-      0, // reef A
-      0, // reef B
-      0, // reef C
-      0, // reef D
-      0, // reef E
-      0, // reef F
-      0, // reef G
-      0, // reef H
-      0, // reef I
-      0, // reef J
-      0, // reef K
-      0, // reef L
-    };
-
-    if (EagleUtil.isRedAlliance()) {
-      return elevatorHeight + redReefOffsets[reefIndex];
-    }
-    return elevatorHeight + blueReefOffsets[reefIndex];
   }
 
   /**
