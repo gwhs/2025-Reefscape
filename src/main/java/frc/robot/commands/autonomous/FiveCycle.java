@@ -82,7 +82,9 @@ public class FiveCycle extends PathPlannerAuto {
 
   public Command autoHelper(PathPlannerPath pathOne, PathPlannerPath pathTwo) {
     return Commands.sequence(
-        Commands.waitSeconds(waitTime),
+        // wait until coral is loaded
+        Commands.waitUntil(() -> robotContainer.endEffector.endEffectorIO.coralLoaded()),
+        // drive to scoring position
         AutoBuilder.followPath(pathOne)
             .deadlineFor(
                 Commands.sequence(
