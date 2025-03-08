@@ -12,5 +12,7 @@ interface EndEffectorIO {
 
   double getVoltage();
 
+  void setAmps(double current);
+
   void update();
 }
