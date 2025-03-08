@@ -496,18 +496,21 @@ public class RobotContainer {
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
 
+  public Command prepScoreCoral(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
+    return Commands.parallel(
+            endEffector.holdCoral(),
+            elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
+            arm.setAngleSupplier(armAngle).withTimeout(.5))
+        .withName(
+            "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
+  }
+
   public Command prepScoreCoral(CoralLevel level) {
     DoubleSupplier elevatorHeightSupplier =
         () -> EagleUtil.getOffsetElevatorHeight(level, drivetrain.getPose());
     DoubleSupplier armAngleSupplier =
         () -> EagleUtil.getOffsetArmAngle(level, drivetrain.getPose());
     return prepScoreCoral(elevatorHeightSupplier, armAngleSupplier);
-  }
-
-  public Command prepScoreCoral(
-      DoubleSupplier elevatorHeightSupplier, DoubleSupplier armAngleSupplier) {
-    return prepScoreCoral(elevatorHeightSupplier.getAsDouble(), armAngleSupplier.getAsDouble())
-        .repeatedly();
   }
 
   /**

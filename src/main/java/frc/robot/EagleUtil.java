@@ -45,7 +45,7 @@ public class EagleUtil {
     // in meters
     0, // reef G
     0, // reef H
-    0, // reef I
+    -50, // reef I
     0, // reef J
     0, // reef K
     0, // reef L
@@ -60,7 +60,7 @@ public class EagleUtil {
     // in meters
     0, // reef A
     0, // reef B
-    0, // reef C
+    -50, // reef C
     0, // reef D
     -50, // reef E
     0, // reef F
@@ -360,6 +360,7 @@ public class EagleUtil {
   public static double getOffsetArmAngle(CoralLevel level, Pose2d robotPose) {
     double armAngle = level.armAngle;
     int reefIndex = findClosestReefIndex(robotPose);
+
     if (level != CoralLevel.L4) {
       return armAngle;
     }
@@ -376,6 +377,7 @@ public class EagleUtil {
       return elevatorHeight;
     }
     int reefIndex = findClosestReefIndex(robotPose);
+    DogLog.log("Closest Reef Index", reefIndex);
 
     if (isRedAlliance()) {
       return elevatorHeight + redHeightReefOffsets[reefIndex];
