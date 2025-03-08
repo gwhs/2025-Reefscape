@@ -69,9 +69,6 @@ public class ElevatorIOReal implements ElevatorIO {
   private final Alert backElevatorMotorConnectedAlert =
       new Alert("Back Elevator Motor Not Connected", AlertType.kError);
 
-  private final Alert elevatorLimitSwitchConnectedAlert =
-      new Alert("elevator limit switch is not connected", AlertType.kError);
-
   public ElevatorIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
     MotorOutputConfigs motorOutput = talonFXConfigs.MotorOutput;
