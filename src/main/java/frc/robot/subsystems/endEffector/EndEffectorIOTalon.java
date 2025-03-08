@@ -19,7 +19,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
 
   // private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
 
-  public EndEffectorSensor m_endEffectorSensor = new EndEffectorSensor();
+  public TOFSensor m_endEffectorSensor = new TOFSensor();
 
   private TalonFX motor = new TalonFX(EndEffectorConstants.deviceID, "rio");
   private final StatusSignal<Voltage> volts = motor.getMotorVoltage();
