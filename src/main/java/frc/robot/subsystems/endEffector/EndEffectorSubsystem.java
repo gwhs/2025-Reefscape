@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class EndEffectorSubsystem extends SubsystemBase {
 
-  EndEffectorIO endEffectorIO;
+  public EndEffectorIO endEffectorIO;
   public final Trigger coralTriggered;
 
   /**

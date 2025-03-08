@@ -39,9 +39,7 @@ import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
-import frc.robot.subsystems.endEffector.EndEffectorConstants;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
-import frc.robot.subsystems.endEffector.TOFSensor;
 import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -82,8 +80,8 @@ public class RobotContainer {
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
   // private final ClimbSubsystem climb = new ClimbSubsystem();
-  private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
-  private final TOFSensor endEffectorSensor = new TOFSensor(EndEffectorConstants.CORAL_DETECTOR_ID);
+  public final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
+
   private final LedSubsystem led = new LedSubsystem();
 
   private final DriveCommand driveCommand;
@@ -422,7 +420,6 @@ public class RobotContainer {
     DogLog.log("Current Robot", getRobot().toString());
     DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
 
-    endEffectorSensor.robotPeriodic();
     DogLog.log("Match Timer", DriverStation.getMatchTime());
   }
 
