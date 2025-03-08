@@ -41,6 +41,67 @@ public class EagleUtil {
 
   private static Pose2d cachedPose = null;
   private static Alliance red = DriverStation.Alliance.Red;
+  static double[] redHeightReefOffsets = {
+    // in meters
+    0, // reef G
+    0, // reef H
+    0, // reef I
+    0, // reef J
+    0, // reef K
+    0, // reef L
+    0, // reef A
+    0, // reef B
+    0, // reef C
+    0, // reef D
+    -50, // reef E
+    0 // reef F
+  };
+  static double[] blueHeightReefOffsets = {
+    // in meters
+    0, // reef A
+    0, // reef B
+    0, // reef C
+    0, // reef D
+    -50, // reef E
+    0, // reef F
+    0, // reef G
+    0, // reef H
+    0, // reef I
+    0, // reef J
+    0, // reef K
+    0, // reef L
+  };
+
+  static double[] redAngleReefOffsets = {
+    // in meters
+    0, // reef G
+    0, // reef H
+    0, // reef I
+    0, // reef J
+    0, // reef K
+    0, // reef L
+    0, // reef A
+    0, // reef B
+    0, // reef C
+    0, // reef D
+    0, // reef E
+    0 // reef F
+  };
+  static double[] blueAngleReefOffsets = {
+    // in meters
+    0, // reef A
+    0, // reef B
+    0, // reef C
+    0, // reef D
+    0, // reef E
+    0, // reef F
+    0, // reef G
+    0, // reef H
+    0, // reef I
+    0, // reef J
+    0, // reef K
+    0, // reef L
+  };
 
   /**
    * @return returns the calculated set points
@@ -298,45 +359,15 @@ public class EagleUtil {
 
   public static double getOffsetArmAngle(CoralLevel level, Pose2d robotPose) {
     double armAngle = level.armAngle;
-    int reefIndex = EagleUtil.findClosestReefIndex(robotPose);
+    int reefIndex = findClosestReefIndex(robotPose);
     if (level != CoralLevel.L4) {
       return armAngle;
     }
-    double[] redReefOffsets = {
-      // in degrees
-      0, // reef G
-      0, // reef H
-      0, // reef I
-      0, // reef J
-      0, // reef K
-      0, // reef L
-      0, // reef A
-      0, // reef B
-      0, // reef C
-      0, // reef D
-      0, // reef E
-      0 // reef F
-    };
-    double[] blueReefOffsets = {
-      // in degrees
-      0, // reef A
-      0, // reef B
-      0, // reef C
-      0, // reef D
-      0, // reef E
-      0, // reef F
-      0, // reef G
-      0, // reef H
-      0, // reef I
-      0, // reef J
-      0, // reef K
-      0, // reef L
-    };
 
-    if (EagleUtil.isRedAlliance()) {
-      return armAngle + redReefOffsets[reefIndex];
+    if (isRedAlliance()) {
+      return armAngle + redAngleReefOffsets[reefIndex];
     }
-    return armAngle + blueReefOffsets[reefIndex];
+    return armAngle + blueAngleReefOffsets[reefIndex];
   }
 
   public static double getOffsetElevatorHeight(CoralLevel level, Pose2d robotPose) {
@@ -344,42 +375,11 @@ public class EagleUtil {
     if (level != CoralLevel.L4) {
       return elevatorHeight;
     }
-    int reefIndex = EagleUtil.findClosestReefIndex(robotPose);
+    int reefIndex = findClosestReefIndex(robotPose);
 
-    double[] redReefOffsets = {
-      // in meters
-      0, // reef G
-      0, // reef H
-      0, // reef I
-      0, // reef J
-      0, // reef K
-      0, // reef L
-      0, // reef A
-      0, // reef B
-      0, // reef C
-      0, // reef D
-      0, // reef E
-      0 // reef F
-    };
-    double[] blueReefOffsets = {
-      // in meters
-      0, // reef A
-      0, // reef B
-      0, // reef C
-      0, // reef D
-      0, // reef E
-      0, // reef F
-      0, // reef G
-      0, // reef H
-      0, // reef I
-      0, // reef J
-      0, // reef K
-      0, // reef L
-    };
-
-    if (EagleUtil.isRedAlliance()) {
-      return elevatorHeight + redReefOffsets[reefIndex];
+    if (isRedAlliance()) {
+      return elevatorHeight + redHeightReefOffsets[reefIndex];
     }
-    return elevatorHeight + blueReefOffsets[reefIndex];
+    return elevatorHeight + blueHeightReefOffsets[reefIndex];
   }
 }
