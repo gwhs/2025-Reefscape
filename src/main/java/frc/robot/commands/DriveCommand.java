@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.EagleUtil;
-import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.DoubleSupplier;
 
@@ -31,7 +30,7 @@ public class DriveCommand extends Command {
   private final double DEAD_BAND = 0.1;
   private boolean resetLimiter = true;
 
-  private double maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  private double maxSpeed = CommandSwerveDrivetrain.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 3.5 * Math.PI;
 
   private final double RED_LEFT_STATION_ANGLE = 126;
@@ -42,7 +41,15 @@ public class DriveCommand extends Command {
   private final double BLUE_CAGE_ANGLE = 90;
   private final double RED_CAGE_ANGLE = -90;
 
-  private final double ELEVATOR_UP_SLEW_RATE = 0.5;
+  private final double ELEVATOR_UP_SLEW_RATE = 1;
+
+  public enum ReefPositions {
+    RIGHT_SIDE_REEF,
+    BACK_REEF,
+    FRONT_REEF
+  }
+
+  private ReefPositions reefMode = ReefPositions.FRONT_REEF;
 
   private final DoubleSupplier elevatorHeight;
 
@@ -60,7 +67,8 @@ public class DriveCommand extends Command {
     NORMAL,
     CORAL_STATION,
     REEF,
-    CAGE
+    CAGE,
+    PROCESSOR
   }
 
   private TargetMode mode = TargetMode.NORMAL;
@@ -96,6 +104,10 @@ public class DriveCommand extends Command {
     addRequirements(drivetrain);
   }
 
+  /**
+   * @param currentRobotPose the current pose of the robot via drivetrain.getpose();
+   * @return returns the angle?
+   */
   public double calculateSetpoint(Pose2d currentRobotPose) {
     if (mode == TargetMode.CORAL_STATION) {
       if (DriverStation.getAlliance().isPresent()
@@ -118,8 +130,18 @@ public class DriveCommand extends Command {
       }
 
     } else if (mode == TargetMode.REEF) {
-      Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
-      return nearest.getRotation().getDegrees();
+      if (reefMode == ReefPositions.FRONT_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees();
+      } else if (reefMode == ReefPositions.RIGHT_SIDE_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees() + 90;
+      } else if (reefMode == ReefPositions.BACK_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees() + 180;
+      } else {
+        return 0;
+      }
     } else if (mode == TargetMode.CAGE) {
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
@@ -127,25 +149,50 @@ public class DriveCommand extends Command {
       } else {
         return RED_CAGE_ANGLE;
       }
+    } else if (mode == TargetMode.PROCESSOR) {
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        return -90;
+      } else {
+        return 90;
+      }
     } else {
       return 0;
     }
   }
 
+  /**
+   * @param mode what mode should it set to?
+   */
   public void setTargetMode(TargetMode mode) {
     this.mode = mode;
   }
 
+  public void setReefMode(ReefPositions mode) {
+    reefMode = mode;
+  }
+
+  /**
+   * @param isSlow is it slow?
+   * @param factor how slow?
+   *     <p>NOTE: the value is clamped between 0 and 1
+   */
   public void setSlowMode(boolean isSlow, double factor) {
     this.isSlow = isSlow;
     factor = MathUtil.clamp(factor, 0, 1);
     slowFactor = factor;
   }
 
+  /**
+   * @param driveMode what mode should the drive be in?
+   */
   public void setDriveMode(DriveMode driveMode) {
     this.driveMode = driveMode;
   }
 
+  /**
+   * @return the target mode we have
+   */
   public TargetMode getTargetMode() {
     return this.mode;
   }
@@ -180,9 +227,9 @@ public class DriveCommand extends Command {
         yVelocityLimiter.reset(yVelocity);
         angularVelocityLimiter.reset(angularVelocity);
       }
-      xVelocity = MathUtil.clamp(xVelocity, -0.1, 0.1);
-      yVelocity = MathUtil.clamp(yVelocity, -0.1, 0.1);
-      angularVelocity = MathUtil.clamp(angularVelocity, -0.1, 0.1);
+      xVelocity = MathUtil.clamp(xVelocity, -0.2, 0.2);
+      yVelocity = MathUtil.clamp(yVelocity, -0.2, 0.2);
+      angularVelocity = MathUtil.clamp(angularVelocity, -0.2, 0.2);
 
       xVelocity = xVelocityLimiter.calculate(xVelocity);
       yVelocity = yVelocityLimiter.calculate(yVelocity);
@@ -218,34 +265,12 @@ public class DriveCommand extends Command {
     }
   }
 
-  public boolean isAtSetPoint() {
-    if (this.mode == TargetMode.CORAL_STATION || this.mode == TargetMode.REEF) {
-      return PID.atSetpoint();
-    }
-    return false;
-  }
-
   @Override
   public void end(boolean interrupted) {}
 
   @Override
   public boolean isFinished() {
     return false;
-  }
-
-  public Command driveBackward(double velocity) {
-    return drivetrain
-        .run(
-            () ->
-                drivetrain.setControl(
-                    robotCentricDrive
-                        .withVelocityX(-velocity)
-                        .withVelocityY(0)
-                        .withRotationalRate(0)))
-        .finallyDo(
-            () ->
-                drivetrain.setControl(
-                    robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
   }
 
   public void stopDrivetrain() {

@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 
-/** Add your docs here. */
 public class RobotVisualizer {
   private final ElevatorSubsystem elevator;
   private final ArmSubsystem arm;
