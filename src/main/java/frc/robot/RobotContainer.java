@@ -83,9 +83,8 @@ public class RobotContainer {
   private final ArmSubsystem arm = new ArmSubsystem();
   // private final ClimbSubsystem climb = new ClimbSubsystem();
   public final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
-
+  private final TOFSensor endEffectorSensor = new TOFSensor(EndEffectorConstants.CORAL_DETECTOR_ID);
   private final LedSubsystem led = new LedSubsystem();
-
 
   private final DriveCommand driveCommand;
 
