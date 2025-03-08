@@ -78,13 +78,14 @@ public class ObjectDetectionCam {
         Transform3d targetLocationToCamera = bestTarget.getBestCameraToTarget();
         Pose3d targetLocationToField = this.getTargetLocInFieldSpace(targetLocationToCamera);
         if (!filterResults(targetLocationToField)) {
-          DogLog.log(ntKey + "Rejected Target Pose/", targetLocationToField);
           break;
         }
         DogLog.log(ntKey + "Accepted Target Pose/", targetLocationToField);
       }
     }
   }
+
+  
 
   // Transform (target location in camera space) by (camera location in field space) to get (target
   // location in field space)
@@ -100,38 +101,38 @@ public class ObjectDetectionCam {
     return targetToField;
   }
 
-  public boolean filterResults(Pose3d estimTargetPosePose3d) {
+  public boolean filterResults(Pose3d detectedTargetPose) {
 
-    // If vision’s pose estimation is above/below the ground
-    double upperZBound = ObjectDetectionConstants.Z_TOLERANCE;
-    double lowerZBound = -(ObjectDetectionConstants.Z_TOLERANCE);
-    if (estimTargetPosePose3d.getZ() > upperZBound
-        || estimTargetPosePose3d.getZ()
+    // If vision’s detected target is below the ground/above tolerable height
+    double upperZBound = ObjectDetectionConstants.UPPER_Z_TOLERANCE;
+    double lowerZBound = ObjectDetectionConstants.LOWER_Z_TOLERANCE;
+    if (detectedTargetPose.getZ() > upperZBound
+        || detectedTargetPose.getZ()
             < lowerZBound) { // change if we find out that z starts from camera height
-      DogLog.log(ntKey + "Rejected Pose", estimTargetPosePose3d);
+      DogLog.log(ntKey + "Rejected Target Pose", detectedTargetPose);
       DogLog.log(
-          ntKey + "Rejected Reason", "out of Z bounds", "Z: " + estimTargetPosePose3d.getZ());
+          ntKey + "Rejected Reason", "out of Z bounds", "Z: " + detectedTargetPose.getZ());
       return false;
     }
 
-    // If vision's pose estimation is outside the field
+    // If vision's detected target pose is outside the field
     double upperXBound =
         ObjectDetectionConstants.MAX_X_VALUE + ObjectDetectionConstants.XY_TOLERANCE;
     double upperYBound =
         ObjectDetectionConstants.MAX_Y_VALUE + ObjectDetectionConstants.XY_TOLERANCE;
     double lowerXYBound = -(ObjectDetectionConstants.XY_TOLERANCE);
-    if (estimTargetPosePose3d.getX() < lowerXYBound
-        || estimTargetPosePose3d.getY() < lowerXYBound) {
-      DogLog.log(ntKey + "Rejected Pose", estimTargetPosePose3d);
+    if (detectedTargetPose.getX() < lowerXYBound
+        || detectedTargetPose.getY() < lowerXYBound) {
+      DogLog.log(ntKey + "Rejected Target Pose", detectedTargetPose);
       DogLog.log(ntKey + "Rejected Reason", "Y or X is less than 0");
       return false;
     }
-    if (estimTargetPosePose3d.getX() > upperXBound || estimTargetPosePose3d.getY() > upperYBound) {
-      DogLog.log(ntKey + "Rejected Pose", estimTargetPosePose3d);
+    if (detectedTargetPose.getX() > upperXBound || detectedTargetPose.getY() > upperYBound) {
+      DogLog.log(ntKey + "Rejected Target Pose", detectedTargetPose);
       DogLog.log(
           ntKey + "Rejected Reason",
           "Y or X is out of bounds",
-          "X: " + estimTargetPosePose3d.getX() + "," + "Y: " + estimTargetPosePose3d.getX());
+          "X: " + detectedTargetPose.getX() + "," + "Y: " + detectedTargetPose.getX());
 
       return false;
     }
