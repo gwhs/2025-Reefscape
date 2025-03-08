@@ -6,7 +6,7 @@ interface EndEffectorIO {
 
   void stopMotor();
 
-  public boolean isSensorTriggered();
+  public boolean coralLoaded();
 
   double getVelocity();
 

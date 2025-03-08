@@ -27,7 +27,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
       endEffectorIO = new EndEffectorIOTalon();
     }
 
-    coralTriggered = new Trigger(() -> endEffectorIO.isSensorTriggered());
+    coralTriggered = new Trigger(() -> endEffectorIO.coralLoaded());
 
     SmartDashboard.putData("End Effector Command/End Effector Shoot", shoot());
     SmartDashboard.putData("End Effector Command/End Effector Intake", intake());
