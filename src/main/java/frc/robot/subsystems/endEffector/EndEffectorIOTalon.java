@@ -29,7 +29,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
 
   // private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
 
-  public TOFSensor m_endEffectorSensor = new TOFSensor();
+  public TOFSensor m_coral_detector = new TOFSensor(EndEffectorConstants.CORAL_DETECTOR_ID);
 
   private TalonFX motor = new TalonFX(EndEffectorConstants.deviceID, "rio");
   private final StatusSignal<Voltage> volts = motor.getMotorVoltage();
@@ -88,10 +88,10 @@ class EndEffectorIOTalon implements EndEffectorIO {
     motor.setControl(currentControl.withOutput(current).withMaxAbsDutyCycle(.2));
   }
 
-  public boolean isSensorTriggered() {
+  public boolean coralLoaded() {
     // double distance = m_colorSensor.getProximity();
-    double distance = m_endEffectorSensor.getRange();
-    if (distance > 1500) {
+    double distance = m_coral_detector.getRange();
+    if (distance < 30) {
       return true;
     } else {
       return false;
