@@ -275,6 +275,7 @@ public class EagleUtil {
       ArrayList<Pose2d> red = calculateRedReefSetPoints();
       double minimumDistance = Double.MAX_VALUE;
       int minIndex = 0;
+
       for (int i = 0; i < red.size(); i++) {
         double distance = getDistanceBetween(pose, red.get(i));
         if (distance < minimumDistance) {
@@ -282,6 +283,7 @@ public class EagleUtil {
           minIndex = i;
         }
       }
+      DogLog.log("Min Index", minIndex);
       return minIndex;
     }
     ArrayList<Pose2d> blue = calculateBlueReefSetPoints();
@@ -360,6 +362,7 @@ public class EagleUtil {
   public static double getOffsetArmAngle(CoralLevel level, Pose2d robotPose) {
     double armAngle = level.armAngle;
     int reefIndex = findClosestReefIndex(robotPose);
+    DogLog.log("Arm Angle (Offset)", armAngle);
 
     if (level != CoralLevel.L4) {
       return armAngle;
