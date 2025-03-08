@@ -34,6 +34,8 @@ public class RobotVisualizer {
           new MechanismLigament2d(
               "arm", Units.inchesToMeters(20), 90, 10, new Color8Bit(Color.kWhite)));
 
+  // ground intake
+
   public RobotVisualizer(ElevatorSubsystem elevator, ArmSubsystem arm) {
     this.elevator = elevator;
     this.arm = arm;
