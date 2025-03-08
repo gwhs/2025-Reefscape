@@ -135,7 +135,7 @@ public class RobotContainer {
         drivetrain = TunerConstants_Comp.createDrivetrain();
         leftCam =
             new AprilTagCam(
-                AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_COMP_NAME,
                 AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
                 drivetrain::addVisionMeasurent,
                 () -> drivetrain.getState().Pose,
@@ -143,7 +143,7 @@ public class RobotContainer {
 
         rightCam =
             new AprilTagCam(
-                AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_COMP_NAME,
                 AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
                 drivetrain::addVisionMeasurent,
                 () -> drivetrain.getState().Pose,
