@@ -35,8 +35,8 @@ public class EagleUtil {
   private static double Y = REEF_TO_REEF_DISTANCE / 2;
   private static double Y_OFFSET = Units.inchesToMeters(0.5);
 
-  private static Pose2d[] bluePoses = new Pose2d[12];
-  private static Pose2d[] redPoses = new Pose2d[12];
+  static Pose2d[] bluePoses = new Pose2d[12];
+  static Pose2d[] redPoses = new Pose2d[12];
 
   private static Pose2d cachedPose = null;
   private static Alliance red = DriverStation.Alliance.Red;
