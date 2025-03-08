@@ -45,6 +45,9 @@ public class ArmIOReal implements ArmIO {
   private final Alert armMotorConnectedAlert =
       new Alert("Arm motor not connected", AlertType.kError);
 
+  private final Alert armEncoderConnectedAlert =
+      new Alert("Arm CANcoder not connected", AlertType.kError);
+
   public ArmIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
     MotorOutputConfigs motorOutput = talonFXConfigs.MotorOutput;
@@ -148,5 +151,6 @@ public class ArmIOReal implements ArmIO {
     DogLog.log("Arm/Motor/Connected", armConnected);
 
     armMotorConnectedAlert.set(!armConnected);
+    armEncoderConnectedAlert.set(!armEncoder.isConnected());
   }
 }
