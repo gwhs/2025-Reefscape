@@ -12,8 +12,8 @@ public class AprilTagCamConstants {
   public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1, 1, 8);
   public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
-  public static final String FRONT_LEFT_CAMERA_COMP_NAME = "cam1";
-  public static final String FRONT_RIGHT_CAMERA_COMP_NAME = "cam2";
+  public static final String FRONT_LEFT_CAMERA_COMP_NAME = "leftcam";
+  public static final String FRONT_RIGHT_CAMERA_COMP_NAME = "rightcam";
   public static final String FRONT_LEFT_CAMERA_DEV_NAME = "cam3";
   public static final String FRONT_RIGHT_CAMERA_DEV_NAME = "cam4";
 
