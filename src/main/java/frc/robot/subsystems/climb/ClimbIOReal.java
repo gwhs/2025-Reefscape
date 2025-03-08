@@ -21,6 +21,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.arm.ArmConstants;
@@ -32,6 +34,8 @@ public class ClimbIOReal implements ClimbIO {
   private final StatusSignal<Voltage> climbMotorVoltage = climbMotor.getMotorVoltage();
   private final StatusSignal<Current> climbStatorCurrent = climbMotor.getStatorCurrent();
   private final StatusSignal<Angle> climbPosition = climbMotor.getPosition();
+  private final Alert climbMotorconnectedAlert =
+      new Alert("climb motor is not connected", AlertType.kError);
 
   public ClimbIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
@@ -111,5 +115,7 @@ public class ClimbIOReal implements ClimbIO {
     DogLog.log("Climb/Motor/motor voltage", climbMotorVoltage.getValueAsDouble());
     DogLog.log("Climb/Motor/stator current", climbStatorCurrent.getValueAsDouble());
     DogLog.log("Climb/Motor/Connected", armConnected);
+
+    climbMotorconnectedAlert.set(!armConnected);
   }
 }
