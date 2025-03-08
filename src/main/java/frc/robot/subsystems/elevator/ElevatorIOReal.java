@@ -29,12 +29,14 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class ElevatorIOReal implements ElevatorIO {
 
   private TalonFX m_frontElevatorMotor =
       new TalonFX(ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, "rio");
   public TalonFX m_backElevatorMotor = new TalonFX(ElevatorConstants.BACK_ELEVATOR_MOTOR_ID, "rio");
+  public DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.LIMIT_SWITCH_CHANNEL);
 
   private final DifferentialMotionMagicVoltage m_request =
       new DifferentialMotionMagicVoltage(0, 0).withEnableFOC(true);
