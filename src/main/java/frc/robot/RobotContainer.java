@@ -39,6 +39,7 @@ import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.endEffector.EndEffectorConstants;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.endEffector.TOFSensor;
 import frc.robot.subsystems.led.LedSubsystem;
@@ -83,7 +84,6 @@ public class RobotContainer {
   // private final ClimbSubsystem climb = new ClimbSubsystem();
   public final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
   private final LedSubsystem led = new LedSubsystem();
-  private final TOFSensor endEffectorSensor = new TOFSensor();
 
   private final DriveCommand driveCommand;
 
