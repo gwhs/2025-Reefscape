@@ -22,7 +22,4 @@ public class ObjectDetectionConstants {
   public static final double APRILTAG_MAX_DISTANCE = 2.4;
   public static final double MAX_VELOCITY = 4;
   public static final double MAX_ROTATION = Math.PI;
-            
 }
-
-
