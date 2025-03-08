@@ -7,11 +7,16 @@ import org.junit.jupiter.api.Test;
 public class EagleUtilTest {
 
   @Test
-  public void testClosestTo0_0() {
+  public void testClosestTo0() {
     EagleUtil.calculateRedReefSetPoints();
     EagleUtil.calculateBlueReefSetPoints();
+    EagleUtil.setAllianceOverride(false);
 
-    Pose2d closest = EagleUtil.closestReefSetPoint(EagleUtil.bluePoses[0], 0);
-    Assertions.assertEquals(EagleUtil.bluePoses[0], closest);
+    Pose2d closest = EagleUtil.closestReefSetPoint(EagleUtil.m_bluePoses.get(0), 0);
+    Assertions.assertEquals(EagleUtil.m_bluePoses.get(0), closest);
+
+    EagleUtil.setAllianceOverride(true);
+    closest = EagleUtil.closestReefSetPoint(EagleUtil.m_redPoses.get(0), 0);
+    Assertions.assertEquals(EagleUtil.m_redPoses.get(0), closest);
   }
 }

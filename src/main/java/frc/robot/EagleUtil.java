@@ -35,8 +35,8 @@ public class EagleUtil {
   private static double Y = REEF_TO_REEF_DISTANCE / 2;
   private static double Y_OFFSET = Units.inchesToMeters(0.5);
 
-  static Pose2d[] bluePoses = new Pose2d[12];
-  static Pose2d[] redPoses = new Pose2d[12];
+  private static Pose2d[] bluePoses = new Pose2d[12];
+  private static Pose2d[] redPoses = new Pose2d[12];
 
   private static Pose2d cachedPose = null;
   private static Alliance red = DriverStation.Alliance.Red;
@@ -208,11 +208,21 @@ public class EagleUtil {
     return blue.get(n);
   }
 
+  private static Boolean redAlliance = null;
+
+  public static void setAllianceOverride(Boolean isRed) {
+    redAlliance = isRed;
+  }
+
   /**
    * @return if your on red alliance
    */
   public static boolean isRedAlliance() {
-    return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == red;
+    if (redAlliance == null) {
+      redAlliance =
+          DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == red;
+    }
+    return redAlliance;
   }
 
   /**
