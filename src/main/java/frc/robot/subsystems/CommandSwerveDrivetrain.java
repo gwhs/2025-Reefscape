@@ -283,6 +283,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                         : kBlueAlliancePerspectiveRotation);
                 m_hasAppliedOperatorPerspective = true;
               });
+
+      DogLog.log("Command Swerve DriveTrain/is Aligning to pose", IS_ALIGNING_TO_POSE.getAsBoolean());
+      DogLog.log("Command Swerve DriveTrain/is at target pose", IS_AT_TARGET_POSE.getAsBoolean());
+
     }
 
     DogLog.log("Swerve/current X setpoint", PID_X.getSetpoint().position);
