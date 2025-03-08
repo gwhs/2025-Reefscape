@@ -36,6 +36,10 @@ public class GroundIntakeSubsystem extends SubsystemBase {
         .withName("Ground Intake: pivot angle: " + pivotAngle + " Intake Voltage: " + voltage);
   }
 
+  public double getAngle() {
+    return groundintakeIO.getPivotAngle();
+  }
+
   @Override
   public void periodic() {
     groundintakeIO.update();

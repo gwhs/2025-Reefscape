@@ -125,7 +125,7 @@ public class RobotContainer {
 
   private AprilTagCam rightCam;
 
-  private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
+  private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm, groundIntake);
 
   private final BiConsumer<Runnable, Double> addPeriodic;
 
