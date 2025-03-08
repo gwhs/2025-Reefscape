@@ -25,10 +25,6 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 
 class EndEffectorIOTalon implements EndEffectorIO {
 
-  // private final I2C.Port i2cPort = I2C.Port.kOnboard;
-
-  // private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
-
   public TOFSensor m_coral_detector = new TOFSensor(EndEffectorConstants.CORAL_DETECTOR_ID);
 
   private TalonFX motor = new TalonFX(EndEffectorConstants.deviceID, "rio");
@@ -106,5 +102,6 @@ class EndEffectorIOTalon implements EndEffectorIO {
     DogLog.log("EndEffector/Connected", endEffectorConnected);
     DogLog.log("EndEffector/StatorCurrent", statorCurrent.getValueAsDouble());
     endEffectorMotorConnectedAlert.set(!endEffectorConnected);
+    m_coral_detector.robotPeriodic();
   }
 }
