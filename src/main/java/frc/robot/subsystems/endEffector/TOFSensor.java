@@ -9,21 +9,31 @@ public class TOFSensor {
   public double m_dist_SDEV;
   public String mode = "Short";
 
+  int m_rangeX0;
+  int m_rangeY0;
+  int m_rangeX1;
+  int m_rangeY1;
+
   public void RoI(int rangeX0, int rangeY0, int rangeX1, int rangeY1) {
     m_rangeX0 = rangeX0;
     m_rangeY0 = rangeY0;
     m_rangeX1 = rangeX1;
     m_rangeY1 = rangeY1;
+
+    sensor.setRangeOfInterest(m_rangeX0, m_rangeY0, m_rangeX1, m_rangeY1);
+    SmartDashboard.putNumber("rangeX0", m_rangeX0);
+    SmartDashboard.putNumber("rangeY0", m_rangeY0);
+    SmartDashboard.putNumber("rangeX1", m_rangeX1);
+    SmartDashboard.putNumber("rangeY1", m_rangeY1);
   }
 
   private TimeOfFlight sensor = new TimeOfFlight(EndEffectorConstants.TOF_DEVICE_ID);
 
   public TOFSensor() {
+    RoI(0,0,15,15); 
     sensor.setRangingMode(RangingMode.Short, 0.24); // Will need to test. must be between 24-1000ms
     m_distance_EMA = sensor.getRange();
     m_dist_SDEV = 0;
-
-    sensor.setRangeOfInterest(rangeX0, rangeY0, rangeX1, rangeY1);
   }
 
   public double getRange() {
@@ -61,9 +71,5 @@ public class TOFSensor {
 
     SmartDashboard.putNumber("dist_EMA", m_distance_EMA);
     SmartDashboard.putNumber("dist_EDEV", m_dist_SDEV);
-    SmartDashboard.putNumber("rangeX0", rangeX0);
-    SmartDashboard.putNumber("rangeY0", rangeY0);
-    SmartDashboard.putNumber("rangeX1", rangeX1);
-    SmartDashboard.putNumber("rangeY1", rangeY1);
   }
 }
