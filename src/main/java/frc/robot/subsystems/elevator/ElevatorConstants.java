@@ -23,7 +23,7 @@ public class ElevatorConstants {
   public static final double L3_PREP_POSITION = .1986;
   public static final double L4_PREP_POSITION = .7593;
 
-  public static final double INTAKE_METER = 0.26;
+  public static final double INTAKE_METER = Units.inchesToMeters(11.5);
   public static final double DEALGAE_LOW_POSITION = 0;
   public static final double DEALGAE_HIGH_POSITION = .4424;
   public static final double DEALGAE_STOW_POSITION = 0;
