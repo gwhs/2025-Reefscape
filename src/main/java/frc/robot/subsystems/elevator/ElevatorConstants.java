@@ -23,13 +23,13 @@ public class ElevatorConstants {
   public static final double L3_PREP_POSITION = .1986;
   public static final double L4_PREP_POSITION = .7593;
 
-  public static final double INTAKE_METER = 0.22;
+  public static final double INTAKE_METER = Units.inchesToMeters(10.5);
   public static final double DEALGAE_LOW_POSITION = 0;
-  public static final double DEALGAE_HIGH_POSITION = .4724;
+  public static final double DEALGAE_HIGH_POSITION = .4424;
   public static final double DEALGAE_STOW_POSITION = 0;
 
   public static final double STOW_METER = .1752;
 
-  public static final double MAX_VELOCITY = 90; // rps
-  public static final double MAX_ACCELERATION = 1000; // rps
+  public static final double MAX_VELOCITY = 80; // rps
+  public static final double MAX_ACCELERATION = 800; // rps
 }
