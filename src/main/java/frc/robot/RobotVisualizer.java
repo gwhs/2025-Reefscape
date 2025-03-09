@@ -63,7 +63,7 @@ public class RobotVisualizer {
 
     m_arm.setAngle(-armAngle - 90);
 
-    m_ground_intake.setAngle(-groundIntakeAngle+90);
+    m_ground_intake.setAngle(-groundIntakeAngle + 90);
 
     m_elevator.setLength(elevatorHeight + Units.inchesToMeters(37.2));
   }
