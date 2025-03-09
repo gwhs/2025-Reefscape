@@ -36,6 +36,7 @@ public class ElevatorIOReal implements ElevatorIO {
   private TalonFX m_frontElevatorMotor =
       new TalonFX(ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, "rio");
   public TalonFX m_backElevatorMotor = new TalonFX(ElevatorConstants.BACK_ELEVATOR_MOTOR_ID, "rio");
+  public DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.LIMIT_SWITCH_CHANNEL);
 
   private final DifferentialMotionMagicVoltage m_request =
       new DifferentialMotionMagicVoltage(0, 0).withEnableFOC(true);
@@ -69,8 +70,6 @@ public class ElevatorIOReal implements ElevatorIO {
       new Alert("Front Elevator Motor Not Connected", AlertType.kError);
   private final Alert backElevatorMotorConnectedAlert =
       new Alert("Back Elevator Motor Not Connected", AlertType.kError);
-
-  private DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.LIMIT_SWITCH_CHANNEL);
 
   public ElevatorIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
