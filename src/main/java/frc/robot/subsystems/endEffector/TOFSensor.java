@@ -63,8 +63,6 @@ public class TOFSensor {
     double distance = sensor.getRange();
     SmartDashboard.putNumber("Distance", distance);
 
-
-
     m_dist_SDEV_sq =
         (EndEffectorConstants.SDEV_Decay * Math.pow((m_distance_EMA - sensor.getRange()), 2))
             + ((1 - EndEffectorConstants.SDEV_Decay) * m_dist_SDEV_sq);
