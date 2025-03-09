@@ -511,7 +511,6 @@ public class RobotContainer {
         () -> EagleUtil.getOffsetElevatorHeight(level, drivetrain.getPose());
     DoubleSupplier armAngleSupplier =
         () -> EagleUtil.getOffsetArmAngle(level, drivetrain.getPose());
-    DogLog.log("adada", elevatorHeightSupplier.getAsDouble());
     return prepScoreCoral(elevatorHeightSupplier, armAngleSupplier);
   }
 

@@ -16,8 +16,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class EagleUtil {
-  public static ArrayList<Pose2d> m_redPoses;
-  public static ArrayList<Pose2d> m_bluePoses;
+  protected static ArrayList<Pose2d> m_redPoses;
+  protected static ArrayList<Pose2d> m_bluePoses;
 
   private static double BLUE_REEF_X = Units.inchesToMeters(144 + (93.5 - 14 * 2) / 2);
   private static double BLUE_REEF_Y = Units.inchesToMeters(158.50);
@@ -45,7 +45,7 @@ public class EagleUtil {
     // in meters
     0, // reef G
     0, // reef H
-    -50, // reef I
+    0, // reef I
     0, // reef J
     0, // reef K
     0, // reef L
@@ -53,16 +53,16 @@ public class EagleUtil {
     0, // reef B
     0, // reef C
     0, // reef D
-    -50, // reef E
+    0, // reef E
     0 // reef F
   };
   static double[] blueHeightReefOffsets = {
     // in meters
     0, // reef A
     0, // reef B
-    -50, // reef C
+    0, // reef C
     0, // reef D
-    -50, // reef E
+    0, // reef E
     0, // reef F
     0, // reef G
     0, // reef H
@@ -108,7 +108,7 @@ public class EagleUtil {
    */
   public static ArrayList<Pose2d> calculateBlueReefSetPoints() {
     if (m_bluePoses != null) {
-      return m_bluePoses;
+      return new ArrayList<Pose2d>(m_bluePoses);
     }
 
     double[][] blueReefOffsets = {
@@ -156,7 +156,7 @@ public class EagleUtil {
    */
   public static ArrayList<Pose2d> calculateRedReefSetPoints() {
     if (m_redPoses != null) {
-      return m_redPoses;
+      return new ArrayList<Pose2d>(m_redPoses);
     }
 
     redPoses[0] = new Pose2d(X, Y + Y_OFFSET, Rotation2d.kZero);
@@ -276,26 +276,17 @@ public class EagleUtil {
   }
 
   public static int findClosestReefIndex(Pose2d pose) {
+    ArrayList<Pose2d> reefSetPoints = null;
     if (isRedAlliance()) {
-      ArrayList<Pose2d> red = calculateRedReefSetPoints();
-      double minimumDistance = Double.MAX_VALUE;
-      int minIndex = 0;
-
-      for (int i = 0; i < red.size(); i++) {
-        double distance = getDistanceBetween(pose, red.get(i));
-        if (distance < minimumDistance) {
-          minimumDistance = distance;
-          minIndex = i;
-        }
-      }
-      DogLog.log("Min Index", minIndex);
-      return minIndex;
+      reefSetPoints = calculateRedReefSetPoints();
+    } else {
+      reefSetPoints = calculateBlueReefSetPoints();
     }
-    ArrayList<Pose2d> blue = calculateBlueReefSetPoints();
+
     double minimumDistance = Double.MAX_VALUE;
     int minIndex = 0;
-    for (int i = 0; i < blue.size(); i++) {
-      double distance = getDistanceBetween(pose, blue.get(i));
+    for (int i = 0; i < reefSetPoints.size(); i++) {
+      double distance = getDistanceBetween(pose, reefSetPoints.get(i));
       if (distance < minimumDistance) {
         minimumDistance = distance;
         minIndex = i;
@@ -370,7 +361,8 @@ public class EagleUtil {
   public static double getOffsetArmAngle(CoralLevel level, Pose2d robotPose) {
     double armAngle = level.armAngle;
     int reefIndex = findClosestReefIndex(robotPose);
-    DogLog.log("Arm Angle (Offset)", armAngle);
+
+    DogLog.log("Closest Reef Index Arm", reefIndex);
 
     if (level != CoralLevel.L4) {
       return armAngle;
@@ -388,7 +380,7 @@ public class EagleUtil {
       return elevatorHeight;
     }
     int reefIndex = findClosestReefIndex(robotPose);
-    DogLog.log("Closest Reef Index", reefIndex);
+    DogLog.log("Closest Reef Index Elevator", reefIndex);
 
     if (isRedAlliance()) {
       return elevatorHeight + redHeightReefOffsets[reefIndex];
