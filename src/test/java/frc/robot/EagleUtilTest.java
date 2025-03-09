@@ -42,7 +42,7 @@ public class EagleUtilTest {
   }
 
   // to show that tests can fail on build, uncomment this below
-  //@Test
+  // @Test
   public void testFail() {
     Assertions.assertEquals(1, 2);
   }
