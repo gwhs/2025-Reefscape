@@ -10,6 +10,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -17,7 +18,6 @@ import java.util.function.Supplier;
 public class AlignToPose extends Command {
 
   Supplier<Pose2d> targetPose;
-
   private final double ELEVATOR_UP_SLEW_RATE = 1;
 
   private final SlewRateLimiter angularVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
@@ -26,6 +26,7 @@ public class AlignToPose extends Command {
   private final DoubleSupplier elevatorHeight;
 
   private boolean resetLimiter = true;
+  private CommandXboxController driverController;
 
   private CommandSwerveDrivetrain drivetrain;
 
@@ -41,11 +42,15 @@ public class AlignToPose extends Command {
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
   public AlignToPose(
-      Supplier<Pose2d> Pose, CommandSwerveDrivetrain drivetrain, DoubleSupplier elevatorHeight) {
+      Supplier<Pose2d> Pose,
+      CommandSwerveDrivetrain drivetrain,
+      DoubleSupplier elevatorHeight,
+      CommandXboxController driverController) {
     addRequirements(drivetrain);
 
     this.drivetrain = drivetrain;
     this.targetPose = Pose;
+    this.driverController = driverController;
     this.elevatorHeight = elevatorHeight;
   }
 
@@ -61,6 +66,20 @@ public class AlignToPose extends Command {
     DogLog.log("Align/atRotation", isAtRotation);
 
     if (isAtX && isAtY && isAtRotation) {
+      return true;
+    }
+    return false;
+  }
+
+  public boolean isJoystickActive() {
+    // get joystick x and y
+    // if between certain values (absolute value of y > something), report true
+    // repeat for absolute value of x, report true
+    // else report false
+    double xVelocity = driverController.getLeftY();
+    double yVelocity = driverController.getLeftX();
+
+    if (Math.abs(yVelocity) > 0.1 || Math.abs(xVelocity) > 0.1) {
       return true;
     }
     return false;
@@ -139,6 +158,9 @@ public class AlignToPose extends Command {
 
   @Override
   public boolean isFinished() {
+    if (isJoystickActive()) {
+      return true;
+    }
     return false;
   }
 }
