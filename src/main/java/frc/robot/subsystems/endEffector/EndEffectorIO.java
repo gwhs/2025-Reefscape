@@ -1,12 +1,12 @@
 package frc.robot.subsystems.endEffector;
 
-interface EndEffectorIO {
+public interface EndEffectorIO {
 
   void setVoltage(double voltage);
 
   void stopMotor();
 
-  public boolean isSensorTriggered();
+  public boolean coralLoaded();
 
   double getVelocity();
 

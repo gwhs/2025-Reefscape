@@ -42,15 +42,15 @@ class EndEffectorIOSim implements EndEffectorIO {
     motor.setInputVoltage(voltage);
   }
 
-  private boolean coralSensor = false;
+  private boolean coralSensorState = false;
 
   public EndEffectorIOSim() {
     SmartDashboard.putData(
-        "Simulation/Coral Sensor", Commands.runOnce(() -> coralSensor = !coralSensor));
+        "Simulation/Coral Sensor", Commands.runOnce(() -> coralSensorState = !coralSensorState));
   }
 
-  public boolean isSensorTriggered() {
-    return coralSensor;
+  public boolean coralLoaded() {
+    return coralSensorState;
   }
 
   @Override

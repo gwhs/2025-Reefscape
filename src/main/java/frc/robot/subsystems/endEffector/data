@@ -1,0 +1,278 @@
+nd the device is powered. ﻿﻿ talon fx 8 ("CAN_Network") ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿﻿﻿ERROR ﻿﻿ -10021 ﻿﻿ Device firmware could not be retrieved. Check that the device is running v6 firmware, the device ID is correct, the specified CAN bus is correct, and the device is powered. ﻿﻿ pigeon 2 1 ("CAN_Network") ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿ 133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0, ﻿
+﻿﻿﻿﻿﻿﻿ 133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0, ﻿
+﻿﻿﻿﻿﻿﻿ 133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0, ﻿
+﻿﻿﻿﻿﻿﻿ 133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0, ﻿
+﻿﻿﻿﻿﻿﻿ 133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0, ﻿
+﻿﻿﻿﻿﻿﻿ 133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0, ﻿
+﻿﻿﻿﻿﻿﻿ 133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0, ﻿
+﻿﻿﻿﻿﻿﻿ 133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0, ﻿
+﻿﻿﻿﻿﻿﻿ 133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0, ﻿
+﻿﻿﻿﻿﻿﻿ 133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0, ﻿
+﻿﻿﻿﻿﻿﻿ 133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0, ﻿
+﻿﻿﻿﻿﻿﻿ 133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0, ﻿
+﻿﻿﻿﻿﻿﻿ 133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0, ﻿
+﻿﻿﻿﻿﻿﻿ 133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0, ﻿
+﻿﻿﻿﻿﻿﻿ 133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,133.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ Error at org.photonvision.PhotonCamera.verifyVersion(PhotonCamera.java:389): Could not find **any** PhotonVision coprocessors on NetworkTables. Double check that PhotonVision is running, and that your camera is connected! ﻿
+﻿﻿﻿﻿﻿﻿ ﻿Warning﻿ at org.photonvision.PhotonCamera.verifyVersion(PhotonCamera.java:426): PhotonVision coprocessor at path /photonvision/cam3 has not reported a message interface UUID - is your coprocessor's camera started? ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ CommandScheduler loop overrun ﻿
+﻿﻿﻿﻿﻿﻿ ﻿Warning﻿ at edu.wpi.first.wpilibj.Tracer.lambda$printEpochs$0(Tracer.java:62): 	EndEffectorSubsystem.periodic(): 0.034336s ﻿
+﻿﻿﻿﻿﻿﻿ 	ClimbSubsystem.periodic(): 0.000872s ﻿
+﻿﻿﻿﻿﻿﻿ 	ArmSubsystem.periodic(): 0.000501s ﻿
+﻿﻿﻿﻿﻿﻿ 	CommandSwerveDrivetrain.periodic(): 0.000074s ﻿
+﻿﻿﻿﻿﻿﻿ 	buttons.run(): 0.000130s ﻿
+﻿﻿﻿﻿﻿﻿ 	ElevatorSubsystem.periodic(): 0.003172s ﻿
+﻿﻿﻿﻿﻿﻿ 	LedSubsystem.periodic(): 0.000019s ﻿
+﻿﻿﻿﻿﻿﻿  ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿﻿﻿Warning ﻿﻿ 1 ﻿﻿ Joystick Button 3 on port 0 not available, check if controller is plugged in ﻿﻿ edu.wpi.first.wpilibj.DriverStation.reportJoystickUnplugged﻿Warning﻿(DriverStation.java:1346) ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿﻿﻿ERROR ﻿﻿ 0 ﻿﻿ [phoenix] CANbus Failed to Connect: CAN_Network ﻿﻿  ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0, ﻿
+﻿﻿﻿﻿﻿﻿ 127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0, ﻿
+﻿﻿﻿﻿﻿﻿ 127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0, ﻿
+﻿﻿﻿﻿﻿﻿ 127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0, ﻿
+﻿﻿﻿﻿﻿﻿ 127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0, ﻿
+﻿﻿﻿﻿﻿﻿ 127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0, ﻿
+﻿﻿﻿﻿﻿﻿ 127.0,127.0,127.0,127.0,127.0,127.0,127.0,﻿Warning﻿ at edu.wpi.first.wpilibj.IterativeRobotBase.printLoopOverrunMessage(IterativeRobotBase.java:436): Loop time of 0.02s overrun ﻿
+﻿﻿﻿﻿﻿﻿  ﻿
+﻿﻿﻿﻿﻿﻿ 127.0,127.0,127.0,127.0,127.0, ﻿
+﻿﻿﻿﻿﻿﻿ 127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0, ﻿
+﻿﻿﻿﻿﻿﻿ 127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,144.0,144.0,144.0, ﻿
+﻿﻿﻿﻿﻿﻿ 144.0,144.0,144.0,144.0,144.0,144.0,144.0,144.0,144.0,144.0,144.0,144.0, ﻿
+﻿﻿﻿﻿﻿﻿ 144.0,144.0,144.0,144.0,144.0,144.0,144.0,144.0,144.0,144.0,144.0,125.0, ﻿
+﻿﻿﻿﻿﻿﻿ 125.0,125.0,125.0,125.0,125.0,125.0,125.0,125.0,125.0,125.0,125.0,125.0, ﻿
+﻿﻿﻿﻿﻿﻿ 136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0, ﻿
+﻿﻿﻿﻿﻿﻿ 136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0, ﻿
+﻿﻿﻿﻿﻿﻿ 136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0, ﻿
+﻿﻿﻿﻿﻿﻿ 136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0,136.0,128.0,128.0,128.0, ﻿
+﻿﻿﻿﻿﻿﻿ 128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0, ﻿
+﻿﻿﻿﻿﻿﻿ 128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0, ﻿
+﻿﻿﻿﻿﻿﻿ 128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0, ﻿
+﻿﻿﻿﻿﻿﻿ 128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0, ﻿
+﻿﻿﻿﻿﻿﻿ 128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0,128.0, ﻿
+﻿﻿﻿﻿﻿﻿ 128.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0, ﻿
+﻿﻿﻿﻿﻿﻿ 127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0, ﻿
+﻿﻿﻿﻿﻿﻿ 127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0,127.0, ﻿
+﻿﻿﻿﻿﻿﻿ CommandScheduler loop overrun ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿﻿﻿Warning ﻿﻿ 1 ﻿﻿ 	SmartDashboard.updateValues(): 0.004025s
+	robotPeriodic(): 0.312308s
+	LiveWindow.updateValues(): 0.000000s
+	Shuffleboard.update(): 0.000000s
+	disabledPeriodic(): 0.000389s
+ ﻿﻿ edu.wpi.first.wpilibj.Tracer.lambda$printEpochs$0(Tracer.java:62) ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0,132.0, ﻿
+﻿﻿﻿﻿﻿﻿ 132.0,132.0,132.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿ 138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0,138.0, ﻿
+﻿﻿﻿﻿﻿﻿﻿﻿Warning ﻿﻿ 1 ﻿﻿ Loop time of 0.02s overrun
+ ﻿﻿ edu.wpi.first.wpilibj.IterativeRobotBase.printLoopOverrunMessage(IterativeRobotBase.java:436) ﻿﻿﻿
+
+
+
+
+0, ﻿
+﻿﻿﻿﻿﻿﻿ 90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0, ﻿
+﻿﻿﻿﻿﻿﻿ 90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0, ﻿
+﻿﻿﻿﻿﻿﻿ 90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0, ﻿
+﻿﻿﻿﻿﻿﻿ 90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0, ﻿
+﻿﻿﻿﻿﻿﻿ 90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0, ﻿
+﻿﻿﻿﻿﻿﻿ 90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0, ﻿
+﻿﻿﻿﻿﻿﻿ 90.0,90.0,90.0,90.0,90.0,90.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿﻿﻿Warning ﻿﻿ 1 ﻿﻿ 	SmartDashboard.updateValues(): 0.002263s
+	robotPeriodic(): 0.327705s
+	LiveWindow.updateValues(): 0.000000s
+	Shuffleboard.update(): 0.000018s
+	disabledPeriodic(): 0.000445s
+ ﻿﻿ edu.wpi.first.wpilibj.Tracer.lambda$printEpochs$0(Tracer.java:62) ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿﻿﻿Warning ﻿﻿ 1 ﻿﻿ Loop time of 0.02s overrun
+ ﻿﻿ edu.wpi.first.wpilibj.IterativeRobotBase.printLoopOverrunMessage(IterativeRobotBase.java:436) ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿﻿﻿Warning ﻿﻿ 1 ﻿﻿ Joystick Button 3 on port 0 not available, check if controller is plugged in ﻿﻿ edu.wpi.first.wpilibj.DriverStation.reportJoystickUnplugged﻿Warning﻿(DriverStation.java:1346) ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿ 88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0,88.0, ﻿
+﻿﻿﻿﻿﻿﻿﻿﻿ERROR ﻿﻿ -1154 ﻿﻿ HAL: CAN Receive has Timed Out ﻿﻿ dev.doglog.internal.extras.ExtrasLogger.logPdh(ExtrasLogger.java:136) ﻿﻿﻿
+
+
+g ﻿﻿ 1 ﻿﻿ 	SmartDashboard.updateValues(): 0.003785s
+	robotPeriodic(): 0.467701s
+	LiveWindow.updateValues(): 0.000018s
+	Shuffleboard.update(): 0.000019s
+	disabledPeriodic(): 0.000519s
+ ﻿﻿ edu.wpi.first.wpilibj.Tracer.lambda$printEpochs$0(Tracer.java:62) ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿﻿﻿Warning ﻿﻿ 1 ﻿﻿ Joystick Button 3 on port 0 not available, check if controller is plugged in ﻿﻿ edu.wpi.first.wpilibj.DriverStation.reportJoystickUnplugged﻿Warning﻿(DriverStation.java:1346) ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿﻿﻿Warning ﻿﻿ 1 ﻿﻿ Loop time of 0.02s overrun
+ ﻿﻿ edu.wpi.first.wpilibj.IterativeRobotBase.printLoopOverrunMessage(IterativeRobotBase.java:436) ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿ 425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid424.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid435.0,Valid419.0,Valid419.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid425.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 425.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid412.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ ﻿Warning﻿ at edu.wpi.first.wpilibj.Tracer.lambda$printEpochs$0(Tracer.java:62): 	SmartDashboard.updateValues(): 0.007847s ﻿
+﻿﻿﻿﻿﻿﻿ 	robotPeriodic(): 0.284891s ﻿
+﻿﻿﻿﻿﻿﻿ 	LiveWindow.updateValues(): 0.000018s ﻿
+﻿﻿﻿﻿﻿﻿ 	Shuffleboard.update(): 0.000019s ﻿
+﻿﻿﻿﻿﻿﻿ 	disabledPeriodic(): 0.000223s ﻿
+﻿﻿﻿﻿﻿﻿  ﻿
+﻿﻿﻿﻿﻿﻿ ﻿Warning﻿ at edu.wpi.first.wpilibj.DriverStation.reportJoystickUnplugged﻿Warning﻿(DriverStation.java:1346): Joystick Button 3 on port 0 not available, check if controller is plugged in ﻿
+﻿﻿﻿﻿﻿﻿ 409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid409.0,Valid﻿Warning﻿ at edu.wpi.first.wpilibj.IterativeRobotBase.printLoopOverrunMessage(IterativeRobotBase.java:436): Loop time of 0.02s overrun ﻿
+﻿﻿﻿﻿﻿﻿  ﻿
+﻿﻿﻿﻿﻿﻿ 385.0,Invalid385.0,Invalid ﻿
+﻿﻿﻿﻿﻿﻿ Error at org.photonvision.PhotonCamera.verifyVersion(PhotonCamera.java:389): Could not find **any** PhotonVision coprocessors on NetworkTables. Double check that PhotonVision is running, and that your camera is connected! ﻿
+﻿﻿﻿﻿﻿﻿ ﻿Warning﻿ at org.photonvision.PhotonCamera.verifyVersion(PhotonCamera.java:426): PhotonVision coprocessor at path /photonvision/cam3 has not reported a message interface UUID - is your coprocessor's camera started? ﻿
+﻿﻿﻿﻿﻿﻿ ﻿Warning﻿ at org.photonvision.PhotonCamera.verifyVersion(PhotonCamera.java:426): PhotonVision coprocessor at path /photonvision/cam4 has not reported a message interface UUID - is your coprocessor's camera started? ﻿
+﻿﻿﻿﻿﻿﻿ 385.0,Invalid385.0,Invalid385.0,Invalid385.0,Invalid385.0,Invalid385.0,Invalid385.0,Invalid385.0,Invalid385.0,Invalid385.0,Invalid385.0,Invalid385.0,Invalid ﻿
+﻿﻿﻿﻿﻿﻿ 385.0,Invalid385.0,Invalid385.0,Invalid385.0,Invalid385.0,Invalid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿﻿﻿ERROR ﻿﻿ 1 ﻿﻿ Could not find **any** PhotonVision coprocessors on NetworkTables. Double check that PhotonVision is running, and that your camera is connected! ﻿﻿ org.photonvision.PhotonCamera.verifyVersion(PhotonCamera.java:389) ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿﻿﻿Warning ﻿﻿ 1 ﻿﻿ PhotonVision coprocessor at path /photonvision/cam3 has not reported a message interface UUID - is your coprocessor's camera started? ﻿﻿ org.photonvision.PhotonCamera.verifyVersion(PhotonCamera.java:426) ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿﻿﻿Warning ﻿﻿ 1 ﻿﻿ PhotonVision coprocessor at path /photonvision/cam4 has not reported a message interface UUID - is your coprocessor's camera started? ﻿﻿ org.photonvision.PhotonCamera.verifyVersion(PhotonCamera.java:426) ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿﻿﻿Warning ﻿﻿ 0 ﻿﻿ [phoenix] Signal Logger: Available disk space (54 MB) is low; at 50 MB, old hoot logs will be deleted. Use Tuner X to download and delete hoot logs. ﻿﻿  ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿ 416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid416.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid403.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid ﻿
+﻿﻿﻿﻿﻿﻿ 424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid ﻿
+﻿﻿﻿﻿﻿﻿ 424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid ﻿
+﻿﻿﻿﻿﻿﻿ 424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid ﻿
+﻿﻿﻿﻿﻿﻿ 424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid ﻿
+﻿﻿﻿﻿﻿﻿ 424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid ﻿
+﻿﻿﻿﻿﻿﻿﻿﻿ERROR ﻿﻿ -10021 ﻿﻿ Device firmware could not be retrieved. Check that the device is running v6 firmware, the device ID is correct, the specified CAN bus is correct, and the device is powered. ﻿﻿ talon fx 21 ("rio") ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿ 424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Invalid424.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿ 427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid427.0,Valid ﻿
+﻿﻿﻿﻿﻿﻿﻿﻿ERROR ﻿﻿ -10021 ﻿﻿ Device firmware could not be retrieved. Check that the device is running v6 firmware, the device ID is correct, the specified CAN bus is correct, and the device is powered. ﻿﻿ talon fx 14 ("rio") ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿﻿﻿ERROR ﻿﻿ -1003 ﻿﻿ CAN frame not received/too-stale. Check the CAN bus wiring, CAN bus utilization, and power to the device. ﻿﻿ ctre.phoenix6.BaseStatusSignal.refreshAll ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿﻿﻿ERROR ﻿﻿ -10021 ﻿﻿ Device firmware could not be retrieved. Check that the device is running v6 firmware, the device ID is correct, the specified CAN bus is correct, and the device is powered. ﻿﻿ talon fx 15 ("rio") ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿﻿﻿ERROR ﻿﻿ -10021 ﻿﻿ Device firmware could not be retrieved. Check that the device is running v6 firmware, the device ID is correct, the specified CAN bus is correct, and the device is powered. ﻿﻿ talon fx 56 ("rio") ﻿﻿﻿
+﻿﻿﻿﻿﻿﻿﻿﻿ERROR ﻿﻿ -10021 ﻿﻿ Device firmware could not be retrieved. Check that the device is running v6 firmware, the device ID is correct, the specified CAN bus is correct, and the device is powered. ﻿﻿ talon fx 16 ("rio") ﻿﻿﻿

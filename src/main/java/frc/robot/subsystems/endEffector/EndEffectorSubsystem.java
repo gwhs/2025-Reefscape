@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class EndEffectorSubsystem extends SubsystemBase {
 
-  EndEffectorIO endEffectorIO;
+  public EndEffectorIO endEffectorIO;
   public final Trigger coralTriggered;
 
   /**
@@ -27,7 +27,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
       endEffectorIO = new EndEffectorIOTalon();
     }
 
-    coralTriggered = new Trigger(() -> endEffectorIO.isSensorTriggered());
+    coralTriggered = new Trigger(() -> endEffectorIO.coralLoaded());
 
     SmartDashboard.putData("End Effector Command/End Effector Shoot", shoot());
     SmartDashboard.putData("End Effector Command/End Effector Intake", intake());
