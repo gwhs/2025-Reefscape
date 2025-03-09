@@ -505,7 +505,7 @@ public class RobotContainer {
    */
   public Command scoreCoral() {
     return Commands.sequence(
-            arm.increaseAngle(5).onlyIf(IS_L4).withTimeout(0.5),
+            arm.increaseAngle(5).onlyIf(IS_L4).withTimeout(1.0),
             endEffector.shoot(),
             Commands.waitSeconds(0.1),
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.2),
