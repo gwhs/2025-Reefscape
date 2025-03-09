@@ -309,7 +309,7 @@ public class EagleUtil {
    */
   public static boolean isRedAlliance() {
     if (overrideIsRed != null) {
-      return overrideIsRed;          
+      return overrideIsRed;
     }
     return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == red;
   }
