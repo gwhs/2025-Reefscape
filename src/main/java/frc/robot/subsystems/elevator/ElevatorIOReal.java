@@ -123,7 +123,7 @@ public class ElevatorIOReal implements ElevatorIO {
       System.out.println("Could not configure device. Error: " + backStatus.toString());
     }
 
-    motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     StatusCode frontStatus = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; i++) {
