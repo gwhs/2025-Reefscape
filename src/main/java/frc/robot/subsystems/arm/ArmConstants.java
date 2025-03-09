@@ -22,4 +22,6 @@ public class ArmConstants {
 
   public static final double PRE_DEALGAE_ANGLE = 335;
   public static final double DEALGAE_ANGLE = 350;
+
+  public static final double MAGNET_OFFSET_DEGREES = 0;
 }
