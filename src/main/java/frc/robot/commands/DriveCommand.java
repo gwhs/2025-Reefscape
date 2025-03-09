@@ -43,6 +43,14 @@ public class DriveCommand extends Command {
 
   private final double ELEVATOR_UP_SLEW_RATE = 1;
 
+  public enum ReefPositions {
+    RIGHT_SIDE_REEF,
+    BACK_REEF,
+    FRONT_REEF
+  }
+
+  private ReefPositions reefMode = ReefPositions.FRONT_REEF;
+
   private final DoubleSupplier elevatorHeight;
 
   public enum DriveMode {
@@ -59,7 +67,8 @@ public class DriveCommand extends Command {
     NORMAL,
     CORAL_STATION,
     REEF,
-    CAGE
+    CAGE,
+    PROCESSOR
   }
 
   private TargetMode mode = TargetMode.NORMAL;
@@ -121,14 +130,31 @@ public class DriveCommand extends Command {
       }
 
     } else if (mode == TargetMode.REEF) {
-      Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
-      return nearest.getRotation().getDegrees();
+      if (reefMode == ReefPositions.FRONT_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees();
+      } else if (reefMode == ReefPositions.RIGHT_SIDE_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees() + 90;
+      } else if (reefMode == ReefPositions.BACK_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees() + 180;
+      } else {
+        return 0;
+      }
     } else if (mode == TargetMode.CAGE) {
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
         return BLUE_CAGE_ANGLE;
       } else {
         return RED_CAGE_ANGLE;
+      }
+    } else if (mode == TargetMode.PROCESSOR) {
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        return -90;
+      } else {
+        return 90;
       }
     } else {
       return 0;
@@ -140,6 +166,10 @@ public class DriveCommand extends Command {
    */
   public void setTargetMode(TargetMode mode) {
     this.mode = mode;
+  }
+
+  public void setReefMode(ReefPositions mode) {
+    reefMode = mode;
   }
 
   /**
@@ -235,41 +265,12 @@ public class DriveCommand extends Command {
     }
   }
 
-  /**
-   * @return is the robot at the setpoint?
-   */
-  public boolean isAtSetPoint() {
-    if (this.mode == TargetMode.CORAL_STATION || this.mode == TargetMode.REEF) {
-      return PID.atSetpoint();
-    }
-    return false;
-  }
-
   @Override
   public void end(boolean interrupted) {}
 
   @Override
   public boolean isFinished() {
     return false;
-  }
-
-  /**
-   * @param velocity how fast should it drive?
-   * @return do an MJ (minus the little boys)
-   */
-  public Command driveBackward(double velocity) {
-    return drivetrain
-        .run(
-            () ->
-                drivetrain.setControl(
-                    robotCentricDrive
-                        .withVelocityX(-velocity)
-                        .withVelocityY(0)
-                        .withRotationalRate(0)))
-        .finallyDo(
-            () ->
-                drivetrain.setControl(
-                    robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
   }
 
   public void stopDrivetrain() {
