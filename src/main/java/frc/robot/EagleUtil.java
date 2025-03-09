@@ -271,25 +271,17 @@ public class EagleUtil {
   }
 
   public static int findClosestReefIndex(Pose2d pose) {
+    ArrayList<Pose2d> reefSetPoints = null;
     if (isRedAlliance()) {
-      ArrayList<Pose2d> red = calculateRedReefSetPoints();
-      double minimumDistance = Double.MAX_VALUE;
-      int minIndex = 0;
-
-      for (int i = 0; i < red.size(); i++) {
-        double distance = getDistanceBetween(pose, red.get(i));
-        if (distance < minimumDistance) {
-          minimumDistance = distance;
-          minIndex = i;
-        }
-      }
-      return minIndex;
+      reefSetPoints = calculateRedReefSetPoints();
+    } else {
+      reefSetPoints = calculateBlueReefSetPoints();
     }
-    ArrayList<Pose2d> blue = calculateBlueReefSetPoints();
+
     double minimumDistance = Double.MAX_VALUE;
     int minIndex = 0;
-    for (int i = 0; i < blue.size(); i++) {
-      double distance = getDistanceBetween(pose, blue.get(i));
+    for (int i = 0; i < reefSetPoints.size(); i++) {
+      double distance = getDistanceBetween(pose, reefSetPoints.get(i));
       if (distance < minimumDistance) {
         minimumDistance = distance;
         minIndex = i;
