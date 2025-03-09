@@ -201,11 +201,10 @@ public class EagleUtil {
   }
 
   private static Pose2d getNearestReefPoint(Pose2d pose) {
-    if (DriverStation.getAlliance().isPresent()
-        && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-      return pose.nearest(FieldConstants.blueReefSetpointList);
+    if (!isRedAlliance()) {
+      return pose.nearest(calculateBlueReefSetPoints());
     } else {
-      return pose.nearest(FieldConstants.redReefSetpointList);
+      return pose.nearest(calculateRedReefSetPoints());
     }
   }
 
@@ -270,10 +269,10 @@ public class EagleUtil {
     return blue.get(n);
   }
 
-  private static Boolean redAlliance = null;
+  private static Boolean overrideIsRed = null;
 
   public static void setAllianceOverride(Boolean isRed) {
-    redAlliance = isRed;
+    overrideIsRed = isRed;
   }
 
   public static int findClosestReefIndex(Pose2d pose) {
@@ -306,14 +305,13 @@ public class EagleUtil {
   }
 
   /**
-   * @return if your on red alliance
+   * @return if you're on red alliance
    */
   public static boolean isRedAlliance() {
-    if (redAlliance == null) {
-      redAlliance =
-          DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == red;
+    if (overrideIsRed != null) {
+      return overrideIsRed;          
     }
-    return redAlliance;
+    return DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == red;
   }
 
   /**
