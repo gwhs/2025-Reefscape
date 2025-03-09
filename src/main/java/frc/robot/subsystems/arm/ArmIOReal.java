@@ -102,7 +102,6 @@ public class ArmIOReal implements ArmIO {
     cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
     cc_cfg.MagnetSensor.withMagnetOffset(
         Units.degreesToRotations(ArmConstants.MAGNET_OFFSET_DEGREES));
-
     for (int i = 0; i < 5; i++) {
       status = armEncoder.getConfigurator().apply(cc_cfg);
       if (status.isOK()) break;
