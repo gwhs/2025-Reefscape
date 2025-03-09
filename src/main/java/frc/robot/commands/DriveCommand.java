@@ -31,7 +31,7 @@ public class DriveCommand extends Command {
   private boolean resetLimiter = true;
 
   private double maxSpeed = CommandSwerveDrivetrain.kSpeedAt12Volts.in(MetersPerSecond);
-  private double maxAngularRate = 3.5 * Math.PI;
+  private double maxAngularRate = 2.5 * Math.PI;
 
   private final double RED_LEFT_STATION_ANGLE = 126;
   private final double RED_RIGHT_STATION_ANGLE = -126;
