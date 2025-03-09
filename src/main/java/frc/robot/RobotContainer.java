@@ -42,6 +42,7 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.BiConsumer;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class RobotContainer {
@@ -496,8 +497,22 @@ public class RobotContainer {
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
 
+  public Command prepScoreCoral(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
+    return Commands.parallel(
+            endEffector.holdCoral(),
+            elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
+            arm.setAngleSupplier(armAngle).withTimeout(.5))
+        .withName(
+            "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
+  }
+
   public Command prepScoreCoral(CoralLevel level) {
-    return prepScoreCoral(level.elevatorHeight, level.armAngle);
+    DoubleSupplier elevatorHeightSupplier =
+        () -> EagleUtil.getOffsetElevatorHeight(level, drivetrain.getPose());
+    DoubleSupplier armAngleSupplier =
+        () -> EagleUtil.getOffsetArmAngle(level, drivetrain.getPose());
+    DogLog.log("adada", elevatorHeightSupplier.getAsDouble());
+    return prepScoreCoral(elevatorHeightSupplier, armAngleSupplier);
   }
 
   /**
