@@ -16,8 +16,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class EagleUtil {
-  public static ArrayList<Pose2d> m_redPoses;
-  public static ArrayList<Pose2d> m_bluePoses;
+  protected static ArrayList<Pose2d> m_redPoses;
+  protected static ArrayList<Pose2d> m_bluePoses;
 
   private static double BLUE_REEF_X = Units.inchesToMeters(144 + (93.5 - 14 * 2) / 2);
   private static double BLUE_REEF_Y = Units.inchesToMeters(158.50);
