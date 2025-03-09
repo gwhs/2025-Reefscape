@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TOFSensor {
   public double m_distance_EMA;
-  public double m_dist_SDEV;
+  public double m_dist_SDEV_sq;
   public String mode = "Short";
 
   int m_rangeX0;
@@ -21,7 +21,7 @@ public class TOFSensor {
     RoI(0, 0, 15, 15);
     sensor.setRangingMode(RangingMode.Short, 0.24); // Will need to test. must be between 24-1000ms
     m_distance_EMA = sensor.getRange();
-    m_dist_SDEV = 0;
+    m_dist_SDEV_sq = 0;
   }
 
   public void RoI(int rangeX0, int rangeY0, int rangeX1, int rangeY1) {
@@ -63,14 +63,16 @@ public class TOFSensor {
     double distance = sensor.getRange();
     SmartDashboard.putNumber("Distance", distance);
 
-    m_dist_SDEV =
+
+
+    m_dist_SDEV_sq =
         (EndEffectorConstants.SDEV_Decay * Math.pow((m_distance_EMA - sensor.getRange()), 2))
-            + ((1 - EndEffectorConstants.SDEV_Decay) * m_dist_SDEV);
+            + ((1 - EndEffectorConstants.SDEV_Decay) * m_dist_SDEV_sq);
     m_distance_EMA =
         (EndEffectorConstants.EXP_DECAY * sensor.getRange())
             + ((1 - EndEffectorConstants.EXP_DECAY) * m_distance_EMA);
 
     SmartDashboard.putNumber("dist_EMA", m_distance_EMA);
-    SmartDashboard.putNumber("dist_EDEV", m_dist_SDEV);
+    SmartDashboard.putNumber("dist_EDEV", Math.pow(m_dist_SDEV_sq, .5));
   }
 }
