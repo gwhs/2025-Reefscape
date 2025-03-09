@@ -84,7 +84,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
   public boolean coralLoaded() {
     // double distance = m_colorSensor.getProximity();
     double distance = m_coral_detector.getRange();
-    if (distance < 30) {
+    if (distance < 50) {
       return true;
     } else {
       return false;
