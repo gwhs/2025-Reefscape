@@ -66,7 +66,7 @@ public class FiveCycle extends PathPlannerAuto {
                               robotContainer.prepScoreCoral(
                                   ElevatorConstants.L4_PREP_POSITION,
                                   ArmConstants.L4_PREP_POSITION))),
-                  Commands.sequence(Commands.waitSeconds(.5), robotContainer.scoreCoral())
+                  Commands.sequence(Commands.waitSeconds(.3), robotContainer.scoreCoral())
                       .deadlineFor(
                           robotContainer.alignToPose(
                               () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
