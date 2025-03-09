@@ -40,4 +40,9 @@ public class EagleUtilTest {
       Assertions.assertEquals(i, index);
     }
   }
+
+  @Test
+  public void testFail() {
+    Assertions.assertEquals(1, 2);
+  }
 }
