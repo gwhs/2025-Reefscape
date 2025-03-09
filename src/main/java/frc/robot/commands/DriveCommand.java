@@ -26,12 +26,12 @@ public class DriveCommand extends Command {
   private final SlewRateLimiter yVelocityLimiter;
   private final PIDController PID;
   private double slowFactor = 0.25;
-  private boolean isSlow = true;
+  private boolean isSlow = false;
   private final double DEAD_BAND = 0.1;
   private boolean resetLimiter = true;
 
   private double maxSpeed = CommandSwerveDrivetrain.kSpeedAt12Volts.in(MetersPerSecond);
-  private double maxAngularRate = 3.5 * Math.PI;
+  private double maxAngularRate = 2.5 * Math.PI;
 
   private final double RED_LEFT_STATION_ANGLE = 126;
   private final double RED_RIGHT_STATION_ANGLE = -126;
