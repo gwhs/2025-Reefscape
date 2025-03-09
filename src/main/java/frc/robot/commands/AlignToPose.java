@@ -158,9 +158,6 @@ public class AlignToPose extends Command {
 
   @Override
   public boolean isFinished() {
-    if (isAtTargetPose()) {
-      return true;
-    }
     if (isJoystickActive()) {
       return true;
     }
