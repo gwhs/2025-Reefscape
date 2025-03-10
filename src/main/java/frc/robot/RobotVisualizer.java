@@ -37,7 +37,7 @@ public class RobotVisualizer {
               "arm", Units.inchesToMeters(20), 90, 10, new Color8Bit(Color.kWhite)));
 
   // ground intake
-  MechanismRoot2d root2 = panel.getRoot("ground", (ROBOT_LENGTH / 2) + 0.3, 0.078);
+  MechanismRoot2d root2 = panel.getRoot("ground", (ROBOT_LENGTH / 2) - 0.3, 0.078);
   MechanismLigament2d m_ground_intake =
       root2.append(
           new MechanismLigament2d(
@@ -63,7 +63,7 @@ public class RobotVisualizer {
 
     m_arm.setAngle(-armAngle - 90);
 
-    m_ground_intake.setAngle(-groundIntakeAngle+90);
+    m_ground_intake.setAngle(groundIntakeAngle + 90);
 
     m_elevator.setLength(elevatorHeight + Units.inchesToMeters(37.2));
   }
