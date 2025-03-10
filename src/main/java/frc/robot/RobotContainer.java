@@ -41,6 +41,7 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
+import frc.robot.subsystems.objectDetection.ObjectDetectionCam;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -121,6 +122,8 @@ public class RobotContainer {
   private AprilTagCam leftCam;
 
   private AprilTagCam rightCam;
+
+  private ObjectDetectionCam objDecCam;
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm);
 
@@ -400,6 +403,10 @@ public class RobotContainer {
     }
     if (rightCam != null) {
       rightCam.updatePoseEstim();
+    }
+
+    if (objDecCam != null) {
+      objDecCam.updateDetection();
     }
     // 4
     DogLog.log("Loop Time/Robot Container/Cam4", (HALUtil.getFPGATime() - startTime) / 1000);
