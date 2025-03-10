@@ -40,7 +40,8 @@ public class ArmIOReal implements ArmIO {
   private final StatusSignal<Voltage> armSupplyVoltage = armMotor.getSupplyVoltage();
   private final StatusSignal<Temperature> armDeviceTemp = armMotor.getDeviceTemp();
   private final StatusSignal<Current> armStatorCurrent = armMotor.getStatorCurrent();
-  private final StatusSignal<Angle> armPosition = armEncoder.getPosition();
+  private final StatusSignal<Angle> armEncoderPosition = armEncoder.getPosition();
+  private final StatusSignal<Angle> armPosition = armMotor.getPosition();
 
   private final Alert armMotorConnectedAlert =
       new Alert("Arm motor not connected", AlertType.kError);
@@ -122,7 +123,7 @@ public class ArmIOReal implements ArmIO {
 
   @Override
   public double getPosition() {
-    return Units.rotationsToDegrees(armPosition.getValueAsDouble());
+    return Units.rotationsToDegrees(armEncoderPosition.getValueAsDouble());
   }
 
   /**
@@ -141,7 +142,8 @@ public class ArmIOReal implements ArmIO {
                 armSupplyVoltage,
                 armDeviceTemp,
                 armStatorCurrent,
-                armPosition)
+                armPosition,
+                armEncoderPosition)
             .isOK());
     DogLog.log("Arm/Motor/pid goal", Units.rotationsToDegrees(armPIDGoal.getValueAsDouble()));
     DogLog.log("Arm/Motor/motor voltage", armMotorVoltage.getValueAsDouble());
@@ -149,6 +151,7 @@ public class ArmIOReal implements ArmIO {
     DogLog.log("Arm/Motor/device temp", armDeviceTemp.getValueAsDouble());
     DogLog.log("Arm/Motor/stator current", armStatorCurrent.getValueAsDouble());
     DogLog.log("Arm/Motor/Connected", armConnected);
+    DogLog.log("Arm/Encoder/encoder position", armEncoderPosition);
 
     armMotorConnectedAlert.set(!armConnected);
     armEncoderConnectedAlert.set(!armEncoder.isConnected());
