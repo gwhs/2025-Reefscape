@@ -335,6 +335,22 @@ public class RobotContainer {
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Face Processor"));
 
+    m_operatorController
+        .leftStick()
+        .whileTrue(
+            Commands.startEnd(
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL),
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
+                .withName("Ground Intake normal"));
+
+    m_operatorController
+        .x()
+        .whileTrue(
+            Commands.startEnd(
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL),
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
+                .withName("Algae Normal"));
+
     IS_L1
         .and(IS_REEF_MODE)
         .onTrue(
@@ -529,7 +545,7 @@ public class RobotContainer {
             groundIntake
                 .setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, 5)
                 .withTimeout(0.5),
-            Commands.waitSeconds(0.3),
+            Commands.waitSeconds(0.7),
             groundIntake
                 .setAngleAndVoltage(GroundIntakeConstants.ALGAE_STOW_ANGLE, 0)
                 .withTimeout(0.5))
