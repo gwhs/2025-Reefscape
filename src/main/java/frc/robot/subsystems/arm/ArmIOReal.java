@@ -40,7 +40,7 @@ public class ArmIOReal implements ArmIO {
   private final StatusSignal<Voltage> armSupplyVoltage = armMotor.getSupplyVoltage();
   private final StatusSignal<Temperature> armDeviceTemp = armMotor.getDeviceTemp();
   private final StatusSignal<Current> armStatorCurrent = armMotor.getStatorCurrent();
-  private final StatusSignal<Angle> armPosition = armMotor.getPosition();
+  private final StatusSignal<Angle> armPosition = armEncoder.getPosition();
 
   private final Alert armMotorConnectedAlert =
       new Alert("Arm motor not connected", AlertType.kError);
