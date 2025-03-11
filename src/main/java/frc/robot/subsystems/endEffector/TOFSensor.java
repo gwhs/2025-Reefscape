@@ -2,6 +2,7 @@ package frc.robot.subsystems.endEffector;
 
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TOFSensor {
@@ -63,14 +64,14 @@ public class TOFSensor {
     double distance = sensor.getRange();
     SmartDashboard.putNumber("Distance", distance);
 
+    double diff_from_EMA = m_distance_EMA - sensor.getRange();
     m_dist_SDEV_sq =
-        (EndEffectorConstants.SDEV_Decay * Math.pow((m_distance_EMA - sensor.getRange()), 2))
-            + ((1 - EndEffectorConstants.SDEV_Decay) * m_dist_SDEV_sq);
+        (EndEffectorConstants.SDEV_Decay * diff_from_EMA * diff_from_EMA) + ((1 - EndEffectorConstants.SDEV_Decay) * m_dist_SDEV_sq);
     m_distance_EMA =
         (EndEffectorConstants.EXP_DECAY * sensor.getRange())
             + ((1 - EndEffectorConstants.EXP_DECAY) * m_distance_EMA);
 
     SmartDashboard.putNumber("dist_EMA", m_distance_EMA);
-    SmartDashboard.putNumber("dist_EDEV", Math.pow(m_dist_SDEV_sq, .5));
+    SmartDashboard.putNumber("dist_EDEV", Math.sqrt(m_dist_SDEV_sq));
   }
 }
