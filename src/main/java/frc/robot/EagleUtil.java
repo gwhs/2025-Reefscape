@@ -60,8 +60,8 @@ public class EagleUtil {
     // in meters
     0, // reef A
     0, // reef B
-    -.5, // reef C
-    -1, // reef D
+    0, // reef C
+    0, // reef D
     0, // reef E
     0, // reef F
     0, // reef G
