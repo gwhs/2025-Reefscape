@@ -33,6 +33,8 @@ public class AlignToPose extends Command {
   private double maxSpeed = CommandSwerveDrivetrain.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 1.0 * Math.PI;
 
+  private long startTime;
+
   public static final double PID_MAX = 0.44;
 
   private final SwerveRequest.FieldCentric drive =
@@ -72,10 +74,10 @@ public class AlignToPose extends Command {
   }
 
   public boolean isJoystickActive() {
-    // get joystick x and y
-    // if between certain values (absolute value of y > something), report true
-    // repeat for absolute value of x, report true
-    // else report false
+    long now = System.currentTimeMillis();
+    if (now - startTime < 1000) { // if under 1 second, then joystick shouldn't be considered active
+      return false;
+    }
     double xVelocity = driverController.getLeftY();
     double yVelocity = driverController.getLeftX();
 
@@ -87,6 +89,7 @@ public class AlignToPose extends Command {
 
   @Override
   public void initialize() {
+    startTime = System.currentTimeMillis();
     drivetrain.goToPoseWithPID(targetPose.get());
     DogLog.log("Align/Target Pose", targetPose.get());
   }
