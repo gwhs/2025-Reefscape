@@ -461,7 +461,7 @@ public class RobotContainer {
    * @return run the command
    */
   public Command alignToPose(Supplier<Pose2d> Pose) {
-    return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters());
+    return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters(), m_driverController);
   }
 
   /**
