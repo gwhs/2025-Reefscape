@@ -8,4 +8,7 @@ public interface ArmIO {
   public void update();
 
   public void setVoltage(double volts);
+
+  public void setEmergencyMode(boolean emergency);
+
 }
