@@ -14,6 +14,7 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import com.playingwithfusion.TimeOfFlight;
 
 class EndEffectorIOTalon implements EndEffectorIO {
 
@@ -79,11 +80,18 @@ class EndEffectorIOTalon implements EndEffectorIO {
   public boolean coralLoaded() {
     // double distance = m_colorSensor.getProximity();
     double distance = m_coral_detector.getRange();
-    if (distance < 30) {
+    if (m_coral_detector.getStatus() != TimeOfFlight.Status.Valid) {
+      DogLog.log("EndEffector/Validity", m_coral_detector.getStatus());
+      DogLog.log("EndEffector/Distance", distance);
+      return false;
+    }
+    if (distance < 30 && distance > 20) {
       return true;
     } else {
       return false;
     }
+
+
   }
 
   @Override

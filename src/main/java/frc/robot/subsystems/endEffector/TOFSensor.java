@@ -23,8 +23,13 @@ public class TOFSensor {
     sensor.setRangingMode(RangingMode.Short, 0.24); // Will need to test. must be between 24-1000ms
     m_distance_EMA = sensor.getRange();
     m_dist_SDEV_sq = 0;
+
   }
 
+  public TimeOfFlight.Status getStatus() {
+    return sensor.getStatus();
+  }
+  
   public void RoI(int rangeX0, int rangeY0, int rangeX1, int rangeY1) {
     m_rangeX0 = rangeX0;
     m_rangeY0 = rangeY0;
