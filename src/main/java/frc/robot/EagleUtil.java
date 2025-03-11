@@ -352,11 +352,11 @@ public class EagleUtil {
 
   public static double getOffsetArmAngle(CoralLevel level, Pose2d robotPose) {
     double armAngle = level.armAngle;
-    
+
     if (level != CoralLevel.L4) {
       return armAngle;
     }
-  
+
     int reefIndex = findClosestReefIndex(robotPose);
     if (isRedAlliance()) {
       return armAngle + redAngleReefOffsets[reefIndex];
@@ -370,7 +370,6 @@ public class EagleUtil {
       return elevatorHeight;
     }
     int reefIndex = findClosestReefIndex(robotPose);
-    
 
     if (isRedAlliance()) {
       return elevatorHeight + redHeightReefOffsets[reefIndex];
