@@ -7,14 +7,6 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-import com.ctre.phoenix6.signals.InvertedValue;
->>>>>>> a451146 (adds sensor and moving averages for dist and stan deviation)
-import com.revrobotics.ColorSensorV3;
-=======
->>>>>>> bd4cb4a (adds sensor and moving averages for dist and stan deviation)
 import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
