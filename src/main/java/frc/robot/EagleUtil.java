@@ -148,7 +148,7 @@ public class EagleUtil {
     DogLog.log("Caculation/Blue Reef", BLUE_REEF);
     DogLog.log("Caculation/Blue Set Points", bluePoses);
     m_bluePoses = new ArrayList<Pose2d>(Arrays.asList(bluePoses));
-    return m_bluePoses;
+    return new ArrayList<Pose2d>(m_bluePoses);
   }
 
   /**
@@ -197,7 +197,7 @@ public class EagleUtil {
 
     m_redPoses = new ArrayList<Pose2d>(Arrays.asList(redPoses));
 
-    return m_redPoses;
+    return new ArrayList<Pose2d>(m_redPoses);
   }
 
   private static Pose2d getNearestReefPoint(Pose2d pose) {
@@ -352,14 +352,12 @@ public class EagleUtil {
 
   public static double getOffsetArmAngle(CoralLevel level, Pose2d robotPose) {
     double armAngle = level.armAngle;
-    int reefIndex = findClosestReefIndex(robotPose);
-
-    DogLog.log("Closest Reef Index Arm", reefIndex);
-
+    
     if (level != CoralLevel.L4) {
       return armAngle;
     }
-
+  
+    int reefIndex = findClosestReefIndex(robotPose);
     if (isRedAlliance()) {
       return armAngle + redAngleReefOffsets[reefIndex];
     }
@@ -372,7 +370,7 @@ public class EagleUtil {
       return elevatorHeight;
     }
     int reefIndex = findClosestReefIndex(robotPose);
-    DogLog.log("Closest Reef Index Elevator", reefIndex);
+    
 
     if (isRedAlliance()) {
       return elevatorHeight + redHeightReefOffsets[reefIndex];
