@@ -136,7 +136,7 @@ public class RobotContainer {
         drivetrain = TunerConstants_Comp.createDrivetrain();
         leftCam =
             new AprilTagCam(
-                AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_COMP_NAME,
                 AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
                 drivetrain::addVisionMeasurent,
                 () -> drivetrain.getState().Pose,
@@ -144,7 +144,7 @@ public class RobotContainer {
 
         rightCam =
             new AprilTagCam(
-                AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_COMP_NAME,
                 AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
                 drivetrain::addVisionMeasurent,
                 () -> drivetrain.getState().Pose,
@@ -314,7 +314,7 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+                  driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
                 }));
 
     IS_L2
@@ -519,10 +519,11 @@ public class RobotContainer {
    */
   public Command scoreCoral() {
     return Commands.sequence(
+            arm.increaseAngle(20).onlyIf(IS_L4).withTimeout(1.0),
             endEffector.shoot(),
-            Commands.waitSeconds(0.2),
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.2),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.2),
+            Commands.waitSeconds(0.1),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
             endEffector.stopMotor())
         .withName("Score Coral");
   }
