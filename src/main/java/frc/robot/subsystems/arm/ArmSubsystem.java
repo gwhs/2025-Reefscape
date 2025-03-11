@@ -78,10 +78,11 @@ public class ArmSubsystem extends SubsystemBase {
    * @return run the command
    */
   public Command increaseAngle(double degrees) {
-    return Commands.runOnce(() -> {armIO.setAngle(armIO.getPosition() + degrees);
-    
-    }).andThen(Commands.waitUntil(() -> MathUtil.isNear(degrees, armIO.getPosition(), 1)));
-  }
+    return Commands.runOnce(
+            () -> {
+              armIO.setAngle(armIO.getPosition() + degrees);
+            })
+        .andThen(Commands.waitUntil(() -> MathUtil.isNear(degrees, armIO.getPosition(), 1)));
   }
 
   /**
@@ -89,8 +90,10 @@ public class ArmSubsystem extends SubsystemBase {
    * @return run the command
    */
   public Command decreaseAngle(double degrees) {
-    return Commands.runOnce(() -> {armIO.setAngle(armIO.getPosition() - degrees);
-    
-    }).andThen(Commands.waitUntil(() -> MathUtil.isNear(degrees, armIO.getPosition(), 1)));
+    return Commands.runOnce(
+            () -> {
+              armIO.setAngle(armIO.getPosition() - degrees);
+            })
+        .andThen(Commands.waitUntil(() -> MathUtil.isNear(degrees, armIO.getPosition(), 1)));
   }
 }
