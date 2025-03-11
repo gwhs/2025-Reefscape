@@ -101,10 +101,9 @@ public class ArmSubsystem extends SubsystemBase {
    * @return run the command
    */
   public Command increaseAngle(double degrees) {
-    double originalAngle = armIO.getPosition();
     return Commands.runOnce(
             () -> {
-              armIO.setAngle(originalAngle + degrees);
+              armIO.setAngle(armIO.getPosition() + degrees);
             })
         .andThen(Commands.waitUntil(() -> MathUtil.isNear(armIO.getPositionError(), 0, 1)));
   }
