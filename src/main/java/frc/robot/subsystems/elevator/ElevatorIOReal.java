@@ -91,7 +91,7 @@ public class ElevatorIOReal implements ElevatorIO {
 
     motionMagicConfigs.MotionMagicCruiseVelocity = ElevatorConstants.MAX_VELOCITY;
     motionMagicConfigs.MotionMagicAcceleration = ElevatorConstants.MAX_ACCELERATION;
-    motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
+    motionMagicConfigs.MotionMagicJerk = 0;
 
     currentConfig.withStatorCurrentLimitEnable(true);
     currentConfig.withStatorCurrentLimit(30);
@@ -106,7 +106,7 @@ public class ElevatorIOReal implements ElevatorIO {
 
     hardwareLimitSwitchConfigs.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
     hardwareLimitSwitchConfigs.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
-    hardwareLimitSwitchConfigs.ForwardLimitEnable = false;
+    hardwareLimitSwitchConfigs.ForwardLimitEnable = true;
     hardwareLimitSwitchConfigs.ReverseLimitEnable = true;
     hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyOpen;
     hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
