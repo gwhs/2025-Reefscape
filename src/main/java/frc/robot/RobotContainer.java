@@ -42,6 +42,7 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.BiConsumer;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class RobotContainer {
@@ -136,7 +137,7 @@ public class RobotContainer {
         drivetrain = TunerConstants_Comp.createDrivetrain();
         leftCam =
             new AprilTagCam(
-                AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_COMP_NAME,
                 AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
                 drivetrain::addVisionMeasurent,
                 () -> drivetrain.getState().Pose,
@@ -144,7 +145,7 @@ public class RobotContainer {
 
         rightCam =
             new AprilTagCam(
-                AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_COMP_NAME,
                 AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
                 drivetrain::addVisionMeasurent,
                 () -> drivetrain.getState().Pose,
@@ -314,7 +315,7 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+                  driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
                 }));
 
     IS_L2
@@ -461,7 +462,7 @@ public class RobotContainer {
    * @return run the command
    */
   public Command alignToPose(Supplier<Pose2d> Pose) {
-    return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters());
+    return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters(), m_driverController);
   }
 
   /**
@@ -497,8 +498,21 @@ public class RobotContainer {
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
 
+  public Command prepScoreCoral(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
+    return Commands.parallel(
+            endEffector.holdCoral(),
+            elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
+            arm.setAngleSupplier(armAngle).withTimeout(.5))
+        .withName(
+            "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
+  }
+
   public Command prepScoreCoral(CoralLevel level) {
-    return prepScoreCoral(level.elevatorHeight, level.armAngle);
+    DoubleSupplier elevatorHeightSupplier =
+        () -> EagleUtil.getOffsetElevatorHeight(level, drivetrain.getPose());
+    DoubleSupplier armAngleSupplier =
+        () -> EagleUtil.getOffsetArmAngle(level, drivetrain.getPose());
+    return prepScoreCoral(elevatorHeightSupplier, armAngleSupplier).repeatedly();
   }
 
   /**
@@ -506,10 +520,11 @@ public class RobotContainer {
    */
   public Command scoreCoral() {
     return Commands.sequence(
+            arm.increaseAngle(20).onlyIf(IS_L4).withTimeout(1.0),
             endEffector.shoot(),
-            Commands.waitSeconds(0.2),
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.2),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.2),
+            Commands.waitSeconds(0.1),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
             endEffector.stopMotor())
         .withName("Score Coral");
   }

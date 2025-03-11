@@ -20,8 +20,7 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 public class FiveCycle extends PathPlannerAuto {
 
   private RobotContainer robotContainer;
-
-  //   private double waitTime = .340;
+//   private double waitTime = 1.25;
 
   public FiveCycle(RobotContainer robotContainer, boolean nonProcessorSide) {
     super(Commands.run(() -> {}));
@@ -67,17 +66,14 @@ public class FiveCycle extends PathPlannerAuto {
                               robotContainer.prepScoreCoral(
                                   ElevatorConstants.L4_PREP_POSITION,
                                   ArmConstants.L4_PREP_POSITION))),
-                  robotContainer
-                      .prepScoreCoral(
-                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
+                  Commands.sequence(Commands.waitSeconds(.2), robotContainer.scoreCoral())
                       .deadlineFor(
                           robotContainer.alignToPose(
                               () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
-                  robotContainer.scoreCoral(),
                   AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntake()),
                   autoHelper(CSP_D, D_CSP),
-                  autoHelper(CSP_C, C_CSP) /*,
-                  autoHelper(CSP_C, C_CSP)*/));
+                  autoHelper(CSP_C, C_CSP),
+                  autoHelper(CSP_E, E_CSP)));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
@@ -92,15 +88,13 @@ public class FiveCycle extends PathPlannerAuto {
         AutoBuilder.followPath(pathOne)
             .deadlineFor(
                 Commands.sequence(
-                    Commands.waitSeconds(1),
+                    Commands.waitSeconds(.8),
                     robotContainer.prepScoreCoral(
                         ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION))),
-        robotContainer
-            .prepScoreCoral(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
+        Commands.sequence(Commands.waitSeconds(.2), robotContainer.scoreCoral())
             .deadlineFor(
                 robotContainer.alignToPose(
                     () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
-        robotContainer.scoreCoral(),
         AutoBuilder.followPath(pathTwo).alongWith(robotContainer.prepCoralIntake()));
   }
 }
