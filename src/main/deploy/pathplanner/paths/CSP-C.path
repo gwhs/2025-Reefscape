@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 2.8531584738301596,
-        "y": 1.7815261797165582
+        "y": 1.781526179716558
       },
       "isLocked": false,
       "linkedName": "CSP"
@@ -55,7 +55,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 3.25,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 9.0,
