@@ -89,7 +89,7 @@ public class ClimbIOReal implements ClimbIO {
 
   @Override
   public void setPosition(double angle) {
-    climbMotor.setControl(m_request.withPosition(Units.degreesToRotations(angle)));
+    climbMotor.setControl(m_request.withPosition(angle));
   }
 
   @Override
