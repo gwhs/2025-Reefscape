@@ -69,7 +69,7 @@ public class ClimbIOReal implements ClimbIO {
     softwareLimitSwitch.ForwardSoftLimitEnable = false;
     softwareLimitSwitch.ForwardSoftLimitThreshold =
         Units.degreesToRotations(ClimbConstants.CLIMB_CLIMB_POSITION + 5);
-    softwareLimitSwitch.ReverseSoftLimitEnable = true;
+    softwareLimitSwitch.ReverseSoftLimitEnable = false;
     softwareLimitSwitch.ReverseSoftLimitThreshold =
         Units.degreesToRotations(ClimbConstants.STOW_CLIMB_POSITION);
 
