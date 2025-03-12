@@ -222,10 +222,9 @@ public class AprilTagCam {
         && averageDistance > AprilTagCamConstants.MULTI_APRILTAG_MAX_DISTANCE) {
       DogLog.log(ntKey + "Rejected Pose", estimPose3d);
       DogLog.log(ntKey + "Rejected Reason", "Too far of distance to april tag");
-      
+
       return false;
     }
-    
 
     // if velocity or rotaion is too high
     double xVel = speed.vxMetersPerSecond;
