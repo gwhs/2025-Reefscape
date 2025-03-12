@@ -10,6 +10,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -17,7 +18,6 @@ import java.util.function.Supplier;
 public class AlignToPose extends Command {
 
   Supplier<Pose2d> targetPose;
-
   private final double ELEVATOR_UP_SLEW_RATE = 1;
 
   private final SlewRateLimiter angularVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
@@ -26,11 +26,14 @@ public class AlignToPose extends Command {
   private final DoubleSupplier elevatorHeight;
 
   private boolean resetLimiter = true;
+  private CommandXboxController driverController;
 
   private CommandSwerveDrivetrain drivetrain;
 
   private double maxSpeed = CommandSwerveDrivetrain.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 1.0 * Math.PI;
+
+  private long startTime;
 
   public static final double PID_MAX = 0.44;
 
@@ -41,11 +44,15 @@ public class AlignToPose extends Command {
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
   public AlignToPose(
-      Supplier<Pose2d> Pose, CommandSwerveDrivetrain drivetrain, DoubleSupplier elevatorHeight) {
+      Supplier<Pose2d> Pose,
+      CommandSwerveDrivetrain drivetrain,
+      DoubleSupplier elevatorHeight,
+      CommandXboxController driverController) {
     addRequirements(drivetrain);
 
     this.drivetrain = drivetrain;
     this.targetPose = Pose;
+    this.driverController = driverController;
     this.elevatorHeight = elevatorHeight;
   }
 
@@ -66,8 +73,23 @@ public class AlignToPose extends Command {
     return false;
   }
 
+  public boolean isJoystickActive() {
+    long now = System.currentTimeMillis();
+    if (now - startTime < 1000) { // if under 1 second, then joystick shouldn't be considered active
+      return false;
+    }
+    double xVelocity = driverController.getLeftY();
+    double yVelocity = driverController.getLeftX();
+
+    if (Math.abs(yVelocity) > 0.1 || Math.abs(xVelocity) > 0.1) {
+      return true;
+    }
+    return false;
+  }
+
   @Override
   public void initialize() {
+    startTime = System.currentTimeMillis();
     drivetrain.goToPoseWithPID(targetPose.get());
     DogLog.log("Align/Target Pose", targetPose.get());
   }
@@ -139,6 +161,9 @@ public class AlignToPose extends Command {
 
   @Override
   public boolean isFinished() {
+    if (isJoystickActive()) {
+      return true;
+    }
     return false;
   }
 }
