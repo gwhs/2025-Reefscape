@@ -66,7 +66,7 @@ public class ClimbIOReal implements ClimbIO {
     motorOutput.NeutralMode = NeutralModeValue.Brake;
     motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-    softwareLimitSwitch.ForwardSoftLimitEnable = true;
+    softwareLimitSwitch.ForwardSoftLimitEnable = false;
     softwareLimitSwitch.ForwardSoftLimitThreshold =
         Units.degreesToRotations(ClimbConstants.CLIMB_CLIMB_POSITION + 5);
     softwareLimitSwitch.ReverseSoftLimitEnable = true;
