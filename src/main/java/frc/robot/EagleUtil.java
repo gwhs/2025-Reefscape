@@ -19,6 +19,9 @@ public class EagleUtil {
   protected static ArrayList<Pose2d> m_redPoses;
   protected static ArrayList<Pose2d> m_bluePoses;
 
+  protected static ArrayList<Pose2d> m_redAlgaePoses;
+  protected static ArrayList<Pose2d> m_blueAlgaePoses;
+
   private static double BLUE_REEF_X = Units.inchesToMeters(144 + (93.5 - 14 * 2) / 2);
   private static double BLUE_REEF_Y = Units.inchesToMeters(158.50);
   private static Pose2d BLUE_REEF = new Pose2d(BLUE_REEF_X, BLUE_REEF_Y, Rotation2d.kZero);
@@ -38,6 +41,9 @@ public class EagleUtil {
 
   private static Pose2d[] bluePoses = new Pose2d[12];
   private static Pose2d[] redPoses = new Pose2d[12];
+
+  private static Pose2d[] blueAlgaePoses = new Pose2d[6];
+  private static Pose2d[] redAlgaePoses = new Pose2d[6];
 
   private static Pose2d cachedPose = null;
   private static Alliance red = DriverStation.Alliance.Red;
@@ -196,8 +202,61 @@ public class EagleUtil {
     DogLog.log("Caculation/Red Set Points", redPoses);
 
     m_redPoses = new ArrayList<Pose2d>(Arrays.asList(redPoses));
-
     return new ArrayList<Pose2d>(m_redPoses);
+  }
+
+  public static ArrayList<Pose2d> calculateBlueAlgaeSetPoints() {
+    if (m_blueAlgaePoses != null) {
+      return new ArrayList<Pose2d>(m_blueAlgaePoses);
+    }
+
+    blueAlgaePoses[0] = new Pose2d(X, Y, Rotation2d.kZero);
+    blueAlgaePoses[1] = new Pose2d(X, -Y, Rotation2d.kZero);
+
+    Rotation2d sixty = Rotation2d.fromDegrees(60);
+
+    for (int i = 2; i < blueAlgaePoses.length; i++) {
+      blueAlgaePoses[i] = blueAlgaePoses[i - 2].rotateBy(sixty);
+    }
+
+    for (int i = 0; i < blueAlgaePoses.length; i++) {
+      blueAlgaePoses[i] = blueAlgaePoses[i].relativeTo(BLUE_REEF_INVERT);
+      blueAlgaePoses[i] =
+          new Pose2d(
+              blueAlgaePoses[i].getX(), blueAlgaePoses[i].getY(), blueAlgaePoses[i].getRotation());
+    }
+
+    DogLog.log("Caculation/Blue Reef", BLUE_REEF);
+    DogLog.log("Caculation/Blue Set Points", blueAlgaePoses);
+    m_blueAlgaePoses = new ArrayList<Pose2d>(Arrays.asList(blueAlgaePoses));
+    return new ArrayList<Pose2d>(m_blueAlgaePoses);
+  }
+
+  public static ArrayList<Pose2d> calculateRedAlgaeSetPoints() {
+    if (m_redAlgaePoses != null) {
+      return new ArrayList<Pose2d>(m_redAlgaePoses);
+    }
+
+    redAlgaePoses[0] = new Pose2d(X, Y, Rotation2d.kZero);
+    redAlgaePoses[1] = new Pose2d(X, -Y, Rotation2d.kZero);
+
+    Rotation2d sixty = Rotation2d.fromDegrees(60);
+
+    for (int i = 2; i < redAlgaePoses.length; i++) {
+      redAlgaePoses[i] = redAlgaePoses[i - 2].rotateBy(sixty);
+    }
+
+    for (int i = 0; i < redAlgaePoses.length; i++) {
+      redAlgaePoses[i] = redAlgaePoses[i].relativeTo(RED_REEF_INVERT);
+      redAlgaePoses[i] =
+          new Pose2d(
+              redAlgaePoses[i].getX(), redAlgaePoses[i].getY(), redAlgaePoses[i].getRotation());
+    }
+
+    DogLog.log("Caculation/Blue Reef", BLUE_REEF);
+    DogLog.log("Caculation/Blue Set Points", redAlgaePoses);
+    m_redAlgaePoses = new ArrayList<Pose2d>(Arrays.asList(redAlgaePoses));
+    return new ArrayList<Pose2d>(m_redAlgaePoses);
   }
 
   private static Pose2d getNearestReefPoint(Pose2d pose) {
@@ -209,6 +268,15 @@ public class EagleUtil {
     }
   }
 
+  private static Pose2d getNearestAlgaePoint(Pose2d pose) {
+    if (DriverStation.getAlliance().isPresent()
+        && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      return pose.nearest(FieldConstants.blueAlgaeSetpointList);
+    } else {
+      return pose.nearest(FieldConstants.redAlgaeSetpointList);
+    }
+  }
+
   /**
    * @param pose the pose to compare to
    * @return cached Pose2d
@@ -216,6 +284,13 @@ public class EagleUtil {
   public static Pose2d getCachedReefPose(Pose2d pose) {
     if (cachedPose == null) {
       cachedPose = getNearestReefPoint(pose);
+    }
+    return cachedPose;
+  }
+
+  public static Pose2d getCachedAlgaePose(Pose2d pose) {
+    if (cachedPose == null) {
+      cachedPose = getNearestAlgaePoint(pose);
     }
     return cachedPose;
   }

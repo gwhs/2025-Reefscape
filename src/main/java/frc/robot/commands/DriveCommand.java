@@ -68,7 +68,8 @@ public class DriveCommand extends Command {
     CORAL_STATION,
     REEF,
     CAGE,
-    PROCESSOR
+    PROCESSOR,
+    DEALGAE
   }
 
   private TargetMode mode = TargetMode.NORMAL;
@@ -155,6 +156,13 @@ public class DriveCommand extends Command {
         return -90;
       } else {
         return 90;
+      }
+    } else if (mode == TargetMode.DEALGAE) {
+      if (DriverStation.getAlliance().isPresent()) {
+        Pose2d nearest = EagleUtil.getCachedAlgaePose(currentRobotPose);
+        return nearest.getRotation().getDegrees();
+      } else {
+        return 0;
       }
     } else {
       return 0;
