@@ -209,6 +209,8 @@ public class AprilTagCam {
       numOfTags++;
       tagList.add(tagPose);
     }
+
+    DogLog.log(ntKey + "April Tags Seen/", tagList.toArray(new Pose3d[0]));
     if (numOfTags > 0) {
       averageDistance /= numOfTags;
     }
@@ -220,9 +222,9 @@ public class AprilTagCam {
         && averageDistance > AprilTagCamConstants.MULTI_APRILTAG_MAX_DISTANCE) {
       DogLog.log(ntKey + "Rejected Pose", estimPose3d);
       DogLog.log(ntKey + "Rejected Reason", "Too far of distance to april tag");
+
       return false;
     }
-    DogLog.log(ntKey + "April Tags Seen/", tagList.toArray(new Pose3d[0]));
 
     // if velocity or rotaion is too high
     double xVel = speed.vxMetersPerSecond;
