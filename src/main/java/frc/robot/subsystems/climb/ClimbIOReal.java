@@ -73,7 +73,7 @@ public class ClimbIOReal implements ClimbIO {
     softwareLimitSwitch.ReverseSoftLimitThreshold =
         Units.degreesToRotations(ClimbConstants.STOW_CLIMB_POSITION);
 
-    currentConfig.withStatorCurrentLimitEnable(true);
+    currentConfig.withStatorCurrentLimitEnable (true);
     currentConfig.withStatorCurrentLimit(20);
 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
