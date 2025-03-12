@@ -34,7 +34,7 @@ public class ElevatorSubsystem extends SubsystemBase {
               (volts) -> elevatorIO.setVoltage(volts.in(Volts)), null, this));
 
   public ElevatorSubsystem() {
-    if (RobotBase.isSimulation()) {
+    if (RobotBase.isSimulation() || true) {
       elevatorIO = new ElevatorIOSim();
     } else {
       elevatorIO = new ElevatorIOReal();
