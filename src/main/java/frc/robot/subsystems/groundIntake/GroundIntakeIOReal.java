@@ -67,8 +67,8 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
 
     feedbackConfigs.FeedbackRotorOffset = 0;
     feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-    feedbackConfigs.RotorToSensorRatio = GroundIntakeConstants.PIVOT_GEAR_RATIO;
-    feedbackConfigs.SensorToMechanismRatio = 1;
+    feedbackConfigs.RotorToSensorRatio = 1;
+    feedbackConfigs.SensorToMechanismRatio = GroundIntakeConstants.PIVOT_GEAR_RATIO;
 
     motionMagicConfigs.MotionMagicCruiseVelocity = GroundIntakeConstants.MAX_VELOCITY;
     motionMagicConfigs.MotionMagicAcceleration = GroundIntakeConstants.MAX_ACCELERATION;
