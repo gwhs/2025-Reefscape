@@ -207,56 +207,48 @@ public class EagleUtil {
 
   public static ArrayList<Pose2d> calculateBlueAlgaeSetPoints() {
     if (m_blueAlgaePoses != null) {
-      return new ArrayList<Pose2d>(m_blueAlgaePoses);
+      return new ArrayList<>(m_blueAlgaePoses);
     }
 
-    blueAlgaePoses[0] = new Pose2d(X, Y, Rotation2d.kZero);
-    blueAlgaePoses[1] = new Pose2d(X, -Y, Rotation2d.kZero);
-
     Rotation2d sixty = Rotation2d.fromDegrees(60);
+    Pose2d startPose =
+        new Pose2d(X, Y - REEF_TO_REEF_DISTANCE / 2, Rotation2d.kZero); // Centered on first side
 
-    for (int i = 2; i < blueAlgaePoses.length; i++) {
-      blueAlgaePoses[i] = blueAlgaePoses[i - 2].rotateBy(sixty);
+    for (int i = 0; i < blueAlgaePoses.length; i++) {
+      blueAlgaePoses[i] = startPose.rotateBy(sixty.times(i));
     }
 
     for (int i = 0; i < blueAlgaePoses.length; i++) {
       blueAlgaePoses[i] = blueAlgaePoses[i].relativeTo(BLUE_REEF_INVERT);
-      blueAlgaePoses[i] =
-          new Pose2d(
-              blueAlgaePoses[i].getX(), blueAlgaePoses[i].getY(), blueAlgaePoses[i].getRotation());
     }
 
-    DogLog.log("Caculation/Blue Reef", BLUE_REEF);
-    DogLog.log("Caculation/Blue Set Points", blueAlgaePoses);
-    m_blueAlgaePoses = new ArrayList<Pose2d>(Arrays.asList(blueAlgaePoses));
-    return new ArrayList<Pose2d>(m_blueAlgaePoses);
+    DogLog.log("Calculation/Blue Algae", BLUE_REEF);
+    DogLog.log("Calculation/Blue Algae Setpoints", blueAlgaePoses);
+    m_blueAlgaePoses = new ArrayList<>(Arrays.asList(blueAlgaePoses));
+    return new ArrayList<>(m_blueAlgaePoses);
   }
 
   public static ArrayList<Pose2d> calculateRedAlgaeSetPoints() {
     if (m_redAlgaePoses != null) {
-      return new ArrayList<Pose2d>(m_redAlgaePoses);
+      return new ArrayList<>(m_redAlgaePoses);
     }
 
-    redAlgaePoses[0] = new Pose2d(X, Y, Rotation2d.kZero);
-    redAlgaePoses[1] = new Pose2d(X, -Y, Rotation2d.kZero);
-
     Rotation2d sixty = Rotation2d.fromDegrees(60);
+    Pose2d startPose =
+        new Pose2d(X, Y - REEF_TO_REEF_DISTANCE / 2, Rotation2d.kZero); // Centered on first side
 
-    for (int i = 2; i < redAlgaePoses.length; i++) {
-      redAlgaePoses[i] = redAlgaePoses[i - 2].rotateBy(sixty);
+    for (int i = 0; i < redAlgaePoses.length; i++) {
+      redAlgaePoses[i] = startPose.rotateBy(sixty.times(i));
     }
 
     for (int i = 0; i < redAlgaePoses.length; i++) {
       redAlgaePoses[i] = redAlgaePoses[i].relativeTo(RED_REEF_INVERT);
-      redAlgaePoses[i] =
-          new Pose2d(
-              redAlgaePoses[i].getX(), redAlgaePoses[i].getY(), redAlgaePoses[i].getRotation());
     }
 
-    DogLog.log("Caculation/Blue Reef", BLUE_REEF);
-    DogLog.log("Caculation/Blue Set Points", redAlgaePoses);
-    m_redAlgaePoses = new ArrayList<Pose2d>(Arrays.asList(redAlgaePoses));
-    return new ArrayList<Pose2d>(m_redAlgaePoses);
+    DogLog.log("Calculation/Red Algae", RED_REEF);
+    DogLog.log("Calculation/Red Algae Setpoints", redAlgaePoses);
+    m_redAlgaePoses = new ArrayList<>(Arrays.asList(redAlgaePoses));
+    return new ArrayList<>(m_redAlgaePoses);
   }
 
   private static Pose2d getNearestReefPoint(Pose2d pose) {
