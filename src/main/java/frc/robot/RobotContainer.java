@@ -537,14 +537,38 @@ public class RobotContainer {
    * @return score the coral
    */
   public Command scoreCoral() {
+
+    ALGAE_HIGH.negate().and(m_driverController.leftTrigger()).onTrue(prepDealgaeLow());
+    ALGAE_HIGH.and(m_driverController.leftTrigger()).onTrue(prepDealgaeHigh());
+
+    m_driverController
+        .leftTrigger()
+        .whileTrue(alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose)));
+
+    Command scoreCoral =
+      Commands.sequence(
+        endEffector.shoot(),
+        Commands.waitSeconds(0.1),
+        arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.1),
+        elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
+        endEffector.stopMotor()).withTimeout(0.5);
+
+    Command deAlgae = 
+      Commands.sequence(
+        endEffector.shoot(),
+        Commands.waitSeconds(0.1),
+        arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.1),
+        elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
+        endEffector.stopMotor(),
+        .whileTrue(alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose)));
+        
+        
+        
+        ).withTimeout(0.5);
+
     return Commands.sequence(
-            // arm.increaseAngle(20).onlyIf(IS_L4).withTimeout(1.0),
-            endEffector.shoot(),
-            Commands.waitSeconds(0.1),
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.1),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
-            endEffector.stopMotor())
-        .withName("Score Coral");
+            Commands.either(driveCommand, driveCommand, ALGAE_HIGH)
+        .withName("Score Coral"));
   }
 
   // DeAlgae Commands
