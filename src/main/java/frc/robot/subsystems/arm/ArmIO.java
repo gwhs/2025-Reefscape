@@ -9,7 +9,7 @@ public interface ArmIO {
 
   public void setVoltage(double volts);
 
-  public void setEmergencyMode(
-      boolean emergency); 
+  public void setEmergencyMode(boolean emergency);
 
+  public double getPositionError();
 }

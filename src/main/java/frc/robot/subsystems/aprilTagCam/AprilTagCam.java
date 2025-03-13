@@ -107,13 +107,12 @@ public class AprilTagCam {
     // we need to give the info of where the robot is to the drive train so it knows where to move
 
     List<PhotonPipelineResult> results = cam.getAllUnreadResults();
-    ArrayList<Pose3d> tagListFiltered = new ArrayList<Pose3d>();
-    ArrayList<Pose3d> tagListUnfiltered = new ArrayList<Pose3d>();
     DogLog.log(ntKey + "Number of Results/", results.size());
     DogLog.log(ntKey + "counter", counter);
     if (results.isEmpty()) {
       return;
     }
+
     for (PhotonPipelineResult targetPose : results) {
       optionalEstimPose = photonEstimator.update(targetPose);
 
@@ -121,21 +120,9 @@ public class AprilTagCam {
         continue;
       }
 
-      List<PhotonTrackedTarget> seenTargets = targetPose.getTargets();
-      for (PhotonTrackedTarget currTarget : seenTargets) {
-        Optional<Pose3d> optionalTargetPose =
-            aprilTagFieldLayout.getTagPose(currTarget.getFiducialId());
-        if (optionalTargetPose.isEmpty()) {
-          continue;
-        }
-        tagListUnfiltered.add(optionalTargetPose.get());
-      }
-
       Pose3d estimPose3d = optionalEstimPose.get().estimatedPose;
-      tagListFiltered = filterTags(tagListUnfiltered, estimPose3d);
 
-      if (!filterResults(
-          estimPose3d, optionalEstimPose.get(), tagListFiltered, currRobotSpeed.get())) {
+      if (!filterResults(estimPose3d, optionalEstimPose.get(), currRobotSpeed.get())) {
         continue;
       }
 
@@ -147,8 +134,6 @@ public class AprilTagCam {
       DogLog.log(ntKey + "Accepted Pose/", pos);
       DogLog.log(ntKey + "Accepted Time Stamp/", timestamp);
       DogLog.log(ntKey + "Accepted Stdev/", getSDArray(sd));
-      DogLog.log(ntKey + "Unfiltered April Tags/", tagListUnfiltered.toArray(new Pose3d[0]));
-      DogLog.log(ntKey + "Filtered April Tags/", tagListFiltered.toArray(new Pose3d[0]));
 
       addVisionMeasurement.accept(helper);
     }
@@ -177,10 +162,7 @@ public class AprilTagCam {
    * @return are they filtered?
    */
   public boolean filterResults(
-      Pose3d estimPose3d,
-      EstimatedRobotPose optionalEstimPose,
-      ArrayList<Pose3d> filteredTags,
-      ChassisSpeeds speed) {
+      Pose3d estimPose3d, EstimatedRobotPose optionalEstimPose, ChassisSpeeds speed) {
 
     // If vision’s pose estimation is above/below the ground
     double upperZBound = AprilTagCamConstants.Z_TOLERANCE;
@@ -213,11 +195,34 @@ public class AprilTagCam {
     }
 
     // If the tags are too far away
-    if (filteredTags.isEmpty()) {
+    double averageDistance = 0;
+    double numOfTags = 0;
+    ArrayList<Pose3d> tagList = new ArrayList<Pose3d>();
+    for (PhotonTrackedTarget target : optionalEstimPose.targetsUsed) {
+      Optional<Pose3d> tagPoseOptional = aprilTagFieldLayout.getTagPose(target.getFiducialId());
+      if (tagPoseOptional.isEmpty()) {
+        continue;
+      }
+      Pose3d tagPose = tagPoseOptional.get();
+      double distance = optionalEstimPose.estimatedPose.minus(tagPose).getTranslation().getNorm();
+      averageDistance += distance;
+      numOfTags++;
+      tagList.add(tagPose);
+    }
+    if (numOfTags > 0) {
+      averageDistance /= numOfTags;
+    }
+    if (numOfTags == 1 && averageDistance > AprilTagCamConstants.SINGLE_APRILTAG_MAX_DISTANCE) {
+      DogLog.log(ntKey + "Rejected Pose", estimPose3d);
+      DogLog.log(ntKey + "Rejected Reason", "Too far of distance to april tag");
+      return false;
+    } else if (numOfTags > 1
+        && averageDistance > AprilTagCamConstants.MULTI_APRILTAG_MAX_DISTANCE) {
       DogLog.log(ntKey + "Rejected Pose", estimPose3d);
       DogLog.log(ntKey + "Rejected Reason", "Too far of distance to april tag");
       return false;
     }
+    DogLog.log(ntKey + "April Tags Seen/", tagList.toArray(new Pose3d[0]));
 
     // if velocity or rotaion is too high
     double xVel = speed.vxMetersPerSecond;
@@ -232,25 +237,6 @@ public class AprilTagCam {
     }
 
     return true;
-  }
-
-  /**
-   * @param unfilteredTags tags to filter
-   * @param robotPose the robot position
-   * @return the tags
-   */
-  public ArrayList<Pose3d> filterTags(ArrayList<Pose3d> unfilteredTags, Pose3d robotPose) {
-
-    // If the tag is too far away
-    ArrayList<Pose3d> filteredTags = new ArrayList<Pose3d>();
-    for (Pose3d currTarget : unfilteredTags) {
-      if (robotPose.minus(currTarget).getTranslation().getNorm()
-          < AprilTagCamConstants.APRILTAG_MAX_DISTANCE) {
-        filteredTags.add(currTarget);
-      }
-    }
-
-    return filteredTags;
   }
 
   /**
