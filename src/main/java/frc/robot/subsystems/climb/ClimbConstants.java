@@ -9,5 +9,5 @@ public class ClimbConstants {
 
   public static final double CLIMB_CLIMB_POSITION = 2.77;
   public static final double STOW_CLIMB_POSITION = 0;
-  public static final double LATCH_CLIMB_POSITION = 0.8; 
+  public static final double LATCH_CLIMB_POSITION = 0.8;
 }
