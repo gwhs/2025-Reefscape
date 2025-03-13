@@ -216,6 +216,7 @@ public class ElevatorIOReal implements ElevatorIO {
     backElevatorMotorConnectedAlert.set(!m_backElevatorMotor.isConnected());
 
     if (m_emergencyMode == true) {
+      setVoltage(0);
       differentialMechanism.setStaticBrake();
     }
   }
