@@ -1,5 +1,6 @@
 package frc.robot.subsystems.endEffector;
 
+import com.playingwithfusion.TimeOfFlight;
 import dev.doglog.DogLog;
 import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -11,8 +12,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class EndEffectorSubsystem extends SubsystemBase {
 
-  public EndEffectorIO endEffectorIO;
+  EndEffectorIO endEffectorIO;
   public final Trigger coralTriggered;
+  public TOFSensor m_coral_detector = new TOFSensor(EndEffectorConstants.CORAL_DETECTOR_ID);
 
   /**
    * there are two implemenations for talon motors and sparkmax motors we are probably going to use
@@ -38,6 +40,21 @@ public class EndEffectorSubsystem extends SubsystemBase {
    * @param voltage the voltage to set to
    * @return set the motor to the voltage
    */
+  public boolean coralLoaded() {
+    // double distance = m_colorSensor.getProximity();
+    double distance = m_coral_detector.getRange();
+    if (m_coral_detector.getStatus() != TimeOfFlight.Status.Valid) {
+      DogLog.log("EndEffector/Validity", m_coral_detector.getStatus());
+      DogLog.log("EndEffector/Distance", distance);
+      return false;
+    }
+    if (distance < 30 && distance > 20) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   public Command setVoltage(double voltage) {
     return Commands.runOnce(() -> endEffectorIO.setVoltage(voltage));
   }

@@ -20,7 +20,8 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 public class FiveCycle extends PathPlannerAuto {
 
   private RobotContainer robotContainer;
-//   private double waitTime = 1.25;
+
+  //   private double waitTime = 1.25;
 
   public FiveCycle(RobotContainer robotContainer, boolean nonProcessorSide) {
     super(Commands.run(() -> {}));
@@ -83,7 +84,7 @@ public class FiveCycle extends PathPlannerAuto {
   public Command autoHelper(PathPlannerPath pathOne, PathPlannerPath pathTwo) {
     return Commands.sequence(
         // wait until coral is loaded
-        Commands.waitUntil(() -> robotContainer.endEffector.endEffectorIO.coralLoaded()),
+        Commands.waitUntil(() -> robotContainer.endEffector.coralLoaded()),
         // drive to scoring position
         AutoBuilder.followPath(pathOne)
             .deadlineFor(
