@@ -28,7 +28,7 @@ public class ArmSubsystem extends SubsystemBase {
           new SysIdRoutine.Mechanism((volts) -> armIO.setVoltage(volts.in(Volts)), null, this));
 
   public ArmSubsystem() {
-    if (RobotBase.isSimulation() || true) {
+    if (RobotBase.isSimulation()) {
       armIO = new ArmIOSim();
     } else {
       armIO = new ArmIOReal();
