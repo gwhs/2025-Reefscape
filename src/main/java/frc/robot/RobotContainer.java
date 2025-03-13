@@ -582,7 +582,12 @@ public class RobotContainer {
                 .withTimeout(.5));
 
     Command climbCommand =
-        Commands.parallel(climb.climb(), elevator.setHeight(0), arm.setAngle(90)).withTimeout(0.5);
+        Commands.parallel(
+                climb.climb(),
+                elevator.setHeight(0),
+                arm.setAngle(90),
+                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL)))
+            .withTimeout(0.5);
 
     return Commands.sequence(
             Commands.parallel(
