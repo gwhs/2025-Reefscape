@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import java.util.function.DoubleSupplier;
 
 public class ElevatorSubsystem extends SubsystemBase {
   private ElevatorIO elevatorIO;
@@ -72,6 +73,23 @@ public class ElevatorSubsystem extends SubsystemBase {
                 () ->
                     MathUtil.isNear(
                         clampedMeters, rotationsToMeters(elevatorIO.getRotation()), 0.1)));
+  }
+
+  public Command setHeightSupplier(DoubleSupplier meters) {
+    return this.runOnce(
+            () -> {
+              double clampedMeters =
+                  MathUtil.clamp(meters.getAsDouble(), 0, ElevatorConstants.TOP_METER);
+              elevatorIO.setRotation(metersToRotations(clampedMeters));
+            })
+        .andThen(
+            Commands.waitUntil(
+                () -> {
+                  double clampedMeters =
+                      MathUtil.clamp(meters.getAsDouble(), 0, ElevatorConstants.TOP_METER);
+                  return MathUtil.isNear(
+                      clampedMeters, rotationsToMeters(elevatorIO.getRotation()), 0.1);
+                }));
   }
 
   /**

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -37,6 +38,7 @@ import frc.robot.subsystems.aprilTagCam.AprilTagCam;
 import frc.robot.subsystems.aprilTagCam.AprilTagCamConstants;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
@@ -44,6 +46,7 @@ import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.BiConsumer;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class RobotContainer {
@@ -85,7 +88,7 @@ public class RobotContainer {
   private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
   private final LedSubsystem led = new LedSubsystem();
   private final GroundIntakeSubsystem groundIntake = new GroundIntakeSubsystem();
-
+  private final ClimbSubsystem climb = new ClimbSubsystem();
   private final DriveCommand driveCommand;
 
   public enum CoralLevel {
@@ -138,7 +141,7 @@ public class RobotContainer {
         drivetrain = TunerConstants_Comp.createDrivetrain();
         leftCam =
             new AprilTagCam(
-                AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_LEFT_CAMERA_COMP_NAME,
                 AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
                 drivetrain::addVisionMeasurent,
                 () -> drivetrain.getState().Pose,
@@ -146,7 +149,7 @@ public class RobotContainer {
 
         rightCam =
             new AprilTagCam(
-                AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+                AprilTagCamConstants.FRONT_RIGHT_CAMERA_COMP_NAME,
                 AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
                 drivetrain::addVisionMeasurent,
                 () -> drivetrain.getState().Pose,
@@ -230,7 +233,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    BATTERY_BROWN_OUT.onTrue(drivetrain.setDriveMotorCurrentLimit());
+    // BATTERY_BROWN_OUT.onTrue(drivetrain.setDriveMotorCurrentLimit());
 
     drivetrain
         .IS_ALIGNING_TO_POSE
@@ -356,7 +359,7 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+                  driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
                 }));
 
     IS_L2
@@ -370,6 +373,18 @@ public class RobotContainer {
                 }));
 
     m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
+
+    m_driverController
+        .rightBumper()
+        .whileTrue(
+            Commands.startEnd(
+                    () -> {
+                      driveCommand.setSlowMode(true, 0.25);
+                    },
+                    () -> {
+                      driveCommand.setSlowMode(false, 0.25);
+                    })
+                .withName("Slow Mode"));
 
     m_driverController
         .rightTrigger()
@@ -412,12 +427,11 @@ public class RobotContainer {
     // m_operatorController.x().whileTrue(elevator.sysIdDynamic(Direction.kReverse));
 
     m_operatorController.povRight().onTrue(arm.increaseAngle(3.0));
-
     m_operatorController.povLeft().onTrue(arm.decreaseAngle(3.0));
-
     m_operatorController.povUp().onTrue(elevator.increaseHeight(0.02));
-
     m_operatorController.povDown().onTrue(elevator.decreaseHeight(0.02));
+
+    m_operatorController.leftTrigger().onTrue(climb());
   }
 
   public void periodic() {
@@ -484,6 +498,7 @@ public class RobotContainer {
     autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
     autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
     autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
+    autoChooser.addOption("Push_One_Cycle", new PushOneCycle(this));
     autoChooser.addOption(
         "Wheel_Radius_Chracterizaton",
         WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
@@ -506,7 +521,7 @@ public class RobotContainer {
    * @return run the command
    */
   public Command alignToPose(Supplier<Pose2d> Pose) {
-    return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters());
+    return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters(), m_driverController);
   }
 
   /**
@@ -560,14 +575,27 @@ public class RobotContainer {
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
     return Commands.parallel(
             endEffector.holdCoral(),
-            elevator.setHeight(elevatorHeight).withTimeout(.5),
-            arm.setAngle(armAngle).withTimeout(.5))
+            elevator.setHeight(elevatorHeight).withTimeout(1.5),
+            arm.setAngle(armAngle).withTimeout(1.5))
+        .withName(
+            "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
+  }
+
+  public Command prepScoreCoral(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
+    return Commands.parallel(
+            endEffector.holdCoral(),
+            elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
+            arm.setAngleSupplier(armAngle).withTimeout(.5))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
 
   public Command prepScoreCoral(CoralLevel level) {
-    return prepScoreCoral(level.elevatorHeight, level.armAngle);
+    DoubleSupplier elevatorHeightSupplier =
+        () -> EagleUtil.getOffsetElevatorHeight(level, drivetrain.getPose());
+    DoubleSupplier armAngleSupplier =
+        () -> EagleUtil.getOffsetArmAngle(level, drivetrain.getPose());
+    return prepScoreCoral(elevatorHeightSupplier, armAngleSupplier).repeatedly();
   }
 
   /**
@@ -575,10 +603,11 @@ public class RobotContainer {
    */
   public Command scoreCoral() {
     return Commands.sequence(
+            // arm.increaseAngle(20).onlyIf(IS_L4).withTimeout(1.0),
             endEffector.shoot(),
-            Commands.waitSeconds(0.2),
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.2),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.2),
+            Commands.waitSeconds(0.1),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
             endEffector.stopMotor())
         .withName("Score Coral");
   }
@@ -607,5 +636,41 @@ public class RobotContainer {
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(.1),
                 endEffector.stopMotor()))
         .withName("Dealgae");
+  }
+
+  public Command climb() {
+    Trigger unprepclimbTrigger = m_operatorController.leftTrigger().negate();
+    Trigger climbTrigger = m_operatorController.rightTrigger();
+
+    Command unPrepClimbCommand =
+        Commands.sequence(
+            Commands.parallel(
+                    climb.stow(),
+                    elevator.setHeight(0),
+                    arm.setAngle(90),
+                    Commands.runOnce(
+                        () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)))
+                .withTimeout(.5));
+
+    Command climbCommand =
+        Commands.parallel(
+                climb.climb(),
+                elevator.setHeight(0),
+                arm.setAngle(90),
+                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL)))
+            .withTimeout(0.5);
+
+    return Commands.sequence(
+            Commands.parallel(
+                    climb.latch(),
+                    elevator.setHeight(0),
+                    arm.setAngle(90),
+                    Commands.runOnce(
+                        () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE)))
+                .withTimeout(0.01),
+            Commands.waitUntil(unprepclimbTrigger.or(climbTrigger)),
+            Commands.either(unPrepClimbCommand, climbCommand, unprepclimbTrigger))
+        .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+        .withName("Climb");
   }
 }

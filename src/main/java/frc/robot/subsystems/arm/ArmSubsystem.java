@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import java.util.function.DoubleSupplier;
 
 public class ArmSubsystem extends SubsystemBase {
   private ArmIO armIO;
@@ -49,6 +50,28 @@ public class ArmSubsystem extends SubsystemBase {
         .andThen(Commands.waitUntil(() -> MathUtil.isNear(clampedAngle, armIO.getPosition(), 1)));
   }
 
+  public Command setAngleSupplier(DoubleSupplier angle) {
+    return this.runOnce(
+            () -> {
+              double clampedAngle =
+                  MathUtil.clamp(
+                      angle.getAsDouble(),
+                      ArmConstants.ARM_LOWER_BOUND,
+                      ArmConstants.ARM_UPPER_BOUND);
+              armIO.setAngle(clampedAngle);
+            })
+        .andThen(
+            Commands.waitUntil(
+                () -> {
+                  double clampedAngle =
+                      MathUtil.clamp(
+                          angle.getAsDouble(),
+                          ArmConstants.ARM_LOWER_BOUND,
+                          ArmConstants.ARM_UPPER_BOUND);
+                  return MathUtil.isNear(clampedAngle, armIO.getPosition(), 1);
+                }));
+  }
+
   @Override
   public void periodic() {
     double startTime = HALUtil.getFPGATime();
@@ -78,7 +101,11 @@ public class ArmSubsystem extends SubsystemBase {
    * @return run the command
    */
   public Command increaseAngle(double degrees) {
-    return Commands.runOnce(() -> armIO.setAngle(armIO.getPosition() + degrees));
+    return Commands.runOnce(
+            () -> {
+              armIO.setAngle(armIO.getPosition() + degrees);
+            })
+        .andThen(Commands.waitUntil(() -> MathUtil.isNear(armIO.getPositionError(), 0, 1)));
   }
 
   /**
@@ -86,6 +113,6 @@ public class ArmSubsystem extends SubsystemBase {
    * @return run the command
    */
   public Command decreaseAngle(double degrees) {
-    return Commands.runOnce(() -> armIO.setAngle(armIO.getPosition() - degrees));
+    return increaseAngle(-degrees);
   }
 }

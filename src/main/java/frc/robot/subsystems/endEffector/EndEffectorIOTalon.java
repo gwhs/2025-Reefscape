@@ -4,9 +4,11 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.revrobotics.ColorSensorV3;
 import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -36,6 +38,9 @@ class EndEffectorIOTalon implements EndEffectorIO {
   public EndEffectorIOTalon() {
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
     CurrentLimitsConfigs limitsConfigs = talonConfig.CurrentLimits;
+    MotorOutputConfigs motorConfigs = talonConfig.MotorOutput;
+
+    motorConfigs.Inverted = InvertedValue.Clockwise_Positive;
 
     talonConfig.TorqueCurrent.withPeakForwardTorqueCurrent(40);
     talonConfig.TorqueCurrent.withPeakReverseTorqueCurrent(-40);
@@ -76,8 +81,8 @@ class EndEffectorIOTalon implements EndEffectorIO {
   }
 
   @Override
-  public void setAmps(double current) {
-    motor.setControl(currentControl.withOutput(current).withMaxAbsDutyCycle(.2));
+  public void setAmps(double current, double dutyCycle) {
+    motor.setControl(currentControl.withOutput(current).withMaxAbsDutyCycle(dutyCycle));
   }
 
   public boolean isSensorTriggered() {
