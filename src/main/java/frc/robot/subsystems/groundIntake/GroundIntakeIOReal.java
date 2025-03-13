@@ -103,7 +103,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     currentConfig = talonFXConfigs.CurrentLimits;
 
     motorOutput.NeutralMode = NeutralModeValue.Coast;
-    motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     currentConfig.withStatorCurrentLimitEnable(true);
     currentConfig.withStatorCurrentLimit(40);
