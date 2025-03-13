@@ -72,9 +72,9 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
 
     motionMagicConfigs.MotionMagicCruiseVelocity = GroundIntakeConstants.MAX_VELOCITY;
     motionMagicConfigs.MotionMagicAcceleration = GroundIntakeConstants.MAX_ACCELERATION;
-    motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
+    motionMagicConfigs.MotionMagicJerk = 0; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
-    motorOutput.NeutralMode = NeutralModeValue.Coast;
+    motorOutput.NeutralMode = NeutralModeValue.Brake;
     motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     softwareLimitSwitch.ForwardSoftLimitEnable = true;
