@@ -36,7 +36,7 @@ class EndEffectorIOSim implements EndEffectorIO {
   }
 
   @Override
-  public void setAmps(double current) {
+  public void setAmps(double current, double dutyCycle) {
     double resistance = DCMotor.getFalcon500(1).rOhms;
     double voltage = current * resistance;
     motor.setInputVoltage(voltage);
