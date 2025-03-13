@@ -71,6 +71,8 @@ public class ElevatorIOReal implements ElevatorIO {
   private final Alert backElevatorMotorConnectedAlert =
       new Alert("Back Elevator Motor Not Connected", AlertType.kError);
 
+  private boolean m_emergencyMode;
+
   public ElevatorIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
     MotorOutputConfigs motorOutput = talonFXConfigs.MotorOutput;
@@ -158,7 +160,11 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   public void setVoltage(double voltage) {
-    differentialMechanism.setControl(m_requestVoltage.withTargetOutput(voltage));
+    if (m_emergencyMode == true) {
+      differentialMechanism.setControl(m_requestVoltage.withTargetOutput(0));
+    } else {
+      differentialMechanism.setControl(m_requestVoltage.withTargetOutput(voltage));
+    }
   }
 
   public void setNeutralMode(NeutralModeValue mode) {
@@ -167,8 +173,14 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   public void setPosition(double newValue) {
-    m_frontElevatorMotor.setPosition(newValue);
-    m_backElevatorMotor.setPosition(newValue);
+    if (m_emergencyMode == false) {
+      m_frontElevatorMotor.setPosition(newValue);
+      m_backElevatorMotor.setPosition(newValue);
+    }
+  }
+
+  public void setEmergencyMode(boolean emergency) {
+    m_emergencyMode = emergency;
   }
 
   @Override
@@ -202,5 +214,9 @@ public class ElevatorIOReal implements ElevatorIO {
 
     frontElevatorMotorConnectedAlert.set(!m_frontElevatorMotor.isConnected());
     backElevatorMotorConnectedAlert.set(!m_backElevatorMotor.isConnected());
+
+    if (m_emergencyMode == true) {
+      differentialMechanism.setStaticBrake();
+    }
   }
 }

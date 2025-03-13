@@ -111,4 +111,12 @@ public class ArmSubsystem extends SubsystemBase {
   public Command decreaseAngle(double degrees) {
     return Commands.runOnce(() -> armIO.setAngle(armIO.getPosition() - degrees));
   }
+
+  public Command engageEmergencyMode() {
+    return Commands.runOnce(() -> armIO.setEmergencyMode(true));
+  }
+
+  public Command exitEmergencyMode() {
+    return Commands.runOnce(() -> armIO.setEmergencyMode(false));
+  }
 }
