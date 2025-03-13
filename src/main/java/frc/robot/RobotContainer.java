@@ -110,7 +110,7 @@ public class RobotContainer {
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
   public static final Trigger BATTERY_BROWN_OUT = new Trigger(() -> RobotController.isBrownedOut());
-
+  public static Trigger ALGAE_HIGH;
   public final Trigger IS_NEAR_CORAL_STATION;
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
@@ -194,6 +194,8 @@ public class RobotContainer {
                 EagleUtil.getDistanceBetween(
                         drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
                     < 0.4);
+
+    ALGAE_HIGH = new Trigger(() -> EagleUtil.isHighAlgae(getRobotPose()));
 
     configureAutonomous();
     configureBindings();
@@ -299,8 +301,12 @@ public class RobotContainer {
             Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
                 .withName("Back to Original State"));
 
-    IS_L2.and(m_driverController.leftTrigger()).onTrue(prepDealgaeLow());
-    IS_L3.or(IS_L4).and(m_driverController.leftTrigger()).onTrue(prepDealgaeHigh());
+    ALGAE_HIGH.negate().and(m_driverController.leftTrigger()).onTrue(prepDealgaeLow());
+    ALGAE_HIGH.and(m_driverController.leftTrigger()).onTrue(prepDealgaeHigh());
+
+    m_driverController
+        .leftTrigger()
+        .whileTrue(alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose)));
 
     m_driverController.leftTrigger().onFalse(dealgae());
 

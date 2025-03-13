@@ -157,13 +157,6 @@ public class DriveCommand extends Command {
       } else {
         return 90;
       }
-    } else if (mode == TargetMode.DEALGAE) {
-      if (DriverStation.getAlliance().isPresent()) {
-        Pose2d nearest = EagleUtil.getCachedAlgaePose(currentRobotPose);
-        return nearest.getRotation().getDegrees();
-      } else {
-        return 0;
-      }
     } else {
       return 0;
     }

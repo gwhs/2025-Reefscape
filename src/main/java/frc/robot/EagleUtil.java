@@ -260,12 +260,24 @@ public class EagleUtil {
     }
   }
 
-  private static Pose2d getNearestAlgaePoint(Pose2d pose) {
+  public static Pose2d getNearestAlgaePoint(Pose2d pose) {
     if (DriverStation.getAlliance().isPresent()
         && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
       return pose.nearest(FieldConstants.blueAlgaeSetpointList);
     } else {
       return pose.nearest(FieldConstants.redAlgaeSetpointList);
+    }
+  }
+
+  public static boolean isHighAlgae(Pose2d pose) {
+    Pose2d nearest = getNearestAlgaePoint(pose);
+    if (DriverStation.getAlliance().isPresent()
+        && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      int index = FieldConstants.blueAlgaeSetpointList.indexOf(nearest);
+      return (index % 2 == 0);
+    } else {
+      int index = FieldConstants.redAlgaeSetpointList.indexOf(nearest);
+      return (index % 2 == 1);
     }
   }
 
@@ -276,13 +288,6 @@ public class EagleUtil {
   public static Pose2d getCachedReefPose(Pose2d pose) {
     if (cachedPose == null) {
       cachedPose = getNearestReefPoint(pose);
-    }
-    return cachedPose;
-  }
-
-  public static Pose2d getCachedAlgaePose(Pose2d pose) {
-    if (cachedPose == null) {
-      cachedPose = getNearestAlgaePoint(pose);
     }
     return cachedPose;
   }
