@@ -78,5 +78,7 @@ public class TOFSensor {
 
     SmartDashboard.putNumber("dist_EMA", m_distance_EMA);
     SmartDashboard.putNumber("dist_EDEV", Math.sqrt(m_dist_SDEV_sq));
+    SmartDashboard.putString("sensor_Status", sensor.getStatus().toString());
+    SmartDashboard.putNumber("getDist_Sigma", sensor.getRangeSigma());
   }
 }
