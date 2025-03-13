@@ -31,7 +31,7 @@ public class ArmSubsystem extends SubsystemBase {
     if (RobotBase.isSimulation()) {
       armIO = new ArmIOSim();
     } else {
-      armIO = new ArmIOReal(); 
+      armIO = new ArmIOReal();
     }
   }
 
