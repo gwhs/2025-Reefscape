@@ -186,4 +186,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     return Commands.runOnce(
         () -> elevatorIO.setRotation(metersToRotations(getHeightMeters() - meters)));
   }
+
+  public Command engageEmergencyMode() {
+    return Commands.runOnce(() -> elevatorIO.setEmergencyMode(true));
+  }
+
+  public Command exitEmergencyMode() {
+    return Commands.runOnce(() -> elevatorIO.setEmergencyMode(false));
+  }
 }

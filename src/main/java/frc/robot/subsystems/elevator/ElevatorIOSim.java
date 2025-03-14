@@ -54,4 +54,10 @@ public class ElevatorIOSim implements ElevatorIO {
   public void setPosition(double newValue) {
     elevatorSim.setState(newValue, 0);
   }
+
+  @Override
+  public void setEmergencyMode(boolean emergency) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'setEmergencyMode'");
+  }
 }

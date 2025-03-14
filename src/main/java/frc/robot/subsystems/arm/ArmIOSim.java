@@ -44,7 +44,11 @@ public class ArmIOSim implements ArmIO {
    * @param volts how many volts to set to
    */
   public void setVoltage(double volts) {
-    armSim.setInputVoltage(volts);
+    if (ArmIOReal.m_emergencyMode == true) {
+      armSim.setInputVoltage(0);
+    } else {
+      armSim.setInputVoltage(volts);
+    }
   }
 
   public void update() {
@@ -53,5 +57,11 @@ public class ArmIOSim implements ArmIO {
     double pidOutput = pidController.calculate(getPosition());
 
     armSim.setInputVoltage(pidOutput);
+  }
+
+  @Override
+  public void setEmergencyMode(boolean emergency) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'setEmergencyMode'");
   }
 }

@@ -23,4 +23,6 @@ public interface ElevatorIO {
   public boolean getForwardLimit();
 
   public void setNeutralMode(NeutralModeValue mode);
+
+  public void setEmergencyMode(boolean emergency);
 }
