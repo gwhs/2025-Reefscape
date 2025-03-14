@@ -86,6 +86,7 @@ public class RobotContainer {
   private final ArmSubsystem arm = new ArmSubsystem();
   // private final ClimbSubsystem climb = new ClimbSubsystem();
   private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
+
   private final LedSubsystem led = new LedSubsystem();
   private final GroundIntakeSubsystem groundIntake = new GroundIntakeSubsystem();
   private final ClimbSubsystem climb = new ClimbSubsystem();
@@ -117,6 +118,8 @@ public class RobotContainer {
   public static final Trigger BATTERY_BROWN_OUT = new Trigger(() -> RobotController.isBrownedOut());
 
   public final Trigger IS_NEAR_CORAL_STATION;
+
+  public final Trigger IS_CORAL_LOADED;
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
@@ -199,6 +202,8 @@ public class RobotContainer {
                 EagleUtil.getDistanceBetween(
                         drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
                     < 0.4);
+
+    IS_CORAL_LOADED = new Trigger(() -> endEffector.coralLoaded());
 
     configureAutonomous();
     configureBindings();
