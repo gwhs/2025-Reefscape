@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 
 class EndEffectorIOTalon implements EndEffectorIO {
 
-  public TOFSensor m_coral_detector = new TOFSensor(EndEffectorConstants.CORAL_DETECTOR_ID);
+  private TOFSensor m_coral_detector = new TOFSensor(EndEffectorConstants.CORAL_DETECTOR_ID);
 
   private TalonFX motor = new TalonFX(EndEffectorConstants.deviceID, "rio");
   private final StatusSignal<Voltage> volts = motor.getMotorVoltage();

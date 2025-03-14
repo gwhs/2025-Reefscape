@@ -1,6 +1,5 @@
 package frc.robot.subsystems.endEffector;
 
-import com.playingwithfusion.TimeOfFlight;
 import dev.doglog.DogLog;
 import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -8,13 +7,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class EndEffectorSubsystem extends SubsystemBase {
 
-  EndEffectorIO endEffectorIO;
-  public final Trigger coralTriggered;
-  public TOFSensor m_coral_detector = new TOFSensor(EndEffectorConstants.CORAL_DETECTOR_ID);
+  private EndEffectorIO endEffectorIO;
+
+  // public final Trigger coralTriggered;
 
   /**
    * there are two implemenations for talon motors and sparkmax motors we are probably going to use
@@ -29,7 +27,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
       endEffectorIO = new EndEffectorIOTalon();
     }
 
-    coralTriggered = new Trigger(() -> endEffectorIO.coralLoaded());
+    // coralTriggered = new Trigger(() -> endEffectorIO.coralLoaded());
 
     SmartDashboard.putData("End Effector Command/End Effector Shoot", shoot());
     SmartDashboard.putData("End Effector Command/End Effector Intake", intake());
@@ -41,18 +39,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
    * @return set the motor to the voltage
    */
   public boolean coralLoaded() {
-    // double distance = m_colorSensor.getProximity();
-    double distance = m_coral_detector.getRange();
-    if (m_coral_detector.getStatus() != TimeOfFlight.Status.Valid) {
-      DogLog.log("EndEffector/Validity", m_coral_detector.getStatus());
-      DogLog.log("EndEffector/Distance", distance);
-      return false;
-    }
-    if (distance < 30 && distance > 20) {
-      return true;
-    } else {
-      return false;
-    }
+    return endEffectorIO.coralLoaded();
   }
 
   public Command setVoltage(double voltage) {

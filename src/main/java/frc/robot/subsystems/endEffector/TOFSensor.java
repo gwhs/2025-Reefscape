@@ -19,7 +19,7 @@ public class TOFSensor {
   public TOFSensor(int CAN_ID) {
     sensor = new TimeOfFlight(CAN_ID);
     setRangeOfInterest(0, 0, 15, 15);
-    sensor.setRangingMode(RangingMode.Short, 0.24); // Will need to test. must be between 24-1000ms
+    sensor.setRangingMode(RangingMode.Short, 24); // Will need to test. must be between 24-1000ms
     m_distance_EMA = sensor.getRange();
     m_dist_SDEV_sq = 0;
   }
@@ -52,8 +52,8 @@ public class TOFSensor {
 
     double diff_from_EMA = m_distance_EMA - sensor.getRange();
     m_dist_SDEV_sq =
-        (EndEffectorConstants.SDEV_Decay * diff_from_EMA * diff_from_EMA)
-            + ((1 - EndEffectorConstants.SDEV_Decay) * m_dist_SDEV_sq);
+        (EndEffectorConstants.SDEV_DECAY * diff_from_EMA * diff_from_EMA)
+            + ((1 - EndEffectorConstants.SDEV_DECAY) * m_dist_SDEV_sq);
     m_distance_EMA =
         (EndEffectorConstants.EXP_DECAY * sensor.getRange())
             + ((1 - EndEffectorConstants.EXP_DECAY) * m_distance_EMA);
