@@ -78,8 +78,8 @@ class EndEffectorIOTalon implements EndEffectorIO {
   }
 
   @Override
-  public void setAmps(double current) {
-    motor.setControl(currentControl.withOutput(current).withMaxAbsDutyCycle(.2));
+  public void setAmps(double current, double dutyCycle) {
+    motor.setControl(currentControl.withOutput(current).withMaxAbsDutyCycle(dutyCycle));
   }
 
   public boolean coralLoaded() {

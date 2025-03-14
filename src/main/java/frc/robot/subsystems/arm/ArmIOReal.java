@@ -42,6 +42,7 @@ public class ArmIOReal implements ArmIO {
   private final StatusSignal<Current> armStatorCurrent = armMotor.getStatorCurrent();
   private final StatusSignal<Angle> armEncoderPosition = armEncoder.getPosition();
   private final StatusSignal<Angle> armPosition = armMotor.getPosition();
+  private final StatusSignal<Double> armAngleError = armMotor.getClosedLoopError();
 
   private final Alert armMotorConnectedAlert =
       new Alert("Arm motor not connected", AlertType.kError);
@@ -75,7 +76,7 @@ public class ArmIOReal implements ArmIO {
 
     motionMagicConfigs.MotionMagicCruiseVelocity = ArmConstants.MAX_VELOCITY;
     motionMagicConfigs.MotionMagicAcceleration = ArmConstants.MAX_ACCELERATION;
-    motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
+    motionMagicConfigs.MotionMagicJerk = 0; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
     motorOutput.NeutralMode = NeutralModeValue.Brake;
     motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -126,6 +127,10 @@ public class ArmIOReal implements ArmIO {
     return Units.rotationsToDegrees(armEncoderPosition.getValueAsDouble());
   }
 
+  public double getPositionError() {
+    return armAngleError.getValueAsDouble();
+  }
+
   /**
    * @param volts the voltage to set to
    */
@@ -143,7 +148,8 @@ public class ArmIOReal implements ArmIO {
                 armDeviceTemp,
                 armStatorCurrent,
                 armPosition,
-                armEncoderPosition)
+                armEncoderPosition,
+                armAngleError)
             .isOK());
     DogLog.log("Arm/Motor/pid goal", Units.rotationsToDegrees(armPIDGoal.getValueAsDouble()));
     DogLog.log("Arm/Motor/motor voltage", armMotorVoltage.getValueAsDouble());
