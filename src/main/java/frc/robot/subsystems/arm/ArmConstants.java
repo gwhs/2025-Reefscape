@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import edu.wpi.first.math.util.Units;
+
 public class ArmConstants {
   public static final int ARM_MOTOR_ID = 15;
 
@@ -23,7 +25,7 @@ public class ArmConstants {
   public static final double PRE_DEALGAE_ANGLE = 335;
   public static final double DEALGAE_ANGLE = 350;
 
-  public static final double MAGNET_OFFSET_DEGREES = -34.96875;
+  public static final double MAGNET_OFFSET_DEGREES = Units.rotationsToDegrees(0.0403282);
 
   public static final double PREP_CLIMB_ANGLE = 10;
   public static final double CLIMB_ANGLE = 10;
