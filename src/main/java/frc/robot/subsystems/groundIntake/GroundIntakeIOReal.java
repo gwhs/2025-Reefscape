@@ -137,7 +137,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
 
   @Override
   public double getPivotAngle() {
-    return Units.rotationsToDegrees(pivotEncoder.get());
+    return (Units.rotationsToDegrees(pivotEncoder.get()) - GroundIntakeConstants.ENCODER_OFFSET);
   }
 
   @Override
@@ -176,7 +176,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
   @Override
   public void resetPivotEncoder() {
     if (pivotEncoder.isConnected()) {
-      double encoderAngle = pivotEncoder.get();
+      double encoderAngle = pivotEncoder.get() - (Units.degreesToRotations(GroundIntakeConstants.ENCODER_OFFSET));
       pivotMotor.setPosition(encoderAngle);
     }
   }
