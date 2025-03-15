@@ -94,7 +94,7 @@ public class ClimbIOReal implements ClimbIO {
 
   @Override
   public double getPosition() {
-    return Units.rotationsToDegrees(climbPosition.getValueAsDouble());
+    return climbPosition.getValueAsDouble();
   }
 
   @Override

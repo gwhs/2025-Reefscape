@@ -645,31 +645,29 @@ public class RobotContainer {
     Command unPrepClimbCommand =
         Commands.sequence(
             Commands.parallel(
-                    climb.stow(),
-                    elevator.setHeight(0),
-                    arm.setAngle(90),
+                    elevator.setHeight(0).withTimeout(1),
+                    arm.setAngle(90).withTimeout(1),
                     Commands.runOnce(
-                        () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)))
-                .withTimeout(.5));
+                        () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
+                        climb.stow()));
 
     Command climbCommand =
         Commands.parallel(
                 climb.climb(),
                 elevator.setHeight(0),
-                arm.setAngle(90),
+                arm.setAngle(ArmConstants.CLIMB_ANGLE),
                 Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL)))
             .withTimeout(0.5);
 
     return Commands.sequence(
-            Commands.parallel(
+            Commands.sequence(
                     groundIntake
-                        .setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0)
-                        .andThen(climb.latch()),
-                    elevator.setHeight(0),
-                    arm.setAngle(90),
+                        .setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0).withTimeout(1),
+                        arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
+                    elevator.setHeight(0).withTimeout(1),
+                    climb.latch().withTimeout(1),
                     Commands.runOnce(
-                        () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE)))
-                .withTimeout(0.01),
+                        () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE))),
             Commands.waitUntil(unprepclimbTrigger.or(climbTrigger)),
             Commands.either(unPrepClimbCommand, climbCommand, unprepclimbTrigger))
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
