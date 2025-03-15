@@ -318,8 +318,6 @@ public class RobotContainer {
         .and(m_driverController.leftTrigger())
         .onTrue(prepDealgaeHigh());
 
-
-
     m_driverController
         .rightTrigger()
         .negate()
@@ -334,7 +332,6 @@ public class RobotContainer {
                       driveCommand.setDriveMode(DriveCommand.DriveMode.FIELD_CENTRIC);
                     })
                 .withName("DeALgae Robot Centric"));
-
 
     m_driverController.leftTrigger().onFalse(dealgae());
 
