@@ -36,21 +36,21 @@ class EndEffectorIOSim implements EndEffectorIO {
   }
 
   @Override
-  public void setAmps(double current) {
+  public void setAmps(double current, double dutyCycle) {
     double resistance = DCMotor.getFalcon500(1).rOhms;
     double voltage = current * resistance;
     motor.setInputVoltage(voltage);
   }
 
-  private boolean coralSensor = false;
+  private boolean coralSensorState = false;
 
   public EndEffectorIOSim() {
     SmartDashboard.putData(
-        "Simulation/Coral Sensor", Commands.runOnce(() -> coralSensor = !coralSensor));
+        "Simulation/Coral Sensor", Commands.runOnce(() -> coralSensorState = !coralSensorState));
   }
 
-  public boolean isSensorTriggered() {
-    return coralSensor;
+  public boolean coralLoaded() {
+    return coralSensorState;
   }
 
   @Override

@@ -40,7 +40,9 @@ public class ArmIOReal implements ArmIO {
   private final StatusSignal<Voltage> armSupplyVoltage = armMotor.getSupplyVoltage();
   private final StatusSignal<Temperature> armDeviceTemp = armMotor.getDeviceTemp();
   private final StatusSignal<Current> armStatorCurrent = armMotor.getStatorCurrent();
+  private final StatusSignal<Angle> armEncoderPosition = armEncoder.getPosition();
   private final StatusSignal<Angle> armPosition = armMotor.getPosition();
+  private final StatusSignal<Double> armAngleError = armMotor.getClosedLoopError();
 
   private final Alert armMotorConnectedAlert =
       new Alert("Arm motor not connected", AlertType.kError);
@@ -74,7 +76,7 @@ public class ArmIOReal implements ArmIO {
 
     motionMagicConfigs.MotionMagicCruiseVelocity = ArmConstants.MAX_VELOCITY;
     motionMagicConfigs.MotionMagicAcceleration = ArmConstants.MAX_ACCELERATION;
-    motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
+    motionMagicConfigs.MotionMagicJerk = 0; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
     motorOutput.NeutralMode = NeutralModeValue.Brake;
     motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -102,9 +104,9 @@ public class ArmIOReal implements ArmIO {
 
     CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
     cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
-    cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-    cc_cfg.MagnetSensor.withMagnetOffset(Units.degreesToRotations(311.46875));
-
+    cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    cc_cfg.MagnetSensor.withMagnetOffset(
+        Units.degreesToRotations(ArmConstants.MAGNET_OFFSET_DEGREES));
     for (int i = 0; i < 5; i++) {
       status = armEncoder.getConfigurator().apply(cc_cfg);
       if (status.isOK()) break;
@@ -122,7 +124,11 @@ public class ArmIOReal implements ArmIO {
 
   @Override
   public double getPosition() {
-    return Units.rotationsToDegrees(armPosition.getValueAsDouble());
+    return Units.rotationsToDegrees(armEncoderPosition.getValueAsDouble());
+  }
+
+  public double getPositionError() {
+    return armAngleError.getValueAsDouble();
   }
 
   /**
@@ -141,7 +147,9 @@ public class ArmIOReal implements ArmIO {
                 armSupplyVoltage,
                 armDeviceTemp,
                 armStatorCurrent,
-                armPosition)
+                armPosition,
+                armEncoderPosition,
+                armAngleError)
             .isOK());
     DogLog.log("Arm/Motor/pid goal", Units.rotationsToDegrees(armPIDGoal.getValueAsDouble()));
     DogLog.log("Arm/Motor/motor voltage", armMotorVoltage.getValueAsDouble());
@@ -149,6 +157,7 @@ public class ArmIOReal implements ArmIO {
     DogLog.log("Arm/Motor/device temp", armDeviceTemp.getValueAsDouble());
     DogLog.log("Arm/Motor/stator current", armStatorCurrent.getValueAsDouble());
     DogLog.log("Arm/Motor/Connected", armConnected);
+    DogLog.log("Arm/Encoder/encoder position", getPosition());
 
     armMotorConnectedAlert.set(!armConnected);
     armEncoderConnectedAlert.set(!armEncoder.isConnected());
