@@ -6,7 +6,6 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
 import edu.wpi.first.hal.HALUtil;
@@ -14,11 +13,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -44,7 +41,6 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
-import frc.robot.subsystems.led.LedSubsystem;
 import java.util.function.BiConsumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -85,7 +81,7 @@ public class RobotContainer {
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
   private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
- // private final LedSubsystem led = new LedSubsystem();
+  // private final LedSubsystem led = new LedSubsystem();
   private final GroundIntakeSubsystem groundIntake = new GroundIntakeSubsystem();
   private final ClimbSubsystem climb = new ClimbSubsystem();
   private final DriveCommand driveCommand;
@@ -269,7 +265,8 @@ public class RobotContainer {
                 () -> {
                   // drivetrain.configNeutralMode(NeutralModeValue.Brake);
                   // elevator.setNeutralMode(NeutralModeValue.Brake);
-                }).andThen(groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 0))
+                })
+            .andThen(groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 0))
             .ignoringDisable(false));
 
     // IS_DISABLED
@@ -545,7 +542,7 @@ public class RobotContainer {
             endEffector.holdCoral())
         .withName("stop Intake");
   }
- 
+
   public Command groundIntakeScoreL1() {
     return Commands.sequence(
             groundIntake
@@ -665,7 +662,9 @@ public class RobotContainer {
 
     return Commands.sequence(
             Commands.parallel(
-                    groundIntake.setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0).andThen(climb.latch()),
+                    groundIntake
+                        .setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0)
+                        .andThen(climb.latch()),
                     elevator.setHeight(0),
                     arm.setAngle(90),
                     Commands.runOnce(

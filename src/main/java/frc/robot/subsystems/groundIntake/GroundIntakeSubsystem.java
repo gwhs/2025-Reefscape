@@ -1,8 +1,8 @@
 package frc.robot.subsystems.groundIntake;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -41,5 +41,6 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     groundintakeIO.update();
+    DogLog.log("groundIntake/Pivot/angle", groundintakeIO.getPivotAngle());
   }
 }
