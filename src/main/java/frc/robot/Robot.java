@@ -60,7 +60,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
 
-    Threads.setCurrentThreadPriority(true, 99);
+    //Threads.setCurrentThreadPriority(true, 99);
 
     EagleUtil.clearCachedPose();
     double startTime = HALUtil.getFPGATime();
@@ -81,7 +81,7 @@ public class Robot extends TimedRobot {
     DogLog.log("Loop Time/Total", (currentTime - prevTime) / 1000);
     prevTime = currentTime;
 
-    Threads.setCurrentThreadPriority(false, 10);
+    //Threads.setCurrentThreadPriority(false, 10);
   }
 
   @Override

@@ -16,8 +16,6 @@ public class GroundIntakeSubsystem extends SubsystemBase {
     } else {
       groundintakeIO = new GroundIntakeIOReal();
     }
-
-    SmartDashboard.putData("groundIntake/Pivot/setAngle", setAngleAndVoltage(40, 50));
   }
 
   public Command setAngleAndVoltage(double pivotAngle, double voltage) {

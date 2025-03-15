@@ -28,10 +28,6 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     // coralTriggered = new Trigger(() -> endEffectorIO.coralLoaded());
-
-    SmartDashboard.putData("End Effector Command/End Effector Shoot", shoot());
-    SmartDashboard.putData("End Effector Command/End Effector Intake", intake());
-    SmartDashboard.putData("End Effector Command/Stop End Effector", stopMotor());
   }
 
   /**

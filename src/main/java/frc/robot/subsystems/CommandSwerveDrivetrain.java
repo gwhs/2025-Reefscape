@@ -248,9 +248,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
       DriverStation.reportError(
           "Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
     }
-    SmartDashboard.putData("Align/PID controller X", PID_X);
-    SmartDashboard.putData("Align/PID controller Y", PID_Y);
-    SmartDashboard.putData("Align/PID controller Rotate", PID_Rotation);
   }
 
   /**

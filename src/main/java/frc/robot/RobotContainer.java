@@ -84,10 +84,8 @@ public class RobotContainer {
   private final CommandSwerveDrivetrain drivetrain;
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
-  // private final ClimbSubsystem climb = new ClimbSubsystem();
   private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
-
-  private final LedSubsystem led = new LedSubsystem();
+ // private final LedSubsystem led = new LedSubsystem();
   private final GroundIntakeSubsystem groundIntake = new GroundIntakeSubsystem();
   private final ClimbSubsystem climb = new ClimbSubsystem();
   private final DriveCommand driveCommand;
