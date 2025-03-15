@@ -317,7 +317,9 @@ public class RobotContainer {
         .onTrue(prepDealgaeHigh());
 
     m_driverController
-        .rightTrigger().negate().and(m_driverController.leftTrigger())
+        .rightTrigger()
+        .negate()
+        .and(m_driverController.leftTrigger())
         .whileTrue(alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose)));
 
     m_driverController.leftTrigger().onFalse(dealgae());
@@ -558,15 +560,18 @@ public class RobotContainer {
 
     Command deAlgae =
         Commands.sequence(
-            endEffector.shoot(),
-            Commands.waitSeconds(0.1),
-            endEffector.stopMotor(),
-            alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose)).withTimeout(2),
-            Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
-                .withTimeout(0.5)
-                .deadlineFor(
-                    alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))),
-            dealgae()).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
+                endEffector.shoot(),
+                Commands.waitSeconds(0.1),
+                endEffector.stopMotor(),
+                alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))
+                    .withTimeout(2),
+                Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
+                    .withTimeout(0.5)
+                    .deadlineFor(
+                        alignToPose(
+                            () -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))),
+                dealgae())
+            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
 
     return Commands.sequence(
         Commands.either(deAlgae, scoreCoral, m_driverController.leftTrigger())
