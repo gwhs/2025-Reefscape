@@ -37,7 +37,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
     CurrentLimitsConfigs limitsConfigs = talonConfig.CurrentLimits;
     MotorOutputConfigs motorConfigs = talonConfig.MotorOutput;
 
-    motorConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    motorConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
 
     talonConfig.TorqueCurrent.withPeakForwardTorqueCurrent(40);
     talonConfig.TorqueCurrent.withPeakReverseTorqueCurrent(-40);
