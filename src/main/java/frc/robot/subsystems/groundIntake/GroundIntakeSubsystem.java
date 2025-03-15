@@ -20,15 +20,15 @@ public class GroundIntakeSubsystem extends SubsystemBase {
 
   public Command setAngleAndVoltage(double pivotAngle, double voltage) {
     double volt = MathUtil.clamp(voltage, -12, 12);
-    double piv =
-        MathUtil.clamp(
-            pivotAngle,
-            GroundIntakeConstants.GROUND_INTAKE_LOWER_BOUND,
-            GroundIntakeConstants.GROUND_INTAKE_UPPER_BOUND);
+    // double piv =
+    //     MathUtil.clamp(
+    //         pivotAngle,
+    //         GroundIntakeConstants.GROUND_INTAKE_LOWER_BOUND,
+    //         GroundIntakeConstants.GROUND_INTAKE_UPPER_BOUND);
     return this.runOnce(
             () -> {
               groundintakeIO.resetPivotEncoder();
-              groundintakeIO.setAngle(piv);
+              groundintakeIO.setAngle(pivotAngle);
               groundintakeIO.setSpinMotorVoltage(volt);
             })
         .withName("Ground Intake: pivot angle: " + pivotAngle + " Intake Voltage: " + voltage);
