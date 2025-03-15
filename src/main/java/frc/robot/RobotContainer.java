@@ -116,7 +116,7 @@ public class RobotContainer {
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
   public static final Trigger BATTERY_BROWN_OUT = new Trigger(() -> RobotController.isBrownedOut());
-
+  public static Trigger ALGAE_HIGH;
   public final Trigger IS_NEAR_CORAL_STATION;
 
   public final Trigger IS_CORAL_LOADED;
@@ -203,6 +203,7 @@ public class RobotContainer {
                         drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
                     < 0.4);
 
+    ALGAE_HIGH = new Trigger(() -> EagleUtil.isHighAlgae(getRobotPose()));
     IS_CORAL_LOADED = new Trigger(() -> endEffector.coralLoaded());
 
     configureAutonomous();
@@ -309,8 +310,24 @@ public class RobotContainer {
             Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
                 .withName("Back to Original State"));
 
-    IS_L2.or(IS_L1).and(m_driverController.leftTrigger()).onTrue(prepDealgaeLow());
-    IS_L3.or(IS_L4).and(m_driverController.leftTrigger()).onTrue(prepDealgaeHigh());
+    m_driverController
+        .rightTrigger()
+        .negate()
+        .and(ALGAE_HIGH.negate())
+        .and(m_driverController.leftTrigger())
+        .onTrue(prepDealgaeLow());
+    m_driverController
+        .rightTrigger()
+        .negate()
+        .and(ALGAE_HIGH)
+        .and(m_driverController.leftTrigger())
+        .onTrue(prepDealgaeHigh());
+
+    m_driverController
+        .rightTrigger()
+        .negate()
+        .and(m_driverController.leftTrigger())
+        .whileTrue(alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose)));
 
     m_driverController.leftTrigger().onFalse(dealgae());
 
@@ -607,29 +624,50 @@ public class RobotContainer {
    * @return score the coral
    */
   public Command scoreCoral() {
+    Command scoreCoral =
+        Commands.sequence(
+                endEffector.shoot(),
+                Commands.waitSeconds(0.1),
+                arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.1),
+                elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
+                endEffector.stopMotor())
+            .withTimeout(0.5);
+
+    Command deAlgae =
+        Commands.sequence(
+                endEffector.shoot(),
+                Commands.waitSeconds(0.1),
+                endEffector.stopMotor(),
+                alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))
+                    .withTimeout(2),
+                Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
+                    .withTimeout(0.5)
+                    .deadlineFor(
+                        alignToPose(
+                            () -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))),
+                dealgae())
+            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
+
     return Commands.sequence(
-            // arm.increaseAngle(20).onlyIf(IS_L4).withTimeout(1.0),
-            endEffector.shoot(),
-            Commands.waitSeconds(0.1),
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.1),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
-            endEffector.stopMotor())
-        .withName("Score Coral");
+        Commands.either(deAlgae, scoreCoral, m_driverController.leftTrigger())
+            .withName("Score Coral/deAlgae"));
   }
 
   // DeAlgae Commands
   public Command prepDealgaeLow() {
     return Commands.parallel(
-        elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
-        arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
-        endEffector.setVoltage(0));
+            elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
+            arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
+            endEffector.setVoltage(0))
+        .withName("prep Delalgae low");
   }
 
   public Command prepDealgaeHigh() {
     return Commands.parallel(
-        elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
-        arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
-        endEffector.setVoltage(0));
+            elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
+            arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
+            endEffector.setVoltage(0))
+        .withName("prep Dealgae high");
   }
 
   public Command dealgae() {
