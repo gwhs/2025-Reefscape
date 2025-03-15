@@ -68,8 +68,7 @@ public class DriveCommand extends Command {
     CORAL_STATION,
     REEF,
     CAGE,
-    PROCESSOR,
-    DEALGAE
+    PROCESSOR
   }
 
   private TargetMode mode = TargetMode.NORMAL;
