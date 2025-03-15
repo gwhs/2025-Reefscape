@@ -645,11 +645,10 @@ public class RobotContainer {
     Command unPrepClimbCommand =
         Commands.sequence(
             Commands.parallel(
-                    elevator.setHeight(0).withTimeout(1),
-                    arm.setAngle(90).withTimeout(1),
-                    Commands.runOnce(
-                        () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
-                        climb.stow()));
+                elevator.setHeight(0).withTimeout(1),
+                arm.setAngle(90).withTimeout(1),
+                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
+                climb.stow()));
 
     Command climbCommand =
         Commands.parallel(
@@ -661,13 +660,13 @@ public class RobotContainer {
 
     return Commands.sequence(
             Commands.sequence(
-                    groundIntake
-                        .setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0).withTimeout(1),
-                        arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
-                    elevator.setHeight(0).withTimeout(1),
-                    climb.latch().withTimeout(1),
-                    Commands.runOnce(
-                        () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE))),
+                groundIntake
+                    .setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0)
+                    .withTimeout(1),
+                arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
+                elevator.setHeight(0).withTimeout(1),
+                climb.latch().withTimeout(1),
+                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE))),
             Commands.waitUntil(unprepclimbTrigger.or(climbTrigger)),
             Commands.either(unPrepClimbCommand, climbCommand, unprepclimbTrigger))
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
