@@ -547,7 +547,7 @@ public class RobotContainer {
             endEffector.holdCoral())
         .withName("stop Intake");
   }
-
+ 
   public Command groundIntakeScoreL1() {
     return Commands.sequence(
             groundIntake
