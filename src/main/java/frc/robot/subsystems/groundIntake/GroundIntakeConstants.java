@@ -12,12 +12,12 @@ public class GroundIntakeConstants {
   public static final double ENCODER_OFFSET = 242.0;
 
   public static final double GROUND_INTAKE_LOWER_BOUND = 0.0;
-  public static final double GROUND_INTAKE_UPPER_BOUND = 90.0;
+  public static final double GROUND_INTAKE_UPPER_BOUND = 95.0;
 
   public static final double MAX_VELOCITY = 1.2;
   public static final double MAX_ACCELERATION = 1.5;
 
-  public static final double INTAKE_CORAL_ANGLE = -90; // TODO
+  public static final double INTAKE_CORAL_ANGLE = -95; // TODO
   public static final double CORAL_STOW_ANGLE = 0; // TODO
 
   public static final double INTAKE_ALGAE_ANGLE = -45; // TODO
