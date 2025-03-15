@@ -6,7 +6,7 @@ public class GroundIntakeConstants {
   public static final int PIVOT_MOTOR_ID = 32;
   public static final int PIVOT_ENCODER_ID = 2;
 
-  public static final double PIVOT_GEAR_RATIO = 16 * 42 / 24 * 36 / 18;
+  public static final double PIVOT_GEAR_RATIO = 60;
   public static final double SPIN_GEAR_RATIO = 2.0;
 
   public static final double GROUND_INTAKE_LOWER_BOUND = 0.0;

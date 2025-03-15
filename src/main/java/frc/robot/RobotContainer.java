@@ -240,43 +240,43 @@ public class RobotContainer {
   private void configureBindings() {
     // BATTERY_BROWN_OUT.onTrue(drivetrain.setDriveMotorCurrentLimit());
 
-    drivetrain
-        .IS_ALIGNING_TO_POSE
-        .and(drivetrain.IS_AT_TARGET_POSE)
-        .onTrue(led.setPattern(LEDPattern.solid(Color.kGreen)));
-    drivetrain
-        .IS_ALIGNING_TO_POSE
-        .and(drivetrain.IS_AT_TARGET_POSE.negate())
-        .onTrue(led.setPattern(LEDPattern.solid(Color.kBlack)));
+    // drivetrain
+    //     .IS_ALIGNING_TO_POSE
+    //     .and(drivetrain.IS_AT_TARGET_POSE)
+    //     .onTrue(led.setPattern(LEDPattern.solid(Color.kGreen)));
+    // drivetrain
+    //     .IS_ALIGNING_TO_POSE
+    //     .and(drivetrain.IS_AT_TARGET_POSE.negate())
+    //     .onTrue(led.setPattern(LEDPattern.solid(Color.kBlack)));
 
     IS_DISABLED.onTrue(
         Commands.runOnce(
                 () -> {
-                  drivetrain.configNeutralMode(NeutralModeValue.Coast);
-                  elevator.setNeutralMode(NeutralModeValue.Coast);
+                  // drivetrain.configNeutralMode(NeutralModeValue.Coast);
+                  // elevator.setNeutralMode(NeutralModeValue.Coast);
                   driveCommand.stopDrivetrain();
                 })
             .ignoringDisable(true));
 
-    IS_DISABLED
-        .and(() -> RobotController.getBatteryVoltage() >= 12)
-        .onTrue(led.setPattern(LEDPattern.solid(Color.kGreen)));
+    // IS_DISABLED
+    //     .and(() -> RobotController.getBatteryVoltage() >= 12)
+    //     .onTrue(led.setPattern(LEDPattern.solid(Color.kGreen)));
 
-    IS_DISABLED
-        .and(() -> RobotController.getBatteryVoltage() < 12)
-        .onTrue(led.setPattern(LEDPattern.solid(Color.kRed)));
+    // IS_DISABLED
+    //     .and(() -> RobotController.getBatteryVoltage() < 12)
+    //     .onTrue(led.setPattern(LEDPattern.solid(Color.kRed)));
 
     IS_DISABLED.onFalse(
         Commands.runOnce(
                 () -> {
-                  drivetrain.configNeutralMode(NeutralModeValue.Brake);
-                  elevator.setNeutralMode(NeutralModeValue.Brake);
-                })
+                  // drivetrain.configNeutralMode(NeutralModeValue.Brake);
+                  // elevator.setNeutralMode(NeutralModeValue.Brake);
+                }).andThen(groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 0))
             .ignoringDisable(false));
 
-    IS_DISABLED
-        .and(() -> RobotController.getBatteryVoltage() < 12)
-        .onTrue(EagleUtil.triggerAlert(batteryUnderTwelveVolts));
+    // IS_DISABLED
+    //     .and(() -> RobotController.getBatteryVoltage() < 12)
+    //     .onTrue(EagleUtil.triggerAlert(batteryUnderTwelveVolts));
 
     m_driverController
         .x()
