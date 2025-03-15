@@ -77,10 +77,10 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     motorOutput.NeutralMode = NeutralModeValue.Brake;
     motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-    softwareLimitSwitch.ForwardSoftLimitEnable = true;
+    softwareLimitSwitch.ForwardSoftLimitEnable = false;
     softwareLimitSwitch.ForwardSoftLimitThreshold =
         Units.degreesToRotations(GroundIntakeConstants.GROUND_INTAKE_UPPER_BOUND);
-    softwareLimitSwitch.ReverseSoftLimitEnable = true;
+    softwareLimitSwitch.ReverseSoftLimitEnable = false;
     softwareLimitSwitch.ReverseSoftLimitThreshold =
         Units.degreesToRotations(GroundIntakeConstants.GROUND_INTAKE_LOWER_BOUND);
 
