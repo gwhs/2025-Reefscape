@@ -7,12 +7,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class EndEffectorSubsystem extends SubsystemBase {
 
-  EndEffectorIO endEffectorIO;
-  public final Trigger coralTriggered;
+  private EndEffectorIO endEffectorIO;
+
+  // public final Trigger coralTriggered;
 
   /**
    * there are two implemenations for talon motors and sparkmax motors we are probably going to use
@@ -27,7 +27,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
       endEffectorIO = new EndEffectorIOTalon();
     }
 
-    coralTriggered = new Trigger(() -> endEffectorIO.isSensorTriggered());
+    // coralTriggered = new Trigger(() -> endEffectorIO.coralLoaded());
 
     SmartDashboard.putData("End Effector Command/End Effector Shoot", shoot());
     SmartDashboard.putData("End Effector Command/End Effector Intake", intake());
@@ -38,6 +38,10 @@ public class EndEffectorSubsystem extends SubsystemBase {
    * @param voltage the voltage to set to
    * @return set the motor to the voltage
    */
+  public boolean coralLoaded() {
+    return endEffectorIO.coralLoaded();
+  }
+
   public Command setVoltage(double voltage) {
     return Commands.runOnce(() -> endEffectorIO.setVoltage(voltage));
   }

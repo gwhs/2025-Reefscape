@@ -1,29 +1,30 @@
 {
-    "fileName": "REVLib-2025.0.2.json",
-    "name": "REVLib",
-    "version": "2025.0.2",
+    "fileName": "playingwithfusion2025.json",
+    "name": "PlayingWithFusion",
+    "version": "2025.01.23",
+    "uuid": "14b8ad04-24df-11ea-978f-2e728ce88125",
     "frcYear": "2025",
-    "uuid": "3f48eb8c-50fe-43a6-9cb7-44c86353c4cb",
+    "jsonUrl": "https://www.playingwithfusion.com/frc/playingwithfusion2025.json",
     "mavenUrls": [
-        "https://maven.revrobotics.com/"
+        "https://www.playingwithfusion.com/frc/maven/"
     ],
-    "jsonUrl": "https://software-metadata.revrobotics.com/REVLib-2025.json",
     "javaDependencies": [
         {
-            "groupId": "com.revrobotics.frc",
-            "artifactId": "REVLib-java",
-            "version": "2025.0.2"
+            "groupId": "com.playingwithfusion.frc",
+            "artifactId": "PlayingWithFusion-java",
+            "version": "2025.01.23"
         }
     ],
     "jniDependencies": [
         {
-            "groupId": "com.revrobotics.frc",
-            "artifactId": "REVLib-driver",
-            "version": "2025.0.2",
+            "groupId": "com.playingwithfusion.frc",
+            "artifactId": "PlayingWithFusion-driver",
+            "version": "2025.01.23",
             "skipInvalidPlatforms": true,
             "isJar": false,
             "validPlatforms": [
                 "windowsx86-64",
+                "windowsx86",
                 "linuxarm64",
                 "linuxx86-64",
                 "linuxathena",
@@ -34,15 +35,16 @@
     ],
     "cppDependencies": [
         {
-            "groupId": "com.revrobotics.frc",
-            "artifactId": "REVLib-cpp",
-            "version": "2025.0.2",
-            "libName": "REVLib",
+            "groupId": "com.playingwithfusion.frc",
+            "artifactId": "PlayingWithFusion-cpp",
+            "version": "2025.01.23",
             "headerClassifier": "headers",
             "sharedLibrary": false,
+            "libName": "PlayingWithFusion",
             "skipInvalidPlatforms": true,
             "binaryPlatforms": [
                 "windowsx86-64",
+                "windowsx86",
                 "linuxarm64",
                 "linuxx86-64",
                 "linuxathena",
@@ -51,15 +53,16 @@
             ]
         },
         {
-            "groupId": "com.revrobotics.frc",
-            "artifactId": "REVLib-driver",
-            "version": "2025.0.2",
-            "libName": "REVLibDriver",
+            "groupId": "com.playingwithfusion.frc",
+            "artifactId": "PlayingWithFusion-driver",
+            "version": "2025.01.23",
             "headerClassifier": "headers",
-            "sharedLibrary": false,
+            "sharedLibrary": true,
+            "libName": "PlayingWithFusionDriver",
             "skipInvalidPlatforms": true,
             "binaryPlatforms": [
                 "windowsx86-64",
+                "windowsx86",
                 "linuxarm64",
                 "linuxx86-64",
                 "linuxathena",
