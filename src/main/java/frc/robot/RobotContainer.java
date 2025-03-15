@@ -318,11 +318,23 @@ public class RobotContainer {
         .and(m_driverController.leftTrigger())
         .onTrue(prepDealgaeHigh());
 
+
+
     m_driverController
         .rightTrigger()
         .negate()
         .and(m_driverController.leftTrigger())
-        .whileTrue(alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose)));
+        .whileTrue(alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose)))
+        .whileTrue(
+            Commands.startEnd(
+                    () -> {
+                      driveCommand.setDriveMode(DriveCommand.DriveMode.ROBOT_CENTRIC);
+                    },
+                    () -> {
+                      driveCommand.setDriveMode(DriveCommand.DriveMode.FIELD_CENTRIC);
+                    })
+                .withName("DeALgae Robot Centric"));
+******************************************************************************************-------------------------------------------------------------
 
     m_driverController.leftTrigger().onFalse(dealgae());
 
