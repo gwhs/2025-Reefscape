@@ -667,7 +667,7 @@ public class RobotContainer {
 
     return Commands.sequence(
             Commands.parallel(
-                    climb.latch(),
+                    groundIntake.setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0).andThen(climb.latch()),
                     elevator.setHeight(0),
                     arm.setAngle(90),
                     Commands.runOnce(
