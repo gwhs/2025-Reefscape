@@ -28,7 +28,7 @@ public class ClimbIOSim implements ClimbIO {
 
   @Override
   public double getPosition() {
-    return Units.radiansToDegrees(climbSim.getAngleRads());
+    return Units.radiansToRotations(climbSim.getAngleRads());
   }
 
   @Override

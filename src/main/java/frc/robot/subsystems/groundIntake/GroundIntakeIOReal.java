@@ -75,12 +75,12 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     motionMagicConfigs.MotionMagicJerk = 0; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
     motorOutput.NeutralMode = NeutralModeValue.Brake;
-    motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-    softwareLimitSwitch.ForwardSoftLimitEnable = true;
+    softwareLimitSwitch.ForwardSoftLimitEnable = false;
     softwareLimitSwitch.ForwardSoftLimitThreshold =
         Units.degreesToRotations(GroundIntakeConstants.GROUND_INTAKE_UPPER_BOUND);
-    softwareLimitSwitch.ReverseSoftLimitEnable = true;
+    softwareLimitSwitch.ReverseSoftLimitEnable = false;
     softwareLimitSwitch.ReverseSoftLimitThreshold =
         Units.degreesToRotations(GroundIntakeConstants.GROUND_INTAKE_LOWER_BOUND);
 
@@ -137,7 +137,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
 
   @Override
   public double getPivotAngle() {
-    return Units.rotationsToDegrees(pivotEncoder.get());
+    return (Units.rotationsToDegrees(pivotEncoder.get()) - GroundIntakeConstants.ENCODER_OFFSET);
   }
 
   @Override
@@ -176,7 +176,8 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
   @Override
   public void resetPivotEncoder() {
     if (pivotEncoder.isConnected()) {
-      double encoderAngle = pivotEncoder.get();
+      double encoderAngle =
+          (pivotEncoder.get()) - (Units.degreesToRotations(GroundIntakeConstants.ENCODER_OFFSET));
       pivotMotor.setPosition(encoderAngle);
     }
   }

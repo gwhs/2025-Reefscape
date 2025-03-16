@@ -220,7 +220,7 @@ public class DriveCommand extends Command {
       DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
     }
 
-    if (elevatorHeight.getAsDouble() > 0.3) {
+    if (elevatorHeight.getAsDouble() > 0.4) {
       if (resetLimiter) {
         resetLimiter = false;
         xVelocityLimiter.reset(xVelocity);
