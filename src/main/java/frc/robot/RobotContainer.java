@@ -626,12 +626,12 @@ public class RobotContainer {
 
   public Command autonScoreCoral() {
     return Commands.sequence(
-      endEffector.shoot(),
-      Commands.waitSeconds(0.1),
-      arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.1),
-      elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
-      endEffector.stopMotor())
-  .withTimeout(0.5);
+            endEffector.shoot(),
+            Commands.waitSeconds(0.1),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.1),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
+            endEffector.stopMotor())
+        .withTimeout(0.5);
   }
 
   /**
