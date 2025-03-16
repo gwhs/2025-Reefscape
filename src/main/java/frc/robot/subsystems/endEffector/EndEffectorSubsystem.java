@@ -3,7 +3,6 @@ package frc.robot.subsystems.endEffector;
 import dev.doglog.DogLog;
 import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,10 +27,6 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     // coralTriggered = new Trigger(() -> endEffectorIO.coralLoaded());
-
-    SmartDashboard.putData("End Effector Command/End Effector Shoot", shoot());
-    SmartDashboard.putData("End Effector Command/End Effector Intake", intake());
-    SmartDashboard.putData("End Effector Command/Stop End Effector", stopMotor());
   }
 
   /**
