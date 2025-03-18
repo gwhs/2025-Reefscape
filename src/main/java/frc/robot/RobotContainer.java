@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.DriveCommand.TargetMode;
@@ -454,15 +455,15 @@ public class RobotContainer {
         .onFalse(
             groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, -3)); // TODO
 
-    m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
-    m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
-    m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
-    m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
+    // m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
+    // m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
+    // m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
+    // m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
 
-    // m_operatorController.y().whileTrue(elevator.sysIdQuasistatic(Direction.kForward));
-    // m_operatorController.b().whileTrue(elevator.sysIdQuasistatic(Direction.kReverse));
-    // m_operatorController.a().whileTrue(elevator.sysIdDynamic(Direction.kForward));
-    // m_operatorController.x().whileTrue(elevator.sysIdDynamic(Direction.kReverse));
+    m_operatorController.y().whileTrue(elevator.sysIdQuasistatic(Direction.kForward));
+    m_operatorController.b().whileTrue(elevator.sysIdQuasistatic(Direction.kReverse));
+    m_operatorController.a().whileTrue(elevator.sysIdDynamic(Direction.kForward));
+    m_operatorController.x().whileTrue(elevator.sysIdDynamic(Direction.kReverse));
 
     m_operatorController.povRight().onTrue(arm.increaseAngle(3.0));
     m_operatorController.povLeft().onTrue(arm.decreaseAngle(3.0));
