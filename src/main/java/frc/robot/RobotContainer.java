@@ -310,6 +310,13 @@ public class RobotContainer {
 
     m_driverController
         .rightTrigger()
+        .onFalse(
+            Commands.either(scoreCoral(), groundIntakeScoreL1(), IS_L1.negate())
+                .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+                .withName("score Coral"));
+
+    m_driverController
+        .rightTrigger()
         .negate()
         .and(ALGAE_HIGH.negate())
         .and(m_driverController.leftTrigger())
@@ -344,10 +351,6 @@ public class RobotContainer {
     IS_L1
         .and(m_driverController.rightTrigger())
         .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_CORAL_ANGLE, -1));
-
-    m_driverController
-        .rightTrigger()
-        .onFalse(Commands.either(scoreCoral(), groundIntakeScoreL1(), IS_L1.negate()));
 
     m_operatorController
         .leftStick()
@@ -660,7 +663,7 @@ public class RobotContainer {
                 Commands.waitSeconds(0.1),
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))
-                    .withTimeout(2),
+                    .withTimeout(1),
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
                     .withTimeout(0.5)
                     .deadlineFor(
