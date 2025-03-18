@@ -98,7 +98,7 @@ public class ElevatorIOReal implements ElevatorIO {
     currentConfig.withStatorCurrentLimitEnable(true);
     currentConfig.withStatorCurrentLimit(30);
     motorOutput.NeutralMode = NeutralModeValue.Coast;
-    motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     softwareLimitSwitchConfigs.ForwardSoftLimitEnable = true;
     softwareLimitSwitchConfigs.ReverseSoftLimitEnable = true;
@@ -124,7 +124,7 @@ public class ElevatorIOReal implements ElevatorIO {
       System.out.println("Could not configure device. Error: " + backStatus.toString());
     }
 
-    motorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     StatusCode frontStatus = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; i++) {

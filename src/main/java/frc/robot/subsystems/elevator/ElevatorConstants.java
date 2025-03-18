@@ -8,8 +8,8 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class ElevatorConstants {
-  public static final int FRONT_ELEVATOR_MOTOR_ID = 21;
-  public static final int BACK_ELEVATOR_MOTOR_ID = 14;
+  public static final int FRONT_ELEVATOR_MOTOR_ID = 14;
+  public static final int BACK_ELEVATOR_MOTOR_ID = 21;
   public static final int LIMIT_SWITCH_CHANNEL = 0;
 
   public static final int GEAR_RATIO = 12;
