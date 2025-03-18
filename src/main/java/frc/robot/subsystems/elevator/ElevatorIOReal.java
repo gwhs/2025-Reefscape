@@ -1,4 +1,4 @@
-package frc.robot.subsystems.elevator;
+package frc.robot.subsystems.elevator; 
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
@@ -177,14 +177,19 @@ public class ElevatorIOReal implements ElevatorIO {
       m_frontElevatorMotor.setPosition(newValue);
       m_backElevatorMotor.setPosition(newValue);
     }
+    else {
+      m_frontElevatorMotor.stopMotor();
+      m_backElevatorMotor.stopMotor();
+    }
   }
 
   public void setEmergencyMode(boolean emergency) {
     m_emergencyMode = emergency;
+    setVoltage(0);
   }
 
   @Override
-  public void update() {
+  public void update() { 
     BaseStatusSignal.refreshAll(
         frontElevatorMotorPIDGoal,
         frontElevatorMotorVoltage,

@@ -13,6 +13,7 @@ import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -188,10 +189,14 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public Command engageEmergencyMode() {
+    SmartDashboard.putBoolean(
+        "Elevator/Emergency Mode",true);
     return Commands.runOnce(() -> elevatorIO.setEmergencyMode(true));
   }
 
   public Command exitEmergencyMode() {
+    SmartDashboard.putBoolean(
+        "Elevator/Emergency Mode",false);
     return Commands.runOnce(() -> elevatorIO.setEmergencyMode(false));
   }
 }

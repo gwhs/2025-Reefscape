@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 public class ElevatorIOSim implements ElevatorIO {
   private ElevatorSim elevatorSim =
@@ -22,6 +23,8 @@ public class ElevatorIOSim implements ElevatorIO {
   public double getRotation() {
     return ElevatorSubsystem.metersToRotations(elevatorSim.getPositionMeters());
   }
+
+  private boolean m_emergencyMode;
 
   public void update() {
     elevatorSim.update(.020);
@@ -57,7 +60,7 @@ public class ElevatorIOSim implements ElevatorIO {
 
   @Override
   public void setEmergencyMode(boolean emergency) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'setEmergencyMode'");
+    m_emergencyMode = emergency;
+    setVoltage(0);
   }
-}
+ }

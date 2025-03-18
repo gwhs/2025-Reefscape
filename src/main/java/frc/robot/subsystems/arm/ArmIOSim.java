@@ -5,6 +5,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArmIOSim implements ArmIO {
   private SingleJointedArmSim armSim =
@@ -23,6 +24,8 @@ public class ArmIOSim implements ArmIO {
           ArmConstants.MAX_VELOCITY * 360, ArmConstants.MAX_ACCELERATION * 360);
   private ProfiledPIDController pidController = new ProfiledPIDController(.1, 0, 0, constraints);
 
+  private boolean m_emergencyMode;
+
   public ArmIOSim() {
     pidController.setGoal(90);
   }
@@ -33,7 +36,9 @@ public class ArmIOSim implements ArmIO {
 
   @Override
   public void setAngle(double angle) {
-    pidController.setGoal(angle);
+    if(m_emergencyMode == true) {
+      pidController.setGoal(angle);
+    }
   }
 
   public double getPositionError() {
@@ -44,7 +49,7 @@ public class ArmIOSim implements ArmIO {
    * @param volts how many volts to set to
    */
   public void setVoltage(double volts) {
-    if (ArmIOReal.m_emergencyMode == true) {
+    if (m_emergencyMode == true) {
       armSim.setInputVoltage(0);
     } else {
       armSim.setInputVoltage(volts);
@@ -53,15 +58,19 @@ public class ArmIOSim implements ArmIO {
 
   public void update() {
     armSim.update(0.20);
-
+    if (m_emergencyMode == true) {
     double pidOutput = pidController.calculate(getPosition());
 
     armSim.setInputVoltage(pidOutput);
+    }
   }
 
   @Override
   public void setEmergencyMode(boolean emergency) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'setEmergencyMode'");
+    m_emergencyMode = emergency;
+    setVoltage(0);
+    SmartDashboard.putBoolean(
+        "Simulation/Arm Emergency Mode",emergency);
+  
   }
 }

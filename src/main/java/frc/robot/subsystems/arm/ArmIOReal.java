@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 
 public class ArmIOReal implements ArmIO {
-  TalonFX armMotor = new TalonFX(ArmConstants.ARM_MOTOR_ID, "rio");
+  private TalonFX armMotor = new TalonFX(ArmConstants.ARM_MOTOR_ID, "rio");
   private CANcoder armEncoder = new CANcoder(ArmConstants.ARM_ENCODER_ID, "rio");
   private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
   private final VoltageOut m_voltReq = new VoltageOut(0.0);
@@ -50,7 +50,7 @@ public class ArmIOReal implements ArmIO {
   private final Alert armEncoderConnectedAlert =
       new Alert("Arm CANcoder not connected", AlertType.kError);
 
-  public static boolean m_emergencyMode;
+  private boolean m_emergencyMode;
 
   public ArmIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
@@ -146,6 +146,7 @@ public class ArmIOReal implements ArmIO {
 
   public void setEmergencyMode(boolean emergency) {
     m_emergencyMode = emergency;
+    setVoltage(0);
   }
 
   @Override
