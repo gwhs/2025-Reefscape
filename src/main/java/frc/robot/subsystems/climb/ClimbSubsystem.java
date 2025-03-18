@@ -18,10 +18,6 @@ public class ClimbSubsystem extends SubsystemBase {
     } else {
       climbIO = new ClimbIOReal();
     }
-
-    SmartDashboard.putData("Climb Command/climb", climb());
-    SmartDashboard.putData("Climb Command/stow", stow());
-    SmartDashboard.putData("Climb Command/latch", latch());
   }
 
   @Override
