@@ -515,6 +515,10 @@ public class RobotContainer {
     DogLog.log("Current Robot", getRobot().toString());
     DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
 
+    DogLog.log("Trigger/Algae High", ALGAE_HIGH.getAsBoolean());
+    DogLog.log("Trigger/Is Near Coarl Station", IS_NEAR_CORAL_STATION.getAsBoolean());
+    DogLog.log("Trigger/Is Coral Loaded", IS_CORAL_LOADED.getAsBoolean());
+
     DogLog.log("Match Timer", DriverStation.getMatchTime());
   }
 
