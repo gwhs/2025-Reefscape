@@ -189,14 +189,12 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public Command engageEmergencyMode() {
-    SmartDashboard.putBoolean(
-        "Elevator/Emergency Mode",true);
+    SmartDashboard.putBoolean("Elevator/Emergency Mode", true);
     return Commands.runOnce(() -> elevatorIO.setEmergencyMode(true));
   }
 
   public Command exitEmergencyMode() {
-    SmartDashboard.putBoolean(
-        "Elevator/Emergency Mode",false);
+    SmartDashboard.putBoolean("Elevator/Emergency Mode", false);
     return Commands.runOnce(() -> elevatorIO.setEmergencyMode(false));
   }
 }

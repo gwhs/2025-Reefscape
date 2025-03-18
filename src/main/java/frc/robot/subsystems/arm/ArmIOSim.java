@@ -36,7 +36,7 @@ public class ArmIOSim implements ArmIO {
 
   @Override
   public void setAngle(double angle) {
-    if(m_emergencyMode == true) {
+    if (m_emergencyMode == true) {
       pidController.setGoal(angle);
     }
   }
@@ -59,9 +59,9 @@ public class ArmIOSim implements ArmIO {
   public void update() {
     armSim.update(0.20);
     if (m_emergencyMode == true) {
-    double pidOutput = pidController.calculate(getPosition());
+      double pidOutput = pidController.calculate(getPosition());
 
-    armSim.setInputVoltage(pidOutput);
+      armSim.setInputVoltage(pidOutput);
     }
   }
 
@@ -69,8 +69,6 @@ public class ArmIOSim implements ArmIO {
   public void setEmergencyMode(boolean emergency) {
     m_emergencyMode = emergency;
     setVoltage(0);
-    SmartDashboard.putBoolean(
-        "Simulation/Arm Emergency Mode",emergency);
-  
+    SmartDashboard.putBoolean("Simulation/Arm Emergency Mode", emergency);
   }
 }

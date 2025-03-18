@@ -6,7 +6,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import edu.wpi.first.wpilibj2.command.Commands;
 
 public class ElevatorIOSim implements ElevatorIO {
   private ElevatorSim elevatorSim =
@@ -63,4 +62,4 @@ public class ElevatorIOSim implements ElevatorIO {
     m_emergencyMode = emergency;
     setVoltage(0);
   }
- }
+}
