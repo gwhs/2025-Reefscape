@@ -12,7 +12,7 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   private final GroundIntakeIO groundintakeIO;
 
   public GroundIntakeSubsystem() {
-    if (RobotBase.isSimulation()) {
+    if (RobotBase.isSimulation() ||true) {
       groundintakeIO = new GroundIntakeIOSim();
     } else {
       groundintakeIO = new GroundIntakeIOReal();
