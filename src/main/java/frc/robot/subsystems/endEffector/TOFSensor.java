@@ -36,10 +36,10 @@ public class TOFSensor {
 
     sensor.setRangeOfInterest(m_rangeX0, m_rangeY0, m_rangeX1, m_rangeY1);
 
-    DogLog.log("TOFSensor/RangeOfInterest", "rangeX0: " + m_rangeX0);
-    DogLog.log("TOFSensor/RangeOfInterest", "rangeY0: " + m_rangeY0);
-    DogLog.log("TOFSensor/RangeOfInterest", "rangeX1: " + m_rangeX1);
-    DogLog.log("TOFSensor/RangeOfInterest", "rangeY1: " + m_rangeY1);
+    DogLog.log("TOFSensor/rangeX0", m_rangeX0);
+    DogLog.log("TOFSensor/rangeY0", m_rangeY0);
+    DogLog.log("TOFSensor/rangeX1", m_rangeX1);
+    DogLog.log("TOFSensor/rangeY1", m_rangeY1);
   }
 
   public double getRange() {
@@ -58,10 +58,10 @@ public class TOFSensor {
         (EndEffectorConstants.EXP_DECAY * sensor.getRange())
             + ((1 - EndEffectorConstants.EXP_DECAY) * m_distance_EMA);
 
-    DogLog.log("TOFSensor/Distance", "Distance: " + distance);
-    DogLog.log("TOFSensor/Distance", "dist_EMA: " + m_distance_EMA);
-    DogLog.log("TOFSensor/Distance", "dist_EDEV: " + Math.sqrt(m_dist_SDEV_sq));
-    DogLog.log("TOFSensor/", "Sensor Status: " + sensor.getStatus().toString());
-    DogLog.log("TOFSensor/Distance", "getDist_Sigma: " + sensor.getRangeSigma());
+    DogLog.log("TOFSensor/Distance", distance);
+    DogLog.log("TOFSensor/DistanceEMA", m_distance_EMA);
+    DogLog.log("TOFSensor/DistanceSDEV", Math.sqrt(m_dist_SDEV_sq));
+    DogLog.log("TOFSensor/SensorStatus", sensor.getStatus().toString());
+    DogLog.log("TOFSensor/RangeSigma", sensor.getRangeSigma());
   }
 }
