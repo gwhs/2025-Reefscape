@@ -2,6 +2,8 @@ package frc.robot.subsystems.endEffector;
 
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TOFSensor {
@@ -35,10 +37,11 @@ public class TOFSensor {
     m_rangeY1 = rangeY1;
 
     sensor.setRangeOfInterest(m_rangeX0, m_rangeY0, m_rangeX1, m_rangeY1);
-    SmartDashboard.putNumber("rangeX0", m_rangeX0);
-    SmartDashboard.putNumber("rangeY0", m_rangeY0);
-    SmartDashboard.putNumber("rangeX1", m_rangeX1);
-    SmartDashboard.putNumber("rangeY1", m_rangeY1);
+
+    DogLog.log("TOFSensor/RangeOfInterest", "rangeX0: " + m_rangeX0);
+    DogLog.log("TOFSensor/RangeOfInterest", "rangeY0: " + m_rangeY0);
+    DogLog.log("TOFSensor/RangeOfInterest", "rangeX1: " + m_rangeX1);
+    DogLog.log("TOFSensor/RangeOfInterest", "rangeY1: " + m_rangeY1);
   }
 
   public double getRange() {
@@ -58,9 +61,9 @@ public class TOFSensor {
         (EndEffectorConstants.EXP_DECAY * sensor.getRange())
             + ((1 - EndEffectorConstants.EXP_DECAY) * m_distance_EMA);
 
-    SmartDashboard.putNumber("dist_EMA", m_distance_EMA);
-    SmartDashboard.putNumber("dist_EDEV", Math.sqrt(m_dist_SDEV_sq));
-    SmartDashboard.putString("sensor_Status", sensor.getStatus().toString());
-    SmartDashboard.putNumber("getDist_Sigma", sensor.getRangeSigma());
+    DogLog.log("TOFSensor/Distance", "dist_EMA: " + m_distance_EMA);
+    DogLog.log("TOFSensor/Distance", "dist_EDEV: " + Math.sqrt(m_dist_SDEV_sq));
+    DogLog.log("TOFSensor/", "Sensor Status: " + sensor.getStatus().toString());
+    DogLog.log("TOFSensor/Distance", "getDist_Sigma: " + sensor.getRangeSigma());
   }
 }
