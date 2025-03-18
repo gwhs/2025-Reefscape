@@ -2,7 +2,7 @@ package frc.robot.subsystems.endEffector;
 
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import dev.doglog.DogLog;
 
 public class TOFSensor {
   public double m_distance_EMA;
@@ -35,10 +35,11 @@ public class TOFSensor {
     m_rangeY1 = rangeY1;
 
     sensor.setRangeOfInterest(m_rangeX0, m_rangeY0, m_rangeX1, m_rangeY1);
-    SmartDashboard.putNumber("rangeX0", m_rangeX0);
-    SmartDashboard.putNumber("rangeY0", m_rangeY0);
-    SmartDashboard.putNumber("rangeX1", m_rangeX1);
-    SmartDashboard.putNumber("rangeY1", m_rangeY1);
+
+    DogLog.log("TOFSensor/rangeX0", m_rangeX0);
+    DogLog.log("TOFSensor/rangeY0", m_rangeY0);
+    DogLog.log("TOFSensor/rangeX1", m_rangeX1);
+    DogLog.log("TOFSensor/rangeY1", m_rangeY1);
   }
 
   public double getRange() {
@@ -48,7 +49,6 @@ public class TOFSensor {
   public void robotPeriodic() {
 
     double distance = sensor.getRange();
-    SmartDashboard.putNumber("Distance", distance);
 
     double diff_from_EMA = m_distance_EMA - sensor.getRange();
     m_dist_SDEV_sq =
@@ -58,9 +58,10 @@ public class TOFSensor {
         (EndEffectorConstants.EXP_DECAY * sensor.getRange())
             + ((1 - EndEffectorConstants.EXP_DECAY) * m_distance_EMA);
 
-    SmartDashboard.putNumber("dist_EMA", m_distance_EMA);
-    SmartDashboard.putNumber("dist_EDEV", Math.sqrt(m_dist_SDEV_sq));
-    SmartDashboard.putString("sensor_Status", sensor.getStatus().toString());
-    SmartDashboard.putNumber("getDist_Sigma", sensor.getRangeSigma());
+    DogLog.log("TOFSensor/Distance", distance);
+    DogLog.log("TOFSensor/DistanceEMA", m_distance_EMA);
+    DogLog.log("TOFSensor/DistanceSDEV", Math.sqrt(m_dist_SDEV_sq));
+    DogLog.log("TOFSensor/SensorStatus", sensor.getStatus().toString());
+    DogLog.log("TOFSensor/RangeSigma", sensor.getRangeSigma());
   }
 }
