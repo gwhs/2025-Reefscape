@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import com.ctre.phoenix6.CANBus.CANBusStatus;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
 import edu.wpi.first.hal.HALUtil;
@@ -217,9 +218,11 @@ public class RobotContainer {
     EagleUtil.calculateRedReefSetPoints();
 
     addPeriodic.accept(
-        () ->
-            DogLog.log(
-                "Canivore Bus Utilization", TunerConstants_Comp.kCANBus.getStatus().BusUtilization),
+        () -> {
+          CANBusStatus status = TunerConstants_Comp.kCANBus.getStatus();
+          DogLog.log("Canivore/Canivore Bus Utilization", status.BusUtilization);
+          DogLog.log("Canivore/Status Code on Canivore", status.Status.toString());
+        },
         0.5);
   }
 
