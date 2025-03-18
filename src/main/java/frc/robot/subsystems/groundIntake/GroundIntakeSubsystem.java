@@ -45,11 +45,11 @@ public class GroundIntakeSubsystem extends SubsystemBase {
     DogLog.log("groundIntake/Pivot/angle", groundintakeIO.getPivotAngle());
   }
 
-  public Command decreaseAngle(double angle) {
-    return Commands.runOnce(() -> groundintakeIO.setAngle(getAngle() + angle));
-  }
-
   public Command increaseAngle(double angle) {
     return Commands.runOnce(() -> groundintakeIO.setAngle(getAngle() - angle));
+  }
+
+  public Command decreaseAngle(double angle) {
+    return Commands.runOnce(() -> groundintakeIO.setAngle(getAngle() + angle));
   }
 }
