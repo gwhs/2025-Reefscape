@@ -59,7 +59,7 @@ public class ElevatorIOSim implements ElevatorIO {
 
   @Override
   public void setEmergencyMode(boolean emergency) {
-    m_emergencyMode = emergency; 
+    m_emergencyMode = emergency;
     setVoltage(0);
   }
 }
