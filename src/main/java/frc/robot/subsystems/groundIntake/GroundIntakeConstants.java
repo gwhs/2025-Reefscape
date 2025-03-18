@@ -11,8 +11,8 @@ public class GroundIntakeConstants {
 
   public static final double ENCODER_OFFSET = 235.0;
 
-  public static final double GROUND_INTAKE_LOWER_BOUND = 0.0;
-  public static final double GROUND_INTAKE_UPPER_BOUND = 95.0;
+  public static final double GROUND_INTAKE_LOWER_BOUND = -120.0;
+  public static final double GROUND_INTAKE_UPPER_BOUND = 10.0;
 
   public static final double MAX_VELOCITY = 1.2;
   public static final double MAX_ACCELERATION = 1.5;
