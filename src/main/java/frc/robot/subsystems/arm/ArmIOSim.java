@@ -69,6 +69,5 @@ public class ArmIOSim implements ArmIO {
   public void setEmergencyMode(boolean emergency) {
     m_emergencyMode = emergency;
     setVoltage(0);
-    SmartDashboard.putBoolean("Simulation/Arm Emergency Mode", emergency);
   }
 }

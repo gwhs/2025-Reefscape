@@ -23,8 +23,6 @@ public class ElevatorIOSim implements ElevatorIO {
     return ElevatorSubsystem.metersToRotations(elevatorSim.getPositionMeters());
   }
 
-  private boolean m_emergencyMode;
-
   public void update() {
     elevatorSim.update(.020);
 
@@ -34,6 +32,8 @@ public class ElevatorIOSim implements ElevatorIO {
 
     elevatorSim.setInputVoltage(pidOutput);
   }
+
+  private boolean m_emergencyMode;
 
   public boolean getReverseLimit() {
     return elevatorSim.getPositionMeters() == 0;
@@ -59,7 +59,7 @@ public class ElevatorIOSim implements ElevatorIO {
 
   @Override
   public void setEmergencyMode(boolean emergency) {
-    m_emergencyMode = emergency;
+    m_emergencyMode = emergency; 
     setVoltage(0);
   }
 }
