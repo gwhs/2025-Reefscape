@@ -656,7 +656,7 @@ public class RobotContainer {
                 Commands.waitSeconds(0.1),
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))
-                    .withTimeout(2),
+                    .withTimeout(1),
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
                     .withTimeout(0.5)
                     .deadlineFor(
