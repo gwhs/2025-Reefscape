@@ -3,12 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
-import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -34,9 +29,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.generated.TunerSwerveDrivetrain;
@@ -58,26 +51,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             }
           });
 
-  SwerveModule<TalonFX, TalonFX, CANcoder> mod_1 = getModule(0);
-  SwerveModule<TalonFX, TalonFX, CANcoder> mod_2 = getModule(1);
-  SwerveModule<TalonFX, TalonFX, CANcoder> mod_3 = getModule(2);
-  SwerveModule<TalonFX, TalonFX, CANcoder> mod_4 = getModule(3);
-  TalonFX m_1 = mod_1.getDriveMotor();
-  TalonFX m_2 = mod_2.getDriveMotor();
-  TalonFX m_3 = mod_3.getDriveMotor();
-  TalonFX m_4 = mod_4.getDriveMotor();
-  TalonFXConfiguration m1_config = new TalonFXConfiguration();
-  TalonFXConfiguration m2_config = new TalonFXConfiguration();
-  TalonFXConfiguration m3_config = new TalonFXConfiguration();
-  TalonFXConfiguration m4_config = new TalonFXConfiguration();
-  CurrentLimitsConfigs m1_current_config = new CurrentLimitsConfigs();
-  CurrentLimitsConfigs m2_current_config = new CurrentLimitsConfigs();
-  CurrentLimitsConfigs m3_current_config = new CurrentLimitsConfigs();
-  CurrentLimitsConfigs m4_current_config = new CurrentLimitsConfigs();
-
   public Constraints constraints = new TrapezoidProfile.Constraints(3, 1);
-  public ProfiledPIDController PID_X = new ProfiledPIDController(2.5, 0, 0, constraints);
-  public ProfiledPIDController PID_Y = new ProfiledPIDController(2.5, 0, 0, constraints);
+  public ProfiledPIDController PID_X = new ProfiledPIDController(3.0, 0, 0, constraints);
+  public ProfiledPIDController PID_Y = new ProfiledPIDController(3.0, 0, 0, constraints);
 
   public PIDController PID_Rotation = new PIDController(0.1, 0, 0);
   public Trigger IS_AT_TARGET_POSE =
@@ -169,25 +145,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   }
 
   /**
-   * @return run the command NOTE: this sets it to 35 DO NOT CHANGE THE VALUE!!!! <br>
-   *     NOTE: this only exists so that a thing in the RobotContainer.java file works <br>
-   *     NOTE: don't use this in the actual code there is a 99% chance this isn't the function you
-   *     want
-   */
-  public Command setDriveMotorCurrentLimit() {
-
-    return Commands.runOnce(
-        () -> {
-          m1_current_config.withStatorCurrentLimitEnable(true);
-          m1_current_config.withStatorCurrentLimit(35);
-          m_1.getConfigurator().apply(m1_current_config);
-          m_2.getConfigurator().apply(m1_current_config);
-          m_3.getConfigurator().apply(m1_current_config);
-          m_4.getConfigurator().apply(m1_current_config);
-        });
-  }
-
-  /**
    * Constructs a CTRE SwerveDrivetrain using the specified constants.
    *
    * <p>This constructs the underlying hardware devices, so users should not construct the devices
@@ -248,9 +205,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
       DriverStation.reportError(
           "Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
     }
-    SmartDashboard.putData("Align/PID controller X", PID_X);
-    SmartDashboard.putData("Align/PID controller Y", PID_Y);
-    SmartDashboard.putData("Align/PID controller Rotate", PID_Rotation);
   }
 
   /**

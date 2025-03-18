@@ -115,7 +115,7 @@ public class AlignToPose extends Command {
     double angularVelocity = PIDRotationOutput;
     DogLog.log("Align/PIDRotationoutput", PIDRotationOutput);
 
-    if (elevatorHeight.getAsDouble() > 0.3) {
+    if (elevatorHeight.getAsDouble() > 0.4) {
       if (resetLimiter) {
         resetLimiter = false;
         xVelocityLimiter.reset(xVelocity);
