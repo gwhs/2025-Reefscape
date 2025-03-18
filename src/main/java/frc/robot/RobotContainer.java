@@ -469,6 +469,9 @@ public class RobotContainer {
     m_operatorController.povUp().onTrue(elevator.increaseHeight(0.02));
     m_operatorController.povDown().onTrue(elevator.decreaseHeight(0.02));
 
+    m_operatorController.leftBumper().onTrue(groundIntake.decreaseAngle(3));
+    m_operatorController.rightBumper().onTrue(groundIntake.increaseAngle(3));
+
     m_operatorController.leftTrigger().onTrue(climb());
   }
 
@@ -647,8 +650,8 @@ public class RobotContainer {
   public Command autonScoreCoral() {
     return Commands.sequence(
             endEffector.shoot(),
-            Commands.waitSeconds(0.1),
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.1),
+            Commands.waitSeconds(0.05),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.05),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
             endEffector.stopMotor())
         .withTimeout(0.5);
