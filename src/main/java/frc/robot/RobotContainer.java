@@ -463,6 +463,9 @@ public class RobotContainer {
     m_operatorController.povUp().onTrue(elevator.increaseHeight(0.02));
     m_operatorController.povDown().onTrue(elevator.decreaseHeight(0.02));
 
+    m_operatorController.leftBumper().onTrue(groundIntake.decreaseAngle(3));
+    m_operatorController.rightBumper().onTrue(groundIntake.increaseAngle(3));
+
     m_operatorController.leftTrigger().onTrue(climb());
   }
 
