@@ -295,6 +295,12 @@ public class RobotContainer {
     //     .onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0)));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(stopIntake());
+    m_driverController
+        .y()
+        .whileTrue(
+            prepCoralIntake(
+                ElevatorConstants.INTAKE_METER_BACKUP, ArmConstants.ARM_INTAKE_ANGLE_BACKUP))
+        .onFalse(stopIntake());
 
     // IS_TELEOP
     //     .and(IS_REEFMODE)
@@ -556,12 +562,16 @@ public class RobotContainer {
   /**
    * @return prep to pickup coral
    */
-  public Command prepCoralIntake() {
+  public Command prepCoralIntake(double elevatorHeight, double armAngle) {
     return Commands.sequence(
             endEffector.intake(),
-            elevator.setHeight(ElevatorConstants.INTAKE_METER).withTimeout(0.5),
-            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
+            arm.setAngle(armAngle).withTimeout(1))
         .withName("Prepare Coral Intake");
+  }
+
+  public Command prepCoralIntake() {
+    return prepCoralIntake(ElevatorConstants.INTAKE_METER, ArmConstants.ARM_INTAKE_ANGLE);
   }
 
   public Command stopIntake() {
