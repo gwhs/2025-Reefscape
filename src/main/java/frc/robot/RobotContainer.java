@@ -305,10 +305,12 @@ public class RobotContainer {
             Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
                 .withName("Back to Original State"));
 
-     m_driverController
-      .rightTrigger()
-      .onFalse(Commands.either(scoreCoral(), groundIntakeScoreL1(), IS_L1.negate())
-      .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+    m_driverController
+        .rightTrigger()
+        .onFalse(
+            Commands.either(scoreCoral(), groundIntakeScoreL1(), IS_L1.negate())
+                .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+                .withName("score Coral"));
 
     m_driverController
         .rightTrigger()
