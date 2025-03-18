@@ -3,7 +3,6 @@ package frc.robot.subsystems.endEffector;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
 import dev.doglog.DogLog;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TOFSensor {
   public double m_distance_EMA;
@@ -50,7 +49,6 @@ public class TOFSensor {
   public void robotPeriodic() {
 
     double distance = sensor.getRange();
-    SmartDashboard.putNumber("Distance", distance);
 
     double diff_from_EMA = m_distance_EMA - sensor.getRange();
     m_dist_SDEV_sq =
@@ -60,6 +58,7 @@ public class TOFSensor {
         (EndEffectorConstants.EXP_DECAY * sensor.getRange())
             + ((1 - EndEffectorConstants.EXP_DECAY) * m_distance_EMA);
 
+    DogLog.log("TOFSensor/Distance", "Distance: " + distance);
     DogLog.log("TOFSensor/Distance", "dist_EMA: " + m_distance_EMA);
     DogLog.log("TOFSensor/Distance", "dist_EDEV: " + Math.sqrt(m_dist_SDEV_sq));
     DogLog.log("TOFSensor/", "Sensor Status: " + sensor.getStatus().toString());
