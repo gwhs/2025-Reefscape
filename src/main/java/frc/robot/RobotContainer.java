@@ -679,7 +679,7 @@ public class RobotContainer {
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))
                     .withTimeout(1),
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
-                    .withTimeout(0.5)
+                    .withTimeout(1)
                     .deadlineFor(
                         alignToPose(
                             () -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))),
@@ -741,13 +741,14 @@ public class RobotContainer {
 
     return Commands.sequence(
             Commands.sequence(
-                groundIntake
+                 Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE))),
+                 groundIntake
                     .setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0)
                     .withTimeout(1),
                 arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
                 elevator.setHeight(0).withTimeout(1),
                 climb.latch().withTimeout(1),
-                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE))),
+               
             Commands.waitUntil(unprepclimbTrigger.or(climbTrigger)),
             Commands.either(unPrepClimbCommand, climbCommand, unprepclimbTrigger))
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
