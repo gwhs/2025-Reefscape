@@ -52,8 +52,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
           });
 
   public Constraints constraints = new TrapezoidProfile.Constraints(3, 2);
-  public ProfiledPIDController PID_X = new ProfiledPIDController(4.5, 0, 0, constraints);
-  public ProfiledPIDController PID_Y = new ProfiledPIDController(4.5, 0, 0, constraints);
+  public ProfiledPIDController PID_X = new ProfiledPIDController(4.0, 0, 0, constraints);
+  public ProfiledPIDController PID_Y = new ProfiledPIDController(4.0, 0, 0, constraints);
 
   public PIDController PID_Rotation = new PIDController(0.1, 0, 0);
   public Trigger IS_AT_TARGET_POSE =
