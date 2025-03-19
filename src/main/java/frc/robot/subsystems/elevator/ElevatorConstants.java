@@ -15,16 +15,16 @@ public class ElevatorConstants {
   public static final int GEAR_RATIO = 12;
   public static final double SPROCKET_DIAMETER = Units.inchesToMeters(1.7567);
 
-  public static final double TOP_METER = .7593;
+  public static final double TOP_METER = .75;
 
   // Position constants:
   public static final double L1_PREP_POSITION = 0;
   public static final double L2_PREP_POSITION = 0;
   public static final double L3_PREP_POSITION = 0.2;
-  public static final double L4_PREP_POSITION = .7593;
+  public static final double L4_PREP_POSITION = .75;
 
-  public static final double INTAKE_METER = .31;
-  public static final double INTAKE_METER_BACKUP = .31;
+  public static final double INTAKE_METER = .28; // 0.31
+  public static final double INTAKE_METER_BACKUP = .166;
   public static final double DEALGAE_LOW_POSITION = 0;
   public static final double DEALGAE_HIGH_POSITION = .4424;
   public static final double DEALGAE_STOW_POSITION = 0;
@@ -32,5 +32,5 @@ public class ElevatorConstants {
   public static final double STOW_METER = Units.inchesToMeters(10.5);
 
   public static final double MAX_VELOCITY = 80; // rps
-  public static final double MAX_ACCELERATION = 800; // rps
+  public static final double MAX_ACCELERATION = 200; // rps
 }
