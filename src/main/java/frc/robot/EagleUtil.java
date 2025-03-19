@@ -33,7 +33,7 @@ public class EagleUtil {
 
   private static double REEF_LENGTH = Units.inchesToMeters(35);
   private static double REEF_TO_REEF_DISTANCE = 0.33;
-  private static double ROBOT_AWAY_FROM_REEF = Units.inchesToMeters(16);
+  private static double ROBOT_AWAY_FROM_REEF = Units.inchesToMeters(15.5);
 
   private static double X = -REEF_LENGTH - ROBOT_AWAY_FROM_REEF;
   private static double Y = REEF_TO_REEF_DISTANCE / 2;
