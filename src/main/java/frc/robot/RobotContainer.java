@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import com.ctre.phoenix6.CANBus.CANBusStatus;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
 import edu.wpi.first.hal.HALUtil;
@@ -217,9 +218,11 @@ public class RobotContainer {
     EagleUtil.calculateRedReefSetPoints();
 
     addPeriodic.accept(
-        () ->
-            DogLog.log(
-                "Canivore Bus Utilization", TunerConstants_Comp.kCANBus.getStatus().BusUtilization),
+        () -> {
+          CANBusStatus status = TunerConstants_Comp.kCANBus.getStatus();
+          DogLog.log("Canivore/Canivore Bus Utilization", status.BusUtilization);
+          DogLog.log("Canivore/Status Code on Canivore", status.Status.toString());
+        },
         0.5);
   }
 
@@ -276,6 +279,7 @@ public class RobotContainer {
 
     m_driverController
         .x()
+        .or(m_driverController.y())
         .whileTrue(
             Commands.startEnd(
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
@@ -292,6 +296,12 @@ public class RobotContainer {
     //     .onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0)));
 
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(stopIntake());
+    m_driverController
+        .y()
+        .whileTrue(
+            prepCoralIntake(
+                ElevatorConstants.INTAKE_METER_BACKUP, ArmConstants.ARM_INTAKE_ANGLE_BACKUP))
+        .onFalse(stopIntake());
 
     // IS_TELEOP
     //     .and(IS_REEFMODE)
@@ -304,6 +314,13 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
                 .withName("Back to Original State"));
+
+    m_driverController
+        .rightTrigger()
+        .onFalse(
+            Commands.either(scoreCoral(), groundIntakeScoreL1(), IS_L1.negate())
+                .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+                .withName("score Coral"));
 
     m_driverController
         .rightTrigger()
@@ -341,10 +358,6 @@ public class RobotContainer {
     IS_L1
         .and(m_driverController.rightTrigger())
         .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_CORAL_ANGLE, -1));
-
-    m_driverController
-        .rightTrigger()
-        .onFalse(Commands.either(scoreCoral(), groundIntakeScoreL1(), IS_L1.negate()));
 
     m_operatorController
         .leftStick()
@@ -447,15 +460,18 @@ public class RobotContainer {
     m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
     m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
 
-    // m_operatorController.y().whileTrue(elevator.sysIdQuasistatic(Direction.kForward));
-    // m_operatorController.b().whileTrue(elevator.sysIdQuasistatic(Direction.kReverse));
-    // m_operatorController.a().whileTrue(elevator.sysIdDynamic(Direction.kForward));
-    // m_operatorController.x().whileTrue(elevator.sysIdDynamic(Direction.kReverse));
+    // m_operatorController.y().whileTrue(arm.sysIdQuasistatic(Direction.kForward));
+    // m_operatorController.b().whileTrue(arm.sysIdQuasistatic(Direction.kReverse));
+    // m_operatorController.a().whileTrue(arm.sysIdDynamic(Direction.kForward));
+    // m_operatorController.x().whileTrue(arm.sysIdDynamic(Direction.kReverse));
 
     m_operatorController.povRight().onTrue(arm.increaseAngle(3.0));
     m_operatorController.povLeft().onTrue(arm.decreaseAngle(3.0));
     m_operatorController.povUp().onTrue(elevator.increaseHeight(0.02));
     m_operatorController.povDown().onTrue(elevator.decreaseHeight(0.02));
+
+    m_operatorController.leftBumper().onTrue(groundIntake.decreaseAngle(3));
+    m_operatorController.rightBumper().onTrue(groundIntake.increaseAngle(3));
 
     m_operatorController.leftTrigger().onTrue(climb());
   }
@@ -506,6 +522,10 @@ public class RobotContainer {
     DogLog.log("Current Robot", getRobot().toString());
     DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
 
+    DogLog.log("Trigger/Algae High", ALGAE_HIGH.getAsBoolean());
+    DogLog.log("Trigger/Is Near Coarl Station", IS_NEAR_CORAL_STATION.getAsBoolean());
+    DogLog.log("Trigger/Is Coral Loaded", IS_CORAL_LOADED.getAsBoolean());
+
     DogLog.log("Match Timer", DriverStation.getMatchTime());
   }
 
@@ -553,19 +573,25 @@ public class RobotContainer {
   /**
    * @return prep to pickup coral
    */
-  public Command prepCoralIntake() {
+  public Command prepCoralIntake(double elevatorHeight, double armAngle) {
     return Commands.sequence(
             endEffector.intake(),
-            elevator.setHeight(ElevatorConstants.INTAKE_METER).withTimeout(0.5),
-            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
+            arm.setAngle(armAngle).withTimeout(1),
+            groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_CORAL_ANGLE, 6))
         .withName("Prepare Coral Intake");
+  }
+
+  public Command prepCoralIntake() {
+    return prepCoralIntake(ElevatorConstants.INTAKE_METER, ArmConstants.ARM_INTAKE_ANGLE);
   }
 
   public Command stopIntake() {
     return Commands.parallel(
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
             elevator.setHeight(ElevatorConstants.STOW_METER),
-            endEffector.holdCoral())
+            endEffector.holdCoral(),
+            groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_CORAL_ANGLE, 1))
         .withName("stop Intake");
   }
 
@@ -627,8 +653,8 @@ public class RobotContainer {
   public Command autonScoreCoral() {
     return Commands.sequence(
             endEffector.shoot(),
-            Commands.waitSeconds(0.1),
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.1),
+            Commands.waitSeconds(0.05),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.05),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
             endEffector.stopMotor())
         .withTimeout(0.5);
@@ -653,9 +679,9 @@ public class RobotContainer {
                 Commands.waitSeconds(0.1),
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))
-                    .withTimeout(2),
+                    .withTimeout(1),
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
-                    .withTimeout(0.5)
+                    .withTimeout(1)
                     .deadlineFor(
                         alignToPose(
                             () -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))),
@@ -686,7 +712,9 @@ public class RobotContainer {
 
   public Command dealgae() {
     return Commands.sequence(
-            arm.setAngle(ArmConstants.DEALGAE_ANGLE).withTimeout(0.2),
+            arm.setAngle(ArmConstants.DEALGAE_ANGLE)
+                .alongWith(elevator.decreaseHeight(0.1))
+                .withTimeout(0.2),
             drivetrain.driveBackward(1).withTimeout(0.6),
             Commands.parallel(
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(.1),
@@ -717,13 +745,11 @@ public class RobotContainer {
 
     return Commands.sequence(
             Commands.sequence(
-                groundIntake
-                    .setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0)
-                    .withTimeout(1),
-                arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
-                elevator.setHeight(0).withTimeout(1),
-                climb.latch().withTimeout(1),
                 Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE))),
+            groundIntake.setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0).withTimeout(1),
+            arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
+            elevator.setHeight(0).withTimeout(1),
+            climb.latch().withTimeout(1),
             Commands.waitUntil(unprepclimbTrigger.or(climbTrigger)),
             Commands.either(unPrepClimbCommand, climbCommand, unprepclimbTrigger))
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
