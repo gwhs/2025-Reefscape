@@ -27,10 +27,10 @@ public class Robot extends TimedRobot {
   private final GcStatsCollector gcStatsCollector = new GcStatsCollector();
 
   public Robot() {
-        // Setup DogLog
-        DogLog.setOptions(
-          new DogLogOptions().withNtPublish(true).withCaptureNt(true).withCaptureDs(true));
-      DogLog.setPdh(new PowerDistribution());
+    // Setup DogLog
+    DogLog.setOptions(
+        new DogLogOptions().withNtPublish(true).withCaptureNt(true).withCaptureDs(true));
+    DogLog.setPdh(new PowerDistribution());
 
     m_robotContainer = new RobotContainer(this::addPeriodic);
 
