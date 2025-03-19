@@ -279,6 +279,7 @@ public class RobotContainer {
 
     m_driverController
         .x()
+        .or(m_driverController.y())
         .whileTrue(
             Commands.startEnd(
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
@@ -459,10 +460,10 @@ public class RobotContainer {
     m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
     m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
 
-    // m_operatorController.y().whileTrue(elevator.sysIdQuasistatic(Direction.kForward));
-    // m_operatorController.b().whileTrue(elevator.sysIdQuasistatic(Direction.kReverse));
-    // m_operatorController.a().whileTrue(elevator.sysIdDynamic(Direction.kForward));
-    // m_operatorController.x().whileTrue(elevator.sysIdDynamic(Direction.kReverse));
+    // m_operatorController.y().whileTrue(arm.sysIdQuasistatic(Direction.kForward));
+    // m_operatorController.b().whileTrue(arm.sysIdQuasistatic(Direction.kReverse));
+    // m_operatorController.a().whileTrue(arm.sysIdDynamic(Direction.kForward));
+    // m_operatorController.x().whileTrue(arm.sysIdDynamic(Direction.kReverse));
 
     m_operatorController.povRight().onTrue(arm.increaseAngle(3.0));
     m_operatorController.povLeft().onTrue(arm.decreaseAngle(3.0));
@@ -678,7 +679,7 @@ public class RobotContainer {
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))
                     .withTimeout(1),
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
-                    .withTimeout(0.5)
+                    .withTimeout(1)
                     .deadlineFor(
                         alignToPose(
                             () -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))),
@@ -709,7 +710,9 @@ public class RobotContainer {
 
   public Command dealgae() {
     return Commands.sequence(
-            arm.setAngle(ArmConstants.DEALGAE_ANGLE).withTimeout(0.2),
+            arm.setAngle(ArmConstants.DEALGAE_ANGLE)
+                .alongWith(elevator.decreaseHeight(0.1))
+                .withTimeout(0.2),
             drivetrain.driveBackward(1).withTimeout(0.6),
             Commands.parallel(
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(.1),
@@ -740,13 +743,11 @@ public class RobotContainer {
 
     return Commands.sequence(
             Commands.sequence(
-                groundIntake
-                    .setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0)
-                    .withTimeout(1),
-                arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
-                elevator.setHeight(0).withTimeout(1),
-                climb.latch().withTimeout(1),
                 Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE))),
+            groundIntake.setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0).withTimeout(1),
+            arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
+            elevator.setHeight(0).withTimeout(1),
+            climb.latch().withTimeout(1),
             Commands.waitUntil(unprepclimbTrigger.or(climbTrigger)),
             Commands.either(unPrepClimbCommand, climbCommand, unprepclimbTrigger))
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)

@@ -170,6 +170,7 @@ public class ArmIOReal implements ArmIO {
     DogLog.log("Arm/Motor/stator current", armStatorCurrent.getValueAsDouble());
     DogLog.log("Arm/Motor/Connected", armConnected);
     DogLog.log("Arm/Encoder/encoder position", getPosition());
+    DogLog.log("Arm/Encoder/Connected", armEncoder.isConnected());
 
     armMotorConnectedAlert.set(!armConnected);
     armEncoderConnectedAlert.set(!armEncoder.isConnected());
