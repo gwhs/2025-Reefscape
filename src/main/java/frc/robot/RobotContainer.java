@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.DriveCommand.TargetMode;
@@ -710,7 +709,7 @@ public class RobotContainer {
 
   public Command dealgae() {
     return Commands.sequence(
-            arm.setAngle(ArmConstants.DEALGAE_ANGLE).withTimeout(0.2),
+            arm.setAngle(ArmConstants.DEALGAE_ANGLE).alongWith(elevator.decreaseHeight(0.05)).withTimeout(0.2),
             drivetrain.driveBackward(1).withTimeout(0.6),
             Commands.parallel(
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(.1),
