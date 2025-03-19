@@ -709,7 +709,9 @@ public class RobotContainer {
 
   public Command dealgae() {
     return Commands.sequence(
-            arm.setAngle(ArmConstants.DEALGAE_ANGLE).alongWith(elevator.decreaseHeight(0.05)).withTimeout(0.2),
+            arm.setAngle(ArmConstants.DEALGAE_ANGLE)
+                .alongWith(elevator.decreaseHeight(0.1))
+                .withTimeout(0.2),
             drivetrain.driveBackward(1).withTimeout(0.6),
             Commands.parallel(
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(.1),
