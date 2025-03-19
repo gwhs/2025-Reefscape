@@ -32,5 +32,5 @@ public class ElevatorConstants {
   public static final double STOW_METER = Units.inchesToMeters(10.5);
 
   public static final double MAX_VELOCITY = 80; // rps
-  public static final double MAX_ACCELERATION = 800; // rps
+  public static final double MAX_ACCELERATION = 700; // rps
 }

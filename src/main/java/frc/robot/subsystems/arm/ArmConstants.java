@@ -12,7 +12,7 @@ public class ArmConstants {
   public static final double L1_PREP_POSITION = 313;
   public static final double L2_PREP_POSITION = 315;
   public static final double L3_PREP_POSITION = 304.565;
-  public static final double L4_PREP_POSITION = 304.565;
+  public static final double L4_PREP_POSITION = 301;
 
   public static final double ARM_UPPER_BOUND = 360;
   public static final double ARM_LOWER_BOUND = 10;
