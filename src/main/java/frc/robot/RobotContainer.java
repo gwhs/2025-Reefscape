@@ -278,7 +278,7 @@ public class RobotContainer {
     //     .onTrue(EagleUtil.triggerAlert(batteryUnderTwelveVolts));
 
     m_driverController
-        .x()
+        .x().or(m_driverController.y())
         .whileTrue(
             Commands.startEnd(
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
