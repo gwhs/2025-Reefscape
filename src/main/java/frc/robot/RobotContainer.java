@@ -577,7 +577,8 @@ public class RobotContainer {
     return Commands.sequence(
             endEffector.intake(),
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
-            arm.setAngle(armAngle).withTimeout(1))
+            arm.setAngle(armAngle).withTimeout(1),
+            groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_CORAL_ANGLE, 6))
         .withName("Prepare Coral Intake");
   }
 
@@ -589,7 +590,8 @@ public class RobotContainer {
     return Commands.parallel(
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
             elevator.setHeight(ElevatorConstants.STOW_METER),
-            endEffector.holdCoral())
+            endEffector.holdCoral(),
+            groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_CORAL_ANGLE, 1))
         .withName("stop Intake");
   }
 
