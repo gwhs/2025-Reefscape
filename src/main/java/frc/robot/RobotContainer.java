@@ -600,7 +600,7 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
             elevator.setHeight(ElevatorConstants.STOW_METER),
             endEffector.holdCoral(),
-            groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_CORAL_ANGLE, 1))
+            groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 1))
         .withName("stop Intake");
   }
 
