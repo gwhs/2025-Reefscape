@@ -47,7 +47,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
   public Command intake() {
     return Commands.runOnce(
-        () -> endEffectorIO.setAmps(EndEffectorConstants.INTAKE_CORAL_CURRENT, 0.25));
+        () -> endEffectorIO.setAmps(EndEffectorConstants.INTAKE_CORAL_CURRENT, 0.35));
   }
 
   public Command holdCoral() {
