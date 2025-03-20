@@ -61,7 +61,7 @@ public class RobotVisualizer {
     double armAngle = arm.getAngle();
     double groundIntakeAngle = groundIntake.getAngle();
 
-    m_arm.setAngle(-armAngle - 90);
+    m_arm.setAngle(-armAngle + 90);
 
     m_ground_intake.setAngle(-groundIntakeAngle + 90);
 
