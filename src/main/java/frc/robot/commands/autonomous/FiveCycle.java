@@ -21,7 +21,7 @@ public class FiveCycle extends PathPlannerAuto {
 
   private RobotContainer robotContainer;
 
-  private double waitTime = 1.25;
+  private double waitTime = 1.5;
 
   public FiveCycle(RobotContainer robotContainer, boolean nonProcessorSide) {
     super(Commands.run(() -> {}));
@@ -94,7 +94,7 @@ public class FiveCycle extends PathPlannerAuto {
                         .prepScoreCoral(
                             ElevatorConstants.INTAKE_METER, ArmConstants.L4_PREP_POSITION)
                         .withTimeout(0.02),
-                    Commands.waitSeconds(.8),
+                    Commands.waitSeconds(0.8),
                     robotContainer.prepScoreCoral(
                         ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION))),
         Commands.sequence(Commands.waitSeconds(.1), robotContainer.autonScoreCoral())
