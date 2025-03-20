@@ -574,7 +574,7 @@ public class RobotContainer {
    * @return prep to pickup coral
    */
   public Command prepCoralIntake(double elevatorHeight, double armAngle) {
-    return Commands.sequence(
+    return Commands.parallel(
             endEffector.intake(),
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
             arm.setAngle(armAngle).withTimeout(1))
