@@ -581,6 +581,15 @@ public class RobotContainer {
         .withName("Prepare Coral Intake");
   }
 
+  public Command prepCoralIntakeAuton() {
+    return Commands.sequence(
+        endEffector.intake(),
+        elevator.setHeight(ElevatorConstants.INTAKE_METER).withTimeout(0.5),
+        arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE)
+            .withTimeout(1)
+            .withName("Prepare Coral Intake Auton"));
+  }
+
   public Command prepCoralIntake() {
     return prepCoralIntake(ElevatorConstants.INTAKE_METER, ArmConstants.ARM_INTAKE_ANGLE);
   }
