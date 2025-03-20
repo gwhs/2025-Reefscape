@@ -661,7 +661,7 @@ public class RobotContainer {
     return Commands.sequence(
             endEffector.shoot(),
             Commands.waitSeconds(0.05),
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.05),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
             endEffector.stopMotor())
         .withTimeout(0.5);
@@ -674,8 +674,8 @@ public class RobotContainer {
     Command scoreCoral =
         Commands.sequence(
                 endEffector.shoot(),
-                Commands.waitSeconds(0.1),
-                arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.1),
+                Commands.waitSeconds(0.05),
+                arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
                 endEffector.stopMotor())
             .withTimeout(0.5);
@@ -683,10 +683,10 @@ public class RobotContainer {
     Command deAlgae =
         Commands.sequence(
                 endEffector.shoot(),
-                Commands.waitSeconds(0.1),
+                Commands.waitSeconds(0.05),
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))
-                    .withTimeout(1),
+                    .withTimeout(0.8),
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
                     .withTimeout(1)
                     .deadlineFor(
