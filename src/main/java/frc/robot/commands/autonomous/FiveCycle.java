@@ -21,7 +21,7 @@ public class FiveCycle extends PathPlannerAuto {
 
   private RobotContainer robotContainer;
 
-  //   private double waitTime = 1.25;
+  private double waitTime = 1.5;
 
   public FiveCycle(RobotContainer robotContainer, boolean nonProcessorSide) {
     super(Commands.run(() -> {}));
@@ -71,7 +71,7 @@ public class FiveCycle extends PathPlannerAuto {
                       .deadlineFor(
                           robotContainer.alignToPose(
                               () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
-                  AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntake()),
+                  AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntakeAuton()),
                   autoHelper(CSP_D, D_CSP),
                   autoHelper(CSP_C, C_CSP),
                   autoHelper(CSP_E, E_CSP)));
@@ -84,7 +84,8 @@ public class FiveCycle extends PathPlannerAuto {
   public Command autoHelper(PathPlannerPath pathOne, PathPlannerPath pathTwo) {
     return Commands.sequence(
         // wait until coral is loaded
-        Commands.waitUntil(robotContainer.IS_CORAL_LOADED),
+        // Commands.waitUntil(robotContainer.IS_CORAL_LOADED),
+        Commands.waitSeconds(waitTime),
         // drive to scoring position
         AutoBuilder.followPath(pathOne)
             .deadlineFor(
@@ -93,13 +94,13 @@ public class FiveCycle extends PathPlannerAuto {
                         .prepScoreCoral(
                             ElevatorConstants.INTAKE_METER, ArmConstants.L4_PREP_POSITION)
                         .withTimeout(0.02),
-                    Commands.waitSeconds(.8),
+                    Commands.waitSeconds(0.8),
                     robotContainer.prepScoreCoral(
                         ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION))),
         Commands.sequence(Commands.waitSeconds(.1), robotContainer.autonScoreCoral())
             .deadlineFor(
                 robotContainer.alignToPose(
                     () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
-        AutoBuilder.followPath(pathTwo).alongWith(robotContainer.prepCoralIntake()));
+        AutoBuilder.followPath(pathTwo).alongWith(robotContainer.prepCoralIntakeAuton()));
   }
 }
