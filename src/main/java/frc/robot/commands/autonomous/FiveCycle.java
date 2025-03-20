@@ -89,6 +89,7 @@ public class FiveCycle extends PathPlannerAuto {
         AutoBuilder.followPath(pathOne)
             .deadlineFor(
                 Commands.sequence(
+                    Commands.waitSeconds(.1),
                     robotContainer
                         .prepScoreCoral(
                             ElevatorConstants.INTAKE_METER, ArmConstants.L4_PREP_POSITION)
