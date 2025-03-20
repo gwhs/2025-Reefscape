@@ -578,7 +578,7 @@ public class RobotContainer {
             endEffector.intake(),
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
             arm.setAngle(armAngle).withTimeout(1),
-            groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_CORAL_ANGLE, 6))
+            groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 6))
         .withName("Prepare Coral Intake");
   }
 
