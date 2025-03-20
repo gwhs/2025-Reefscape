@@ -89,7 +89,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
       DogLog.log("EndEffector/Validity", m_coral_detector.getStatus());
       DogLog.log("EndEffector/Distance", distance);
     }
-    if (distance < 30 && distance > 20) {
+    if (distance < 36 && distance > 20) {
       return true;
     } else {
       return false;
