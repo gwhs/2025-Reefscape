@@ -154,6 +154,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
         spinMotorTemperature,
         pivotMotorStatorCurrent,
         spinMotorStatorCurrent,
+        groundIntakePIDGoal,
         pivotMotorPosition);
 
     DogLog.log("groundIntake/Spin/voltage", spinMotorVoltage.getValueAsDouble());
