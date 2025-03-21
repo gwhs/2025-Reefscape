@@ -617,7 +617,7 @@ public class RobotContainer {
   public Command scoreAlgae() {
     return Commands.sequence(
             groundIntake
-                .setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, 5)
+                .setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, 8)
                 .withTimeout(0.5),
             Commands.waitSeconds(0.7),
             groundIntake
