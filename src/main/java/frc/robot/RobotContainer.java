@@ -366,7 +366,7 @@ public class RobotContainer {
 
     m_operatorController
         .rightStick()
-        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, -2))
+        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, 1))
         .onFalse(scoreAlgae());
 
     m_operatorController
