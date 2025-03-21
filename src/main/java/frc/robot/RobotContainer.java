@@ -328,7 +328,7 @@ public class RobotContainer {
         .and(ALGAE_HIGH.negate())
         .and(m_driverController.leftTrigger())
         .onTrue(prepDealgaeLow());
-        
+
     m_driverController
         .rightTrigger()
         .negate()
