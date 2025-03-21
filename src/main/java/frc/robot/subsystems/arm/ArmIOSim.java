@@ -23,6 +23,8 @@ public class ArmIOSim implements ArmIO {
           ArmConstants.MAX_VELOCITY * 360, ArmConstants.MAX_ACCELERATION * 360);
   private ProfiledPIDController pidController = new ProfiledPIDController(.1, 0, 0, constraints);
 
+  private boolean m_emergencyMode;
+
   public ArmIOSim() {
     pidController.setGoal(90);
   }
@@ -33,7 +35,9 @@ public class ArmIOSim implements ArmIO {
 
   @Override
   public void setAngle(double angle) {
-    pidController.setGoal(angle);
+    if (m_emergencyMode == false) {
+      pidController.setGoal(angle);
+    }
   }
 
   public double getPositionError() {
@@ -44,14 +48,25 @@ public class ArmIOSim implements ArmIO {
    * @param volts how many volts to set to
    */
   public void setVoltage(double volts) {
-    armSim.setInputVoltage(volts);
+    if (m_emergencyMode == true) {
+      armSim.setInputVoltage(0);
+    } else {
+      armSim.setInputVoltage(volts);
+    }
   }
 
   public void update() {
     armSim.update(0.20);
+    if (m_emergencyMode == false) {
+      double pidOutput = pidController.calculate(getPosition());
 
-    double pidOutput = pidController.calculate(getPosition());
+      armSim.setInputVoltage(pidOutput);
+    }
+  }
 
-    armSim.setInputVoltage(pidOutput);
+  @Override
+  public void setEmergencyMode(boolean emergency) {
+    m_emergencyMode = emergency;
+    setVoltage(0);
   }
 }

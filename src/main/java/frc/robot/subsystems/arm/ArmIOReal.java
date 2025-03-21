@@ -50,6 +50,8 @@ public class ArmIOReal implements ArmIO {
   private final Alert armEncoderConnectedAlert =
       new Alert("Arm CANcoder not connected", AlertType.kError);
 
+  private boolean m_emergencyMode;
+
   public ArmIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
     MotorOutputConfigs motorOutput = talonFXConfigs.MotorOutput;
@@ -135,11 +137,21 @@ public class ArmIOReal implements ArmIO {
    * @param volts the voltage to set to
    */
   public void setVoltage(double volts) {
-    armMotor.setControl(m_voltReq.withOutput(volts));
+    if (m_emergencyMode == true) {
+      armMotor.setControl(m_voltReq.withOutput(0));
+    } else {
+      armMotor.setControl(m_voltReq.withOutput(volts));
+    }
+  }
+
+  public void setEmergencyMode(boolean emergency) {
+    m_emergencyMode = emergency;
+    setVoltage(0);
   }
 
   @Override
   public void update() {
+
     boolean armConnected =
         (BaseStatusSignal.refreshAll(
                 armPIDGoal,
@@ -162,5 +174,9 @@ public class ArmIOReal implements ArmIO {
 
     armMotorConnectedAlert.set(!armConnected);
     armEncoderConnectedAlert.set(!armEncoder.isConnected());
+
+    if (m_emergencyMode == true) {
+      setVoltage(0);
+    }
   }
 }
