@@ -90,7 +90,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
       DogLog.log("EndEffector/Distance", distance);
       return false;
     }
-    if (distance < 30 && distance > 20) {
+    if (distance < 15) {
       return true;
     } else {
       return false;

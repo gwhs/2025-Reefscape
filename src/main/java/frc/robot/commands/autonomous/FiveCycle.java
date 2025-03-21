@@ -67,7 +67,11 @@ public class FiveCycle extends PathPlannerAuto {
                               robotContainer.prepScoreCoral(
                                   ElevatorConstants.L4_PREP_POSITION,
                                   ArmConstants.L4_PREP_POSITION))),
-                  Commands.sequence(Commands.waitSeconds(.2), robotContainer.autonScoreCoral())
+                  Commands.sequence(
+                          Commands.waitSeconds(.1)
+                              .deadlineFor(
+                                  robotContainer.prepScoreCoral(RobotContainer.CoralLevel.L4)),
+                          robotContainer.autonScoreCoral())
                       .deadlineFor(
                           robotContainer.alignToPose(
                               () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
@@ -84,8 +88,8 @@ public class FiveCycle extends PathPlannerAuto {
   public Command autoHelper(PathPlannerPath pathOne, PathPlannerPath pathTwo) {
     return Commands.sequence(
         // wait until coral is loaded
-        // Commands.waitUntil(robotContainer.IS_CORAL_LOADED),
-        Commands.waitSeconds(waitTime),
+        Commands.waitUntil(robotContainer.IS_CORAL_LOADED),
+        // Commands.waitSeconds(waitTime),
         // drive to scoring position
         AutoBuilder.followPath(pathOne)
             .deadlineFor(
@@ -98,7 +102,10 @@ public class FiveCycle extends PathPlannerAuto {
                     Commands.waitSeconds(0.8),
                     robotContainer.prepScoreCoral(
                         ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION))),
-        Commands.sequence(Commands.waitSeconds(.1), robotContainer.autonScoreCoral())
+        Commands.sequence(
+                Commands.waitSeconds(.1)
+                    .deadlineFor(robotContainer.prepScoreCoral(RobotContainer.CoralLevel.L4)),
+                robotContainer.autonScoreCoral())
             .deadlineFor(
                 robotContainer.alignToPose(
                     () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),

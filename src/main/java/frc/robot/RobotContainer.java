@@ -199,7 +199,7 @@ public class RobotContainer {
                     < 0.4);
 
     ALGAE_HIGH = new Trigger(() -> EagleUtil.isHighAlgae(getRobotPose()));
-    IS_CORAL_LOADED = new Trigger(() -> endEffector.coralLoaded());
+    IS_CORAL_LOADED = new Trigger(() -> endEffector.coralLoaded()).debounce(0.06);
 
     configureAutonomous();
     configureBindings();
@@ -328,6 +328,7 @@ public class RobotContainer {
         .and(ALGAE_HIGH.negate())
         .and(m_driverController.leftTrigger())
         .onTrue(prepDealgaeLow());
+
     m_driverController
         .rightTrigger()
         .negate()
@@ -362,20 +363,23 @@ public class RobotContainer {
     m_operatorController
         .leftStick()
         .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_ALGAE_ANGLE, 6))
-        .onFalse(groundIntake.setAngleAndVoltage(GroundIntakeConstants.ALGAE_STOW_ANGLE, 1));
+        .onFalse(groundIntake.setAngleAndVoltage(GroundIntakeConstants.ALGAE_STOW_ANGLE, 2));
 
     m_operatorController
         .rightStick()
-        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, -2))
+        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, 1))
         .onFalse(scoreAlgae());
 
     m_operatorController
         .rightStick()
         .whileTrue(
-            Commands.startEnd(
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.PROCESSOR),
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
-                .withName("Face Processor"));
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.PROCESSOR))
+                .withName("Face Processor"))
+        .onFalse(
+            Commands.waitSeconds(0.5)
+                .andThen(
+                    Commands.runOnce(
+                        () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))));
 
     m_operatorController
         .leftStick()
@@ -574,7 +578,7 @@ public class RobotContainer {
    * @return prep to pickup coral
    */
   public Command prepCoralIntake(double elevatorHeight, double armAngle) {
-    return Commands.sequence(
+    return Commands.parallel(
             endEffector.intake(),
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
             arm.setAngle(armAngle).withTimeout(1))
@@ -617,7 +621,7 @@ public class RobotContainer {
   public Command scoreAlgae() {
     return Commands.sequence(
             groundIntake
-                .setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, 5)
+                .setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, -6)
                 .withTimeout(0.5),
             Commands.waitSeconds(0.7),
             groundIntake
@@ -661,7 +665,7 @@ public class RobotContainer {
     return Commands.sequence(
             endEffector.shoot(),
             Commands.waitSeconds(0.05),
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.05),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
             endEffector.stopMotor())
         .withTimeout(0.5);
@@ -674,8 +678,8 @@ public class RobotContainer {
     Command scoreCoral =
         Commands.sequence(
                 endEffector.shoot(),
-                Commands.waitSeconds(0.1),
-                arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.1),
+                Commands.waitSeconds(0.05),
+                arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
                 endEffector.stopMotor())
             .withTimeout(0.5);
@@ -683,10 +687,10 @@ public class RobotContainer {
     Command deAlgae =
         Commands.sequence(
                 endEffector.shoot(),
-                Commands.waitSeconds(0.1),
+                Commands.waitSeconds(0.05),
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))
-                    .withTimeout(1),
+                    .withTimeout(0.8),
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
                     .withTimeout(1)
                     .deadlineFor(
