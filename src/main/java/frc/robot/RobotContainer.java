@@ -372,10 +372,10 @@ public class RobotContainer {
     m_operatorController
         .rightStick()
         .whileTrue(
-            Commands.startEnd(
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.PROCESSOR),
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
-                .withName("Face Processor"));
+            Commands.runOnce(
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.PROCESSOR))
+                .withName("Face Processor"))
+                .onFalse(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))));
 
     m_operatorController
         .leftStick()
