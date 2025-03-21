@@ -199,7 +199,7 @@ public class RobotContainer {
                     < 0.4);
 
     ALGAE_HIGH = new Trigger(() -> EagleUtil.isHighAlgae(getRobotPose()));
-    IS_CORAL_LOADED = new Trigger(() -> endEffector.coralLoaded());
+    IS_CORAL_LOADED = new Trigger(() -> endEffector.coralLoaded()).debounce(0.06);
 
     configureAutonomous();
     configureBindings();
