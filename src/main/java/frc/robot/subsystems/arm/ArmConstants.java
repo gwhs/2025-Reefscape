@@ -24,7 +24,7 @@ public class ArmConstants {
   public static final double PRE_DEALGAE_ANGLE = 155;
   public static final double DEALGAE_ANGLE = 170;
 
-  public static final double MAGNET_OFFSET_DEGREES = 0;
+  public static final double MAGNET_OFFSET_DEGREES = -231.679998;
 
   public static final double PREP_CLIMB_ANGLE = -170;
   public static final double CLIMB_ANGLE = -170;
