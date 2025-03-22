@@ -761,7 +761,7 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
             elevator.setHeight(0).withTimeout(1),
             climb.latch().withTimeout(1),
-            Commands.waitUntil(unprepclimbTrigger.or(climbTrigger)),
+            Commands.waitUntil(climbTrigger),
             Commands.either(unPrepClimbCommand, climbCommand, unprepclimbTrigger))
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
         .withName("Climb");
