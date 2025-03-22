@@ -43,6 +43,13 @@ public class ArmIOReal implements ArmIO {
   private final StatusSignal<Angle> armEncoderPosition = armEncoder.getPosition();
   private final StatusSignal<Angle> armPosition = armMotor.getPosition();
   private final StatusSignal<Double> armAngleError = armMotor.getClosedLoopError();
+  private final StatusSignal<Double> feedForwardOutput = armMotor.getClosedLoopFeedForward();
+  private final StatusSignal<Double> closedLoopOutput = armMotor.getClosedLoopOutput();
+  private final StatusSignal<Double> closedLoopProportionalOutput =
+      armMotor.getClosedLoopProportionalOutput();
+  private final StatusSignal<Double> closedLoopIntegral = armMotor.getClosedLoopIntegratedOutput();
+  private final StatusSignal<Double> closedLoopDerivative =
+      armMotor.getClosedLoopDerivativeOutput();
 
   private final Alert armMotorConnectedAlert =
       new Alert("Arm motor not connected", AlertType.kError);
@@ -100,7 +107,15 @@ public class ArmIOReal implements ArmIO {
       System.out.println("Could not configure device. Error: " + status.toString());
     }
 
-    BaseStatusSignal.setUpdateFrequencyForAll(50.0, armPIDGoal, armStatorCurrent);
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50.0,
+        armPIDGoal,
+        armStatorCurrent,
+        feedForwardOutput,
+        closedLoopOutput,
+        closedLoopProportionalOutput,
+        closedLoopIntegral,
+        closedLoopDerivative);
 
     CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
     cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
@@ -149,7 +164,12 @@ public class ArmIOReal implements ArmIO {
                 armStatorCurrent,
                 armPosition,
                 armEncoderPosition,
-                armAngleError)
+                armAngleError,
+                feedForwardOutput,
+                closedLoopOutput,
+                closedLoopProportionalOutput,
+                closedLoopIntegral,
+                closedLoopDerivative)
             .isOK());
     DogLog.log("Arm/Motor/pid goal", Units.rotationsToDegrees(armPIDGoal.getValueAsDouble()));
     DogLog.log("Arm/Motor/motor voltage", armMotorVoltage.getValueAsDouble());
@@ -159,6 +179,12 @@ public class ArmIOReal implements ArmIO {
     DogLog.log("Arm/Motor/Connected", armConnected);
     DogLog.log("Arm/Encoder/encoder position", getPosition());
     DogLog.log("Arm/Encoder/Connected", armEncoder.isConnected());
+    DogLog.log("Arm/Motor/feed forward", feedForwardOutput.getValueAsDouble());
+    DogLog.log("Arm/Motor/closed loop output", closedLoopOutput.getValueAsDouble());
+    DogLog.log(
+        "Arm/Motor/closed loop proportional", closedLoopProportionalOutput.getValueAsDouble());
+    DogLog.log("Arm/Motor/closed loop integral", closedLoopIntegral.getValueAsDouble());
+    DogLog.log("Arm/Motor/closed loop derivative", closedLoopDerivative.getValueAsDouble());
 
     armMotorConnectedAlert.set(!armConnected);
     armEncoderConnectedAlert.set(!armEncoder.isConnected());
