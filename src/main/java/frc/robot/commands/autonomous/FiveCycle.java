@@ -70,7 +70,7 @@ public class FiveCycle extends PathPlannerAuto {
                   Commands.sequence(
                           Commands.waitSeconds(.1)
                               .deadlineFor(
-                                  robotContainer.prepScoreCoral(Robo tContainer.CoralLevel.L4)),
+                                  robotContainer.prepScoreCoral(RobotContainer.CoralLevel.L4)),
                           robotContainer.autonScoreCoral())
                       .deadlineFor(
                           robotContainer.alignToPose(
