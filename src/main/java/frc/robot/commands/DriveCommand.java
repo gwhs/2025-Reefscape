@@ -152,9 +152,9 @@ public class DriveCommand extends Command {
     } else if (mode == TargetMode.PROCESSOR) {
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-        return -90;
-      } else {
         return 90;
+      } else {
+        return -90;
       }
     } else {
       return 0;

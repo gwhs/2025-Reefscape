@@ -455,7 +455,7 @@ public class RobotContainer {
 
     m_operatorController
         .x()
-        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_CORAL_ANGLE, -12))
+        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_CORAL_ANGLE, -6))
         .onFalse(
             groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, -3)); // TODO
 
@@ -761,7 +761,7 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
             elevator.setHeight(0).withTimeout(1),
             climb.latch().withTimeout(1),
-            Commands.waitUntil(unprepclimbTrigger.or(climbTrigger)),
+            Commands.waitUntil(climbTrigger),
             Commands.either(unPrepClimbCommand, climbCommand, unprepclimbTrigger))
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
         .withName("Climb");

@@ -14,7 +14,7 @@ public class ArmConstants {
   public static final double L3_PREP_POSITION = 124.565;
   public static final double L4_PREP_POSITION = 120;
 
-  public static final double ARM_UPPER_BOUND = 180;
+  public static final double ARM_UPPER_BOUND = 270;
   public static final double ARM_LOWER_BOUND = -170;
 
   public static final double ARM_INTAKE_ANGLE = -73.477;
@@ -24,7 +24,7 @@ public class ArmConstants {
   public static final double PRE_DEALGAE_ANGLE = 155;
   public static final double DEALGAE_ANGLE = 170;
 
-  public static final double MAGNET_OFFSET_DEGREES = -229.57;
+  public static final double MAGNET_OFFSET_DEGREES = -231.679998;
 
   public static final double PREP_CLIMB_ANGLE = -170;
   public static final double CLIMB_ANGLE = -170;
