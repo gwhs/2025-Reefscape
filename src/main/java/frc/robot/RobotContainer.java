@@ -736,7 +736,8 @@ public class RobotContainer {
 
   public Command climb() {
     Trigger unprepclimbTrigger = m_operatorController.leftTrigger().negate();
-    Trigger climbTrigger = m_operatorController.rightTrigger().and(m_operatorController.leftTrigger());
+    Trigger climbTrigger =
+        m_operatorController.rightTrigger().and(m_operatorController.leftTrigger());
 
     Command unPrepClimbCommand =
         Commands.sequence(
