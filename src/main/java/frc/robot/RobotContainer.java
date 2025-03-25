@@ -477,7 +477,7 @@ public class RobotContainer {
     m_operatorController.leftBumper().onTrue(groundIntake.decreaseAngle(3));
     m_operatorController.rightBumper().onTrue(groundIntake.increaseAngle(3));
 
-    m_operatorController.leftTrigger().onTrue(climb());
+    m_operatorController.leftTrigger().and(m_operatorController.rightTrigger()).onTrue(climb());
   }
 
   public void periodic() {
@@ -736,7 +736,8 @@ public class RobotContainer {
 
   public Command climb() {
     Trigger unprepclimbTrigger = m_operatorController.leftTrigger().negate();
-    Trigger climbTrigger = m_operatorController.rightTrigger();
+    Trigger climbTrigger =
+        m_operatorController.rightTrigger().and(m_operatorController.leftTrigger());
 
     Command unPrepClimbCommand =
         Commands.sequence(
@@ -762,7 +763,7 @@ public class RobotContainer {
             elevator.setHeight(0).withTimeout(1),
             climb.latch().withTimeout(1),
             Commands.waitUntil(climbTrigger),
-            Commands.either(unPrepClimbCommand, climbCommand, unprepclimbTrigger))
+            climbCommand)
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
         .withName("Climb");
   }
