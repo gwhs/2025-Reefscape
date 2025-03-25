@@ -88,7 +88,7 @@ class EndEffectorIOTalon implements EndEffectorIO {
     if (m_coral_detector.getStatus() != TimeOfFlight.Status.Valid) {
       DogLog.log("EndEffector/Validity", m_coral_detector.getStatus());
       DogLog.log("EndEffector/Distance", distance);
-      //return false;
+      // return false;
     }
     if (distance < 15) {
       return true;
