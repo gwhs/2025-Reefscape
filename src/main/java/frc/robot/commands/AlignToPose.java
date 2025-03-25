@@ -112,7 +112,8 @@ public class AlignToPose extends Command {
     DogLog.log("Align/PIDYoutput", PIDYOutput);
 
     double PIDRotationOutput =
-        MathUtil.clamp(drivetrain.PID_Rotation.calculate(currRotation), -PID_ROTATION_MAX, PID_ROTATION_MAX);
+        MathUtil.clamp(
+            drivetrain.PID_Rotation.calculate(currRotation), -PID_ROTATION_MAX, PID_ROTATION_MAX);
     double angularVelocity = PIDRotationOutput;
     DogLog.log("Align/PIDRotationoutput", PIDRotationOutput);
 
