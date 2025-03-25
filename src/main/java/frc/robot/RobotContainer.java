@@ -664,7 +664,7 @@ public class RobotContainer {
 
   public Command autonScoreCoral() {
     return Commands.sequence(
-            endEffector.shoot(9),
+            endEffector.shoot(EndEffectorConstants.VOLTAGE_L4),
             Commands.waitSeconds(0.05),
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
             elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
@@ -678,7 +678,10 @@ public class RobotContainer {
   public Command scoreCoral() {
     Command scoreCoral =
         Commands.sequence(
-                Commands.either(endEffector.shoot(EndEffectorConstants.VOLTAGE_L4), endEffector.shoot(EndEffectorConstants.VOLTAGE_L3), IS_L4),
+                Commands.either(
+                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L4),
+                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L3),
+                    IS_L4),
                 Commands.waitSeconds(0.05),
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
@@ -687,7 +690,10 @@ public class RobotContainer {
 
     Command deAlgae =
         Commands.sequence(
-                Commands.either(endEffector.shoot(EndEffectorConstants.VOLTAGE_L4), endEffector.shoot(EndEffectorConstants.VOLTAGE_L3), IS_L4),
+                Commands.either(
+                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L4),
+                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L3),
+                    IS_L4),
                 Commands.waitSeconds(0.05),
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))
