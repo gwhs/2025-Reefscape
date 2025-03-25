@@ -36,6 +36,7 @@ public class AlignToPose extends Command {
   private long startTime;
 
   public static final double PID_MAX = 0.44;
+  public static final double PID_ROTATION_MAX = 0.70;
 
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
@@ -111,7 +112,7 @@ public class AlignToPose extends Command {
     DogLog.log("Align/PIDYoutput", PIDYOutput);
 
     double PIDRotationOutput =
-        MathUtil.clamp(drivetrain.PID_Rotation.calculate(currRotation), -PID_MAX, PID_MAX);
+        MathUtil.clamp(drivetrain.PID_Rotation.calculate(currRotation), -PID_ROTATION_MAX, PID_ROTATION_MAX);
     double angularVelocity = PIDRotationOutput;
     DogLog.log("Align/PIDRotationoutput", PIDRotationOutput);
 
