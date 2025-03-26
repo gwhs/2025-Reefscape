@@ -21,7 +21,7 @@ public class FiveCycle extends PathPlannerAuto {
 
   private RobotContainer robotContainer;
 
-  private double waitTime = 1.5;
+  private double waitTime = 0;
 
   public FiveCycle(RobotContainer robotContainer, boolean nonProcessorSide) {
     super(Commands.run(() -> {}));
@@ -88,7 +88,7 @@ public class FiveCycle extends PathPlannerAuto {
   public Command autoHelper(PathPlannerPath pathOne, PathPlannerPath pathTwo) {
     return Commands.sequence(
         // wait until coral is loaded
-        Commands.waitUntil(robotContainer.IS_CORAL_LOADED),
+        // Commands.waitUntil(robotContainer.IS_CORAL_LOADED),
         // Commands.waitSeconds(waitTime),
         // drive to scoring position
         AutoBuilder.followPath(pathOne)
