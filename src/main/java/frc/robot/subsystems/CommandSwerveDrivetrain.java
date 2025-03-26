@@ -165,8 +165,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     ChassisSpeeds currentSpeed =
         ChassisSpeeds.fromRobotRelativeSpeeds(getState().Speeds, getRotation());
 
-    PID_X.reset(getPose().getX(), currentSpeed.vxMetersPerSecond * 0.5);
-    PID_Y.reset(getPose().getY(), currentSpeed.vyMetersPerSecond * 0.5);
+    PID_X.reset(getPose().getX(), currentSpeed.vxMetersPerSecond * 0.4);
+    PID_Y.reset(getPose().getY(), currentSpeed.vyMetersPerSecond * 0.4);
     PID_X.setGoal(targetPose.getX());
     PID_Y.setGoal(targetPose.getY());
     PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
