@@ -10,13 +10,17 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.RobotContainer.CoralLevel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
 public class EagleUtil {
-  public static ArrayList<Pose2d> m_redPoses;
-  public static ArrayList<Pose2d> m_bluePoses;
+  protected static ArrayList<Pose2d> m_redPoses;
+  protected static ArrayList<Pose2d> m_bluePoses;
+
+  protected static ArrayList<Pose2d> m_redAlgaePoses;
+  protected static ArrayList<Pose2d> m_blueAlgaePoses;
 
   private static double BLUE_REEF_X = Units.inchesToMeters(144 + (93.5 - 14 * 2) / 2);
   private static double BLUE_REEF_Y = Units.inchesToMeters(158.50);
@@ -29,24 +33,88 @@ public class EagleUtil {
 
   private static double REEF_LENGTH = Units.inchesToMeters(35);
   private static double REEF_TO_REEF_DISTANCE = 0.33;
-  private static double ROBOT_AWAY_FROM_REEF = Units.inchesToMeters(16.5);
+  private static double ROBOT_AWAY_FROM_REEF = Units.inchesToMeters(16);
 
   private static double X = -REEF_LENGTH - ROBOT_AWAY_FROM_REEF;
   private static double Y = REEF_TO_REEF_DISTANCE / 2;
-  private static double Y_OFFSET = Units.inchesToMeters(0.5);
+  private static double Y_OFFSET = Units.inchesToMeters(-1);
 
   private static Pose2d[] bluePoses = new Pose2d[12];
   private static Pose2d[] redPoses = new Pose2d[12];
 
+  private static Pose2d[] blueAlgaePoses = new Pose2d[6];
+  private static Pose2d[] redAlgaePoses = new Pose2d[6];
+
   private static Pose2d cachedPose = null;
   private static Alliance red = DriverStation.Alliance.Red;
+  static double[] redHeightReefOffsets = {
+    // in meters
+    0, // reef G
+    0, // reef H
+    0, // reef I
+    0, // reef J
+    0, // reef K
+    0, // reef L
+    0, // reef A
+    0, // reef B
+    0, // reef C
+    0, // reef D
+    0, // reef E
+    0 // reef F
+  };
+  static double[] blueHeightReefOffsets = {
+    // in meters
+    0, // reef A
+    0, // reef B
+    0, // reef C
+    0, // reef D
+    0, // reef E
+    0, // reef F
+    0, // reef G
+    0, // reef H
+    0, // reef I
+    0, // reef J
+    0, // reef K
+    0, // reef L
+  };
+
+  static double[] redAngleReefOffsets = {
+    // in meters
+    0, // reef G
+    0, // reef H
+    0, // reef I
+    0, // reef J
+    0, // reef K
+    0, // reef L
+    0, // reef A
+    0, // reef B
+    0, // reef C
+    0, // reef D
+    0, // reef E
+    0 // reef F
+  };
+  static double[] blueAngleReefOffsets = {
+    // in meters
+    0, // reef A
+    0, // reef B
+    0, // reef C
+    0, // reef D
+    0, // reef E
+    0, // reef F
+    0, // reef G
+    0, // reef H
+    0, // reef I
+    0, // reef J
+    0, // reef K
+    0, // reef L
+  };
 
   /**
    * @return returns the calculated set points
    */
   public static ArrayList<Pose2d> calculateBlueReefSetPoints() {
     if (m_bluePoses != null) {
-      return m_bluePoses;
+      return new ArrayList<Pose2d>(m_bluePoses);
     }
 
     double[][] blueReefOffsets = {
@@ -86,7 +154,7 @@ public class EagleUtil {
     DogLog.log("Caculation/Blue Reef", BLUE_REEF);
     DogLog.log("Caculation/Blue Set Points", bluePoses);
     m_bluePoses = new ArrayList<Pose2d>(Arrays.asList(bluePoses));
-    return m_bluePoses;
+    return new ArrayList<Pose2d>(m_bluePoses);
   }
 
   /**
@@ -94,7 +162,7 @@ public class EagleUtil {
    */
   public static ArrayList<Pose2d> calculateRedReefSetPoints() {
     if (m_redPoses != null) {
-      return m_redPoses;
+      return new ArrayList<Pose2d>(m_redPoses);
     }
 
     redPoses[0] = new Pose2d(X, Y + Y_OFFSET, Rotation2d.kZero);
@@ -134,8 +202,53 @@ public class EagleUtil {
     DogLog.log("Caculation/Red Set Points", redPoses);
 
     m_redPoses = new ArrayList<Pose2d>(Arrays.asList(redPoses));
+    return new ArrayList<Pose2d>(m_redPoses);
+  }
 
-    return m_redPoses;
+  public static ArrayList<Pose2d> calculateBlueAlgaeSetPoints() {
+    if (m_blueAlgaePoses != null) {
+      return new ArrayList<>(m_blueAlgaePoses);
+    }
+
+    Rotation2d sixty = Rotation2d.fromDegrees(60);
+    Pose2d startPose =
+        new Pose2d(X, Y - REEF_TO_REEF_DISTANCE / 2, Rotation2d.kZero); // Centered on first side
+
+    for (int i = 0; i < blueAlgaePoses.length; i++) {
+      blueAlgaePoses[i] = startPose.rotateBy(sixty.times(i));
+    }
+
+    for (int i = 0; i < blueAlgaePoses.length; i++) {
+      blueAlgaePoses[i] = blueAlgaePoses[i].relativeTo(BLUE_REEF_INVERT);
+    }
+
+    DogLog.log("Calculation/Blue Algae", BLUE_REEF);
+    DogLog.log("Calculation/Blue Algae Setpoints", blueAlgaePoses);
+    m_blueAlgaePoses = new ArrayList<>(Arrays.asList(blueAlgaePoses));
+    return new ArrayList<>(m_blueAlgaePoses);
+  }
+
+  public static ArrayList<Pose2d> calculateRedAlgaeSetPoints() {
+    if (m_redAlgaePoses != null) {
+      return new ArrayList<>(m_redAlgaePoses);
+    }
+
+    Rotation2d sixty = Rotation2d.fromDegrees(60);
+    Pose2d startPose =
+        new Pose2d(X, Y - REEF_TO_REEF_DISTANCE / 2, Rotation2d.kZero); // Centered on first side
+
+    for (int i = 0; i < redAlgaePoses.length; i++) {
+      redAlgaePoses[i] = startPose.rotateBy(sixty.times(i));
+    }
+
+    for (int i = 0; i < redAlgaePoses.length; i++) {
+      redAlgaePoses[i] = redAlgaePoses[i].relativeTo(RED_REEF_INVERT);
+    }
+
+    DogLog.log("Calculation/Red Algae", RED_REEF);
+    DogLog.log("Calculation/Red Algae Setpoints", redAlgaePoses);
+    m_redAlgaePoses = new ArrayList<>(Arrays.asList(redAlgaePoses));
+    return new ArrayList<>(m_redAlgaePoses);
   }
 
   private static Pose2d getNearestReefPoint(Pose2d pose) {
@@ -144,6 +257,27 @@ public class EagleUtil {
       return pose.nearest(FieldConstants.blueReefSetpointList);
     } else {
       return pose.nearest(FieldConstants.redReefSetpointList);
+    }
+  }
+
+  public static Pose2d getNearestAlgaePoint(Pose2d pose) {
+    if (DriverStation.getAlliance().isPresent()
+        && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      return pose.nearest(FieldConstants.blueAlgaeSetpointList);
+    } else {
+      return pose.nearest(FieldConstants.redAlgaeSetpointList);
+    }
+  }
+
+  public static boolean isHighAlgae(Pose2d pose) {
+    Pose2d nearest = getNearestAlgaePoint(pose);
+    if (DriverStation.getAlliance().isPresent()
+        && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      int index = FieldConstants.blueAlgaeSetpointList.indexOf(nearest);
+      return (index % 2 == 0);
+    } else {
+      int index = FieldConstants.redAlgaeSetpointList.indexOf(nearest);
+      return (index % 2 == 1);
     }
   }
 
@@ -208,6 +342,26 @@ public class EagleUtil {
     return blue.get(n);
   }
 
+  public static int findClosestReefIndex(Pose2d pose) {
+    ArrayList<Pose2d> reefSetPoints = null;
+    if (isRedAlliance()) {
+      reefSetPoints = calculateRedReefSetPoints();
+    } else {
+      reefSetPoints = calculateBlueReefSetPoints();
+    }
+
+    double minimumDistance = Double.MAX_VALUE;
+    int minIndex = 0;
+    for (int i = 0; i < reefSetPoints.size(); i++) {
+      double distance = getDistanceBetween(pose, reefSetPoints.get(i));
+      if (distance < minimumDistance) {
+        minimumDistance = distance;
+        minIndex = i;
+      }
+    }
+    return minIndex;
+  }
+
   /**
    * @return if your on red alliance
    */
@@ -266,5 +420,32 @@ public class EagleUtil {
       return getNonProcessorForAlliance();
     }
     return getProcessorForAlliance();
+  }
+
+  public static double getOffsetArmAngle(CoralLevel level, Pose2d robotPose) {
+    double armAngle = level.armAngle;
+
+    if (level != CoralLevel.L4) {
+      return armAngle;
+    }
+
+    int reefIndex = findClosestReefIndex(robotPose);
+    if (isRedAlliance()) {
+      return armAngle + redAngleReefOffsets[reefIndex];
+    }
+    return armAngle + blueAngleReefOffsets[reefIndex];
+  }
+
+  public static double getOffsetElevatorHeight(CoralLevel level, Pose2d robotPose) {
+    double elevatorHeight = level.elevatorHeight;
+    if (level != CoralLevel.L4) {
+      return elevatorHeight;
+    }
+    int reefIndex = findClosestReefIndex(robotPose);
+
+    if (isRedAlliance()) {
+      return elevatorHeight + redHeightReefOffsets[reefIndex];
+    }
+    return elevatorHeight + blueHeightReefOffsets[reefIndex];
   }
 }

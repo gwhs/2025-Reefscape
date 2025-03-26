@@ -13,11 +13,11 @@ import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import java.util.function.DoubleSupplier;
 
 public class ElevatorSubsystem extends SubsystemBase {
   private ElevatorIO elevatorIO;
@@ -39,12 +39,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     } else {
       elevatorIO = new ElevatorIOReal();
     }
-
-    SmartDashboard.putData("Elevator to 0", setHeight(0));
-    SmartDashboard.putData("Elevator to 0.25", setHeight(0.25));
-    SmartDashboard.putData("Elevator to 0.7", setHeight(0.7));
-    SmartDashboard.putData("Elevator to 0.5", setHeight(0.5));
-    SmartDashboard.putData("Elevator/Homing command", homingCommand());
   }
 
   @Override
@@ -81,6 +75,23 @@ public class ElevatorSubsystem extends SubsystemBase {
                         clampedMeters, rotationsToMeters(elevatorIO.getRotation()), 0.1)));
   }
 
+  public Command setHeightSupplier(DoubleSupplier meters) {
+    return this.runOnce(
+            () -> {
+              double clampedMeters =
+                  MathUtil.clamp(meters.getAsDouble(), 0, ElevatorConstants.TOP_METER);
+              elevatorIO.setRotation(metersToRotations(clampedMeters));
+            })
+        .andThen(
+            Commands.waitUntil(
+                () -> {
+                  double clampedMeters =
+                      MathUtil.clamp(meters.getAsDouble(), 0, ElevatorConstants.TOP_METER);
+                  return MathUtil.isNear(
+                      clampedMeters, rotationsToMeters(elevatorIO.getRotation()), 0.1);
+                }));
+  }
+
   /**
    * The idea is that we slowly lower the elevator (by applying negative volt) until the reverse
    * limit switch is triggered then we stop the elevator the motor automatically sets the internal
@@ -111,7 +122,7 @@ public class ElevatorSubsystem extends SubsystemBase {
               elevatorIO.setPosition(0);
             });
 
-    return Commands.either(whenNotAtBottom, whenAtBottom, () -> !elevatorIO.getReverseLimit());
+    return whenNotAtBottom;
   }
 
   /**
@@ -144,7 +155,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   /**
-   * @param mode the mode to go to?s
+   * @param mode the mode to go to
    */
   public void setNeutralMode(NeutralModeValue mode) {
     elevatorIO.setNeutralMode(mode);
@@ -156,5 +167,23 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.dynamic(direction);
+  }
+
+  /**
+   * @param meters the amount of meters to add
+   * @return run the command
+   */
+  public Command increaseHeight(double meters) {
+    return Commands.runOnce(
+        () -> elevatorIO.setRotation(metersToRotations(getHeightMeters() + meters)));
+  }
+
+  /**
+   * @param meters the amount of meters to remove
+   * @return run the command
+   */
+  public Command decreaseHeight(double meters) {
+    return Commands.runOnce(
+        () -> elevatorIO.setRotation(metersToRotations(getHeightMeters() - meters)));
   }
 }

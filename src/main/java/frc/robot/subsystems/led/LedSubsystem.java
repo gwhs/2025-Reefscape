@@ -24,7 +24,7 @@ public class LedSubsystem extends SubsystemBase {
    * NOTE: java color class and FRC color class are not the same <br>
    * NOTE: FRC: Color.kGreen <br>
    * NOTE: JAVA: Color.green <br>
-   * NOTE: ONLY USE FRC COLOR!!! <br>
+   * NOTE: ONLY USE FRC COLOR!!!
    *
    * @param pattern
    */

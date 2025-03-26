@@ -4,7 +4,6 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.*;
-import com.ctre.phoenix6.hardware.*;
 import com.ctre.phoenix6.signals.*;
 import com.ctre.phoenix6.swerve.*;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.*;
@@ -84,7 +83,7 @@ public class TunerConstants_practiceDrivetrain {
 
   private static final double kDriveGearRatio = 6.746031746031747;
   private static final double kSteerGearRatio = 21.428571428571427;
-  private static final Distance kWheelRadius = Inches.of(2.162);
+  private static final Distance kWheelRadius = Inches.of(2.02);
 
   private static final boolean kInvertLeftSide = false;
   private static final boolean kInvertRightSide = true;

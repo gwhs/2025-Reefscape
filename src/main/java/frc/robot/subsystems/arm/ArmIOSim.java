@@ -36,6 +36,10 @@ public class ArmIOSim implements ArmIO {
     pidController.setGoal(angle);
   }
 
+  public double getPositionError() {
+    return pidController.getPositionError();
+  }
+
   /**
    * @param volts how many volts to set to
    */

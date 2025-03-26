@@ -3,12 +3,12 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -33,9 +33,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.generated.TunerSwerveDrivetrain;
@@ -47,6 +45,11 @@ import java.util.function.Supplier;
  * be used in command-based projects.
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
+  private final TalonFX[] driveMotors = new TalonFX[4];
+  private final TalonFX[] steerMotors = new TalonFX[4];
+  private final CANcoder[] encoders = new CANcoder[4];
+  private final Pigeon2 gyro;
+
   public Trigger IS_ALIGNING_TO_POSE =
       new Trigger(
           () -> {
@@ -57,26 +60,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             }
           });
 
-  SwerveModule<TalonFX, TalonFX, CANcoder> mod_1 = getModule(0);
-  SwerveModule<TalonFX, TalonFX, CANcoder> mod_2 = getModule(1);
-  SwerveModule<TalonFX, TalonFX, CANcoder> mod_3 = getModule(2);
-  SwerveModule<TalonFX, TalonFX, CANcoder> mod_4 = getModule(3);
-  TalonFX m_1 = mod_1.getDriveMotor();
-  TalonFX m_2 = mod_2.getDriveMotor();
-  TalonFX m_3 = mod_3.getDriveMotor();
-  TalonFX m_4 = mod_4.getDriveMotor();
-  TalonFXConfiguration m1_config = new TalonFXConfiguration();
-  TalonFXConfiguration m2_config = new TalonFXConfiguration();
-  TalonFXConfiguration m3_config = new TalonFXConfiguration();
-  TalonFXConfiguration m4_config = new TalonFXConfiguration();
-  CurrentLimitsConfigs m1_current_config = new CurrentLimitsConfigs();
-  CurrentLimitsConfigs m2_current_config = new CurrentLimitsConfigs();
-  CurrentLimitsConfigs m3_current_config = new CurrentLimitsConfigs();
-  CurrentLimitsConfigs m4_current_config = new CurrentLimitsConfigs();
-
-  public Constraints constraints = new TrapezoidProfile.Constraints(5, 4);
-  public ProfiledPIDController PID_X = new ProfiledPIDController(3, 0, 0, constraints);
-  public ProfiledPIDController PID_Y = new ProfiledPIDController(3, 0, 0, constraints);
+  public Constraints constraints = new TrapezoidProfile.Constraints(3, 1);
+  public ProfiledPIDController PID_X = new ProfiledPIDController(3.0, 0, 0, constraints);
+  public ProfiledPIDController PID_Y = new ProfiledPIDController(3.0, 0, 0, constraints);
 
   public PIDController PID_Rotation = new PIDController(0.1, 0, 0);
   public Trigger IS_AT_TARGET_POSE =
@@ -109,6 +95,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds =
       new SwerveRequest.ApplyRobotSpeeds();
 
+  private final SwerveRequest.RobotCentric robotCentricDrive =
+      new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
   /**
    * Constructs a CTRE SwerveDrivetrain using the specified constants.
    *
@@ -129,6 +118,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     PID_Y.setTolerance(0.02);
     PID_X.setTolerance(0.02);
     configureAutoBuilder();
+
+    for (int i = 0; i < 4; i++) {
+      SwerveModule<TalonFX, TalonFX, CANcoder> module = getModule(i);
+      driveMotors[i] = module.getDriveMotor();
+      steerMotors[i] = module.getSteerMotor();
+      encoders[i] = module.getEncoder();
+    }
+    gyro = getPigeon2();
   }
 
   /**
@@ -151,6 +148,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
       startSimThread();
     }
     configureAutoBuilder();
+
+    for (int i = 0; i < 4; i++) {
+      SwerveModule<TalonFX, TalonFX, CANcoder> module = getModule(i);
+      driveMotors[i] = module.getDriveMotor();
+      steerMotors[i] = module.getSteerMotor();
+      encoders[i] = module.getEncoder();
+    }
+    gyro = getPigeon2();
   }
 
   /**
@@ -162,25 +167,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     PID_X.setGoal(targetPose.getX());
     PID_Y.setGoal(targetPose.getY());
     PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
-  }
-
-  /**
-   * @return run the command NOTE: this sets it to 35 DO NOT CHANGE THE VALUE!!!! <br>
-   *     NOTE: this only exists so that a thing in the RobotContainer.java file works <br>
-   *     NOTE: don't use this in the actual code there is a 99% chance this isn't the function you
-   *     want
-   */
-  public Command setDriveMotorCurrentLimit() {
-
-    return Commands.runOnce(
-        () -> {
-          m1_current_config.withStatorCurrentLimitEnable(true);
-          m1_current_config.withStatorCurrentLimit(35);
-          m_1.getConfigurator().apply(m1_current_config);
-          m_2.getConfigurator().apply(m1_current_config);
-          m_3.getConfigurator().apply(m1_current_config);
-          m_4.getConfigurator().apply(m1_current_config);
-        });
   }
 
   /**
@@ -214,6 +200,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
       startSimThread();
     }
     configureAutoBuilder();
+
+    for (int i = 0; i < 4; i++) {
+      SwerveModule<TalonFX, TalonFX, CANcoder> module = getModule(i);
+      driveMotors[i] = module.getDriveMotor();
+      steerMotors[i] = module.getSteerMotor();
+      encoders[i] = module.getEncoder();
+    }
+    gyro = getPigeon2();
   }
 
   private void configureAutoBuilder() {
@@ -232,9 +226,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                       .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())),
           new PPHolonomicDriveController(
               // PID constants for translation
-              new PIDConstants(10, 0, 0),
+              new PIDConstants(5, 0, 0),
               // PID constants for rotation
-              new PIDConstants(7, 0, 0)),
+              new PIDConstants(5, 0, 0)),
           config,
           // Assume the path needs to be flipped for Red vs Blue, this is normally the case
           () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
@@ -244,9 +238,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
       DriverStation.reportError(
           "Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
     }
-    SmartDashboard.putData("Align/PID controller X", PID_X);
-    SmartDashboard.putData("Align/PID controller Y", PID_Y);
-    SmartDashboard.putData("Align/PID controller Rotate", PID_Rotation);
   }
 
   /**
@@ -279,10 +270,32 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                         : kBlueAlliancePerspectiveRotation);
                 m_hasAppliedOperatorPerspective = true;
               });
+
+      DogLog.log(
+          "Command Swerve DriveTrain/is Aligning to pose", IS_ALIGNING_TO_POSE.getAsBoolean());
+      DogLog.log("Command Swerve DriveTrain/is at target pose", IS_AT_TARGET_POSE.getAsBoolean());
     }
 
     DogLog.log("Swerve/current X setpoint", PID_X.getSetpoint().position);
     DogLog.log("Swerve/current Y setpoint", PID_Y.getSetpoint().position);
+
+    DogLog.log("Swerve/Front Left Drive Motor Connected", driveMotors[0].isConnected());
+    DogLog.log("Swerve/Front Left Steer Motor Connected", driveMotors[0].isConnected());
+    DogLog.log("Swerve/Front Left CANcoder Connected", driveMotors[0].isConnected());
+
+    DogLog.log("Swerve/Front Right Drive Motor Connected", driveMotors[1].isConnected());
+    DogLog.log("Swerve/Front Right Steer Motor Connected", driveMotors[1].isConnected());
+    DogLog.log("Swerve/Front Right CANcoder Connected", driveMotors[1].isConnected());
+
+    DogLog.log("Swerve/Back Left Drive Motor Connected", driveMotors[2].isConnected());
+    DogLog.log("Swerve/Back Left Steer Motor Connected", driveMotors[2].isConnected());
+    DogLog.log("Swerve/Back Left CANcoder Connected", driveMotors[2].isConnected());
+
+    DogLog.log("Swerve/Back Right Drive Motor Connected", driveMotors[3].isConnected());
+    DogLog.log("Swerve/Back Right Steer Motor Connected", driveMotors[3].isConnected());
+    DogLog.log("Swerve/Back Right CANcoder Connected", driveMotors[3].isConnected());
+
+    DogLog.log("Swerve/Pigeon Connected", gyro.isConnected());
   }
 
   private void startSimThread() {
@@ -349,5 +362,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    */
   public void runVelocity(ChassisSpeeds speeds) {
     setControl(m_pathApplyRobotSpeeds.withSpeeds(speeds));
+  }
+
+  public Command driveBackward(double velocity) {
+    return this.run(
+            () ->
+                this.setControl(
+                    robotCentricDrive
+                        .withVelocityX(-velocity)
+                        .withVelocityY(0)
+                        .withRotationalRate(0)))
+        .finallyDo(
+            () ->
+                this.setControl(
+                    robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
   }
 }
