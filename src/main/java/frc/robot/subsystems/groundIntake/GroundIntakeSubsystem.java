@@ -11,7 +11,7 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   private final GroundIntakeIO groundintakeIO;
 
   public GroundIntakeSubsystem() {
- 	groundintakeIO = new GroundIntakeIODisabled();
+    groundintakeIO = new GroundIntakeIODisabled();
   }
 
   public Command setAngleAndVoltage(double pivotAngle, double voltage) {
