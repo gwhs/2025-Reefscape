@@ -60,7 +60,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             }
           });
 
-  public Constraints constraints = new TrapezoidProfile.Constraints(3, 1);
+  public Constraints constraints = new TrapezoidProfile.Constraints(3, 2);
   public ProfiledPIDController PID_X = new ProfiledPIDController(3.0, 0, 0, constraints);
   public ProfiledPIDController PID_Y = new ProfiledPIDController(3.0, 0, 0, constraints);
 
@@ -162,8 +162,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    * @param targetPose the pose to go to
    */
   public void goToPoseWithPID(Pose2d targetPose) {
-    PID_X.reset(getPose().getX());
-    PID_Y.reset(getPose().getY());
+    ChassisSpeeds currentSpeed =
+        ChassisSpeeds.fromRobotRelativeSpeeds(getState().Speeds, getRotation());
+
+    PID_X.reset(getPose().getX(), currentSpeed.vxMetersPerSecond * 0.5);
+    PID_Y.reset(getPose().getY(), currentSpeed.vyMetersPerSecond * 0.5);
     PID_X.setGoal(targetPose.getX());
     PID_Y.setGoal(targetPose.getY());
     PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
