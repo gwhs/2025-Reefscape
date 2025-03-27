@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
-
-
 public class EagleUtil {
   protected static ArrayList<Pose2d> m_redPoses;
   protected static ArrayList<Pose2d> m_bluePoses;
@@ -453,13 +451,16 @@ public class EagleUtil {
     return elevatorHeight + blueHeightReefOffsets[reefIndex];
   }
 
-   public static Pose2d getDriveTarget(Pose2d robot, Pose2d goal) {
+  public static Pose2d getDriveTarget(Pose2d robot, Pose2d goal) {
     Rotation2d angleToGoal =
         robot
             .getTranslation()
-            .minus(isRedAlliance() ? RED_REEF.getTranslation():BLUE_REEF.getTranslation())
+            .minus(isRedAlliance() ? RED_REEF.getTranslation() : BLUE_REEF.getTranslation())
             .getAngle()
-            .minus(goal.getTranslation().minus(isRedAlliance() ? RED_REEF.getTranslation():BLUE_REEF.getTranslation()).getAngle());
+            .minus(
+                goal.getTranslation()
+                    .minus(isRedAlliance() ? RED_REEF.getTranslation() : BLUE_REEF.getTranslation())
+                    .getAngle());
     // if (Math.abs(angleToGoal.getDegrees()) >= 30.0 && withinDistanceToReef(robot, 1)) {
     if (Math.abs(angleToGoal.getDegrees()) >= 30.0) {
       var offset = robot.relativeTo(goal);
@@ -467,16 +468,13 @@ public class EagleUtil {
       double xDistance = Math.abs(offset.getX());
       double shiftXT =
           MathUtil.clamp(
-              (yDistance / (REEF_LENGTH * 2)) + ((xDistance - 0.3) / (REEF_LENGTH * 4)),
-              0.0,
-              1.0);
-      double shiftYT =
-          MathUtil.clamp(yDistance <= 0.2 ? 0.0 : xDistance / REEF_LENGTH, 0.0, 1.0);
-      return goal.t ransformBy(
-        new Transform2d(
-          -shiftXT * MAX_DISTANCE_REEF_LINEUP, 
-          Math.copySign(shiftYT * MAX_DISTANCE_REEF_LINEUP * 0.8, offset.getY()),
-          Rotation2d.kZero));
+              (yDistance / (REEF_LENGTH * 2)) + ((xDistance - 0.3) / (REEF_LENGTH * 4)), 0.0, 1.0);
+      double shiftYT = MathUtil.clamp(yDistance <= 0.2 ? 0.0 : xDistance / REEF_LENGTH, 0.0, 1.0);
+      return goal.transformBy(
+          new Transform2d(
+              -shiftXT * MAX_DISTANCE_REEF_LINEUP,
+              Math.copySign(shiftYT * MAX_DISTANCE_REEF_LINEUP * 0.8, offset.getY()),
+              Rotation2d.kZero));
     }
     return goal;
   }
