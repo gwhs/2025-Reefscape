@@ -39,6 +39,7 @@ import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.endEffector.EndEffectorConstants;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
@@ -662,7 +663,7 @@ public class RobotContainer {
   }
 
   public Command autonScoreCoral() {
-    return Commands.sequence(endEffector.shoot(), Commands.waitSeconds(0.05));
+    return Commands.sequence(endEffector.shoot(), Commands.waitSeconds(0.05));v
   }
 
   /**
@@ -671,7 +672,10 @@ public class RobotContainer {
   public Command scoreCoral() {
     Command scoreCoral =
         Commands.sequence(
-                endEffector.shoot(),
+                Commands.either(
+                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L4),
+                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L3),
+                    IS_L4),
                 Commands.waitSeconds(0.05),
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
@@ -680,7 +684,10 @@ public class RobotContainer {
 
     Command deAlgae =
         Commands.sequence(
-                endEffector.shoot(),
+                Commands.either(
+                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L4),
+                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L3),
+                    IS_L4),
                 Commands.waitSeconds(0.05),
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))
