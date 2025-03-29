@@ -23,8 +23,8 @@ public class ElevatorConstants {
   public static final double L3_PREP_POSITION = 0.2;
   public static final double L4_PREP_POSITION = .75;
 
-  public static final double INTAKE_METER = .29639; 
-  public static final double INTAKE_METER_BACKUP = .166;
+  public static final double INTAKE_METER = .29639;
+  public static final double INTAKE_METER_BACKUP = .22633;
   public static final double DEALGAE_LOW_POSITION = 0;
   public static final double DEALGAE_HIGH_POSITION = .4424;
   public static final double DEALGAE_STOW_POSITION = 0;
