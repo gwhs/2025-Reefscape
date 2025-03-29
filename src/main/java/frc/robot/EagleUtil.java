@@ -448,4 +448,34 @@ public class EagleUtil {
     }
     return elevatorHeight + blueHeightReefOffsets[reefIndex];
   }
+
+  public static Pose2d getClosestLeftReef(Pose2d pose) {
+    int closestReef = findClosestReefIndex(pose);
+    if (closestReef % 2 > 0) {
+      closestReef -= 1;
+    }
+
+    if (isRedAlliance()) {
+      calculateRedReefSetPoints();
+      return redPoses[closestReef];
+    } else {
+      calculateBlueReefSetPoints();
+      return bluePoses[closestReef];
+    }
+  }
+
+  public static Pose2d getClosestRightReef(Pose2d pose) {
+    int closestReef = findClosestReefIndex(pose);
+    if (closestReef % 2 == 0) {
+      closestReef += 1;
+    }
+
+    if (isRedAlliance()) {
+      calculateRedReefSetPoints();
+      return redPoses[closestReef];
+    } else {
+      calculateBlueReefSetPoints();
+      return bluePoses[closestReef];
+    }
+  }
 }
