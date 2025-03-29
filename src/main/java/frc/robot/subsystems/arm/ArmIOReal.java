@@ -96,7 +96,7 @@ public class ArmIOReal implements ArmIO {
         Units.degreesToRotations(ArmConstants.ARM_LOWER_BOUND);
 
     currentConfig.withStatorCurrentLimitEnable(true);
-    currentConfig.withStatorCurrentLimit(40);
+    currentConfig.withStatorCurrentLimit(30);
 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; i++) {
