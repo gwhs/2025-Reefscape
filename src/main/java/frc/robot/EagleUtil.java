@@ -448,4 +448,20 @@ public class EagleUtil {
     }
     return elevatorHeight + blueHeightReefOffsets[reefIndex];
   }
+
+  public static int getClosestLeftReef(Pose2d pose) {
+    int closestReef = EagleUtil.findClosestReefIndex(pose);
+    if (closestReef % 2 > 0) {
+      closestReef-=1;
+    }
+    
+  }
+
+  public static int getClosestRightReef(Pose2d pose) {
+    int closestReef = EagleUtil.findClosestReefIndex(pose);
+    if (closestReef % 2 == 0) {
+      closestReef+=1;
+    }
+
+  }
 }
