@@ -446,11 +446,11 @@ public class RobotContainer {
 
     m_driverController
         .a()
-        .whileTrue(alignToPose(() -> EagleUtil.getCachedReefPose(drivetrain.getState().Pose)));
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose())));
 
     m_driverController
         .b()
-        .whileTrue(alignToPose(() -> EagleUtil.closestReefSetPoint(drivetrain.getPose(), 1)));
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose())));
 
     m_operatorController.start().onTrue(elevator.homingCommand());
 
