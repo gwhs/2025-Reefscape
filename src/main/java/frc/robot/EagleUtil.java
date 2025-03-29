@@ -46,7 +46,7 @@ public class EagleUtil {
   private static Pose2d[] redAlgaePoses = new Pose2d[6];
 
   private static final double ALGAE_Y_OFFSET = Units.inchesToMeters(0.5);
-  private static final double ALGAE_X_OFFSET = Units.inchesToMeters(1);
+  private static final double ALGAE_X_OFFSET = Units.inchesToMeters(0.5);
 
   private static Pose2d cachedPose = null;
   private static Alliance red = DriverStation.Alliance.Red;
