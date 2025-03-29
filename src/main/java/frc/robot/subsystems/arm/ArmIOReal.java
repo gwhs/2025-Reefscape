@@ -66,11 +66,11 @@ public class ArmIOReal implements ArmIO {
     CurrentLimitsConfigs currentConfig = talonFXConfigs.CurrentLimits;
     FeedbackConfigs feedbackConfigs = talonFXConfigs.Feedback;
     m_request.EnableFOC = true; // add FOC
-    slot0Configs.kS = 0.18205; // Add 0.25 V output to overcome static friction
-    slot0Configs.kG = 0.5; // Add 0 V to overcome gravity
+    slot0Configs.kS = 0.3; // Add 0.25 V output to overcome static friction
+    slot0Configs.kG = 0.44; // Add 0 V to overcome gravity
     slot0Configs.kV = 7.2427; // A velocity target of 1 rps results in 0.12 V output
     slot0Configs.kA = 0.086264; // An acceleration of 1 rps/s requires 0.01 V output
-    slot0Configs.kP = 55; // A position error of 2.5 rotations results in 12 V output
+    slot0Configs.kP = 30; // A position error of 2.5 rotations results in 12 V output
     slot0Configs.kI = 0; // no output for integrated error
     slot0Configs.kD = 8.4867; // A velocity error of 1 rps results in 0.1 V output
     slot0Configs.withGravityType(GravityTypeValue.Arm_Cosine);
