@@ -475,8 +475,8 @@ public class RobotContainer {
     m_operatorController.povUp().onTrue(elevator.increaseHeight(0.02));
     m_operatorController.povDown().onTrue(elevator.decreaseHeight(0.02));
 
-    m_operatorController.leftBumper().onTrue(groundIntake.decreaseAngle(3));
-    m_operatorController.rightBumper().onTrue(groundIntake.increaseAngle(3));
+    // m_operatorController.leftBumper().onTrue(groundIntake.decreaseAngle(3));
+    // m_operatorController.rightBumper().onTrue(groundIntake.increaseAngle(3));
 
     m_operatorController.leftTrigger().and(m_operatorController.rightTrigger()).onTrue(climb());
   }
@@ -749,7 +749,7 @@ public class RobotContainer {
   public Command climb() {
     Trigger unprepclimbTrigger = m_operatorController.leftTrigger().negate();
     Trigger climbTrigger =
-        m_operatorController.rightTrigger().and(m_operatorController.leftTrigger());
+        m_operatorController.rightBumper().and(m_operatorController.leftBumper());
 
     Command unPrepClimbCommand =
         Commands.sequence(
