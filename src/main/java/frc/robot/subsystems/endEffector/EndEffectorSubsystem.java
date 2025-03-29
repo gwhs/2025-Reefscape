@@ -41,8 +41,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
     return Commands.runOnce(() -> endEffectorIO.setVoltage(voltage));
   }
 
-  public Command shoot() {
-    return Commands.runOnce(() -> endEffectorIO.setVoltage(-10));
+  public Command shoot(double voltage) {
+    return Commands.runOnce(() -> endEffectorIO.setVoltage(-voltage));
   }
 
   public Command intake() {

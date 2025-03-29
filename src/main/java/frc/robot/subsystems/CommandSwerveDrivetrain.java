@@ -3,7 +3,11 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -17,6 +21,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
@@ -41,6 +46,11 @@ import java.util.function.Supplier;
  * be used in command-based projects.
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
+  private final TalonFX[] driveMotors = new TalonFX[4];
+  private final TalonFX[] steerMotors = new TalonFX[4];
+  private final CANcoder[] encoders = new CANcoder[4];
+  private final Pigeon2 gyro;
+
   public Trigger IS_ALIGNING_TO_POSE =
       new Trigger(
           () -> {
@@ -51,9 +61,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             }
           });
 
-  public Constraints constraints = new TrapezoidProfile.Constraints(3, 2);
-  public ProfiledPIDController PID_X = new ProfiledPIDController(3.5, 0, 0, constraints);
-  public ProfiledPIDController PID_Y = new ProfiledPIDController(3.5, 0, 0, constraints);
+  public Constraints constraints = new TrapezoidProfile.Constraints(3, 1);
+  public ProfiledPIDController PID_X = new ProfiledPIDController(3.0, 0, 0, constraints);
+  public ProfiledPIDController PID_Y = new ProfiledPIDController(3.0, 0, 0, constraints);
 
   public PIDController PID_Rotation = new PIDController(0.1, 0, 0);
   public Trigger IS_AT_TARGET_POSE =
@@ -109,6 +119,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     PID_Y.setTolerance(0.02);
     PID_X.setTolerance(0.02);
     configureAutoBuilder();
+
+    for (int i = 0; i < 4; i++) {
+      SwerveModule<TalonFX, TalonFX, CANcoder> module = getModule(i);
+      driveMotors[i] = module.getDriveMotor();
+      steerMotors[i] = module.getSteerMotor();
+      encoders[i] = module.getEncoder();
+    }
+    gyro = getPigeon2();
   }
 
   /**
@@ -131,6 +149,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
       startSimThread();
     }
     configureAutoBuilder();
+
+    for (int i = 0; i < 4; i++) {
+      SwerveModule<TalonFX, TalonFX, CANcoder> module = getModule(i);
+      driveMotors[i] = module.getDriveMotor();
+      steerMotors[i] = module.getSteerMotor();
+      encoders[i] = module.getEncoder();
+    }
+    gyro = getPigeon2();
   }
 
   /**
@@ -175,6 +201,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
       startSimThread();
     }
     configureAutoBuilder();
+
+    for (int i = 0; i < 4; i++) {
+      SwerveModule<TalonFX, TalonFX, CANcoder> module = getModule(i);
+      driveMotors[i] = module.getDriveMotor();
+      steerMotors[i] = module.getSteerMotor();
+      encoders[i] = module.getEncoder();
+    }
+    gyro = getPigeon2();
   }
 
   private void configureAutoBuilder() {
@@ -245,6 +279,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     DogLog.log("Swerve/current X setpoint", PID_X.getSetpoint().position);
     DogLog.log("Swerve/current Y setpoint", PID_Y.getSetpoint().position);
+
+    DogLog.log("Swerve/Front Left Drive Motor Connected", driveMotors[0].isConnected());
+    DogLog.log("Swerve/Front Left Steer Motor Connected", driveMotors[0].isConnected());
+    DogLog.log("Swerve/Front Left CANcoder Connected", driveMotors[0].isConnected());
+
+    DogLog.log("Swerve/Front Right Drive Motor Connected", driveMotors[1].isConnected());
+    DogLog.log("Swerve/Front Right Steer Motor Connected", driveMotors[1].isConnected());
+    DogLog.log("Swerve/Front Right CANcoder Connected", driveMotors[1].isConnected());
+
+    DogLog.log("Swerve/Back Left Drive Motor Connected", driveMotors[2].isConnected());
+    DogLog.log("Swerve/Back Left Steer Motor Connected", driveMotors[2].isConnected());
+    DogLog.log("Swerve/Back Left CANcoder Connected", driveMotors[2].isConnected());
+
+    DogLog.log("Swerve/Back Right Drive Motor Connected", driveMotors[3].isConnected());
+    DogLog.log("Swerve/Back Right Steer Motor Connected", driveMotors[3].isConnected());
+    DogLog.log("Swerve/Back Right CANcoder Connected", driveMotors[3].isConnected());
+
+    DogLog.log("Swerve/Pigeon Connected", gyro.isConnected());
   }
 
   private void startSimThread() {
@@ -282,6 +334,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    */
   public Pose2d getPose() {
     return getState().Pose;
+  }
+
+  public Pose2d getPose(double timeSeconds) {
+    Pose2d currPose = this.getPose();
+    Rotation2d currRotation = currPose.getRotation();
+    ChassisSpeeds speeds = getState().Speeds;
+    double velocityX = speeds.vxMetersPerSecond;
+    double velocityY = speeds.vyMetersPerSecond;
+
+    double transformX = timeSeconds * velocityX;
+    double transformY = timeSeconds * velocityY;
+    Rotation2d transformRotation = new Rotation2d(timeSeconds * speeds.omegaRadiansPerSecond);
+    Transform2d transformPose = new Transform2d(transformX, transformY, transformRotation);
+    Pose2d predictedPose = currPose.plus(transformPose);
+
+    DogLog.log("Predicted Pose", predictedPose);
+
+    return predictedPose;
   }
 
   /**

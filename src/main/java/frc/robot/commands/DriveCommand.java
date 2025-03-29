@@ -17,7 +17,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.DoubleSupplier;
 
 public class DriveCommand extends Command {
-  private static final double PID_MAX = 0.35;
+  private static final double PID_MAX = 0.70;
 
   private final CommandSwerveDrivetrain drivetrain;
   private final CommandXboxController driverController;
@@ -152,9 +152,9 @@ public class DriveCommand extends Command {
     } else if (mode == TargetMode.PROCESSOR) {
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-        return -90;
-      } else {
         return 90;
+      } else {
+        return -90;
       }
     } else {
       return 0;

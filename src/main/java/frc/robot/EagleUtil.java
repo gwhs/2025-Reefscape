@@ -33,7 +33,7 @@ public class EagleUtil {
 
   private static double REEF_LENGTH = Units.inchesToMeters(35);
   private static double REEF_TO_REEF_DISTANCE = 0.33;
-  private static double ROBOT_AWAY_FROM_REEF = Units.inchesToMeters(15);
+  private static double ROBOT_AWAY_FROM_REEF = Units.inchesToMeters(16);
 
   private static double X = -REEF_LENGTH - ROBOT_AWAY_FROM_REEF;
   private static double Y = REEF_TO_REEF_DISTANCE / 2;
@@ -447,5 +447,35 @@ public class EagleUtil {
       return elevatorHeight + redHeightReefOffsets[reefIndex];
     }
     return elevatorHeight + blueHeightReefOffsets[reefIndex];
+  }
+
+  public static Pose2d getClosestLeftReef(Pose2d pose) {
+    int closestReef = findClosestReefIndex(pose);
+    if (closestReef % 2 > 0) {
+      closestReef -= 1;
+    }
+
+    if (isRedAlliance()) {
+      calculateRedReefSetPoints();
+      return redPoses[closestReef];
+    } else {
+      calculateBlueReefSetPoints();
+      return bluePoses[closestReef];
+    }
+  }
+
+  public static Pose2d getClosestRightReef(Pose2d pose) {
+    int closestReef = findClosestReefIndex(pose);
+    if (closestReef % 2 == 0) {
+      closestReef += 1;
+    }
+
+    if (isRedAlliance()) {
+      calculateRedReefSetPoints();
+      return redPoses[closestReef];
+    } else {
+      calculateBlueReefSetPoints();
+      return bluePoses[closestReef];
+    }
   }
 }
