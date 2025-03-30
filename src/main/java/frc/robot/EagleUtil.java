@@ -45,6 +45,9 @@ public class EagleUtil {
   private static Pose2d[] blueAlgaePoses = new Pose2d[6];
   private static Pose2d[] redAlgaePoses = new Pose2d[6];
 
+  private static final double ALGAE_Y_OFFSET = Units.inchesToMeters(0.5);
+  private static final double ALGAE_X_OFFSET = Units.inchesToMeters(0.7);
+
   private static Pose2d cachedPose = null;
   private static Alliance red = DriverStation.Alliance.Red;
   static double[] redHeightReefOffsets = {
@@ -212,7 +215,10 @@ public class EagleUtil {
 
     Rotation2d sixty = Rotation2d.fromDegrees(60);
     Pose2d startPose =
-        new Pose2d(X, Y - REEF_TO_REEF_DISTANCE / 2, Rotation2d.kZero); // Centered on first side
+        new Pose2d(
+            X + ALGAE_X_OFFSET,
+            Y - REEF_TO_REEF_DISTANCE / 2 + ALGAE_Y_OFFSET,
+            Rotation2d.kZero); // Centered on first side
 
     for (int i = 0; i < blueAlgaePoses.length; i++) {
       blueAlgaePoses[i] = startPose.rotateBy(sixty.times(i));
@@ -235,7 +241,10 @@ public class EagleUtil {
 
     Rotation2d sixty = Rotation2d.fromDegrees(60);
     Pose2d startPose =
-        new Pose2d(X, Y - REEF_TO_REEF_DISTANCE / 2, Rotation2d.kZero); // Centered on first side
+        new Pose2d(
+            X + ALGAE_X_OFFSET,
+            Y - REEF_TO_REEF_DISTANCE / 2 + ALGAE_Y_OFFSET,
+            Rotation2d.kZero); // Centered on first side
 
     for (int i = 0; i < redAlgaePoses.length; i++) {
       redAlgaePoses[i] = startPose.rotateBy(sixty.times(i));
