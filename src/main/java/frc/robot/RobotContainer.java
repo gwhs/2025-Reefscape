@@ -213,6 +213,7 @@ public class RobotContainer {
     PathfindingCommand.warmupCommand().schedule();
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
+    SmartDashboard.putData("Unprep Climb", unPrepClimbCommand());
 
     // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
@@ -748,18 +749,18 @@ public class RobotContainer {
         .withName("Dealgae");
   }
 
+  public Command unPrepClimbCommand() {
+    return Commands.sequence(
+        arm.setAngle(ArmConstants.CLIMB_ANGLE).withTimeout(1),
+        Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
+        climb.stow(),
+        elevator.setHeight(0).withTimeout(1));
+  }
+
   public Command climb() {
     Trigger unprepclimbTrigger = m_operatorController.leftTrigger().negate();
     Trigger climbTrigger =
         m_operatorController.rightBumper().and(m_operatorController.leftBumper());
-
-    Command unPrepClimbCommand =
-        Commands.sequence(
-            Commands.parallel(
-                elevator.setHeight(0).withTimeout(1),
-                arm.setAngle(90).withTimeout(1),
-                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
-                climb.stow()));
 
     Command climbCommand =
         Commands.parallel(
