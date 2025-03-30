@@ -4,8 +4,8 @@ public class ClimbConstants {
   public static final int CLIMB_ID = 22;
   public static final double CLIMB_GEAR_RATIO = 100.0;
 
-  public static final double MAX_ACCELERATION = 2;
-  public static final double MAX_VELOCITY = 2;
+  public static final double MAX_ACCELERATION = 1.8;
+  public static final double MAX_VELOCITY = 1.8;
 
   public static final double CLIMB_CLIMB_POSITION = 2.7; // 2.77
   public static final double STOW_CLIMB_POSITION = 0;
