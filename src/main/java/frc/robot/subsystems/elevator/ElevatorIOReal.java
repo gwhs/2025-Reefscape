@@ -94,7 +94,7 @@ public class ElevatorIOReal implements ElevatorIO {
     motionMagicConfigs.MotionMagicJerk = 0;
 
     currentConfig.withStatorCurrentLimitEnable(true);
-    currentConfig.withStatorCurrentLimit(30);
+    currentConfig.withStatorCurrentLimit(40);
     motorOutput.NeutralMode = NeutralModeValue.Coast;
     motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 

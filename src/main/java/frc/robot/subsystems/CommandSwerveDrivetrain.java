@@ -21,6 +21,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
@@ -60,7 +61,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             }
           });
 
-  public Constraints constraints = new TrapezoidProfile.Constraints(3, 1);
+  public Constraints constraints = new TrapezoidProfile.Constraints(3, 2);
   public ProfiledPIDController PID_X = new ProfiledPIDController(3.0, 0, 0, constraints);
   public ProfiledPIDController PID_Y = new ProfiledPIDController(3.0, 0, 0, constraints);
 
@@ -162,8 +163,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    * @param targetPose the pose to go to
    */
   public void goToPoseWithPID(Pose2d targetPose) {
-    PID_X.reset(getPose().getX());
-    PID_Y.reset(getPose().getY());
+    ChassisSpeeds currentSpeed =
+        ChassisSpeeds.fromRobotRelativeSpeeds(getState().Speeds, getRotation());
+
+    PID_X.reset(getPose().getX(), currentSpeed.vxMetersPerSecond * 0.4);
+    PID_Y.reset(getPose().getY(), currentSpeed.vyMetersPerSecond * 0.4);
     PID_X.setGoal(targetPose.getX());
     PID_Y.setGoal(targetPose.getY());
     PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
@@ -333,6 +337,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    */
   public Pose2d getPose() {
     return getState().Pose;
+  }
+
+  public Pose2d getPose(double timeSeconds) {
+    Pose2d currPose = this.getPose();
+    Rotation2d currRotation = currPose.getRotation();
+    ChassisSpeeds speeds = getState().Speeds;
+    double velocityX = speeds.vxMetersPerSecond;
+    double velocityY = speeds.vyMetersPerSecond;
+
+    double transformX = timeSeconds * velocityX;
+    double transformY = timeSeconds * velocityY;
+    Rotation2d transformRotation = new Rotation2d(timeSeconds * speeds.omegaRadiansPerSecond);
+    Transform2d transformPose = new Transform2d(transformX, transformY, transformRotation);
+    Pose2d predictedPose = currPose.plus(transformPose);
+
+    DogLog.log("Predicted Pose", predictedPose);
+
+    return predictedPose;
   }
 
   /**

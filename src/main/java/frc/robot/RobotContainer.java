@@ -446,11 +446,11 @@ public class RobotContainer {
 
     m_driverController
         .a()
-        .whileTrue(alignToPose(() -> EagleUtil.getCachedReefPose(drivetrain.getState().Pose)));
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
 
     m_driverController
         .b()
-        .whileTrue(alignToPose(() -> EagleUtil.closestReefSetPoint(drivetrain.getPose(), 1)));
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
 
     m_operatorController.start().onTrue(elevator.homingCommand());
 
@@ -475,8 +475,8 @@ public class RobotContainer {
     m_operatorController.povUp().onTrue(elevator.increaseHeight(0.02));
     m_operatorController.povDown().onTrue(elevator.decreaseHeight(0.02));
 
-    m_operatorController.leftBumper().onTrue(groundIntake.decreaseAngle(3));
-    m_operatorController.rightBumper().onTrue(groundIntake.increaseAngle(3));
+    // m_operatorController.leftBumper().onTrue(groundIntake.decreaseAngle(3));
+    // m_operatorController.rightBumper().onTrue(groundIntake.increaseAngle(3));
 
     m_operatorController.leftTrigger().and(m_operatorController.rightTrigger()).onTrue(climb());
   }
@@ -581,18 +581,19 @@ public class RobotContainer {
   public Command prepCoralIntake(double elevatorHeight, double armAngle) {
     return Commands.parallel(
             endEffector.intake(),
-            elevator.setHeight(elevatorHeight).withTimeout(0.5),
+            Commands.waitSeconds(0.1).andThen(elevator.setHeight(elevatorHeight)).withTimeout(0.5),
             arm.setAngle(armAngle).withTimeout(1))
         .withName("Prepare Coral Intake");
   }
 
   public Command prepCoralIntakeAuton() {
-    return Commands.sequence(
-        endEffector.intake(),
-        elevator.setHeight(ElevatorConstants.INTAKE_METER).withTimeout(0.5),
-        arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE)
-            .withTimeout(1)
-            .withName("Prepare Coral Intake Auton"));
+    return Commands.parallel(
+            endEffector.intake(),
+            Commands.waitSeconds(0.1)
+                .andThen(elevator.setHeight(ElevatorConstants.INTAKE_METER))
+                .withTimeout(0.5),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
+        .withName("Prepare Coral Intake Auton");
   }
 
   public Command prepCoralIntake() {
@@ -602,7 +603,7 @@ public class RobotContainer {
   public Command stopIntake() {
     return Commands.parallel(
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
-            elevator.setHeight(ElevatorConstants.STOW_METER),
+            Commands.waitSeconds(0.1).andThen(elevator.setHeight(ElevatorConstants.STOW_METER)),
             endEffector.holdCoral())
         .withName("stop Intake");
   }
@@ -639,7 +640,7 @@ public class RobotContainer {
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
     return Commands.parallel(
             endEffector.holdCoral(),
-            elevator.setHeight(elevatorHeight).withTimeout(1.5),
+            Commands.waitSeconds(0.1).andThen(elevator.setHeight(elevatorHeight)).withTimeout(1.5),
             arm.setAngle(armAngle).withTimeout(1.5))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
@@ -648,7 +649,9 @@ public class RobotContainer {
   public Command prepScoreCoral(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
     return Commands.parallel(
             endEffector.holdCoral(),
-            elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
+            Commands.waitSeconds(0.1)
+                .andThen(elevator.setHeightSupplier(elevatorHeight))
+                .withTimeout(.5),
             arm.setAngleSupplier(armAngle).withTimeout(.5))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
@@ -691,7 +694,9 @@ public class RobotContainer {
                 Commands.waitSeconds(0.05),
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))
-                    .withTimeout(0.8),
+                    .withTimeout(0.8)
+                    .alongWith(arm.setAngle(90)),
+                elevator.decreaseHeight(0.15),
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
                     .withTimeout(1)
                     .deadlineFor(
@@ -708,7 +713,8 @@ public class RobotContainer {
   // DeAlgae Commands
   public Command prepDealgaeLow() {
     return Commands.parallel(
-            elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
+            Commands.waitSeconds(0.1)
+                .andThen(elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION)),
             arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
             endEffector.setVoltage(0))
         .withName("prep Delalgae low");
@@ -716,7 +722,8 @@ public class RobotContainer {
 
   public Command prepDealgaeHigh() {
     return Commands.parallel(
-            elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
+            Commands.waitSeconds(0.1)
+                .andThen(elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION)),
             arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
             endEffector.setVoltage(0))
         .withName("prep Dealgae high");
@@ -738,7 +745,7 @@ public class RobotContainer {
   public Command climb() {
     Trigger unprepclimbTrigger = m_operatorController.leftTrigger().negate();
     Trigger climbTrigger =
-        m_operatorController.rightTrigger().and(m_operatorController.leftTrigger());
+        m_operatorController.rightBumper().and(m_operatorController.leftBumper());
 
     Command unPrepClimbCommand =
         Commands.sequence(
