@@ -590,7 +590,7 @@ public class RobotContainer {
     return Commands.parallel(
             endEffector.intake(),
             Commands.waitSeconds(0.1)
-                .andThen(elevator.setHeight(ElevatorConstants.INTAKE_METER))
+                .andThen(elevator.setHeight(ElevatorConstants.INTAKE_METER_AUTON))
                 .withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake Auton");
