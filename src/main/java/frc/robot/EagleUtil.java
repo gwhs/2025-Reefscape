@@ -47,8 +47,8 @@ public class EagleUtil {
 
   private static final double ALGAE_Y_OFFSET = Units.inchesToMeters(0.5);
   private static final double ALGAE_X_OFFSET = Units.inchesToMeters(0.7);
-  //ALGAE_Y_OFFSET = move to left
-  //ALGAE_X_OFFSET = move to right
+  // ALGAE_Y_OFFSET = move to left
+  // ALGAE_X_OFFSET = move to right
 
   private static Pose2d cachedPose = null;
   private static Alliance red = DriverStation.Alliance.Red;

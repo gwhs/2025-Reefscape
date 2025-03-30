@@ -553,6 +553,7 @@ public class RobotContainer {
     autoChooser.addOption(
         "Wheel_Radius_Chracterizaton",
         WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
+    autoChooser.addOption("Do Notion", Commands.none());
 
     SmartDashboard.putData("autonomous", autoChooser);
   }
