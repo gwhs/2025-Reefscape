@@ -29,8 +29,8 @@ public class ArmSubsystem extends SubsystemBase {
           new SysIdRoutine.Mechanism((volts) -> armIO.setVoltage(volts.in(Volts)), null, this));
 
   public ArmSubsystem() {
-    SmartDashboard.putData("Arm/Enable Emergency Mode", engageEmergencyMode());
-    SmartDashboard.putData("Arm/Exit Emergency Mode", exitEmergencyMode());
+    SmartDashboard.putData("Arm/Enable Arm Emergency Mode", engageEmergencyMode());
+    SmartDashboard.putData("Arm/Exit Arm Emergency Mode", exitEmergencyMode());
     if (RobotBase.isSimulation()) {
       armIO = new ArmIOSim();
     } else {

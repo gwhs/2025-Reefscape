@@ -35,8 +35,8 @@ public class ElevatorSubsystem extends SubsystemBase {
               (volts) -> elevatorIO.setVoltage(volts.in(Volts)), null, this));
 
   public ElevatorSubsystem() {
-    SmartDashboard.putData("Elevator/Enable Emergency Mode", engageEmergencyMode());
-    SmartDashboard.putData("Elevator/Exit Emergency Mode", exitEmergencyMode());
+    SmartDashboard.putData("Elevator/Enable Elevator Emergency Mode", engageEmergencyMode());
+    SmartDashboard.putData("Elevator/Exit Elevator Emergency Mode", exitEmergencyMode());
     if (RobotBase.isSimulation()) {
       elevatorIO = new ElevatorIOSim();
     } else {
