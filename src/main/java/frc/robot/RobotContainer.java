@@ -751,11 +751,11 @@ public class RobotContainer {
 
   public Command unPrepClimbCommand() {
     return Commands.sequence(
-        arm.setAngle(ArmConstants.CLIMB_ANGLE).withTimeout(1),
-        Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
-        climb.stow().withTimeout(5),
-        elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(1),
-        arm.setAngle(ArmConstants.ARM_STOW_ANGLE))
+            arm.setAngle(ArmConstants.CLIMB_ANGLE).withTimeout(1),
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
+            climb.stow().withTimeout(5),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(1),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE))
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
         .withName("unPrepClimb");
   }
