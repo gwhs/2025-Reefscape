@@ -73,7 +73,7 @@ public class ClimbIOReal implements ClimbIO {
         Units.degreesToRotations(ClimbConstants.STOW_CLIMB_POSITION);
 
     currentConfig.withStatorCurrentLimitEnable(true);
-    currentConfig.withStatorCurrentLimit(30);
+    currentConfig.withStatorCurrentLimit(20);
 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; i++) {
