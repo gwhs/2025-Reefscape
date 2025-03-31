@@ -9,4 +9,6 @@ public class EndEffectorConstants {
   public static final double EXP_DECAY = 0.02; // exponential decay rate for EMA
   public static final double SDEV_DECAY = 0.02;
   public static final double INTAKE_CORAL_CURRENT = 30;
+  public static final double VOLTAGE_L4 = 9;
+  public static final double VOLTAGE_L3 = 6;
 }

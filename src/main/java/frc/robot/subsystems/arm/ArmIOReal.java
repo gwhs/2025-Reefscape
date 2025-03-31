@@ -66,13 +66,13 @@ public class ArmIOReal implements ArmIO {
     CurrentLimitsConfigs currentConfig = talonFXConfigs.CurrentLimits;
     FeedbackConfigs feedbackConfigs = talonFXConfigs.Feedback;
     m_request.EnableFOC = true; // add FOC
-    slot0Configs.kS = 0.18205; // Add 0.25 V output to overcome static friction
+    slot0Configs.kS = 0.3; // Add 0.25 V output to overcome static friction
     slot0Configs.kG = 0.5; // Add 0 V to overcome gravity
-    slot0Configs.kV = 7.2427; // A velocity target of 1 rps results in 0.12 V output
-    slot0Configs.kA = 0.086264; // An acceleration of 1 rps/s requires 0.01 V output
-    slot0Configs.kP = 55; // A position error of 2.5 rotations results in 12 V output
-    slot0Configs.kI = 0; // no output for integrated error
-    slot0Configs.kD = 8.4867; // A velocity error of 1 rps results in 0.1 V output
+    slot0Configs.kV = 6; // A velocity target of 1 rps results in 0.12 V output
+    slot0Configs.kA = 0.2; // An acceleration of 1 rps/s requires 0.01 V output
+    slot0Configs.kP = 35; // A position error of 2.5 rotations results in 12 V output
+    slot0Configs.kI = 5; // no output for integrated error
+    slot0Configs.kD = 10; // A velocity error of 1 rps results in 0.1 V output
     slot0Configs.withGravityType(GravityTypeValue.Arm_Cosine);
 
     feedbackConfigs.FeedbackRotorOffset = 0;
@@ -96,7 +96,7 @@ public class ArmIOReal implements ArmIO {
         Units.degreesToRotations(ArmConstants.ARM_LOWER_BOUND);
 
     currentConfig.withStatorCurrentLimitEnable(true);
-    currentConfig.withStatorCurrentLimit(20);
+    currentConfig.withStatorCurrentLimit(30);
 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; i++) {

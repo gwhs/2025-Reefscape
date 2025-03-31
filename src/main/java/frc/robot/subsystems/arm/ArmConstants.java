@@ -5,7 +5,7 @@ public class ArmConstants {
 
   public static final int ARM_ENCODER_ID = 20;
   public static final double MAX_VELOCITY = 1.2; // rotation per second
-  public static final double MAX_ACCELERATION = 2; // rotation per second per second
+  public static final double MAX_ACCELERATION = 2.5; // rotation per second per second
   public static final double ARM_GEAR_RATIO = 68.0 / 12 * 84 / 20 * 48 / 18; // 64
 
   // Position constants: in degrees
@@ -17,14 +17,14 @@ public class ArmConstants {
   public static final double ARM_UPPER_BOUND = 270;
   public static final double ARM_LOWER_BOUND = -170;
 
-  public static final double ARM_INTAKE_ANGLE = -73.477;
-  public static final double ARM_INTAKE_ANGLE_BACKUP = -65.479;
+  public static final double ARM_INTAKE_ANGLE = -75.6738;
+  public static final double ARM_INTAKE_ANGLE_BACKUP = -67.0605;
   public static final double ARM_STOW_ANGLE = -90.0;
 
   public static final double PRE_DEALGAE_ANGLE = 155;
   public static final double DEALGAE_ANGLE = 170;
 
-  public static final double MAGNET_OFFSET_DEGREES = -231.679998;
+  public static final double MAGNET_OFFSET_DEGREES = -269.82;
 
   public static final double PREP_CLIMB_ANGLE = -170;
   public static final double CLIMB_ANGLE = -170;

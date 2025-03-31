@@ -37,13 +37,18 @@ public class EagleUtil {
 
   private static double X = -REEF_LENGTH - ROBOT_AWAY_FROM_REEF;
   private static double Y = REEF_TO_REEF_DISTANCE / 2;
-  private static double Y_OFFSET = Units.inchesToMeters(-1);
+  private static double Y_OFFSET = Units.inchesToMeters(-0.5);
 
   private static Pose2d[] bluePoses = new Pose2d[12];
   private static Pose2d[] redPoses = new Pose2d[12];
 
   private static Pose2d[] blueAlgaePoses = new Pose2d[6];
   private static Pose2d[] redAlgaePoses = new Pose2d[6];
+
+  private static final double ALGAE_Y_OFFSET = Units.inchesToMeters(0.6);
+  private static final double ALGAE_X_OFFSET = Units.inchesToMeters(0.7);
+  // ALGAE_Y_OFFSET = move to left
+  // ALGAE_X_OFFSET = move to right
 
   private static Pose2d cachedPose = null;
   private static Alliance red = DriverStation.Alliance.Red;
@@ -212,7 +217,10 @@ public class EagleUtil {
 
     Rotation2d sixty = Rotation2d.fromDegrees(60);
     Pose2d startPose =
-        new Pose2d(X, Y - REEF_TO_REEF_DISTANCE / 2, Rotation2d.kZero); // Centered on first side
+        new Pose2d(
+            X - ALGAE_X_OFFSET,
+            Y - REEF_TO_REEF_DISTANCE / 2 + ALGAE_Y_OFFSET,
+            Rotation2d.kZero); // Centered on first side
 
     for (int i = 0; i < blueAlgaePoses.length; i++) {
       blueAlgaePoses[i] = startPose.rotateBy(sixty.times(i));
@@ -235,7 +243,10 @@ public class EagleUtil {
 
     Rotation2d sixty = Rotation2d.fromDegrees(60);
     Pose2d startPose =
-        new Pose2d(X, Y - REEF_TO_REEF_DISTANCE / 2, Rotation2d.kZero); // Centered on first side
+        new Pose2d(
+            X - ALGAE_X_OFFSET,
+            Y - REEF_TO_REEF_DISTANCE / 2 + ALGAE_Y_OFFSET,
+            Rotation2d.kZero); // Centered on first side
 
     for (int i = 0; i < redAlgaePoses.length; i++) {
       redAlgaePoses[i] = startPose.rotateBy(sixty.times(i));
@@ -447,5 +458,35 @@ public class EagleUtil {
       return elevatorHeight + redHeightReefOffsets[reefIndex];
     }
     return elevatorHeight + blueHeightReefOffsets[reefIndex];
+  }
+
+  public static Pose2d getClosestLeftReef(Pose2d pose) {
+    int closestReef = findClosestReefIndex(pose);
+    if (closestReef % 2 > 0) {
+      closestReef -= 1;
+    }
+
+    if (isRedAlliance()) {
+      calculateRedReefSetPoints();
+      return redPoses[closestReef];
+    } else {
+      calculateBlueReefSetPoints();
+      return bluePoses[closestReef];
+    }
+  }
+
+  public static Pose2d getClosestRightReef(Pose2d pose) {
+    int closestReef = findClosestReefIndex(pose);
+    if (closestReef % 2 == 0) {
+      closestReef += 1;
+    }
+
+    if (isRedAlliance()) {
+      calculateRedReefSetPoints();
+      return redPoses[closestReef];
+    } else {
+      calculateBlueReefSetPoints();
+      return bluePoses[closestReef];
+    }
   }
 }
