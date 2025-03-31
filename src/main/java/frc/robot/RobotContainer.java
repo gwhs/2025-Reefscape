@@ -554,6 +554,7 @@ public class RobotContainer {
     autoChooser.addOption(
         "Wheel_Radius_Chracterizaton",
         WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
+    autoChooser.addOption("Do Notion", Commands.none());
 
     SmartDashboard.putData("autonomous", autoChooser);
   }
@@ -704,6 +705,7 @@ public class RobotContainer {
                     .withTimeout(0.8)
                     .alongWith(arm.setAngle(90)),
                 elevator.decreaseHeight(0.15),
+                Commands.waitSeconds(0.5),
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
                     .withTimeout(1)
                     .deadlineFor(
