@@ -12,10 +12,10 @@ public class ClimbIOSim implements ClimbIO {
       new SingleJointedArmSim(
           DCMotor.getFalcon500Foc(1),
           ClimbConstants.CLIMB_GEAR_RATIO,
-          0.1,
+          0.01,
           0.1,
           Units.degreesToRadians(0),
-          Units.degreesToRadians(300),
+          Units.degreesToRadians(1000),
           false,
           Units.degreesToRadians(90));
 
