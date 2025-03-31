@@ -48,7 +48,7 @@ public class ClimbSubsystem extends SubsystemBase {
             Commands.waitUntil(
                 () ->
                     MathUtil.isNear(
-                        ClimbConstants.CLIMB_CLIMB_POSITION, climbIO.getPosition(), 2)));
+                        ClimbConstants.CLIMB_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
   }
 
   /**
@@ -62,7 +62,8 @@ public class ClimbSubsystem extends SubsystemBase {
         .andThen(
             Commands.waitUntil(
                 () ->
-                    MathUtil.isNear(ClimbConstants.STOW_CLIMB_POSITION, climbIO.getPosition(), 2)));
+                    MathUtil.isNear(
+                        ClimbConstants.STOW_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
   }
 
   public Command latch() {
