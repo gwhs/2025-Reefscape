@@ -213,6 +213,7 @@ public class RobotContainer {
     PathfindingCommand.warmupCommand().schedule();
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
+    SmartDashboard.putData("Unprep Climb", unPrepClimbCommand());
 
     // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
@@ -553,6 +554,7 @@ public class RobotContainer {
     autoChooser.addOption(
         "Wheel_Radius_Chracterizaton",
         WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
+    autoChooser.addOption("Do Notion", Commands.none());
 
     SmartDashboard.putData("autonomous", autoChooser);
   }
@@ -697,6 +699,7 @@ public class RobotContainer {
                     .withTimeout(0.8)
                     .alongWith(arm.setAngle(90)),
                 elevator.decreaseHeight(0.15),
+                Commands.waitSeconds(0.5),
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
                     .withTimeout(1)
                     .deadlineFor(
@@ -742,18 +745,20 @@ public class RobotContainer {
         .withName("Dealgae");
   }
 
+  public Command unPrepClimbCommand() {
+    return Commands.sequence(
+            arm.setAngle(ArmConstants.CLIMB_ANGLE).withTimeout(1),
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
+            climb.stow().withTimeout(5),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(1),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE))
+        .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+        .withName("unPrepClimb");
+  }
+
   public Command climb() {
-    Trigger unprepclimbTrigger = m_operatorController.leftTrigger().negate();
     Trigger climbTrigger =
         m_operatorController.rightBumper().and(m_operatorController.leftBumper());
-
-    Command unPrepClimbCommand =
-        Commands.sequence(
-            Commands.parallel(
-                elevator.setHeight(0).withTimeout(1),
-                arm.setAngle(90).withTimeout(1),
-                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
-                climb.stow()));
 
     Command climbCommand =
         Commands.parallel(

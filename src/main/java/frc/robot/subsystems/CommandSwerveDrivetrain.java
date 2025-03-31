@@ -284,20 +284,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     DogLog.log("Swerve/current Y setpoint", PID_Y.getSetpoint().position);
 
     DogLog.log("Swerve/Front Left Drive Motor Connected", driveMotors[0].isConnected());
-    DogLog.log("Swerve/Front Left Steer Motor Connected", driveMotors[0].isConnected());
-    DogLog.log("Swerve/Front Left CANcoder Connected", driveMotors[0].isConnected());
+    DogLog.log("Swerve/Front Left Steer Motor Connected", steerMotors[0].isConnected());
+    DogLog.log("Swerve/Front Left CANcoder Connected", encoders[0].isConnected());
 
     DogLog.log("Swerve/Front Right Drive Motor Connected", driveMotors[1].isConnected());
-    DogLog.log("Swerve/Front Right Steer Motor Connected", driveMotors[1].isConnected());
-    DogLog.log("Swerve/Front Right CANcoder Connected", driveMotors[1].isConnected());
+    DogLog.log("Swerve/Front Right Steer Motor Connected", steerMotors[1].isConnected());
+    DogLog.log("Swerve/Front Right CANcoder Connected", encoders[1].isConnected());
 
     DogLog.log("Swerve/Back Left Drive Motor Connected", driveMotors[2].isConnected());
-    DogLog.log("Swerve/Back Left Steer Motor Connected", driveMotors[2].isConnected());
-    DogLog.log("Swerve/Back Left CANcoder Connected", driveMotors[2].isConnected());
+    DogLog.log("Swerve/Back Left Steer Motor Connected", steerMotors[2].isConnected());
+    DogLog.log("Swerve/Back Left CANcoder Connected", encoders[2].isConnected());
 
     DogLog.log("Swerve/Back Right Drive Motor Connected", driveMotors[3].isConnected());
-    DogLog.log("Swerve/Back Right Steer Motor Connected", driveMotors[3].isConnected());
-    DogLog.log("Swerve/Back Right CANcoder Connected", driveMotors[3].isConnected());
+    DogLog.log("Swerve/Back Right Steer Motor Connected", steerMotors[3].isConnected());
+    DogLog.log("Swerve/Back Right CANcoder Connected", encoders[3].isConnected());
 
     DogLog.log("Swerve/Pigeon Connected", gyro.isConnected());
   }
