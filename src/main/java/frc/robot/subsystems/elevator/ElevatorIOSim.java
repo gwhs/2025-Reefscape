@@ -30,8 +30,12 @@ public class ElevatorIOSim implements ElevatorIO {
 
     DogLog.log("Elevator/Simulation/PID Output", pidOutput);
 
-    elevatorSim.setInputVoltage(pidOutput);
+    if (m_emergencyMode == false) {
+      elevatorSim.setInputVoltage(pidOutput);
+    }
   }
+
+  private boolean m_emergencyMode;
 
   public boolean getReverseLimit() {
     return elevatorSim.getPositionMeters() == 0;
@@ -47,11 +51,24 @@ public class ElevatorIOSim implements ElevatorIO {
 
   @Override
   public void setVoltage(double voltage) {
-    elevatorSim.setInputVoltage(voltage);
+    if (m_emergencyMode == false) {
+      elevatorSim.setInputVoltage(voltage);
+    } else {
+      elevatorSim.setInputVoltage(0);
+    }
   }
 
   @Override
   public void setPosition(double newValue) {
-    elevatorSim.setState(newValue, 0);
+    if (m_emergencyMode == false) {
+      elevatorSim.setState(newValue, 0);
+    }
+  }
+
+  @Override
+  public void setEmergencyMode(boolean emergency) {
+    m_emergencyMode = emergency;
+    setVoltage(0);
+    DogLog.log("Elevator/Simulation/Emergency Mode Status", m_emergencyMode);
   }
 }
