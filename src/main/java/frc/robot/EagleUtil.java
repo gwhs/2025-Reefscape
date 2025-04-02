@@ -14,6 +14,7 @@ import frc.robot.RobotContainer.CoralLevel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 public class EagleUtil {
   protected static ArrayList<Pose2d> m_redPoses;
@@ -113,6 +114,15 @@ public class EagleUtil {
     0, // reef K
     0, // reef L
   };
+
+  private static List<Pose2d> coralStationPoints =
+      new ArrayList<>(
+          Arrays.asList(
+              new Pose2d(16.05, 7.42, Rotation2d.fromDegrees(-125.79)), // Red Processor Side
+              new Pose2d(16.05, 0.63, Rotation2d.fromDegrees(125.83)), // Red Non-Processor Side
+              new Pose2d(1.5, 0.63, Rotation2d.fromDegrees(-125.84)), // Blue Processor Side
+              new Pose2d(1.5, 7.42, Rotation2d.fromDegrees(125.85)) // Blue Non-Processor Side
+              ));
 
   /**
    * @return returns the calculated set points
@@ -488,5 +498,9 @@ public class EagleUtil {
       calculateBlueReefSetPoints();
       return bluePoses[closestReef];
     }
+  }
+
+  public static Pose2d getClosestCoralStation(Pose2d pose) {
+    return pose.nearest(coralStationPoints);
   }
 }
