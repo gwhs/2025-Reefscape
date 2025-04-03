@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.EagleUtil;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.arm.ArmConstants;
@@ -22,6 +23,10 @@ public class FiveCycle extends PathPlannerAuto {
   private RobotContainer robotContainer;
 
   private double waitTime = 0;
+  private ConditionalCommand doubleBack = new ConditionalCommand(
+    robotContainer.alignToPose(() -> EagleUtil.getClosestCoralStation(robotContainer.getRobotPose())), 
+    Commands.none(), 
+    robotContainer.IS_CORAL_LOADED);
 
   public FiveCycle(RobotContainer robotContainer, boolean nonProcessorSide) {
     super(Commands.run(() -> {}));
@@ -95,6 +100,7 @@ public class FiveCycle extends PathPlannerAuto {
             .deadlineFor(
                 Commands.sequence(
                     Commands.waitSeconds(.3),
+                    doubleBack,
                     robotContainer
                         .prepScoreCoral(
                             ElevatorConstants.INTAKE_METER, ArmConstants.L4_PREP_POSITION)
