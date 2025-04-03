@@ -96,7 +96,6 @@ public class FiveCycle extends PathPlannerAuto {
             .deadlineFor(
                 Commands.sequence(
                     Commands.waitSeconds(.3),
-                    // doubleBack,
                     robotContainer
                         .prepScoreCoral(
                             ElevatorConstants.INTAKE_METER, ArmConstants.L4_PREP_POSITION)
@@ -104,7 +103,9 @@ public class FiveCycle extends PathPlannerAuto {
                     Commands.waitSeconds(0.5),
                     robotContainer.prepScoreCoral(
                         ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)))
-            .raceWith(Commands.idle().onlyIf(robotContainer.IS_CORAL_LOADED)),
+            .raceWith(
+                Commands.waitSeconds(0.2)
+                    .andThen(Commands.idle().onlyIf(robotContainer.IS_CORAL_LOADED))),
         Commands.sequence(
                 Commands.sequence(
                         robotContainer
@@ -118,7 +119,6 @@ public class FiveCycle extends PathPlannerAuto {
                     .deadlineFor(
                         Commands.sequence(
                             Commands.waitSeconds(.3),
-                            // doubleBack,
                             robotContainer
                                 .prepScoreCoral(
                                     ElevatorConstants.INTAKE_METER, ArmConstants.L4_PREP_POSITION)
