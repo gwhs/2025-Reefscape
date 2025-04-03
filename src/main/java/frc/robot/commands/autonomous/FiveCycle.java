@@ -104,29 +104,24 @@ public class FiveCycle extends PathPlannerAuto {
                     robotContainer.prepScoreCoral(
                         ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)))
             .raceWith(
-                Commands.waitSeconds(0.2)
+                Commands.waitSeconds(0.5)
                     .andThen(Commands.idle().onlyIf(robotContainer.IS_CORAL_LOADED))),
-        Commands.sequence(
+        Commands.sequence(Commands.waitUntil(robotContainer.IS_CORAL_LOADED)
+            .deadlineFor(
+                robotContainer.prepCoralIntakeAuton(),
+                robotContainer.alignToPose(
+                    () -> EagleUtil.getClosestCoralStation(robotContainer.getRobotPose()))),
+        AutoBuilder.followPath(pathOne)
+            .deadlineFor(
                 Commands.sequence(
-                        robotContainer
-                            .alignToPose(
-                                () ->
-                                    EagleUtil.getClosestCoralStation(robotContainer.getRobotPose()))
-                            .withTimeout(0.6),
-                        Commands.waitUntil(robotContainer.IS_CORAL_LOADED))
-                    .alongWith(robotContainer.prepCoralIntakeAuton()),
-                AutoBuilder.followPath(pathOne)
-                    .deadlineFor(
-                        Commands.sequence(
-                            Commands.waitSeconds(.3),
-                            robotContainer
-                                .prepScoreCoral(
-                                    ElevatorConstants.INTAKE_METER, ArmConstants.L4_PREP_POSITION)
-                                .withTimeout(0.02),
-                            Commands.waitSeconds(0.5),
-                            robotContainer.prepScoreCoral(
-                                ElevatorConstants.L4_PREP_POSITION,
-                                ArmConstants.L4_PREP_POSITION))))
+                    Commands.waitSeconds(.3),
+                    robotContainer
+                        .prepScoreCoral(
+                            ElevatorConstants.INTAKE_METER, ArmConstants.L4_PREP_POSITION)
+                        .withTimeout(0.02),
+                    Commands.waitSeconds(0.5),
+                    robotContainer.prepScoreCoral(
+                        ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION))))
             .onlyIf(robotContainer.IS_CORAL_LOADED.negate()),
         Commands.sequence(
                 Commands.waitSeconds(.1)

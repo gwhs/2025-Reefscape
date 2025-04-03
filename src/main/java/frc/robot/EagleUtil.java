@@ -118,10 +118,10 @@ public class EagleUtil {
   private static List<Pose2d> coralStationPoints =
       new ArrayList<>(
           Arrays.asList(
-              new Pose2d(16.05, 7.42, Rotation2d.fromDegrees(-125.79)), // Red Processor Side
-              new Pose2d(16.05, 0.63, Rotation2d.fromDegrees(125.83)), // Red Non-Processor Side
-              new Pose2d(1.5, 0.63, Rotation2d.fromDegrees(-125.84)), // Blue Processor Side
-              new Pose2d(1.5, 7.42, Rotation2d.fromDegrees(125.85)) // Blue Non-Processor Side
+              new Pose2d(16.05, 7.42, Rotation2d.fromDegrees(126)), // Red Processor Side
+              new Pose2d(16.05, 0.63, Rotation2d.fromDegrees(-126)), // Red Non-Processor Side
+              new Pose2d(1.5, 0.63, Rotation2d.fromDegrees(54)), // Blue Processor Side
+              new Pose2d(1.5, 7.42, Rotation2d.fromDegrees(-54)) // Blue Non-Processor Side
               ));
 
   /**
