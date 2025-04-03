@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.EagleUtil;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.arm.ArmConstants;
@@ -23,10 +22,6 @@ public class FiveCycle extends PathPlannerAuto {
   private RobotContainer robotContainer;
 
   private double waitTime = 0;
-  private ConditionalCommand doubleBack = new ConditionalCommand(
-    robotContainer.alignToPose(() -> EagleUtil.getClosestCoralStation(robotContainer.getRobotPose())), 
-    Commands.none(), 
-    robotContainer.IS_CORAL_LOADED);
 
   public FiveCycle(RobotContainer robotContainer, boolean nonProcessorSide) {
     super(Commands.run(() -> {}));
@@ -91,6 +86,7 @@ public class FiveCycle extends PathPlannerAuto {
   }
 
   public Command autoHelper(PathPlannerPath pathOne, PathPlannerPath pathTwo) {
+
     return Commands.sequence(
         // wait until coral is loaded
         // Commands.waitUntil(robotContainer.IS_CORAL_LOADED),
@@ -100,14 +96,37 @@ public class FiveCycle extends PathPlannerAuto {
             .deadlineFor(
                 Commands.sequence(
                     Commands.waitSeconds(.3),
-                    doubleBack,
+                    // doubleBack,
                     robotContainer
                         .prepScoreCoral(
                             ElevatorConstants.INTAKE_METER, ArmConstants.L4_PREP_POSITION)
                         .withTimeout(0.02),
                     Commands.waitSeconds(0.5),
                     robotContainer.prepScoreCoral(
-                        ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION))),
+                        ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)))
+            .raceWith(Commands.idle().onlyIf(robotContainer.IS_CORAL_LOADED)),
+        Commands.sequence(
+                Commands.sequence(
+                        robotContainer
+                            .alignToPose(
+                                () -> EagleUtil.getClosestCoralStation(robotContainer.getRobotPose()))
+                            .withTimeout(0.5),
+                        Commands.waitUntil(robotContainer.IS_CORAL_LOADED))
+                    .alongWith(robotContainer.prepCoralIntakeAuton()),
+                AutoBuilder.followPath(pathOne)
+                    .deadlineFor(
+                        Commands.sequence(
+                            Commands.waitSeconds(.3),
+                            // doubleBack,
+                            robotContainer
+                                .prepScoreCoral(
+                                    ElevatorConstants.INTAKE_METER, ArmConstants.L4_PREP_POSITION)
+                                .withTimeout(0.02),
+                            Commands.waitSeconds(0.5),
+                            robotContainer.prepScoreCoral(
+                                ElevatorConstants.L4_PREP_POSITION,
+                                ArmConstants.L4_PREP_POSITION))))
+            .onlyIf(robotContainer.IS_CORAL_LOADED.negate()),
         Commands.sequence(
                 Commands.waitSeconds(.1)
                     .deadlineFor(robotContainer.prepScoreCoral(RobotContainer.CoralLevel.L4)),
