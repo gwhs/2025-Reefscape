@@ -286,7 +286,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     DogLog.log("Swerve/current X setpoint", PID_X.getSetpoint().position);
     DogLog.log("Swerve/current Y setpoint", PID_Y.getSetpoint().position);
 
-    DogLog.log("Swerve/current setpoint", new Pose2d(PID_X.getSetpoint().position, PID_Y.getSetpoint().position, Rotation2d.fromDegrees(PID_Rotation.getSetpoint())));
+    DogLog.log(
+        "Swerve/current setpoint",
+        new Pose2d(
+            PID_X.getSetpoint().position,
+            PID_Y.getSetpoint().position,
+            Rotation2d.fromDegrees(PID_Rotation.getSetpoint())));
 
     DogLog.log("Swerve/Front Left Drive Motor Connected", driveMotors[0].isConnected());
     DogLog.log("Swerve/Front Left Steer Motor Connected", steerMotors[0].isConnected());
