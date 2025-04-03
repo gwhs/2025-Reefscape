@@ -112,7 +112,7 @@ public class FiveCycle extends PathPlannerAuto {
                             .alignToPose(
                                 () ->
                                     EagleUtil.getClosestCoralStation(robotContainer.getRobotPose()))
-                            .withTimeout(0.5),
+                            .withTimeout(0.6),
                         Commands.waitUntil(robotContainer.IS_CORAL_LOADED))
                     .alongWith(robotContainer.prepCoralIntakeAuton()),
                 AutoBuilder.followPath(pathOne)
