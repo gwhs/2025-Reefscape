@@ -592,7 +592,7 @@ public class RobotContainer {
     return Commands.parallel(
             endEffector.intake(),
             Commands.waitSeconds(0.1)
-                .andThen(elevator.setHeight(ElevatorConstants.INTAKE_METER))
+                .andThen(elevator.setHeight(ElevatorConstants.INTAKE_METER_AUTON))
                 .withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake Auton");
@@ -668,13 +668,7 @@ public class RobotContainer {
   }
 
   public Command autonScoreCoral() {
-    return Commands.sequence(
-            endEffector.shoot(EndEffectorConstants.VOLTAGE_L4),
-            Commands.waitSeconds(0.05),
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
-            endEffector.stopMotor())
-        .withTimeout(0.5);
+    return Commands.sequence(endEffector.shoot(9), Commands.waitSeconds(0.05));
   }
 
   /**

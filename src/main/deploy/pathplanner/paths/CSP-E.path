@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.093204602774275,
-        "y": 0.8998523539302221
+        "x": 2.925,
+        "y": 1.4271381578947362
       },
       "isLocked": false,
       "linkedName": "CSP"
@@ -20,8 +20,8 @@
         "y": 2.834
       },
       "prevControl": {
-        "x": 5.2526393442622945,
-        "y": 2.1429610655737705
+        "x": 4.185444078947368,
+        "y": 1.9178453947368417
       },
       "nextControl": null,
       "isLocked": false,
@@ -37,11 +37,11 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.696524064171123,
+      "minWaypointRelativePos": 0.82,
       "maxWaypointRelativePos": 0.9976190476190476,
       "constraints": {
         "maxVelocity": 5.0,
-        "maxAcceleration": 1.5,
+        "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 9.0,
@@ -60,7 +60,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 3.7,
+    "maxAcceleration": 4.8,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 9.0,
