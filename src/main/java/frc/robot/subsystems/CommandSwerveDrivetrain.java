@@ -166,8 +166,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     ChassisSpeeds currentSpeed =
         ChassisSpeeds.fromRobotRelativeSpeeds(getState().Speeds, getRotation());
 
-    PID_X.reset(getPose().getX(), currentSpeed.vxMetersPerSecond * 0.4);
-    PID_Y.reset(getPose().getY(), currentSpeed.vyMetersPerSecond * 0.4);
+    double predicted_X = (targetPose.getX() - getPose().getX()) * 0.4 + getPose().getX();
+    double predicted_Y = (targetPose.getY() - getPose().getY()) * 0.4 + getPose().getY();
+
+    PID_X.reset(predicted_X, currentSpeed.vxMetersPerSecond * 0.4);
+    PID_Y.reset(predicted_Y, currentSpeed.vyMetersPerSecond * 0.4);
     PID_X.setGoal(targetPose.getX());
     PID_Y.setGoal(targetPose.getY());
     PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
@@ -282,6 +285,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     DogLog.log("Swerve/current X setpoint", PID_X.getSetpoint().position);
     DogLog.log("Swerve/current Y setpoint", PID_Y.getSetpoint().position);
+
+    DogLog.log("Swerve/current setpoint", new Pose2d(PID_X.getSetpoint().position, PID_Y.getSetpoint().position, Rotation2d.fromDegrees(PID_Rotation.getSetpoint())));
 
     DogLog.log("Swerve/Front Left Drive Motor Connected", driveMotors[0].isConnected());
     DogLog.log("Swerve/Front Left Steer Motor Connected", steerMotors[0].isConnected());
