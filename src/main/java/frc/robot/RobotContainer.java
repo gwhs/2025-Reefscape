@@ -668,7 +668,8 @@ public class RobotContainer {
   }
 
   public Command autonScoreCoral() {
-    return Commands.sequence(endEffector.shoot(9), Commands.waitSeconds(0.05));
+    return Commands.sequence(
+        endEffector.shoot(EndEffectorConstants.VOLTAGE_L4), Commands.waitSeconds(0.05));
   }
 
   /**
