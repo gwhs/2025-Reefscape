@@ -99,7 +99,7 @@ public class FiveCycle extends PathPlannerAuto {
                         .prepScoreCoral(
                             ElevatorConstants.INTAKE_METER, ArmConstants.L4_PREP_POSITION)
                         .withTimeout(0.02),
-                    Commands.waitSeconds(0.5),
+                    Commands.waitSeconds(0.4),
                     robotContainer.prepScoreCoral(
                         ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION))),
         Commands.sequence(
