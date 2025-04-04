@@ -706,7 +706,7 @@ public class RobotContainer {
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
                     .withTimeout(1)
                     .deadlineFor(
-                        alignToPose(
+                        alignToPose( 
                             () -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))),
                 dealgae())
             .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
