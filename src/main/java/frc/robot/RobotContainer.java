@@ -668,7 +668,8 @@ public class RobotContainer {
   }
 
   public Command autonScoreCoral() {
-    return Commands.sequence(endEffector.shoot(9), Commands.waitSeconds(0.05));
+    return Commands.sequence(
+        endEffector.shoot(EndEffectorConstants.VOLTAGE_L4), Commands.waitSeconds(0.05));
   }
 
   /**
@@ -698,8 +699,10 @@ public class RobotContainer {
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))
                     .withTimeout(0.8)
                     .alongWith(arm.setAngle(90)),
-                elevator.decreaseHeight(0.15),
-                Commands.waitSeconds(0.5),
+                Commands.either(
+                    elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
+                    elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
+                    ALGAE_HIGH),
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
                     .withTimeout(1)
                     .deadlineFor(
