@@ -679,6 +679,7 @@ public class RobotContainer {
                     endEffector.shoot(EndEffectorConstants.VOLTAGE_L3),
                     IS_L4),
                 Commands.waitSeconds(0.05),
+                drivetrain.driveBackward(1).withTimeout(0.2),
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
                 endEffector.stopMotor())
