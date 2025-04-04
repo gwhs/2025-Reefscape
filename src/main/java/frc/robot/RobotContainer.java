@@ -583,7 +583,7 @@ public class RobotContainer {
   public Command prepCoralIntake(double elevatorHeight, double armAngle) {
     return Commands.parallel(
             endEffector.intake(),
-            Commands.waitSeconds(0.1).andThen(elevator.setHeight(elevatorHeight)).withTimeout(0.5),
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
             arm.setAngle(armAngle).withTimeout(1))
         .withName("Prepare Coral Intake");
   }
@@ -591,8 +591,7 @@ public class RobotContainer {
   public Command prepCoralIntakeAuton() {
     return Commands.parallel(
             endEffector.intake(),
-            Commands.waitSeconds(0.1)
-                .andThen(elevator.setHeight(ElevatorConstants.INTAKE_METER_AUTON))
+            elevator.setHeight(ElevatorConstants.INTAKE_METER_AUTON)
                 .withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake Auton");
@@ -605,7 +604,7 @@ public class RobotContainer {
   public Command stopIntake() {
     return Commands.parallel(
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
-            Commands.waitSeconds(0.1).andThen(elevator.setHeight(ElevatorConstants.STOW_METER)),
+            elevator.setHeight(ElevatorConstants.STOW_METER),
             endEffector.holdCoral())
         .withName("stop Intake");
   }
@@ -642,7 +641,7 @@ public class RobotContainer {
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
     return Commands.parallel(
             endEffector.holdCoral(),
-            Commands.waitSeconds(0.1).andThen(elevator.setHeight(elevatorHeight)).withTimeout(1.5),
+            elevator.setHeight(elevatorHeight).withTimeout(1.5),
             arm.setAngle(armAngle).withTimeout(1.5))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
@@ -651,8 +650,7 @@ public class RobotContainer {
   public Command prepScoreCoral(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
     return Commands.parallel(
             endEffector.holdCoral(),
-            Commands.waitSeconds(0.1)
-                .andThen(elevator.setHeightSupplier(elevatorHeight))
+                elevator.setHeightSupplier(elevatorHeight)
                 .withTimeout(.5),
             arm.setAngleSupplier(armAngle).withTimeout(.5))
         .withName(
@@ -719,8 +717,7 @@ public class RobotContainer {
   // DeAlgae Commands
   public Command prepDealgaeLow() {
     return Commands.parallel(
-            Commands.waitSeconds(0.1)
-                .andThen(elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION)),
+            elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
             arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
             endEffector.setVoltage(0))
         .withName("prep Delalgae low");
@@ -728,8 +725,7 @@ public class RobotContainer {
 
   public Command prepDealgaeHigh() {
     return Commands.parallel(
-            Commands.waitSeconds(0.1)
-                .andThen(elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION)),
+            elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
             arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
             endEffector.setVoltage(0))
         .withName("prep Dealgae high");
