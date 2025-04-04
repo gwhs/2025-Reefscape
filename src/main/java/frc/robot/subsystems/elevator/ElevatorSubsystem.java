@@ -124,8 +124,8 @@ public class ElevatorSubsystem extends SubsystemBase {
             () -> {
               elevatorIO.setPosition(0);
             });
-
-    return whenNotAtBottom;
+    
+    return  Commands.either(whenNotAtBottom, whenAtBottom, ()-> !elevatorIO.getReverseLimit());
   }
 
   /**
