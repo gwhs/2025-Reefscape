@@ -700,7 +700,7 @@ public class RobotContainer {
                     elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
                     ALGAE_HIGH),
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
-                    .withTimeout(1)
+                    .withTimeout(.6)
                     .deadlineFor(
                         alignToPose(
                             () -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))),
