@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.711758808708418,
-        "y": 2.1470414746916733
+        "x": 2.809803082191781,
+        "y": 2.034096746575342
       },
       "isLocked": false,
       "linkedName": "CSP"
@@ -32,7 +32,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.7767379679144385,
+      "minWaypointRelativePos": 0.6452380952380957,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 5.0,
