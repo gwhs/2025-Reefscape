@@ -491,7 +491,7 @@ public class EagleUtil {
     }
   }
 
-    private static List<Pose2d> coralStationPoints =
+  private static List<Pose2d> coralStationPoints =
       new ArrayList<>(
           Arrays.asList(
               new Pose2d(16.05, 7.42, Rotation2d.fromDegrees(-126)), // Red Processor Side
@@ -500,8 +500,7 @@ public class EagleUtil {
               new Pose2d(1.5, 7.42, Rotation2d.fromDegrees(-54)) // Blue Non-Processor Side
               ));
 
-    public static Pose2d getClosestCoralStation(Pose2d pose) {
-      return pose.nearest(coralStationPoints);
-    }      
-
+  public static Pose2d getClosestCoralStation(Pose2d pose) {
+    return pose.nearest(coralStationPoints);
+  }
 }

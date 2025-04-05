@@ -391,21 +391,21 @@ public class RobotContainer {
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Ground Intake normal"));
 
-    m_operatorController
-        .x()
-        .whileTrue(
-            Commands.startEnd(
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL),
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
-                .withName("Algae Normal"));
+    // m_operatorController
+    //     .x()
+    //     .whileTrue(
+    //         Commands.startEnd(
+    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL),
+    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
+    //             .withName("Algae Normal"));
 
-    IS_L1
-        .and(IS_REEF_MODE)
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
-                }));
+    // IS_L1
+    //     .and(IS_REEF_MODE)
+    //     .onTrue(
+    //         Commands.runOnce(
+    //             () -> {
+    //               driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+    //             }));
 
     IS_L2
         .or(IS_L3)
@@ -457,7 +457,8 @@ public class RobotContainer {
 
     m_operatorController
         .x()
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestCoralStation(this.getRobotPose()))); // TODO
+        .whileTrue(
+            alignToPose(() -> EagleUtil.getClosestCoralStation(this.getRobotPose()))); // TODO
 
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
