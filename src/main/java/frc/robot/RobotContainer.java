@@ -463,7 +463,7 @@ public class RobotContainer {
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
     m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
-    m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
+    // m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
 
     // m_operatorController.y().whileTrue(arm.sysIdQuasistatic(Direction.kForward));
     // m_operatorController.b().whileTrue(arm.sysIdQuasistatic(Direction.kReverse));
