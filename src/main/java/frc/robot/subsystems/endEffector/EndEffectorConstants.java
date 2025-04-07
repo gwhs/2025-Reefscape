@@ -10,5 +10,5 @@ public class EndEffectorConstants {
   public static final double SDEV_DECAY = 0.02;
   public static final double INTAKE_CORAL_CURRENT = 30;
   public static final double VOLTAGE_L4 = 9;
-  public static final double VOLTAGE_L3 = 6;
+  public static final double VOLTAGE_L3 = 5;
 }

@@ -391,21 +391,21 @@ public class RobotContainer {
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                 .withName("Ground Intake normal"));
 
-    m_operatorController
-        .x()
-        .whileTrue(
-            Commands.startEnd(
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL),
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
-                .withName("Algae Normal"));
+    // m_operatorController
+    //     .x()
+    //     .whileTrue(
+    //         Commands.startEnd(
+    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL),
+    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
+    //             .withName("Algae Normal"));
 
-    IS_L1
-        .and(IS_REEF_MODE)
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
-                }));
+    // IS_L1
+    //     .and(IS_REEF_MODE)
+    //     .onTrue(
+    //         Commands.runOnce(
+    //             () -> {
+    //               driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+    //             }));
 
     IS_L2
         .or(IS_L3)
@@ -457,14 +457,13 @@ public class RobotContainer {
 
     m_operatorController
         .x()
-        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_CORAL_ANGLE, -6))
-        .onFalse(
-            groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, -3)); // TODO
+        .whileTrue(
+            alignToPose(() -> EagleUtil.getClosestCoralStation(this.getRobotPose()))); // TODO
 
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
     m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
-    m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
+    // m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
 
     // m_operatorController.y().whileTrue(arm.sysIdQuasistatic(Direction.kForward));
     // m_operatorController.b().whileTrue(arm.sysIdQuasistatic(Direction.kReverse));
@@ -583,7 +582,7 @@ public class RobotContainer {
   public Command prepCoralIntake(double elevatorHeight, double armAngle) {
     return Commands.parallel(
             endEffector.intake(),
-            Commands.waitSeconds(0.1).andThen(elevator.setHeight(elevatorHeight)).withTimeout(0.5),
+            elevator.setHeight(elevatorHeight).withTimeout(0.5),
             arm.setAngle(armAngle).withTimeout(1))
         .withName("Prepare Coral Intake");
   }
@@ -591,9 +590,7 @@ public class RobotContainer {
   public Command prepCoralIntakeAuton() {
     return Commands.parallel(
             endEffector.intake(),
-            Commands.waitSeconds(0.1)
-                .andThen(elevator.setHeight(ElevatorConstants.INTAKE_METER_AUTON))
-                .withTimeout(0.5),
+            elevator.setHeight(ElevatorConstants.INTAKE_METER_AUTON).withTimeout(0.5),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake Auton");
   }
@@ -605,7 +602,7 @@ public class RobotContainer {
   public Command stopIntake() {
     return Commands.parallel(
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
-            Commands.waitSeconds(0.1).andThen(elevator.setHeight(ElevatorConstants.STOW_METER)),
+            elevator.setHeight(ElevatorConstants.STOW_METER),
             endEffector.holdCoral())
         .withName("stop Intake");
   }
@@ -642,7 +639,7 @@ public class RobotContainer {
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
     return Commands.parallel(
             endEffector.holdCoral(),
-            Commands.waitSeconds(0.1).andThen(elevator.setHeight(elevatorHeight)).withTimeout(1.5),
+            elevator.setHeight(elevatorHeight).withTimeout(1.5),
             arm.setAngle(armAngle).withTimeout(1.5))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
@@ -651,9 +648,7 @@ public class RobotContainer {
   public Command prepScoreCoral(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
     return Commands.parallel(
             endEffector.holdCoral(),
-            Commands.waitSeconds(0.1)
-                .andThen(elevator.setHeightSupplier(elevatorHeight))
-                .withTimeout(.5),
+            elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
             arm.setAngleSupplier(armAngle).withTimeout(.5))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
@@ -683,6 +678,7 @@ public class RobotContainer {
                     endEffector.shoot(EndEffectorConstants.VOLTAGE_L3),
                     IS_L4),
                 Commands.waitSeconds(0.05),
+                drivetrain.driveBackward(1).withTimeout(0.2).onlyIf(IS_L2),
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
                 endEffector.stopMotor())
@@ -697,14 +693,14 @@ public class RobotContainer {
                 Commands.waitSeconds(0.05),
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))
-                    .withTimeout(0.8)
-                    .alongWith(arm.setAngle(90)),
+                    .withTimeout(0.6)
+                    .alongWith(arm.setAngle(90).withTimeout(0.5)),
                 Commands.either(
                     elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
                     elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
                     ALGAE_HIGH),
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
-                    .withTimeout(1)
+                    .withTimeout(.6)
                     .deadlineFor(
                         alignToPose(
                             () -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))),
@@ -719,8 +715,7 @@ public class RobotContainer {
   // DeAlgae Commands
   public Command prepDealgaeLow() {
     return Commands.parallel(
-            Commands.waitSeconds(0.1)
-                .andThen(elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION)),
+            elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
             arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
             endEffector.setVoltage(0))
         .withName("prep Delalgae low");
@@ -728,8 +723,7 @@ public class RobotContainer {
 
   public Command prepDealgaeHigh() {
     return Commands.parallel(
-            Commands.waitSeconds(0.1)
-                .andThen(elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION)),
+            elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
             arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
             endEffector.setVoltage(0))
         .withName("prep Dealgae high");

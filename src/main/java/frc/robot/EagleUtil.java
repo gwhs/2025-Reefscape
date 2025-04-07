@@ -14,6 +14,7 @@ import frc.robot.RobotContainer.CoralLevel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 public class EagleUtil {
   protected static ArrayList<Pose2d> m_redPoses;
@@ -46,7 +47,7 @@ public class EagleUtil {
   private static Pose2d[] redAlgaePoses = new Pose2d[6];
 
   private static final double ALGAE_Y_OFFSET = Units.inchesToMeters(0.6);
-  private static final double ALGAE_X_OFFSET = Units.inchesToMeters(0.7);
+  private static final double ALGAE_X_OFFSET = Units.inchesToMeters(0.2);
   // ALGAE_Y_OFFSET = move to left
   // ALGAE_X_OFFSET = move to right
 
@@ -488,5 +489,18 @@ public class EagleUtil {
       calculateBlueReefSetPoints();
       return bluePoses[closestReef];
     }
+  }
+
+  private static List<Pose2d> coralStationPoints =
+      new ArrayList<>(
+          Arrays.asList(
+              new Pose2d(16.05, 7.42, Rotation2d.fromDegrees(-126)), // Red Processor Side
+              new Pose2d(16.05, 0.63, Rotation2d.fromDegrees(126)), // Red Non-Processor Side
+              new Pose2d(1.5, 0.63, Rotation2d.fromDegrees(54)), // Blue Processor Side
+              new Pose2d(1.5, 7.42, Rotation2d.fromDegrees(-54)) // Blue Non-Processor Side
+              ));
+
+  public static Pose2d getClosestCoralStation(Pose2d pose) {
+    return pose.nearest(coralStationPoints);
   }
 }

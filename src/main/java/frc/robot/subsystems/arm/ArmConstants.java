@@ -17,8 +17,8 @@ public class ArmConstants {
   public static final double ARM_UPPER_BOUND = 270;
   public static final double ARM_LOWER_BOUND = -170;
 
-  public static final double ARM_INTAKE_ANGLE = -75.6738;
-  public static final double ARM_INTAKE_ANGLE_BACKUP = -67.0605;
+  public static final double ARM_INTAKE_ANGLE = -72;
+  public static final double ARM_INTAKE_ANGLE_BACKUP = -65;
   public static final double ARM_STOW_ANGLE = -90.0;
 
   public static final double PRE_DEALGAE_ANGLE = 155;
