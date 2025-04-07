@@ -20,7 +20,8 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 public class FiveCycle extends PathPlannerAuto {
 
   private RobotContainer robotContainer;
-  private double waitTime = .340;
+
+  private double waitTime = 0;
 
   public FiveCycle(RobotContainer robotContainer, boolean nonProcessorSide) {
     super(Commands.run(() -> {}));
@@ -66,17 +67,18 @@ public class FiveCycle extends PathPlannerAuto {
                               robotContainer.prepScoreCoral(
                                   ElevatorConstants.L4_PREP_POSITION,
                                   ArmConstants.L4_PREP_POSITION))),
-                  robotContainer
-                      .prepScoreCoral(
-                          ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
+                  Commands.sequence(
+                          Commands.waitSeconds(.1)
+                              .deadlineFor(
+                                  robotContainer.prepScoreCoral(RobotContainer.CoralLevel.L4)),
+                          robotContainer.autonScoreCoral())
                       .deadlineFor(
                           robotContainer.alignToPose(
                               () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
-                  robotContainer.scoreCoral(),
-                  AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntake()),
+                  AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntakeAuton()),
                   autoHelper(CSP_D, D_CSP),
-                  autoHelper(CSP_C, C_CSP) /*,
-                  autoHelper(CSP_C, C_CSP)*/));
+                  autoHelper(CSP_C, C_CSP),
+                  autoHelper(CSP_E, E_CSP)));
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
@@ -85,19 +87,28 @@ public class FiveCycle extends PathPlannerAuto {
 
   public Command autoHelper(PathPlannerPath pathOne, PathPlannerPath pathTwo) {
     return Commands.sequence(
-        Commands.waitSeconds(waitTime),
+        // wait until coral is loaded
+        // Commands.waitUntil(robotContainer.IS_CORAL_LOADED),
+        // Commands.waitSeconds(waitTime),
+        // drive to scoring position
         AutoBuilder.followPath(pathOne)
             .deadlineFor(
                 Commands.sequence(
-                    Commands.waitSeconds(1),
+                    Commands.waitSeconds(.3),
+                    robotContainer
+                        .prepScoreCoral(
+                            ElevatorConstants.INTAKE_METER, ArmConstants.L4_PREP_POSITION)
+                        .withTimeout(0.02),
+                    Commands.waitSeconds(0.4),
                     robotContainer.prepScoreCoral(
                         ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION))),
-        robotContainer
-            .prepScoreCoral(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
+        Commands.sequence(
+                Commands.waitSeconds(.05)
+                    .deadlineFor(robotContainer.prepScoreCoral(RobotContainer.CoralLevel.L4)),
+                robotContainer.autonScoreCoral())
             .deadlineFor(
                 robotContainer.alignToPose(
                     () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
-        robotContainer.scoreCoral(),
-        AutoBuilder.followPath(pathTwo).alongWith(robotContainer.prepCoralIntake()));
+        AutoBuilder.followPath(pathTwo).alongWith(robotContainer.prepCoralIntakeAuton()));
   }
 }

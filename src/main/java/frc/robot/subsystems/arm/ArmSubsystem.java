@@ -8,10 +8,12 @@ import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import java.util.function.DoubleSupplier;
 
 public class ArmSubsystem extends SubsystemBase {
   private ArmIO armIO;
@@ -27,6 +29,8 @@ public class ArmSubsystem extends SubsystemBase {
           new SysIdRoutine.Mechanism((volts) -> armIO.setVoltage(volts.in(Volts)), null, this));
 
   public ArmSubsystem() {
+    SmartDashboard.putData("Arm/Enable Arm Emergency Mode", engageEmergencyMode());
+    SmartDashboard.putData("Arm/Exit Arm Emergency Mode", exitEmergencyMode());
     if (RobotBase.isSimulation()) {
       armIO = new ArmIOSim();
     } else {
@@ -47,6 +51,28 @@ public class ArmSubsystem extends SubsystemBase {
               armIO.setAngle(clampedAngle);
             })
         .andThen(Commands.waitUntil(() -> MathUtil.isNear(clampedAngle, armIO.getPosition(), 1)));
+  }
+
+  public Command setAngleSupplier(DoubleSupplier angle) {
+    return this.runOnce(
+            () -> {
+              double clampedAngle =
+                  MathUtil.clamp(
+                      angle.getAsDouble(),
+                      ArmConstants.ARM_LOWER_BOUND,
+                      ArmConstants.ARM_UPPER_BOUND);
+              armIO.setAngle(clampedAngle);
+            })
+        .andThen(
+            Commands.waitUntil(
+                () -> {
+                  double clampedAngle =
+                      MathUtil.clamp(
+                          angle.getAsDouble(),
+                          ArmConstants.ARM_LOWER_BOUND,
+                          ArmConstants.ARM_UPPER_BOUND);
+                  return MathUtil.isNear(clampedAngle, armIO.getPosition(), 1);
+                }));
   }
 
   @Override
@@ -78,7 +104,11 @@ public class ArmSubsystem extends SubsystemBase {
    * @return run the command
    */
   public Command increaseAngle(double degrees) {
-    return Commands.runOnce(() -> armIO.setAngle(armIO.getPosition() + degrees));
+    return Commands.runOnce(
+            () -> {
+              armIO.setAngle(armIO.getPosition() + degrees);
+            })
+        .andThen(Commands.waitUntil(() -> MathUtil.isNear(armIO.getPositionError(), 0, 1)));
   }
 
   /**
@@ -86,6 +116,16 @@ public class ArmSubsystem extends SubsystemBase {
    * @return run the command
    */
   public Command decreaseAngle(double degrees) {
-    return Commands.runOnce(() -> armIO.setAngle(armIO.getPosition() - degrees));
+    return increaseAngle(-degrees);
+  }
+
+  public Command engageEmergencyMode() {
+    SmartDashboard.putBoolean("Arm/Emergency Mode", true);
+    return Commands.runOnce(() -> armIO.setEmergencyMode(true));
+  }
+
+  public Command exitEmergencyMode() {
+    SmartDashboard.putBoolean("Arm/Emergency Mode", false);
+    return Commands.runOnce(() -> armIO.setEmergencyMode(false));
   }
 }

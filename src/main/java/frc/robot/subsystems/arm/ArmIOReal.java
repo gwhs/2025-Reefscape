@@ -40,10 +40,24 @@ public class ArmIOReal implements ArmIO {
   private final StatusSignal<Voltage> armSupplyVoltage = armMotor.getSupplyVoltage();
   private final StatusSignal<Temperature> armDeviceTemp = armMotor.getDeviceTemp();
   private final StatusSignal<Current> armStatorCurrent = armMotor.getStatorCurrent();
+  private final StatusSignal<Angle> armEncoderPosition = armEncoder.getPosition();
   private final StatusSignal<Angle> armPosition = armMotor.getPosition();
+  private final StatusSignal<Double> armAngleError = armMotor.getClosedLoopError();
+  private final StatusSignal<Double> feedForwardOutput = armMotor.getClosedLoopFeedForward();
+  private final StatusSignal<Double> closedLoopOutput = armMotor.getClosedLoopOutput();
+  private final StatusSignal<Double> closedLoopProportionalOutput =
+      armMotor.getClosedLoopProportionalOutput();
+  private final StatusSignal<Double> closedLoopIntegral = armMotor.getClosedLoopIntegratedOutput();
+  private final StatusSignal<Double> closedLoopDerivative =
+      armMotor.getClosedLoopDerivativeOutput();
 
   private final Alert armMotorConnectedAlert =
       new Alert("Arm motor not connected", AlertType.kError);
+
+  private final Alert armEncoderConnectedAlert =
+      new Alert("Arm CANcoder not connected", AlertType.kError);
+
+  private boolean m_emergencyMode;
 
   public ArmIOReal() {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
@@ -54,13 +68,13 @@ public class ArmIOReal implements ArmIO {
     CurrentLimitsConfigs currentConfig = talonFXConfigs.CurrentLimits;
     FeedbackConfigs feedbackConfigs = talonFXConfigs.Feedback;
     m_request.EnableFOC = true; // add FOC
-    slot0Configs.kS = 0.18205; // Add 0.25 V output to overcome static friction
-    slot0Configs.kG = 0.09885; // Add 0 V to overcome gravity
-    slot0Configs.kV = 7.2427; // A velocity target of 1 rps results in 0.12 V output
-    slot0Configs.kA = 0.086264; // An acceleration of 1 rps/s requires 0.01 V output
-    slot0Configs.kP = 57.759; // A position error of 2.5 rotations results in 12 V output
+    slot0Configs.kS = 0.3; // Add 0.25 V output to overcome static friction
+    slot0Configs.kG = 0.5; // Add 0 V to overcome gravity
+    slot0Configs.kV = 6; // A velocity target of 1 rps results in 0.12 V output
+    slot0Configs.kA = 0.2; // An acceleration of 1 rps/s requires 0.01 V output
+    slot0Configs.kP = 35; // A position error of 2.5 rotations results in 12 V output
     slot0Configs.kI = 0; // no output for integrated error
-    slot0Configs.kD = 8.4867; // A velocity error of 1 rps results in 0.1 V output
+    slot0Configs.kD = 10; // A velocity error of 1 rps results in 0.1 V output
     slot0Configs.withGravityType(GravityTypeValue.Arm_Cosine);
 
     feedbackConfigs.FeedbackRotorOffset = 0;
@@ -71,9 +85,9 @@ public class ArmIOReal implements ArmIO {
 
     motionMagicConfigs.MotionMagicCruiseVelocity = ArmConstants.MAX_VELOCITY;
     motionMagicConfigs.MotionMagicAcceleration = ArmConstants.MAX_ACCELERATION;
-    motionMagicConfigs.MotionMagicJerk = 1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
+    motionMagicConfigs.MotionMagicJerk = 0; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
-    motorOutput.NeutralMode = NeutralModeValue.Coast;
+    motorOutput.NeutralMode = NeutralModeValue.Brake;
     motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     softwareLimitSwitch.ForwardSoftLimitEnable = true;
@@ -84,7 +98,7 @@ public class ArmIOReal implements ArmIO {
         Units.degreesToRotations(ArmConstants.ARM_LOWER_BOUND);
 
     currentConfig.withStatorCurrentLimitEnable(true);
-    currentConfig.withStatorCurrentLimit(20);
+    currentConfig.withStatorCurrentLimit(30);
 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; i++) {
@@ -95,13 +109,21 @@ public class ArmIOReal implements ArmIO {
       System.out.println("Could not configure device. Error: " + status.toString());
     }
 
-    BaseStatusSignal.setUpdateFrequencyForAll(50.0, armPIDGoal, armStatorCurrent);
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50.0,
+        armPIDGoal,
+        armStatorCurrent,
+        feedForwardOutput,
+        closedLoopOutput,
+        closedLoopProportionalOutput,
+        closedLoopIntegral,
+        closedLoopDerivative);
 
     CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
-    cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
-    cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-    cc_cfg.MagnetSensor.withMagnetOffset(Units.degreesToRotations(311.46875));
-
+    cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
+    cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    cc_cfg.MagnetSensor.withMagnetOffset(
+        Units.degreesToRotations(ArmConstants.MAGNET_OFFSET_DEGREES));
     for (int i = 0; i < 5; i++) {
       status = armEncoder.getConfigurator().apply(cc_cfg);
       if (status.isOK()) break;
@@ -119,18 +141,32 @@ public class ArmIOReal implements ArmIO {
 
   @Override
   public double getPosition() {
-    return Units.rotationsToDegrees(armPosition.getValueAsDouble());
+    return Units.rotationsToDegrees(armEncoderPosition.getValueAsDouble());
+  }
+
+  public double getPositionError() {
+    return armAngleError.getValueAsDouble();
   }
 
   /**
    * @param volts the voltage to set to
    */
   public void setVoltage(double volts) {
-    armMotor.setControl(m_voltReq.withOutput(volts));
+    if (m_emergencyMode == true) {
+      armMotor.setControl(m_voltReq.withOutput(0));
+    } else {
+      armMotor.setControl(m_voltReq.withOutput(volts));
+    }
+  }
+
+  public void setEmergencyMode(boolean emergency) {
+    m_emergencyMode = emergency;
+    setVoltage(0);
   }
 
   @Override
   public void update() {
+
     boolean armConnected =
         (BaseStatusSignal.refreshAll(
                 armPIDGoal,
@@ -138,7 +174,14 @@ public class ArmIOReal implements ArmIO {
                 armSupplyVoltage,
                 armDeviceTemp,
                 armStatorCurrent,
-                armPosition)
+                armPosition,
+                armEncoderPosition,
+                armAngleError,
+                feedForwardOutput,
+                closedLoopOutput,
+                closedLoopProportionalOutput,
+                closedLoopIntegral,
+                closedLoopDerivative)
             .isOK());
     DogLog.log("Arm/Motor/pid goal", Units.rotationsToDegrees(armPIDGoal.getValueAsDouble()));
     DogLog.log("Arm/Motor/motor voltage", armMotorVoltage.getValueAsDouble());
@@ -146,7 +189,20 @@ public class ArmIOReal implements ArmIO {
     DogLog.log("Arm/Motor/device temp", armDeviceTemp.getValueAsDouble());
     DogLog.log("Arm/Motor/stator current", armStatorCurrent.getValueAsDouble());
     DogLog.log("Arm/Motor/Connected", armConnected);
+    DogLog.log("Arm/Encoder/encoder position", getPosition());
+    DogLog.log("Arm/Encoder/Connected", armEncoder.isConnected());
+    DogLog.log("Arm/Motor/feed forward", feedForwardOutput.getValueAsDouble());
+    DogLog.log("Arm/Motor/closed loop output", closedLoopOutput.getValueAsDouble());
+    DogLog.log(
+        "Arm/Motor/closed loop proportional", closedLoopProportionalOutput.getValueAsDouble());
+    DogLog.log("Arm/Motor/closed loop integral", closedLoopIntegral.getValueAsDouble());
+    DogLog.log("Arm/Motor/closed loop derivative", closedLoopDerivative.getValueAsDouble());
 
     armMotorConnectedAlert.set(!armConnected);
+    armEncoderConnectedAlert.set(!armEncoder.isConnected());
+
+    if (m_emergencyMode == true) {
+      setVoltage(0);
+    }
   }
 }

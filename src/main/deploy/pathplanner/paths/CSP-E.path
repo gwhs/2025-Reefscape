@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2823076923076917,
-        "y": 0.8566025641025646
+        "x": 1.474,
+        "y": 0.6144979508196718
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.901024590163934,
-        "y": 1.141956967213115
+        "x": 2.924512295081967,
+        "y": 1.4271381578947362
       },
       "isLocked": false,
       "linkedName": "CSP"
     },
     {
       "anchor": {
-        "x": 4.99,
-        "y": 2.804
+        "x": 4.974424342105263,
+        "y": 2.793421052631579
       },
       "prevControl": {
-        "x": 5.226639344262295,
-        "y": 2.1129610655737703
+        "x": 4.143868421052631,
+        "y": 1.8772664473684206
       },
       "nextControl": null,
       "isLocked": false,
@@ -37,11 +37,11 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6214285714285714,
+      "minWaypointRelativePos": 0.838095238095238,
       "maxWaypointRelativePos": 0.9976190476190476,
       "constraints": {
         "maxVelocity": 5.0,
-        "maxAcceleration": 2.0,
+        "maxAcceleration": 2.1,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 9.0,
@@ -60,10 +60,10 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 4.0,
+    "maxAcceleration": 4.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
-    "nominalVoltage": 9.0,
+    "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {

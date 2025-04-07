@@ -4,7 +4,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,9 +17,6 @@ public class ClimbSubsystem extends SubsystemBase {
     } else {
       climbIO = new ClimbIOReal();
     }
-
-    SmartDashboard.putData("Climb Command/extend", extend());
-    SmartDashboard.putData("Climb Command/retract", retract());
   }
 
   @Override
@@ -43,30 +39,42 @@ public class ClimbSubsystem extends SubsystemBase {
   /**
    * @return extend the climb NOTE: see ClimbConstants for the position
    */
-  public Command extend() {
+  public Command climb() {
     return this.runOnce(
             () -> {
-              climbIO.setPosition(ClimbConstants.EXTEND_CLIMB_POSITION);
+              climbIO.setPosition(ClimbConstants.CLIMB_CLIMB_POSITION);
             })
         .andThen(
             Commands.waitUntil(
                 () ->
                     MathUtil.isNear(
-                        ClimbConstants.EXTEND_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
+                        ClimbConstants.CLIMB_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
   }
 
   /**
    * @return retract the climb NOTE: see ClimbConstants for the position
    */
-  public Command retract() {
+  public Command stow() {
     return this.runOnce(
             () -> {
-              climbIO.setPosition(ClimbConstants.RETRACT_CLIMB_POSITION);
+              climbIO.setPosition(ClimbConstants.STOW_CLIMB_POSITION);
             })
         .andThen(
             Commands.waitUntil(
                 () ->
                     MathUtil.isNear(
-                        ClimbConstants.RETRACT_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
+                        ClimbConstants.STOW_CLIMB_POSITION, climbIO.getPosition(), 0.1)));
+  }
+
+  public Command latch() {
+    return this.runOnce(
+            () -> {
+              climbIO.setPosition(ClimbConstants.LATCH_CLIMB_POSITION);
+            })
+        .andThen(
+            Commands.waitUntil(
+                () ->
+                    MathUtil.isNear(
+                        ClimbConstants.LATCH_CLIMB_POSITION, climbIO.getPosition(), 2)));
   }
 }
