@@ -16,7 +16,7 @@ public class ObjectDetectionConstants {
               Units.degreesToRadians(0), Units.degreesToRadians(-20), Units.degreesToRadians(-5)));
 
   public static final double UPPER_Z_TOLERANCE = 100;
-  public static final double LOWER_Z_TOLERANCE = -2.00;  
+  public static final double LOWER_Z_TOLERANCE = -2.00;
   public static final double XY_TOLERANCE = 2.00;
   public static final double MAX_X_VALUE = 690.87;
   public static final double MAX_Y_VALUE = 317.00;

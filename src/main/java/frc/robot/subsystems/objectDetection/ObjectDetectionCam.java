@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.RobotBase;
 import java.util.List;
 import java.util.function.Supplier;
 import org.photonvision.PhotonCamera;
@@ -26,8 +27,8 @@ public class ObjectDetectionCam {
   private final String ntKey;
   private final Transform3d robotToCam;
   private VisionSystemSim visionSim;
-  private final TargetModel simTargetModel;
-  private final Pose3d simTargetPose;
+  private TargetModel simTargetModel;
+  private Pose3d simTargetPose;
   private VisionTargetSim visionTarget;
   private SimCameraProperties cameraProp;
   private PhotonCameraSim cameraSim;
@@ -40,7 +41,12 @@ public class ObjectDetectionCam {
     this.robotToCam = robotToCam;
 
     ntKey = "/Object Detection/" + name + "/";
+    if (RobotBase.isSimulation()) {
+      this.initSim();
+    }
+  }
 
+  public void initSim() {
     visionSim = new VisionSystemSim("main");
     simTargetModel = new TargetModel(0.2);
     simTargetPose =
@@ -85,8 +91,6 @@ public class ObjectDetectionCam {
     }
   }
 
-  
-
   // Transform (target location in camera space) by (camera location in field space) to get (target
   // location in field space)
   public Pose3d getTargetLocInFieldSpace(Transform3d targetLocationToCamera) {
@@ -97,7 +101,7 @@ public class ObjectDetectionCam {
 
     Pose3d targetToField = cameraPose3d.plus(targetLocationToCamera);
 
-    DogLog.log(ntKey + "Camera Pose/", targetLocationToCamera);
+    DogLog.log(ntKey + "Camera Pose/", cameraPose3d);
     return targetToField;
   }
 
@@ -110,8 +114,7 @@ public class ObjectDetectionCam {
         || detectedTargetPose.getZ()
             < lowerZBound) { // change if we find out that z starts from camera height
       DogLog.log(ntKey + "Rejected Target Pose", detectedTargetPose);
-      DogLog.log(
-          ntKey + "Rejected Reason", "out of Z bounds", "Z: " + detectedTargetPose.getZ());
+      DogLog.log(ntKey + "Rejected Reason", "out of Z bounds", "Z: " + detectedTargetPose.getZ());
       return false;
     }
 
@@ -121,8 +124,7 @@ public class ObjectDetectionCam {
     double upperYBound =
         ObjectDetectionConstants.MAX_Y_VALUE + ObjectDetectionConstants.XY_TOLERANCE;
     double lowerXYBound = -(ObjectDetectionConstants.XY_TOLERANCE);
-    if (detectedTargetPose.getX() < lowerXYBound
-        || detectedTargetPose.getY() < lowerXYBound) {
+    if (detectedTargetPose.getX() < lowerXYBound || detectedTargetPose.getY() < lowerXYBound) {
       DogLog.log(ntKey + "Rejected Target Pose", detectedTargetPose);
       DogLog.log(ntKey + "Rejected Reason", "Y or X is less than 0");
       return false;

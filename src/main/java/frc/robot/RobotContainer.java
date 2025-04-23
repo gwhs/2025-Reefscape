@@ -41,10 +41,10 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorConstants;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
-import frc.robot.subsystems.led.LedSubsystem;
-import frc.robot.subsystems.objectDetection.ObjectDetectionCam;
 import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
+import frc.robot.subsystems.objectDetection.ObjectDetectionCam;
+import frc.robot.subsystems.objectDetection.ObjectDetectionConstants;
 import java.util.function.BiConsumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -183,6 +183,10 @@ public class RobotContainer {
         drivetrain = TunerConstants_Comp.createDrivetrain(); // Fallback
         break;
     }
+
+    objDecCam =
+        new ObjectDetectionCam(
+            "test", ObjectDetectionConstants.robotToCam, () -> drivetrain.getPose());
 
     driveCommand =
         new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
