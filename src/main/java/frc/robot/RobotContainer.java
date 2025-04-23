@@ -358,9 +358,7 @@ public class RobotContainer {
     IS_L4.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L4));
     IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L3));
     IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L2));
-    IS_L1
-        .and(m_driverController.rightTrigger())
-        .whileTrue(prepScoreCoral(CoralLevel.L1));
+    IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L1));
 
     // m_operatorController
     //     .leftStick()
@@ -673,10 +671,10 @@ public class RobotContainer {
   public Command scoreCoral() {
     Command scoreCoral =
         Commands.sequence(
-                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
-                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
-                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
-                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L1).onlyIf(IS_L1),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L1).onlyIf(IS_L1),
                 Commands.waitSeconds(0.05),
                 drivetrain.driveBackward(1).withTimeout(0.2).onlyIf(IS_L2),
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
@@ -686,10 +684,10 @@ public class RobotContainer {
 
     Command deAlgae =
         Commands.sequence(
-                  endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
-                  endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
-                  endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
-                  endEffector.shoot(EndEffectorConstants.VOLTAGE_L1).onlyIf(IS_L1),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L1).onlyIf(IS_L1),
                 Commands.waitSeconds(0.05),
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))
