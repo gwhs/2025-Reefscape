@@ -143,7 +143,7 @@ public class RobotContainer {
                 AprilTagCamConstants.FRONT_LEFT_CAMERA_COMP_NAME,
                 AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
                 drivetrain::addVisionMeasurent,
-                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getPose(),
                 () -> drivetrain.getState().Speeds);
 
         rightCam =
@@ -151,7 +151,7 @@ public class RobotContainer {
                 AprilTagCamConstants.FRONT_RIGHT_CAMERA_COMP_NAME,
                 AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
                 drivetrain::addVisionMeasurent,
-                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getPose(),
                 () -> drivetrain.getState().Speeds);
         break;
       case DEV:
@@ -161,7 +161,7 @@ public class RobotContainer {
                 AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
                 AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_DEV,
                 drivetrain::addVisionMeasurent,
-                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getPose(),
                 () -> drivetrain.getState().Speeds);
 
         rightCam =
@@ -169,7 +169,7 @@ public class RobotContainer {
                 AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
                 AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_DEV,
                 drivetrain::addVisionMeasurent,
-                () -> drivetrain.getState().Pose,
+                () -> drivetrain.getPose(),
                 () -> drivetrain.getState().Speeds);
         break;
       case WALLE:
@@ -342,7 +342,7 @@ public class RobotContainer {
         .rightTrigger()
         .negate()
         .and(m_driverController.leftTrigger())
-        .whileTrue(alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose)))
+        .whileTrue(alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose())))
         .whileTrue(
             Commands.startEnd(
                     () -> {
@@ -692,7 +692,7 @@ public class RobotContainer {
                     IS_L4),
                 Commands.waitSeconds(0.05),
                 endEffector.stopMotor(),
-                alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))
+                alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))
                     .withTimeout(0.6)
                     .alongWith(arm.setAngle(90).withTimeout(0.5)),
                 Commands.either(
@@ -702,8 +702,7 @@ public class RobotContainer {
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
                     .withTimeout(.6)
                     .deadlineFor(
-                        alignToPose(
-                            () -> EagleUtil.getNearestAlgaePoint(drivetrain.getState().Pose))),
+                        alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))),
                 dealgae())
             .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
 
