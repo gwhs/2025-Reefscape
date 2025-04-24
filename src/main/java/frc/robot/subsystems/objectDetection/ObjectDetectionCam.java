@@ -5,8 +5,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import org.photonvision.PhotonCamera;
@@ -32,6 +36,7 @@ public class ObjectDetectionCam {
   private VisionTargetSim visionTarget;
   private SimCameraProperties cameraProp;
   private PhotonCameraSim cameraSim;
+  private ArrayList<Pose3d> targetPoses;
 
   public ObjectDetectionCam(String name, Transform3d robotToCam, Supplier<Pose2d> robotPose) {
 
@@ -74,35 +79,63 @@ public class ObjectDetectionCam {
     DogLog.log(ntKey + "Number of Results/", results.size());
     DogLog.log(ntKey + "counter", counter);
 
+    Pose2d robotPose = this.robotPose.get();
+    Pose3d robotPose3d = new Pose3d(robotPose);
+    Pose3d cameraPose3d = robotPose3d.plus(robotToCam);
+    DogLog.log(ntKey + "Camera Pose/", cameraPose3d);
+
     if (results.isEmpty()) {
       return;
     }
 
     for (PhotonPipelineResult result : results) {
-      PhotonTrackedTarget bestTarget = result.getBestTarget();
-      if (bestTarget != null) {
-        Transform3d targetLocationToCamera = bestTarget.getBestCameraToTarget();
-        Pose3d targetLocationToField = this.getTargetLocInFieldSpace(targetLocationToCamera);
-        if (!filterResults(targetLocationToField)) {
-          break;
-        }
-        DogLog.log(ntKey + "Accepted Target Pose/", targetLocationToField);
+      targetPoses.clear();
+      List<PhotonTrackedTarget> targetsList = result.getTargets();
+      ArrayList<PhotonTrackedTarget> targets = new ArrayList<PhotonTrackedTarget>(targetsList);
+      if (targets.isEmpty()) {
+        continue;
       }
+      for (PhotonTrackedTarget target : targets) {
+        Pose3d targetPose;
+        if (RobotBase.isSimulation()) {
+          double targetYaw = -target.getYaw();
+          double targetPitch = target.getPitch();
+          Translation2d targetLocationToCamera = this.getCameraToTarget(targetYaw, targetPitch);
+          Transform2d cameraToTargetTransform2d =
+              new Transform2d(targetLocationToCamera, new Rotation2d());
+          targetPose =
+              new Pose3d(cameraPose3d.toPose2d().plus(cameraToTargetTransform2d.inverse()));
+        } else {
+          Transform3d targetLocationToCamera = target.getBestCameraToTarget();
+          targetPose = cameraPose3d.transformBy(targetLocationToCamera.inverse());
+        }
+        targetPoses.add(targetPose);
+      }
+      DogLog.log(ntKey + "Target Pose Array/", targetPoses.toArray(new Pose3d[0]));
     }
   }
 
-  // Transform (target location in camera space) by (camera location in field space) to get (target
-  // location in field space)
-  public Pose3d getTargetLocInFieldSpace(Transform3d targetLocationToCamera) {
+  private Translation2d getCameraToTarget(double targetYaw, double targetPitch) {
+    // Define the vector
+    double x = 1.0 * Math.tan(Units.degreesToRadians(targetYaw));
+    double y = 1.0 * Math.tan(Units.degreesToRadians(targetPitch));
+    double z = 1.0;
+    double norm = Math.sqrt(x * x + y * y + z * z);
+    x /= norm;
+    y /= norm;
+    z /= norm;
 
-    Pose2d robotPose = this.robotPose.get();
-    Pose3d robotPose3d = new Pose3d(robotPose);
-    Pose3d cameraPose3d = robotPose3d.plus(robotToCam);
+    // Rotate the vector by the camera pitch
+    Translation2d yzPrime =
+        new Translation2d(y, z).rotateBy(new Rotation2d(robotToCam.getRotation().getY()));
+    double yPrime = yzPrime.getX();
 
-    Pose3d targetToField = cameraPose3d.plus(targetLocationToCamera);
+    // Solve for the intersection
+    double angleToGoalRadians = Math.asin(yPrime);
+    double diffHeight = robotToCam.getZ() - 0;
+    double distance = diffHeight / Math.tan(angleToGoalRadians);
 
-    DogLog.log(ntKey + "Camera Pose/", cameraPose3d);
-    return targetToField;
+    return new Translation2d(distance, Rotation2d.fromDegrees(targetYaw));
   }
 
   public boolean filterResults(Pose3d detectedTargetPose) {
