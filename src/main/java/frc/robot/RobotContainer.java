@@ -320,7 +320,7 @@ public class RobotContainer {
     m_driverController
         .rightTrigger()
         .onFalse(
-            Commands.either(scoreCoral(), groundIntakeScoreL1(), IS_L1.negate())
+            scoreCoral()
                 .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
                 .withName("score Coral"));
 
@@ -358,14 +358,12 @@ public class RobotContainer {
     IS_L4.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L4));
     IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L3));
     IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L2));
-    IS_L1
-        .and(m_driverController.rightTrigger())
-        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_CORAL_ANGLE, -1));
+    IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L1));
 
-    m_operatorController
-        .leftStick()
-        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_ALGAE_ANGLE, 6))
-        .onFalse(groundIntake.setAngleAndVoltage(GroundIntakeConstants.ALGAE_STOW_ANGLE, 2));
+    // m_operatorController
+    //     .leftStick()
+    //     .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_ALGAE_ANGLE, 6))
+    //     .onFalse(groundIntake.setAngleAndVoltage(GroundIntakeConstants.ALGAE_STOW_ANGLE, 2));
 
     m_operatorController
         .rightStick()
@@ -399,13 +397,13 @@ public class RobotContainer {
     //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
     //             .withName("Algae Normal"));
 
-    // IS_L1
-    //     .and(IS_REEF_MODE)
-    //     .onTrue(
-    //         Commands.runOnce(
-    //             () -> {
-    //               driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
-    //             }));
+    IS_L1
+        .and(IS_REEF_MODE)
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
+                }));
 
     IS_L2
         .or(IS_L3)
@@ -456,14 +454,14 @@ public class RobotContainer {
     m_operatorController.start().onTrue(elevator.homingCommand());
 
     m_operatorController
-        .x()
+        .leftStick()
         .whileTrue(
             alignToPose(() -> EagleUtil.getClosestCoralStation(this.getRobotPose()))); // TODO
 
     m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
     m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
     m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
-    // m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
+    m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
 
     // m_operatorController.y().whileTrue(arm.sysIdQuasistatic(Direction.kForward));
     // m_operatorController.b().whileTrue(arm.sysIdQuasistatic(Direction.kReverse));
@@ -673,10 +671,10 @@ public class RobotContainer {
   public Command scoreCoral() {
     Command scoreCoral =
         Commands.sequence(
-                Commands.either(
-                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L4),
-                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L3),
-                    IS_L4),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L1).onlyIf(IS_L1),
                 Commands.waitSeconds(0.05),
                 drivetrain.driveBackward(1).withTimeout(0.2).onlyIf(IS_L2),
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
@@ -686,10 +684,10 @@ public class RobotContainer {
 
     Command deAlgae =
         Commands.sequence(
-                Commands.either(
-                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L4),
-                    endEffector.shoot(EndEffectorConstants.VOLTAGE_L3),
-                    IS_L4),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L1).onlyIf(IS_L1),
                 Commands.waitSeconds(0.05),
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))
