@@ -44,6 +44,7 @@ public class ObjectDetectionCam {
     counter = 0;
     this.robotPose = robotPose;
     this.robotToCam = robotToCam;
+    targetPoses = new ArrayList<Pose3d>();
 
     ntKey = "/Object Detection/" + name + "/";
     if (RobotBase.isSimulation()) {
@@ -55,13 +56,14 @@ public class ObjectDetectionCam {
     visionSim = new VisionSystemSim("main");
     simTargetModel = new TargetModel(0.2);
     simTargetPose =
-        new Pose3d(16, 4, 2, new Rotation3d(0, 0, Math.PI)); // placeholder, change later
+        new Pose3d(16, 4, 0, new Rotation3d(0, 0, Math.PI)); // placeholder, change later
     visionTarget = new VisionTargetSim(simTargetPose, simTargetModel);
     visionSim.addVisionTargets(visionTarget);
     cameraProp = new SimCameraProperties();
     cameraProp.setCalibration(1280, 800, Rotation2d.fromDegrees(90));
     cameraProp.setFPS(100);
     cameraSim = new PhotonCameraSim(cam, cameraProp);
+    cameraSim.enableDrawWireframe(true);
     visionSim.addCamera(cameraSim, robotToCam);
   }
 
@@ -73,6 +75,10 @@ public class ObjectDetectionCam {
   // (target location in field space)
   // 6. Use three PID controllers x, y, and rotation to drive and rotate robot to target pose
   public void updateDetection() {
+
+    if (RobotBase.isSimulation()) {
+      visionSim.update(robotPose.get());
+    }
 
     counter++;
     List<PhotonPipelineResult> results = cam.getAllUnreadResults();
@@ -89,9 +95,7 @@ public class ObjectDetectionCam {
     }
 
     for (PhotonPipelineResult result : results) {
-      targetPoses.clear();
-      List<PhotonTrackedTarget> targetsList = result.getTargets();
-      ArrayList<PhotonTrackedTarget> targets = new ArrayList<PhotonTrackedTarget>(targetsList);
+      ArrayList<PhotonTrackedTarget> targets = (ArrayList<PhotonTrackedTarget>) result.getTargets();
       if (targets.isEmpty()) {
         continue;
       }
@@ -109,9 +113,12 @@ public class ObjectDetectionCam {
           Transform3d targetLocationToCamera = target.getBestCameraToTarget();
           targetPose = cameraPose3d.transformBy(targetLocationToCamera.inverse());
         }
-        targetPoses.add(targetPose);
+        if (filterResults(targetPose)) {
+          targetPoses.add(targetPose);
+        }
       }
       DogLog.log(ntKey + "Target Pose Array/", targetPoses.toArray(new Pose3d[0]));
+      targetPoses.clear();
     }
   }
 
@@ -141,15 +148,16 @@ public class ObjectDetectionCam {
   public boolean filterResults(Pose3d detectedTargetPose) {
 
     // If vision’s detected target is below the ground/above tolerable height
-    double upperZBound = ObjectDetectionConstants.UPPER_Z_TOLERANCE;
-    double lowerZBound = ObjectDetectionConstants.LOWER_Z_TOLERANCE;
-    if (detectedTargetPose.getZ() > upperZBound
-        || detectedTargetPose.getZ()
-            < lowerZBound) { // change if we find out that z starts from camera height
-      DogLog.log(ntKey + "Rejected Target Pose", detectedTargetPose);
-      DogLog.log(ntKey + "Rejected Reason", "out of Z bounds", "Z: " + detectedTargetPose.getZ());
-      return false;
-    }
+    // double upperZBound = ObjectDetectionConstants.UPPER_Z_TOLERANCE;
+    // double lowerZBound = ObjectDetectionConstants.LOWER_Z_TOLERANCE;
+    // if (detectedTargetPose.getZ() > upperZBound
+    //     || detectedTargetPose.getZ()
+    //         < lowerZBound) { // change if we find out that z starts from camera height
+    //   DogLog.log(ntKey + "Rejected Target Pose", detectedTargetPose);
+    //   DogLog.log(ntKey + "Rejected Reason", "out of Z bounds", "Z: " +
+    // detectedTargetPose.getZ());
+    //   return false;
+    // }
 
     // If vision's detected target pose is outside the field
     double upperXBound =
