@@ -681,29 +681,29 @@ public class RobotContainer {
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
                 endEffector.stopMotor())
             .withTimeout(0.5);
-
+    // start here
     Command deAlgae =
         Commands.sequence(
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L1).onlyIf(IS_L1),
-                Commands.waitSeconds(0.05),
+                Commands.waitSeconds(0.04), // .05
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))
                     .withTimeout(0.6)
-                    .alongWith(arm.setAngle(90).withTimeout(0.5)),
+                    .alongWith(arm.setAngle(90).withTimeout(0.4)), // .5
                 Commands.either(
                     elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
                     elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
                     ALGAE_HIGH),
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
-                    .withTimeout(.6)
+                    .withTimeout(.5) // .6
                     .deadlineFor(
                         alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))),
                 dealgae())
             .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
-
+    // end here
     return Commands.sequence(
         Commands.either(deAlgae, scoreCoral, m_driverController.leftTrigger())
             .withName("Score Coral/deAlgae"));
