@@ -60,7 +60,7 @@ public class RobotContainer {
     COMP
   }
 
-  public enum RobotState{
+  public enum RobotState {
     IDLE,
     INTAKE
   }
@@ -307,8 +307,6 @@ public class RobotContainer {
     //     .onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)))
     //     .onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0)));
 
-
-
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(stopIntake());
     m_driverController
         .y()
@@ -317,8 +315,10 @@ public class RobotContainer {
                 ElevatorConstants.INTAKE_METER_BACKUP, ArmConstants.ARM_INTAKE_ANGLE_BACKUP))
         .onFalse(stopIntake());
 
-
-        IS_TELEOP.and(IS_CORAL_LOADED).and(IS_INTAKE).onTrue(drivetrain.driveBackward(-1).withTimeout(.4));
+    IS_TELEOP
+        .and(IS_CORAL_LOADED)
+        .and(IS_INTAKE.debounce(.5))
+        .onTrue(drivetrain.driveBackward(-4.5).withTimeout(.3));
 
     // IS_TELEOP
     //     .and(IS_REEFMODE)
@@ -698,7 +698,7 @@ public class RobotContainer {
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
                 endEffector.stopMotor())
             .withTimeout(0.5);
-    
+
     Command deAlgae =
         Commands.sequence(
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
@@ -709,18 +709,21 @@ public class RobotContainer {
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))
                     .withTimeout(0.6)
-                    .alongWith(arm.setAngle(90).alongWith(Commands.either(
-                      elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
-                      elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
-                      ALGAE_HIGH)).withTimeout(0.4)), // .5
-                
+                    .alongWith(
+                        arm.setAngle(90)
+                            .alongWith(
+                                Commands.either(
+                                    elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
+                                    elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
+                                    ALGAE_HIGH))
+                            .withTimeout(0.4)), // .5
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
                     .withTimeout(.5) // .6
                     .deadlineFor(
                         alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))),
                 dealgae())
             .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
-    
+
     return Commands.sequence(
         Commands.either(deAlgae, scoreCoral, m_driverController.leftTrigger())
             .withName("Score Coral/deAlgae"));
