@@ -60,6 +60,16 @@ public class RobotContainer {
     COMP
   }
 
+  public enum RobotState{
+    IDLE,
+    INTAKE
+  }
+
+  public static RobotState robotState = RobotState.IDLE;
+
+  public static final Trigger IS_IDLE = new Trigger(() -> robotState == RobotState.IDLE);
+  public static final Trigger IS_INTAKE = new Trigger(() -> robotState == RobotState.INTAKE);
+
   public static Robot getRobot() {
     if (RobotController.getSerialNumber().equals("032414F0")) {
       return Robot.COMP;
@@ -297,6 +307,8 @@ public class RobotContainer {
     //     .onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)))
     //     .onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0)));
 
+
+
     m_driverController.x().whileTrue(prepCoralIntake()).onFalse(stopIntake());
     m_driverController
         .y()
@@ -304,6 +316,9 @@ public class RobotContainer {
             prepCoralIntake(
                 ElevatorConstants.INTAKE_METER_BACKUP, ArmConstants.ARM_INTAKE_ANGLE_BACKUP))
         .onFalse(stopIntake());
+
+
+        IS_TELEOP.and(IS_CORAL_LOADED).and(IS_INTAKE).onTrue(drivetrain.driveBackward(-1).withTimeout(.4));
 
     // IS_TELEOP
     //     .and(IS_REEFMODE)
@@ -581,7 +596,8 @@ public class RobotContainer {
     return Commands.parallel(
             endEffector.intake(),
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
-            arm.setAngle(armAngle).withTimeout(1))
+            arm.setAngle(armAngle).withTimeout(1),
+            Commands.runOnce(() -> robotState = RobotState.INTAKE))
         .withName("Prepare Coral Intake");
   }
 
@@ -601,7 +617,8 @@ public class RobotContainer {
     return Commands.parallel(
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
             elevator.setHeight(ElevatorConstants.STOW_METER),
-            endEffector.holdCoral())
+            endEffector.holdCoral(),
+            Commands.runOnce(() -> robotState = RobotState.IDLE))
         .withName("stop Intake");
   }
 
@@ -681,7 +698,7 @@ public class RobotContainer {
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
                 endEffector.stopMotor())
             .withTimeout(0.5);
-    // start here
+    
     Command deAlgae =
         Commands.sequence(
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
@@ -692,18 +709,18 @@ public class RobotContainer {
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))
                     .withTimeout(0.6)
-                    .alongWith(arm.setAngle(90).withTimeout(0.4)), // .5
-                Commands.either(
-                    elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
-                    elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
-                    ALGAE_HIGH),
+                    .alongWith(arm.setAngle(90).alongWith(Commands.either(
+                      elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
+                      elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
+                      ALGAE_HIGH)).withTimeout(0.4)), // .5
+                
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
                     .withTimeout(.5) // .6
                     .deadlineFor(
                         alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))),
                 dealgae())
             .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
-    // end here
+    
     return Commands.sequence(
         Commands.either(deAlgae, scoreCoral, m_driverController.leftTrigger())
             .withName("Score Coral/deAlgae"));
