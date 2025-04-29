@@ -718,7 +718,7 @@ public class RobotContainer {
                                     ALGAE_HIGH))
                             .withTimeout(0.4)), // .5
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
-                    .withTimeout(.5) // .6
+                    .withTimeout(.2) // .6
                     .deadlineFor(
                         alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))),
                 dealgae())
