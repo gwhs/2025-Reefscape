@@ -70,7 +70,8 @@ public class FiveCycle extends PathPlannerAuto {
                   Commands.sequence(
                           Commands.waitSeconds(.1)
                               .deadlineFor(
-                                  robotContainer.prepScoreCoral(RobotContainer.CoralLevel.L4)),
+                                  robotContainer.prepScoreCoral(
+                                      () -> RobotContainer.CoralLevel.L4)),
                           robotContainer.autonScoreCoral())
                       .deadlineFor(
                           robotContainer.alignToPose(
@@ -104,7 +105,7 @@ public class FiveCycle extends PathPlannerAuto {
                         ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION))),
         Commands.sequence(
                 Commands.waitSeconds(.05)
-                    .deadlineFor(robotContainer.prepScoreCoral(RobotContainer.CoralLevel.L4)),
+                    .deadlineFor(robotContainer.prepScoreCoral(() -> RobotContainer.CoralLevel.L4)),
                 robotContainer.autonScoreCoral())
             .deadlineFor(
                 robotContainer.alignToPose(
