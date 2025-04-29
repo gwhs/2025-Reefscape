@@ -17,7 +17,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.RobotContainer.CoralLevel;
+
 import java.util.function.DoubleSupplier;
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -43,6 +46,16 @@ public class ElevatorSubsystem extends SubsystemBase {
       elevatorIO = new ElevatorIOReal();
     }
   }
+
+  public enum EvevatorState{
+    GOAL_HEIGHT,
+    IDLE
+  }
+
+  public static EvevatorState evevatorState = EvevatorState.IDLE;
+
+  public static final Trigger GOAL_HEIGHT = new Trigger(() -> evevatorState == EvevatorState.GOAL_HEIGHT);
+  public static final Trigger IDLE = new Trigger(() -> evevatorState == EvevatorState.IDLE);
 
   @Override
   public void periodic() {

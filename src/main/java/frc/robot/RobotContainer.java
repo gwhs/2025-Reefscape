@@ -445,9 +445,11 @@ public class RobotContainer {
 
     m_driverController
         .a()
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))))
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
+
+        drivetrain.IS_AT_TARGET_POSE.and(m_driverController.rightTrigger()).and(elevator.GOAL_HEIGHT).and(arm.GOAL_ANGLE).onTrue(scoreCoral()); 
         
-        IS_AT_TARGET_POSE.and(m_driveControler.rightTrigger).and(elevatorHeight == elevatorHeight).onTure(scoreCoral());
+        
 
     m_driverController
         .b()
