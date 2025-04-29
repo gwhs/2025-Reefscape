@@ -47,15 +47,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
   }
 
-  public enum EvevatorState{
+  public enum ElevatorState{
     GOAL_HEIGHT,
     IDLE
   }
 
-  public static EvevatorState evevatorState = EvevatorState.IDLE;
+  public static ElevatorState elevatorState = ElevatorState.IDLE;
 
-  public static final Trigger GOAL_HEIGHT = new Trigger(() -> evevatorState == EvevatorState.GOAL_HEIGHT);
-  public static final Trigger IDLE = new Trigger(() -> evevatorState == EvevatorState.IDLE);
+  public static final Trigger GOAL_HEIGHT = new Trigger(() -> elevatorState == ElevatorState.GOAL_HEIGHT);
+  public static final Trigger IDLE = new Trigger(() -> elevatorState == ElevatorState.IDLE);
 
   @Override
   public void periodic() {
