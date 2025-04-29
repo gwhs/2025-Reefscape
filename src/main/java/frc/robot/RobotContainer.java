@@ -318,7 +318,7 @@ public class RobotContainer {
     IS_TELEOP
         .and(IS_CORAL_LOADED)
         .and(IS_INTAKE.debounce(.5))
-        .onTrue(drivetrain.driveBackward(-4.5).withTimeout(.3));
+        .onTrue(drivetrain.driveBackward(-4.5).withTimeout(.5));
 
     // IS_TELEOP
     //     .and(IS_REEFMODE)
