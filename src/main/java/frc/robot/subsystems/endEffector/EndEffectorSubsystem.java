@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.util.function.DoubleSupplier;
 
 public class EndEffectorSubsystem extends SubsystemBase {
 
@@ -44,10 +43,6 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
   public Command shoot(double voltage) {
     return Commands.runOnce(() -> endEffectorIO.setVoltage(-voltage));
-  }
-
-  public Command shoot(DoubleSupplier voltage) {
-    return Commands.runOnce(() -> endEffectorIO.setVoltage(-voltage.getAsDouble()));
   }
 
   public Command intake() {

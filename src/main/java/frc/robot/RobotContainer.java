@@ -41,6 +41,7 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorConstants;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
+import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 import java.util.function.BiConsumer;
 import java.util.function.DoubleSupplier;
@@ -114,14 +115,14 @@ public class RobotContainer {
 
   public static CoralLevel coralLevel = CoralLevel.L4;
 
-  public final Trigger IS_L1 = new Trigger(() -> coralLevel == CoralLevel.L1);
-  public final Trigger IS_L2 = new Trigger(() -> coralLevel == CoralLevel.L2);
-  public final Trigger IS_L3 = new Trigger(() -> coralLevel == CoralLevel.L3);
-  public final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
-  public final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
-  public final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
-  public final Trigger BATTERY_BROWN_OUT = new Trigger(() -> RobotController.isBrownedOut());
-  public Trigger ALGAE_HIGH;
+  public static final Trigger IS_L1 = new Trigger(() -> coralLevel == CoralLevel.L1);
+  public static final Trigger IS_L2 = new Trigger(() -> coralLevel == CoralLevel.L2);
+  public static final Trigger IS_L3 = new Trigger(() -> coralLevel == CoralLevel.L3);
+  public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
+  public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
+  public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
+  public static final Trigger BATTERY_BROWN_OUT = new Trigger(() -> RobotController.isBrownedOut());
+  public static Trigger ALGAE_HIGH;
   public final Trigger IS_NEAR_CORAL_STATION;
 
   public final Trigger IS_CORAL_LOADED;
@@ -275,6 +276,15 @@ public class RobotContainer {
     //     .and(() -> RobotController.getBatteryVoltage() < 12)
     //     .onTrue(led.setPattern(LEDPattern.solid(Color.kRed)));
 
+    IS_DISABLED.onFalse(
+        Commands.runOnce(
+                () -> {
+                  // drivetrain.configNeutralMode(NeutralModeValue.Brake);
+                  // elevator.setNeutralMode(NeutralModeValue.Brake);
+                })
+            .andThen(groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 0))
+            .ignoringDisable(false));
+
     // IS_DISABLED
     //     .and(() -> RobotController.getBatteryVoltage() < 12)
     //     .onTrue(EagleUtil.triggerAlert(batteryUnderTwelveVolts));
@@ -360,7 +370,20 @@ public class RobotContainer {
 
     m_driverController.leftTrigger().onFalse(dealgae());
 
-    m_driverController.rightTrigger().whileTrue(prepScoreCoral(() -> coralLevel));
+    IS_L4.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L4));
+    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L3));
+    IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L2));
+    IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L1));
+
+    // m_operatorController
+    //     .leftStick()
+    //     .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_ALGAE_ANGLE, 6))
+    //     .onFalse(groundIntake.setAngleAndVoltage(GroundIntakeConstants.ALGAE_STOW_ANGLE, 2));
+
+    m_operatorController
+        .rightStick()
+        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, 1))
+        .onFalse(scoreAlgae());
 
     m_operatorController
         .rightStick()
@@ -372,6 +395,14 @@ public class RobotContainer {
                 .andThen(
                     Commands.runOnce(
                         () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))));
+
+    m_operatorController
+        .leftStick()
+        .whileTrue(
+            Commands.startEnd(
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL),
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
+                .withName("Ground Intake normal"));
 
     // m_operatorController
     //     .x()
@@ -456,6 +487,9 @@ public class RobotContainer {
     m_operatorController.povLeft().onTrue(arm.decreaseAngle(3.0));
     m_operatorController.povUp().onTrue(elevator.increaseHeight(0.02));
     m_operatorController.povDown().onTrue(elevator.decreaseHeight(0.02));
+
+    // m_operatorController.leftBumper().onTrue(groundIntake.decreaseAngle(3));
+    // m_operatorController.rightBumper().onTrue(groundIntake.increaseAngle(3));
 
     m_operatorController.leftTrigger().and(m_operatorController.rightTrigger()).onTrue(climb());
   }
@@ -588,6 +622,30 @@ public class RobotContainer {
         .withName("stop Intake");
   }
 
+  public Command groundIntakeScoreL1() {
+    return Commands.sequence(
+            groundIntake
+                .setAngleAndVoltage(GroundIntakeConstants.SCORE_CORAL_ANGLE, 6)
+                .withTimeout(0.5),
+            Commands.waitSeconds(0.3),
+            groundIntake
+                .setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 0)
+                .withTimeout(0.5))
+        .withName("Ground Intake Score Coral L1");
+  }
+
+  public Command scoreAlgae() {
+    return Commands.sequence(
+            groundIntake
+                .setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, -6)
+                .withTimeout(0.5),
+            Commands.waitSeconds(0.7),
+            groundIntake
+                .setAngleAndVoltage(GroundIntakeConstants.ALGAE_STOW_ANGLE, 0)
+                .withTimeout(0.5))
+        .withName("Score Algae");
+  }
+
   /**
    * @param elevatorHeight how tall should the elavator be?
    * @param armAngle what angle should the arm be at
@@ -611,11 +669,11 @@ public class RobotContainer {
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
 
-  public Command prepScoreCoral(Supplier<CoralLevel> level) {
+  public Command prepScoreCoral(CoralLevel level) {
     DoubleSupplier elevatorHeightSupplier =
-        () -> EagleUtil.getOffsetElevatorHeight(level.get(), drivetrain.getPose());
+        () -> EagleUtil.getOffsetElevatorHeight(level, drivetrain.getPose());
     DoubleSupplier armAngleSupplier =
-        () -> EagleUtil.getOffsetArmAngle(level.get(), drivetrain.getPose());
+        () -> EagleUtil.getOffsetArmAngle(level, drivetrain.getPose());
     return prepScoreCoral(elevatorHeightSupplier, armAngleSupplier).repeatedly();
   }
 
@@ -624,23 +682,16 @@ public class RobotContainer {
         endEffector.shoot(EndEffectorConstants.VOLTAGE_L4), Commands.waitSeconds(0.05));
   }
 
-  public double endEffectorVoltage() {
-    return switch (coralLevel) {
-      case L1 -> EndEffectorConstants.VOLTAGE_L1;
-      default -> EndEffectorConstants.VOLTAGE_L1;
-      case L2 -> EndEffectorConstants.VOLTAGE_L2;
-      case L3 -> EndEffectorConstants.VOLTAGE_L3;
-      case L4 -> EndEffectorConstants.VOLTAGE_L4;
-    };
-  }
-
   /**
    * @return score the coral
    */
   public Command scoreCoral() {
     Command scoreCoral =
         Commands.sequence(
-                endEffector.shoot(() -> this.endEffectorVoltage()),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L1).onlyIf(IS_L1),
                 Commands.waitSeconds(0.05),
                 drivetrain.driveBackward(1).withTimeout(0.2).onlyIf(IS_L2),
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
@@ -650,7 +701,10 @@ public class RobotContainer {
 
     Command deAlgae =
         Commands.sequence(
-                endEffector.shoot(() -> this.endEffectorVoltage()),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
+                endEffector.shoot(EndEffectorConstants.VOLTAGE_L1).onlyIf(IS_L1),
                 Commands.waitSeconds(0.04), // .05
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))
@@ -731,6 +785,7 @@ public class RobotContainer {
     return Commands.sequence(
             Commands.sequence(
                 Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE))),
+            groundIntake.setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0).withTimeout(1),
             arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
             elevator.setHeight(0).withTimeout(1),
             climb.latch().withTimeout(1),

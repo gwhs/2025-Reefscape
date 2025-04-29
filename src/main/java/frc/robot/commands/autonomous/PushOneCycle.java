@@ -27,7 +27,7 @@ public class PushOneCycle extends PathPlannerAuto {
                       AutoBuilder.resetOdom(startingPose),
                       AutoBuilder.followPath(startLn_H),
                       robotContainer
-                          .prepScoreCoral(() -> RobotContainer.CoralLevel.L4)
+                          .prepScoreCoral(RobotContainer.CoralLevel.L4)
                           .withTimeout(3)
                           .deadlineFor(
                               robotContainer.alignToPose(
