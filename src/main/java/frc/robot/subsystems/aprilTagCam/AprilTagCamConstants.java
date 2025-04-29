@@ -14,6 +14,8 @@ public class AprilTagCamConstants {
 
   public static final String FRONT_LEFT_CAMERA_COMP_NAME = "leftcam";
   public static final String FRONT_RIGHT_CAMERA_COMP_NAME = "rightcam";
+  public static final String BACK_LEFT_CAMERA_COMP_NAME = "leftcam";
+  public static final String BACK_RIGHT_CAMERA_COMP_NAME = "back_right_cam";
   public static final String FRONT_LEFT_CAMERA_DEV_NAME = "cam3";
   public static final String FRONT_RIGHT_CAMERA_DEV_NAME = "cam4";
 
@@ -48,6 +50,14 @@ public class AprilTagCamConstants {
           Units.inchesToMeters(7.033),
           new Rotation3d(
               Units.degreesToRadians(0), Units.degreesToRadians(-20), Units.degreesToRadians(-18)));
+
+ public static final Transform3d BACK_RIGHT_CAMERA_LOCATION_COMP =
+              new Transform3d(
+                  Units.inchesToMeters(-5.401),
+                  Units.inchesToMeters(-11.908),
+                  Units.inchesToMeters(7.033),
+                  new Rotation3d(
+                      Units.degreesToRadians(0), Units.degreesToRadians(-20), Units.degreesToRadians(18)));
 
   public static final double Z_TOLERANCE = 2.00;
   public static final double XY_TOLERANCE = 2.00;

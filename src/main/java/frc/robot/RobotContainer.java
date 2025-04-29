@@ -127,6 +127,8 @@ public class RobotContainer {
 
   private AprilTagCam rightCam;
 
+  private AprilTagCam back_right_cam; 
+
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm, groundIntake);
 
   private final BiConsumer<Runnable, Double> addPeriodic;
@@ -153,6 +155,13 @@ public class RobotContainer {
                 drivetrain::addVisionMeasurent,
                 () -> drivetrain.getPose(),
                 () -> drivetrain.getState().Speeds);
+
+        back_right_cam = new AprilTagCam(
+          AprilTagCamConstants.BACK_RIGHT_CAMERA_COMP_NAME,
+          AprilTagCamConstants.BACK_RIGHT_CAMERA_LOCATION_COMP,
+          drivetrain::addVisionMeasurent,
+          () -> drivetrain.getPose(),
+          () -> drivetrain.getState().Speeds);
         break;
       case DEV:
         drivetrain = TunerConstants_practiceDrivetrain.createDrivetrain();
