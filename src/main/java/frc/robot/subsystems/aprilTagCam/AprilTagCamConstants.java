@@ -51,13 +51,13 @@ public class AprilTagCamConstants {
           new Rotation3d(
               Units.degreesToRadians(0), Units.degreesToRadians(-20), Units.degreesToRadians(-18)));
 
- public static final Transform3d BACK_RIGHT_CAMERA_LOCATION_COMP =
-              new Transform3d(
-                  Units.inchesToMeters(-5.401),
-                  Units.inchesToMeters(-11.908),
-                  Units.inchesToMeters(7.033),
-                  new Rotation3d(
-                      Units.degreesToRadians(0), Units.degreesToRadians(-20), Units.degreesToRadians(18)));
+  public static final Transform3d BACK_RIGHT_CAMERA_LOCATION_COMP =
+      new Transform3d(
+          Units.inchesToMeters(-5.401),
+          Units.inchesToMeters(-11.908),
+          Units.inchesToMeters(7.033),
+          new Rotation3d(
+              Units.degreesToRadians(0), Units.degreesToRadians(-20), Units.degreesToRadians(162)));
 
   public static final double Z_TOLERANCE = 2.00;
   public static final double XY_TOLERANCE = 2.00;
