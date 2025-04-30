@@ -14,22 +14,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.subsystems.elevator.ElevatorSubsystem.EvevatorState;
 
 import java.util.function.DoubleSupplier;
 
 public class ArmSubsystem extends SubsystemBase {
   private ArmIO armIO;
 
-  public enum ArmState{
-    GOAL_ANGLE,
-    IDLE
-  }
-
-  public static ArmState armState = ArmState.IDLE;
-
-  public static final Trigger GOAL_ANGLE = new Trigger(() -> armState == ArmState.GOAL_ANGLE);
-  public static final Trigger IDLE = new Trigger(() -> armState == ArmState.IDLE);
+  public Trigger AT_GOAL_ANGLE = new Trigger(
+    () -> MathUtil.isNear(0, armIO.getPosition() - armIO.getPIDGoalDegrees(), 5)
+  );
 
   private final SysIdRoutine m_sysIdRoutine =
       new SysIdRoutine(

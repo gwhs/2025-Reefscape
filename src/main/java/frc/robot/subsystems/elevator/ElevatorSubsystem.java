@@ -47,7 +47,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
   }
 
-  public Trigger AT_GOAL_HEIGHT = new Trigger(() -> MathUtil.isNear(0, elevatorIO.getRotation() - elevatorIO.getPIDGoalRotation(), 0.01));
+  public Trigger AT_GOAL_HEIGHT = new Trigger(
+    () -> MathUtil.isNear(0, elevatorIO.getRotation() - elevatorIO.getPIDGoalRotation(), 0.01)
+  );
 
   @Override
   public void periodic() {
