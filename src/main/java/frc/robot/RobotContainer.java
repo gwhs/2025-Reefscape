@@ -62,6 +62,16 @@ public class RobotContainer {
     COMP
   }
 
+  public enum RobotState {
+    IDLE,
+    INTAKE
+  }
+
+  public static RobotState robotState = RobotState.IDLE;
+
+  public static final Trigger IS_IDLE = new Trigger(() -> robotState == RobotState.IDLE);
+  public static final Trigger IS_INTAKE = new Trigger(() -> robotState == RobotState.INTAKE);
+
   public static Robot getRobot() {
     if (RobotController.getSerialNumber().equals("032414F0")) {
       return Robot.COMP;
@@ -306,6 +316,11 @@ public class RobotContainer {
             prepCoralIntake(
                 ElevatorConstants.INTAKE_METER_BACKUP, ArmConstants.ARM_INTAKE_ANGLE_BACKUP))
         .onFalse(stopIntake());
+
+    IS_TELEOP
+        .and(IS_CORAL_LOADED)
+        .and(IS_INTAKE.debounce(.5))
+        .onTrue(drivetrain.driveBackward(-4.5).withTimeout(.5));
 
     // IS_TELEOP
     //     .and(IS_REEFMODE)
@@ -587,7 +602,8 @@ public class RobotContainer {
     return Commands.parallel(
             endEffector.intake(),
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
-            arm.setAngle(armAngle).withTimeout(1))
+            arm.setAngle(armAngle).withTimeout(1),
+            Commands.runOnce(() -> robotState = RobotState.INTAKE))
         .withName("Prepare Coral Intake");
   }
 
@@ -607,7 +623,8 @@ public class RobotContainer {
     return Commands.parallel(
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
             elevator.setHeight(ElevatorConstants.STOW_METER),
-            endEffector.holdCoral())
+            endEffector.holdCoral(),
+            Commands.runOnce(() -> robotState = RobotState.IDLE))
         .withName("stop Intake");
   }
 
@@ -699,17 +716,20 @@ public class RobotContainer {
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L1).onlyIf(IS_L1),
-                Commands.waitSeconds(0.05),
+                Commands.waitSeconds(0.04), // .05
                 endEffector.stopMotor(),
                 alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))
                     .withTimeout(0.6)
-                    .alongWith(arm.setAngle(90).withTimeout(0.5)),
-                Commands.either(
-                    elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
-                    elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
-                    ALGAE_HIGH),
+                    .alongWith(
+                        arm.setAngle(90)
+                            .alongWith(
+                                Commands.either(
+                                    elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
+                                    elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
+                                    ALGAE_HIGH))
+                            .withTimeout(0.4)), // .5
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
-                    .withTimeout(.6)
+                    .withTimeout(.1) // .6
                     .deadlineFor(
                         alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))),
                 dealgae())
