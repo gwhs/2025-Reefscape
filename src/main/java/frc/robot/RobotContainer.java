@@ -532,12 +532,11 @@ public class RobotContainer {
     if (frontRightCam != null) {
       frontRightCam.updatePoseEstim();
       // 4
-       DogLog.log("Loop Time/Robot Container/Cam4", (HALUtil.getFPGATime() - startTime) / 1000);
+      DogLog.log("Loop Time/Robot Container/Cam4", (HALUtil.getFPGATime() - startTime) / 1000);
     }
-    if(backRightCam != null){
+    if (backRightCam != null) {
       backRightCam.updatePoseEstim();
     }
-
 
     startTime = HALUtil.getFPGATime();
 
