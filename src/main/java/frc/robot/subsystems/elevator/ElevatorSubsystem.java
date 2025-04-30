@@ -19,8 +19,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.RobotContainer.CoralLevel;
-
 import java.util.function.DoubleSupplier;
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -47,9 +45,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
   }
 
-  public Trigger AT_GOAL_HEIGHT = new Trigger(
-    () -> MathUtil.isNear(0, elevatorIO.getRotation() - elevatorIO.getPIDGoalRotation(), 0.01)
-  );
+  public Trigger AT_GOAL_HEIGHT =
+      new Trigger(
+          () ->
+              MathUtil.isNear(0, elevatorIO.getRotation() - elevatorIO.getPIDGoalRotation(), 0.01));
 
   @Override
   public void periodic() {

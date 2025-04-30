@@ -23,7 +23,7 @@ public class ElevatorIOSim implements ElevatorIO {
     return ElevatorSubsystem.metersToRotations(elevatorSim.getPositionMeters());
   }
 
-  public double getPIDGoalRotation(){
+  public double getPIDGoalRotation() {
     return this.pidController.getSetpoint().position;
   }
 

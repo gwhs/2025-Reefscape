@@ -143,7 +143,7 @@ public class ElevatorIOReal implements ElevatorIO {
         backElevatorMotorStatorCurrent);
   }
 
-  public double getPIDGoalRotation(){
+  public double getPIDGoalRotation() {
     return frontElevatorMotorPIDGoal.getValueAsDouble();
   }
 

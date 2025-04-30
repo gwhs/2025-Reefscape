@@ -36,7 +36,6 @@ import frc.robot.subsystems.aprilTagCam.AprilTagCam;
 import frc.robot.subsystems.aprilTagCam.AprilTagCamConstants;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
-import frc.robot.subsystems.arm.ArmSubsystem.ArmState;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
@@ -463,9 +462,12 @@ public class RobotContainer {
         .a()
         .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
 
-        drivetrain.IS_AT_TARGET_POSE.and(m_driverController.rightTrigger()).and(elevator.AT_GOAL_HEIGHT).and(arm.GOAL_ANGLE).onTrue(scoreCoral()); 
-        
-        
+    drivetrain
+        .IS_AT_TARGET_POSE
+        .and(m_driverController.rightTrigger())
+        .and(elevator.AT_GOAL_HEIGHT)
+        .and(arm.AT_GOAL_ANGLE)
+        .onTrue(scoreCoral());
 
     m_driverController
         .b()
@@ -660,9 +662,7 @@ public class RobotContainer {
     return Commands.parallel(
             endEffector.holdCoral(),
             elevator.setHeight(elevatorHeight).withTimeout(1.5),
-            Commands.runOnce(() -> elevator.elevatorState = ElevatorState.GOAL_HEIGHT),
-            arm.setAngle(armAngle).withTimeout(1.5),
-            Commands.runOnce(() -> arm.armState = ArmState.GOAL_ANGLE))
+            arm.setAngle(armAngle).withTimeout(1.5))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
@@ -703,10 +703,7 @@ public class RobotContainer {
                 drivetrain.driveBackward(1).withTimeout(0.2).onlyIf(IS_L2),
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
-                endEffector.stopMotor(),
-                Commands.runOnce(() -> elevator.elevatorState = ElevatorState.IDLE),
-                Commands.runOnce(() -> arm.armState = ArmState.IDLE)
-                )
+                endEffector.stopMotor())
             .withTimeout(0.5);
 
     Command deAlgae =
