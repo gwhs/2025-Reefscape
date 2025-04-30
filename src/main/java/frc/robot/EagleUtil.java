@@ -293,6 +293,15 @@ public class EagleUtil {
     }
   }
 
+  public static Pose2d getClosestL1Back(Pose2d pose) {
+    if (DriverStation.getAlliance().isPresent()
+        && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      return pose.nearest(FieldConstants.blueAlgaeSetpointList).rotateBy(new Rotation2d(Math.PI));
+    } else {
+      return pose.nearest(FieldConstants.redAlgaeSetpointList).rotateBy(new Rotation2d(Math.PI));
+    }
+  }
+
   /**
    * @param pose the pose to compare to
    * @return cached Pose2d
@@ -476,6 +485,21 @@ public class EagleUtil {
     }
   }
 
+  public static Pose2d getClosestLeftReefBack(Pose2d pose) {
+    int closestReef = findClosestReefIndex(pose);
+    if (closestReef % 2 > 0) {
+      closestReef -= 1;
+    }
+
+    if (isRedAlliance()) {
+      calculateRedReefSetPoints();
+      return redPoses[closestReef].rotateBy(new Rotation2d(Math.PI));
+    } else {
+      calculateBlueReefSetPoints();
+      return bluePoses[closestReef].rotateBy(new Rotation2d(Math.PI));
+    }
+  }
+
   public static Pose2d getClosestRightReef(Pose2d pose) {
     int closestReef = findClosestReefIndex(pose);
     if (closestReef % 2 == 0) {
@@ -488,6 +512,21 @@ public class EagleUtil {
     } else {
       calculateBlueReefSetPoints();
       return bluePoses[closestReef];
+    }
+  }
+
+  public static Pose2d getClosestRightReefBack(Pose2d pose) {
+    int closestReef = findClosestReefIndex(pose);
+    if (closestReef % 2 == 0) {
+      closestReef += 1;
+    }
+
+    if (isRedAlliance()) {
+      calculateRedReefSetPoints();
+      return redPoses[closestReef].rotateBy(new Rotation2d(Math.PI));
+    } else {
+      calculateBlueReefSetPoints();
+      return bluePoses[closestReef].rotateBy(new Rotation2d(Math.PI));
     }
   }
 
