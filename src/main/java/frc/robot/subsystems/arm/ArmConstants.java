@@ -9,7 +9,7 @@ public class ArmConstants {
   public static final double ARM_GEAR_RATIO = 68.0 / 12 * 84 / 20 * 48 / 18; // 64
 
   // Position constants: in degrees
-  public static final double L1_PREP_POSITION = -80;
+  public static final double L1_PREP_POSITION = -75;
   public static final double L2_PREP_POSITION = 135;
   public static final double L3_PREP_POSITION = 124.565;
   public static final double L4_PREP_POSITION = 120;
