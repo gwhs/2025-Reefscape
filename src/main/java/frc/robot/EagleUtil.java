@@ -503,4 +503,16 @@ public class EagleUtil {
   public static Pose2d getClosestCoralStation(Pose2d pose) {
     return pose.nearest(coralStationPoints);
   }
+
+  public static double getRotationCenterReef(Pose2d pose) {
+    Pose2d reef;
+
+    if (isRedAlliance()) {
+      reef = RED_REEF;
+    } else {
+      reef = BLUE_REEF;
+    }
+
+    return reef.getTranslation().minus(pose.getTranslation()).getAngle().getDegrees();
+  }
 }
