@@ -47,15 +47,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
   }
 
-  public enum ElevatorState{
-    GOAL_HEIGHT,
-    IDLE
-  }
-
-  public static ElevatorState elevatorState = ElevatorState.IDLE;
-
-  public static final Trigger GOAL_HEIGHT = new Trigger(() -> elevatorState == ElevatorState.GOAL_HEIGHT);
-  public static final Trigger IDLE = new Trigger(() -> elevatorState == ElevatorState.IDLE);
+  public Trigger AT_GOAL_HEIGHT = new Trigger(() -> MathUtil.isNear(0, elevatorIO.getRotation() - elevatorIO.getPIDGoalRotation(), 0.01));
 
   @Override
   public void periodic() {
