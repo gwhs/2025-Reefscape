@@ -535,7 +535,6 @@ public class EagleUtil {
     if (isRedAlliance()) {
       calculateRedReefSetPoints();
       targetPose = redPoses[closestReef];
-      return targetPose;
     } else {
       calculateBlueReefSetPoints();
       targetPose = bluePoses[closestReef];
