@@ -466,19 +466,13 @@ public class RobotContainer {
         .and(m_driverController.a())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
 
-    IS_L3
+    IS_L4
+        .or(IS_L3)
         .and(m_driverController.a())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
 
     IS_L4
-        .and(m_driverController.a())
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
-
-    IS_L4
-        .and(m_driverController.b())
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
-
-    IS_L3
+        .or(IS_L3)
         .and(m_driverController.b())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
 
