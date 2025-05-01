@@ -297,10 +297,8 @@ public class EagleUtil {
     Pose2d targetPose;
     if (DriverStation.getAlliance().isPresent()
         && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-      calculateBlueAlgaeSetPoints();
       targetPose = pose.nearest(FieldConstants.blueAlgaeSetpointList);
     } else {
-      calculateRedAlgaeSetPoints();
       targetPose = pose.nearest(FieldConstants.redAlgaeSetpointList);
     }
     Rotation2d targetRotation = new Rotation2d(targetPose.getRotation().getRadians() + Math.PI);
