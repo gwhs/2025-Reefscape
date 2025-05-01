@@ -458,37 +458,37 @@ public class RobotContainer {
                     })
                 .withName("Slow and Robot Centric"));
 
-    IS_L1.and(m_driverController.a())
-        .whileTrue(
-            alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
+    IS_L1
+        .and(m_driverController.a())
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
 
-    IS_L2.and(m_driverController.a())
-        .whileTrue(
-            alignToPose(() -> EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
+    IS_L2
+        .and(m_driverController.a())
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
 
-    IS_L3.and(m_driverController.a())
-        .whileTrue(
-            alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
+    IS_L3
+        .and(m_driverController.a())
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
 
-    IS_L4.and(m_driverController.a())
-        .whileTrue(
-            alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
+    IS_L4
+        .and(m_driverController.a())
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
 
-    IS_L4.and(m_driverController.b())
-        .whileTrue(
-            alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
+    IS_L4
+        .and(m_driverController.b())
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
 
-    IS_L3.and(m_driverController.b())
-        .whileTrue(
-            alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
+    IS_L3
+        .and(m_driverController.b())
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
 
-    IS_L2.and(m_driverController.b())
-        .whileTrue(
-            alignToPose(() -> EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
+    IS_L2
+        .and(m_driverController.b())
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
 
-    IS_L1.and(m_driverController.b())
-        .whileTrue(
-            alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
+    IS_L1
+        .and(m_driverController.b())
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
 
     m_operatorController.start().onTrue(elevator.homingCommand());
 
