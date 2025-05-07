@@ -133,9 +133,11 @@ public class RobotContainer {
 
   private final Trigger IS_CLOSE_TO_REEF;
 
-  private AprilTagCam leftCam;
+  private AprilTagCam frontLeftCam;
 
-  private AprilTagCam rightCam;
+  private AprilTagCam frontRightCam;
+
+  private AprilTagCam backRightCam;
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm, groundIntake);
 
@@ -148,7 +150,7 @@ public class RobotContainer {
     switch (getRobot()) {
       case COMP:
         drivetrain = TunerConstants_Comp.createDrivetrain();
-        leftCam =
+        frontLeftCam =
             new AprilTagCam(
                 AprilTagCamConstants.FRONT_LEFT_CAMERA_COMP_NAME,
                 AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
@@ -156,17 +158,25 @@ public class RobotContainer {
                 () -> drivetrain.getPose(),
                 () -> drivetrain.getState().Speeds);
 
-        rightCam =
+        frontRightCam =
             new AprilTagCam(
                 AprilTagCamConstants.FRONT_RIGHT_CAMERA_COMP_NAME,
                 AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
                 drivetrain::addVisionMeasurent,
                 () -> drivetrain.getPose(),
                 () -> drivetrain.getState().Speeds);
+
+        backRightCam =
+            new AprilTagCam(
+                AprilTagCamConstants.BACK_RIGHT_CAMERA_COMP_NAME,
+                AprilTagCamConstants.BACK_RIGHT_CAMERA_LOCATION_COMP,
+                drivetrain::addVisionMeasurent,
+                () -> drivetrain.getPose(),
+                () -> drivetrain.getState().Speeds);
         break;
       case DEV:
         drivetrain = TunerConstants_practiceDrivetrain.createDrivetrain();
-        leftCam =
+        frontLeftCam =
             new AprilTagCam(
                 AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
                 AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_DEV,
@@ -174,7 +184,7 @@ public class RobotContainer {
                 () -> drivetrain.getPose(),
                 () -> drivetrain.getState().Speeds);
 
-        rightCam =
+        frontRightCam =
             new AprilTagCam(
                 AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
                 AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_DEV,
@@ -530,18 +540,21 @@ public class RobotContainer {
 
     startTime = HALUtil.getFPGATime();
 
-    if (leftCam != null) {
-      leftCam.updatePoseEstim();
+    if (frontLeftCam != null) {
+      frontLeftCam.updatePoseEstim();
       // 3
       DogLog.log("Loop Time/Robot Container/Cam3", (HALUtil.getFPGATime() - startTime) / 1000);
 
       startTime = HALUtil.getFPGATime();
     }
-    if (rightCam != null) {
-      rightCam.updatePoseEstim();
+    if (frontRightCam != null) {
+      frontRightCam.updatePoseEstim();
+      // 4
+      DogLog.log("Loop Time/Robot Container/Cam4", (HALUtil.getFPGATime() - startTime) / 1000);
     }
-    // 4
-    DogLog.log("Loop Time/Robot Container/Cam4", (HALUtil.getFPGATime() - startTime) / 1000);
+    if (backRightCam != null) {
+      backRightCam.updatePoseEstim();
+    }
 
     startTime = HALUtil.getFPGATime();
 
