@@ -413,7 +413,7 @@ public class RobotContainer {
     //             .withName("Algae Normal"));
 
     IS_L1
-   //     .or(IS_L2)
+        .or(IS_L2)
         .and(IS_REEF_MODE)
         .onTrue(
             Commands.runOnce(
