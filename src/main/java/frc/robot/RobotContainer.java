@@ -413,7 +413,7 @@ public class RobotContainer {
     //             .withName("Algae Normal"));
 
     IS_L1
-        .or(IS_L2)
+   //     .or(IS_L2)
         .and(IS_REEF_MODE)
         .onTrue(
             Commands.runOnce(
@@ -481,7 +481,6 @@ public class RobotContainer {
         .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
 
     IS_L1
-    
         .and(m_driverController.b())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
 
