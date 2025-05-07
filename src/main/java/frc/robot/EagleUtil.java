@@ -293,6 +293,19 @@ public class EagleUtil {
     }
   }
 
+  public static Pose2d getClosestL1Back(Pose2d pose) {
+    Pose2d targetPose;
+    if (DriverStation.getAlliance().isPresent()
+        && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      targetPose = pose.nearest(FieldConstants.blueAlgaeSetpointList);
+    } else {
+      targetPose = pose.nearest(FieldConstants.redAlgaeSetpointList);
+    }
+    Rotation2d targetRotation = new Rotation2d(targetPose.getRotation().getRadians() + Math.PI);
+    targetPose = new Pose2d(targetPose.getX(), targetPose.getY(), targetRotation);
+    return targetPose;
+  }
+
   /**
    * @param pose the pose to compare to
    * @return cached Pose2d
@@ -476,6 +489,25 @@ public class EagleUtil {
     }
   }
 
+  public static Pose2d getClosestLeftReefBack(Pose2d pose) {
+    int closestReef = findClosestReefIndex(pose);
+    if (closestReef % 2 > 0) {
+      closestReef -= 1;
+    }
+
+    Pose2d targetPose;
+    if (isRedAlliance()) {
+      calculateRedReefSetPoints();
+      targetPose = redPoses[closestReef];
+    } else {
+      calculateBlueReefSetPoints();
+      targetPose = bluePoses[closestReef];
+    }
+    Rotation2d targetRotation = new Rotation2d(targetPose.getRotation().getRadians() + Math.PI);
+    targetPose = new Pose2d(targetPose.getX(), targetPose.getY(), targetRotation);
+    return targetPose;
+  }
+
   public static Pose2d getClosestRightReef(Pose2d pose) {
     int closestReef = findClosestReefIndex(pose);
     if (closestReef % 2 == 0) {
@@ -489,6 +521,25 @@ public class EagleUtil {
       calculateBlueReefSetPoints();
       return bluePoses[closestReef];
     }
+  }
+
+  public static Pose2d getClosestRightReefBack(Pose2d pose) {
+    int closestReef = findClosestReefIndex(pose);
+    if (closestReef % 2 == 0) {
+      closestReef += 1;
+    }
+
+    Pose2d targetPose;
+    if (isRedAlliance()) {
+      calculateRedReefSetPoints();
+      targetPose = redPoses[closestReef];
+    } else {
+      calculateBlueReefSetPoints();
+      targetPose = bluePoses[closestReef];
+    }
+    Rotation2d targetRotation = new Rotation2d(targetPose.getRotation().getRadians() + Math.PI);
+    targetPose = new Pose2d(targetPose.getX(), targetPose.getY(), targetRotation);
+    return targetPose;
   }
 
   private static List<Pose2d> coralStationPoints =
