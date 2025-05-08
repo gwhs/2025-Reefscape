@@ -76,9 +76,38 @@
         }
       ],
       "position": [
-        
-      ]
-
+        -0.140081,
+        -0.2954274,
+        0.2088388
+      ],
+      "resolution": [
+        1280,
+        800
+      ],
+      "fov": 75
+    },
+    {
+      "name": "Elevator Camera",
+      "rotations": [
+        {
+          "axis": "x",
+          "degrees": 2
+        },
+        {
+          "axis": "y",
+          "degrees": 150
+        }
+      ],
+      "position": [
+        -0.1194308,
+        0.1560068,
+        0.8362188
+      ],
+      "resolution": [
+        1280,
+        800
+      ],
+      "fov": 75
     }
   ],
   "components": []
