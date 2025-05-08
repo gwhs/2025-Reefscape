@@ -139,6 +139,8 @@ public class RobotContainer {
 
   private AprilTagCam backRightCam;
 
+  private AprilTagCam elevatorCam;
+
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm, groundIntake);
 
   private final BiConsumer<Runnable, Double> addPeriodic;
@@ -173,6 +175,15 @@ public class RobotContainer {
                 drivetrain::addVisionMeasurent,
                 () -> drivetrain.getPose(),
                 () -> drivetrain.getState().Speeds);
+
+        elevatorCam =
+            new AprilTagCam(
+                AprilTagCamConstants.ELEVATOR_CAMERA_COMP_NAME,
+                AprilTagCamConstants.ELEVATOR_CAMERA_LOCATION_COMP,
+                drivetrain::addVisionMeasurent,
+                () -> drivetrain.getPose(),
+                () -> drivetrain.getState().Speeds);
+
         break;
       case DEV:
         drivetrain = TunerConstants_practiceDrivetrain.createDrivetrain();
@@ -554,6 +565,9 @@ public class RobotContainer {
     }
     if (backRightCam != null) {
       backRightCam.updatePoseEstim();
+    }
+    if (elevatorCam != null) {
+      elevatorCam.updatePoseEstim();
     }
 
     startTime = HALUtil.getFPGATime();

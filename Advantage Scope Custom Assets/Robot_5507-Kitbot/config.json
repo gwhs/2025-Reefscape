@@ -18,7 +18,7 @@
   ],
   "cameras": [
     {
-      "name": "Left Camera",
+      "name": "Front Left Camera",
       "rotations": [
         {
           "axis": "z",
@@ -41,7 +41,7 @@
       "fov": 75
     },
     {
-      "name": "Right Camera",
+      "name": "Front Right Camera",
       "rotations": [
         {
           "axis": "z",
@@ -62,6 +62,23 @@
         800
       ],
       "fov": 75
+    },
+    {
+      "name": "Back Right Camera",
+      "rotations": [
+        {
+          "axis": "z",
+          "degrees": 162
+        },
+        {
+          "axis": "y",
+          "degrees": -20
+        }
+      ],
+      "position": [
+        
+      ]
+
     }
   ],
   "components": []
