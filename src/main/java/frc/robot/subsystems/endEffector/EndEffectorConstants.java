@@ -11,6 +11,6 @@ public class EndEffectorConstants {
   public static final double INTAKE_CORAL_CURRENT = 30;
   public static final double VOLTAGE_L4 = 9;
   public static final double VOLTAGE_L3 = 5;
-  public static final double VOLTAGE_L2 = 5;
+  public static final double VOLTAGE_L2 = 6;
   public static final double VOLTAGE_L1 = 3.5;
 }
