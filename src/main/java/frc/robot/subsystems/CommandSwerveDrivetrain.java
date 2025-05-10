@@ -19,11 +19,13 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -39,6 +41,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.generated.TunerSwerveDrivetrain;
 import frc.robot.subsystems.aprilTagCam.AprilTagHelp;
+import java.util.ArrayList;
 import java.util.function.Supplier;
 
 /**
@@ -50,6 +53,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   private final TalonFX[] steerMotors = new TalonFX[4];
   private final CANcoder[] encoders = new CANcoder[4];
   private final Pigeon2 gyro;
+
+  private ArrayList<SwerveDrivePoseEstimator> poseEstimators = new ArrayList<>();
 
   public Trigger IS_ALIGNING_TO_POSE =
       new Trigger(
@@ -308,6 +313,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     DogLog.log("Swerve/Back Right CANcoder Connected", encoders[3].isConnected());
 
     DogLog.log("Swerve/Pigeon Connected", gyro.isConnected());
+
+    Rotation2d currRotation = getPigeon2().getRotation2d();
+    SwerveModulePosition[] currModulePositions =
+        new SwerveModulePosition[] {
+          getModule(0).getCachedPosition(),
+          getModule(1).getCachedPosition(),
+          getModule(2).getCachedPosition(),
+          getModule(3).getCachedPosition()
+        };
+    // update all pose estimators
+    for (SwerveDrivePoseEstimator poseEstimator : poseEstimators) {
+      poseEstimator.update(currRotation, currModulePositions);
+    }
   }
 
   private void startSimThread() {
@@ -406,5 +424,23 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             () ->
                 this.setControl(
                     robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
+  }
+
+  public SwerveDrivePoseEstimator createPoseEstimator() {
+    SwerveDrivePoseEstimator poseEstimator =
+        new SwerveDrivePoseEstimator(
+            getKinematics(),
+            getPigeon2().getRotation2d(),
+            new SwerveModulePosition[] {
+              getModule(0).getCachedPosition(),
+              getModule(1).getCachedPosition(),
+              getModule(2).getCachedPosition(),
+              getModule(3).getCachedPosition()
+            },
+            getPose());
+
+    poseEstimators.add(poseEstimator);
+
+    return poseEstimator;
   }
 }

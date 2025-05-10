@@ -37,7 +37,7 @@ public class AprilTagCam {
   AprilTagFieldLayout aprilTagFieldLayout;
 
   private final PhotonCamera cam;
-  private final Consumer<AprilTagHelp> addVisionMeasurement;
+  private final Consumer<AprilTagHelp>[] addVisionMeasurement;
   private final PhotonPoseEstimator photonEstimator;
   private final Transform3d robotToCam;
   private final Supplier<Pose2d> currRobotPose;
@@ -51,12 +51,13 @@ public class AprilTagCam {
   Optional<EstimatedRobotPose> optionalEstimPose;
   private AprilTagHelp helper = new AprilTagHelp(null, 0, null);
 
+  @SuppressWarnings("unchecked")
   public AprilTagCam(
       String str,
       Transform3d robotToCam,
-      Consumer<AprilTagHelp> addVisionMeasurement,
       Supplier<Pose2d> currRobotPose,
-      Supplier<ChassisSpeeds> currRobotSpeed) {
+      Supplier<ChassisSpeeds> currRobotSpeed,
+      Consumer<AprilTagHelp>... addVisionMeasurement) {
 
     PortForwarder.add(5800, "photonvision.local", 5800);
     try {
@@ -135,7 +136,9 @@ public class AprilTagCam {
       DogLog.log(ntKey + "Accepted Time Stamp/", timestamp);
       DogLog.log(ntKey + "Accepted Stdev/", getSDArray(sd));
 
-      addVisionMeasurement.accept(helper);
+      for (var consumer : addVisionMeasurement) {
+        consumer.accept(helper);
+      }
     }
 
     DogLog.log(ntKey + "April Tag Cam Connected/", isConnected);
