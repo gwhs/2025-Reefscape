@@ -470,6 +470,13 @@ public class RobotContainer {
                     })
                 .withName("Slow and Robot Centric"));
 
+    drivetrain
+        .IS_AT_TARGET_POSE
+        .and(m_driverController.rightTrigger())
+        .and(elevator.AT_GOAL_HEIGHT)
+        .and(arm.AT_GOAL_ANGLE)
+        .onTrue(scoreCoral());
+
     IS_L1
         .and(m_driverController.a())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
@@ -482,13 +489,6 @@ public class RobotContainer {
         .or(IS_L3)
         .and(m_driverController.a())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
-
-    drivetrain
-        .IS_AT_TARGET_POSE
-        .and(m_driverController.rightTrigger())
-        .and(elevator.AT_GOAL_HEIGHT)
-        .and(arm.AT_GOAL_ANGLE)
-        .onTrue(scoreCoral());
 
     IS_L4
         .or(IS_L3)
