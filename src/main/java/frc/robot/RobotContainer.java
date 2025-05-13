@@ -472,7 +472,7 @@ public class RobotContainer {
 
     drivetrain
         .IS_AT_TARGET_POSE
-        .and(m_driverController.rightTrigger())
+        .and(IS_PREPSCORE)
         .and(elevator.AT_GOAL_HEIGHT)
         .and(arm.AT_GOAL_ANGLE)
         .onTrue(scoreCoral());
