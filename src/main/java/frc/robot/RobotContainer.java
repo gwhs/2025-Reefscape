@@ -62,13 +62,15 @@ public class RobotContainer {
 
   public enum RobotState {
     IDLE,
-    INTAKE
+    INTAKE,
+    PREPSCORE
   }
 
   public static RobotState robotState = RobotState.IDLE;
 
   public static final Trigger IS_IDLE = new Trigger(() -> robotState == RobotState.IDLE);
   public static final Trigger IS_INTAKE = new Trigger(() -> robotState == RobotState.INTAKE);
+  public static final Trigger IS_PREPSCORE = new Trigger(() -> robotState == RobotState.PREPSCORE);
 
   public static Robot getRobot() {
     if (RobotController.getSerialNumber().equals("032414F0")) {
@@ -693,7 +695,8 @@ public class RobotContainer {
     return Commands.parallel(
             endEffector.holdCoral(),
             elevator.setHeight(elevatorHeight).withTimeout(1.5),
-            arm.setAngle(armAngle).withTimeout(1.5))
+            arm.setAngle(armAngle).withTimeout(1.5),
+            Commands.runOnce(() -> robotState = RobotState.PREPSCORE))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
@@ -702,7 +705,8 @@ public class RobotContainer {
     return Commands.parallel(
             endEffector.holdCoral(),
             elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
-            arm.setAngleSupplier(armAngle).withTimeout(.5))
+            arm.setAngleSupplier(armAngle).withTimeout(.5),
+            Commands.runOnce(() -> robotState = RobotState.PREPSCORE))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
@@ -764,7 +768,8 @@ public class RobotContainer {
 
     return Commands.sequence(
         Commands.either(deAlgae, scoreCoral, m_driverController.leftTrigger())
-            .withName("Score Coral/deAlgae"));
+            .withName("Score Coral/deAlgae"), 
+            Commands.runOnce(() -> robotState = RobotState.IDLE));
   }
 
   // DeAlgae Commands

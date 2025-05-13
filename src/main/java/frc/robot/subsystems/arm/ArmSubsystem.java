@@ -20,7 +20,7 @@ public class ArmSubsystem extends SubsystemBase {
   private ArmIO armIO;
 
   public Trigger AT_GOAL_ANGLE =
-      new Trigger(() -> MathUtil.isNear(0, armIO.getPosition() - armIO.getPIDGoalDegrees(), 5));
+      new Trigger(() -> MathUtil.isNear(0, armIO.getPosition() - armIO.getPIDGoalDegrees(), 3));
 
   private final SysIdRoutine m_sysIdRoutine =
       new SysIdRoutine(
