@@ -8,6 +8,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -17,9 +18,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.Filesystem;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,11 +31,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** Add your docs here. */
 public class AprilTagCam {
-
-  AprilTagFieldLayout aprilTagFieldLayout;
-
   private final PhotonCamera cam;
-  private final Consumer<AprilTagHelp>[] addVisionMeasurement;
+  private final Consumer<AprilTagHelp> addVisionMeasurement;
   private final PhotonPoseEstimator photonEstimator;
   private final Transform3d robotToCam;
   private final Supplier<Pose2d> currRobotPose;
@@ -46,28 +41,22 @@ public class AprilTagCam {
   private final String ntKey;
   private boolean isConnected;
 
+  private final ArrayList<SwerveDrivePoseEstimator> poseEstimators = new ArrayList<>();
+  private final ArrayList<PhotonPoseEstimator> photonPoseEstimators = new ArrayList<>();
+
   private final Alert visionNotConnected;
 
   Optional<EstimatedRobotPose> optionalEstimPose;
   private AprilTagHelp helper = new AprilTagHelp(null, 0, null);
 
-  @SuppressWarnings("unchecked")
   public AprilTagCam(
       String str,
       Transform3d robotToCam,
       Supplier<Pose2d> currRobotPose,
       Supplier<ChassisSpeeds> currRobotSpeed,
-      Consumer<AprilTagHelp>... addVisionMeasurement) {
+      Consumer<AprilTagHelp> addVisionMeasurement) {
 
     PortForwarder.add(5800, "photonvision.local", 5800);
-    try {
-      aprilTagFieldLayout =
-          new AprilTagFieldLayout(
-              Path.of(Filesystem.getDeployDirectory().getPath(), "welded/2025-reef.json"));
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
 
     cam = new PhotonCamera(str);
     this.addVisionMeasurement = addVisionMeasurement;
@@ -79,7 +68,7 @@ public class AprilTagCam {
 
     photonEstimator =
         new PhotonPoseEstimator(
-            aprilTagFieldLayout,
+            AprilTagCamConstants.getAllAprilTags(),
             PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
             robotToCam);
 
@@ -115,7 +104,7 @@ public class AprilTagCam {
     }
 
     for (PhotonPipelineResult targetPose : results) {
-      optionalEstimPose = photonEstimator.update(targetPose);
+      photonEstimator.update(targetPose);
 
       if (optionalEstimPose.isEmpty()) {
         continue;
@@ -136,8 +125,30 @@ public class AprilTagCam {
       DogLog.log(ntKey + "Accepted Time Stamp/", timestamp);
       DogLog.log(ntKey + "Accepted Stdev/", getSDArray(sd));
 
-      for (var consumer : addVisionMeasurement) {
-        consumer.accept(helper);
+      addVisionMeasurement.accept(null);
+
+      for (int i = 0; i < poseEstimators.size(); i++) {
+        optionalEstimPose = photonPoseEstimators.get(i).update(targetPose);
+
+        if (optionalEstimPose.isEmpty()) {
+          continue;
+        }
+
+        estimPose3d = optionalEstimPose.get().estimatedPose;
+
+        if (!filterResults(estimPose3d, optionalEstimPose.get(), currRobotSpeed.get())) {
+          continue;
+        }
+
+        pos = estimPose3d.toPose2d(); // yay :0 im so happy
+        timestamp = Utils.fpgaToCurrentTime(targetPose.getTimestampSeconds());
+        sd = findSD(optionalEstimPose, optionalEstimPose.get().targetsUsed);
+
+        DogLog.log(ntKey + "Accepted Pose/", pos);
+        DogLog.log(ntKey + "Accepted Time Stamp/", timestamp);
+        DogLog.log(ntKey + "Accepted Stdev/", getSDArray(sd));
+
+        poseEstimators.get(i).addVisionMeasurement(robotPose, timestamp, sd);
       }
     }
 
@@ -202,7 +213,7 @@ public class AprilTagCam {
     double numOfTags = 0;
     ArrayList<Pose3d> tagList = new ArrayList<Pose3d>();
     for (PhotonTrackedTarget target : optionalEstimPose.targetsUsed) {
-      Optional<Pose3d> tagPoseOptional = aprilTagFieldLayout.getTagPose(target.getFiducialId());
+      Optional<Pose3d> tagPoseOptional = AprilTagCamConstants.getAllAprilTags().getTagPose(target.getFiducialId());
       if (tagPoseOptional.isEmpty()) {
         continue;
       }
@@ -264,7 +275,7 @@ public class AprilTagCam {
 
       // Precalculation - see how many tags we found, and calculate an average-distance metric
       for (var tgt : targets) {
-        var tagPose = photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
+        var tagPose = AprilTagCamConstants.getAllAprilTags().getTagPose(tgt.getFiducialId());
         if (tagPose.isEmpty()) continue;
         numTags++;
         avgDist +=
@@ -290,5 +301,13 @@ public class AprilTagCam {
         return estStdDevs;
       }
     }
+  }
+
+  public void registerPoseEstimator(
+      SwerveDrivePoseEstimator poseEstimator,
+      PhotonPoseEstimator.PoseStrategy strategy,
+      AprilTagFieldLayout tags) {
+    poseEstimators.add(poseEstimator);
+    photonPoseEstimators.add(new PhotonPoseEstimator(tags, strategy, robotToCam));
   }
 }

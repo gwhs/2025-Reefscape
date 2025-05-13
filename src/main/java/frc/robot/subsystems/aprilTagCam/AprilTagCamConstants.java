@@ -1,5 +1,9 @@
 package frc.robot.subsystems.aprilTagCam;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -7,6 +11,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Filesystem;
 
 public class AprilTagCamConstants {
   public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1, 1, 8);
@@ -67,4 +72,39 @@ public class AprilTagCamConstants {
   public static final double MULTI_APRILTAG_MAX_DISTANCE = 4.3;
   public static final double MAX_VELOCITY = 4;
   public static final double MAX_ROTATION = Math.PI;
+
+  private static AprilTagFieldLayout reefAprilTags;
+  private static AprilTagFieldLayout allAprilTags;
+
+  public static AprilTagFieldLayout getReefAprilTags() {
+    if (reefAprilTags != null) {
+      return reefAprilTags;
+    }
+
+    try {
+        reefAprilTags =
+          new AprilTagFieldLayout(
+              Path.of(Filesystem.getDeployDirectory().getPath(), "welded/2025-reef.json"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return reefAprilTags;
+  }
+
+  public static AprilTagFieldLayout getAllAprilTags() {
+    if (allAprilTags != null) {
+      return allAprilTags;
+    }
+
+    try {
+        allAprilTags =
+          new AprilTagFieldLayout(
+              Path.of(Filesystem.getDeployDirectory().getPath(), "welded/2025-officail.json"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return allAprilTags;
+  }
 }

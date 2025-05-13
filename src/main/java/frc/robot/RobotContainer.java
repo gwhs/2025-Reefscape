@@ -48,6 +48,8 @@ import java.util.function.BiConsumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import org.photonvision.PhotonPoseEstimator;
+
 public class RobotContainer {
 
   private static Alert roborioError =
@@ -99,7 +101,8 @@ public class RobotContainer {
   private final ClimbSubsystem climb = new ClimbSubsystem();
   private final DriveCommand driveCommand;
 
-  private final SwerveDrivePoseEstimator test;
+  private final SwerveDrivePoseEstimator odometryOnlyPoseEstimator;
+  private final SwerveDrivePoseEstimator reefOnlyPoseEstimator;
 
   public enum CoralLevel {
     L1(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION),
@@ -146,7 +149,6 @@ public class RobotContainer {
 
   private final BiConsumer<Runnable, Double> addPeriodic;
 
-  @SuppressWarnings("unchecked")
   public RobotContainer(BiConsumer<Runnable, Double> addPeriodic) {
 
     this.addPeriodic = addPeriodic;
@@ -204,7 +206,21 @@ public class RobotContainer {
         break;
     }
 
-    test = drivetrain.createPoseEstimator();
+    odometryOnlyPoseEstimator = drivetrain.createPoseEstimator();
+    reefOnlyPoseEstimator = drivetrain.createPoseEstimator();
+
+    if(frontLeftCam != null) {
+      frontLeftCam.registerPoseEstimator(reefOnlyPoseEstimator, PhotonPoseEstimator.PoseStrategy.AVERAGE_BEST_TARGETS, AprilTagCamConstants.getReefAprilTags());
+    }
+
+    if(frontRightCam != null) {
+
+    }
+
+    if(backRightCam != null) {
+
+    }
+
 
     driveCommand =
         new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
@@ -583,7 +599,8 @@ public class RobotContainer {
 
     DogLog.log("Match Timer", DriverStation.getMatchTime());
 
-    DogLog.log("Test Pose", test.getEstimatedPosition());
+    DogLog.log("Pose Estimator/odometry only", odometryOnlyPoseEstimator.getEstimatedPosition());
+    DogLog.log("Pose Estimator/reef only", odometryOnlyPoseEstimator.getEstimatedPosition());
   }
 
   /**
