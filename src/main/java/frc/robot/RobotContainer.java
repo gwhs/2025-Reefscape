@@ -584,6 +584,9 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Near Coarl Station", IS_NEAR_CORAL_STATION.getAsBoolean());
     DogLog.log("Trigger/Is Coral Loaded", IS_CORAL_LOADED.getAsBoolean());
 
+    DogLog.log("Trigger/Elevator At Goal Height", elevator.AT_GOAL_HEIGHT.getAsBoolean());
+    DogLog.log("Trigger/Arm At Goal Angle", arm.AT_GOAL_ANGLE.getAsBoolean());
+
     DogLog.log("Match Timer", DriverStation.getMatchTime());
   }
 
@@ -768,8 +771,8 @@ public class RobotContainer {
 
     return Commands.sequence(
         Commands.either(deAlgae, scoreCoral, m_driverController.leftTrigger())
-            .withName("Score Coral/deAlgae"), 
-            Commands.runOnce(() -> robotState = RobotState.IDLE));
+            .withName("Score Coral/deAlgae"),
+        Commands.runOnce(() -> robotState = RobotState.IDLE));
   }
 
   // DeAlgae Commands
