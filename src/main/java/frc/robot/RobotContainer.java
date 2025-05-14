@@ -474,30 +474,33 @@ public class RobotContainer {
         .IS_AT_TARGET_POSE
         .and(IS_PREPSCORE)
         .and(elevator.AT_GOAL_HEIGHT)
-        .and(arm.AT_GOAL_ANGLE).debounce(0.5)
+        .and(arm.AT_GOAL_ANGLE)
+        .debounce(0.5)
         .onTrue(scoreCoral());
 
     IS_L1
         .and(m_driverController.a())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
 
-    IS_L2
-        .and(m_driverController.a())
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
+    // IS_L2
+    //     .and(m_driverController.a())
+    //     .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
 
     IS_L4
         .or(IS_L3)
+        .or(IS_L2)
         .and(m_driverController.a())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
 
     IS_L4
         .or(IS_L3)
+        .or(IS_L2)
         .and(m_driverController.b())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
 
-    IS_L2
-        .and(m_driverController.b())
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
+    // IS_L2
+    //     .and(m_driverController.b())
+    //     .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
 
     IS_L1
         .and(m_driverController.b())
