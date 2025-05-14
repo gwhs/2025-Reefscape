@@ -779,7 +779,7 @@ public class RobotContainer {
         Commands.either(deAlgae, scoreCoral, m_driverController.leftTrigger())
             .withName("Score Coral/deAlgae"),
         Commands.runOnce(() -> robotState = RobotState.IDLE)
-        .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
   }
 
   // DeAlgae Commands
