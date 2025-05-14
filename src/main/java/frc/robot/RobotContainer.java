@@ -484,7 +484,8 @@ public class RobotContainer {
 
     // IS_L2
     //     .and(m_driverController.a())
-    //     .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
+    //     .whileTrue(alignToPose(() ->
+    // EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
 
     IS_L4
         .or(IS_L3)
@@ -500,7 +501,8 @@ public class RobotContainer {
 
     // IS_L2
     //     .and(m_driverController.b())
-    //     .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
+    //     .whileTrue(alignToPose(() ->
+    // EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
 
     IS_L1
         .and(m_driverController.b())
@@ -776,7 +778,8 @@ public class RobotContainer {
     return Commands.sequence(
         Commands.either(deAlgae, scoreCoral, m_driverController.leftTrigger())
             .withName("Score Coral/deAlgae"),
-        Commands.runOnce(() -> robotState = RobotState.IDLE));
+        Commands.runOnce(() -> robotState = RobotState.IDLE)
+        .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
   }
 
   // DeAlgae Commands
