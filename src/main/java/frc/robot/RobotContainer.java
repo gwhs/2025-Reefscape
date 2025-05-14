@@ -474,7 +474,7 @@ public class RobotContainer {
         .IS_AT_TARGET_POSE
         .and(IS_PREPSCORE)
         .and(elevator.AT_GOAL_HEIGHT)
-        .and(arm.AT_GOAL_ANGLE)
+        .and(arm.AT_GOAL_ANGLE).debounce(0.5)
         .onTrue(scoreCoral());
 
     IS_L1
