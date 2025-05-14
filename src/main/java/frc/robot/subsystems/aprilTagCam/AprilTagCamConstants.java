@@ -66,7 +66,7 @@ public class AprilTagCamConstants {
           Units.inchesToMeters(6.142),
           Units.inchesToMeters(32.922),
           new Rotation3d(
-              Units.degreesToRadians(2), Units.degreesToRadians(130), Units.degreesToRadians(0)));
+              Units.degreesToRadians(2), Units.degreesToRadians(50), Units.degreesToRadians(180)));
 
   public static final double Z_TOLERANCE = 2.00;
   public static final double XY_TOLERANCE = 2.00;
