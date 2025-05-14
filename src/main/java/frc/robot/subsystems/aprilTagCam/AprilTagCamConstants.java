@@ -16,7 +16,7 @@ public class AprilTagCamConstants {
   public static final String FRONT_RIGHT_CAMERA_COMP_NAME = "rightcam";
   public static final String BACK_LEFT_CAMERA_COMP_NAME = "leftcam";
   public static final String BACK_RIGHT_CAMERA_COMP_NAME = "back_right_cam";
-  public static final String ELEVATOR_CAMERA_COMP_NAME = "OV9782";
+  public static final String ELEVATOR_CAMERA_COMP_NAME = "Arducam_OV9782_USB_Camera";
   public static final String FRONT_LEFT_CAMERA_DEV_NAME = "cam3";
   public static final String FRONT_RIGHT_CAMERA_DEV_NAME = "cam4";
 
