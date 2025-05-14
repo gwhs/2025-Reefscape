@@ -24,7 +24,7 @@ public class ElevatorIOSim implements ElevatorIO {
   }
 
   public double getPIDGoalRotation() {
-    return this.pidController.getSetpoint().position;
+    return this.pidController.getGoal().position;
   }
 
   public void update() {

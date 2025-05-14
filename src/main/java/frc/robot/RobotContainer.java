@@ -586,6 +586,7 @@ public class RobotContainer {
 
     DogLog.log("Trigger/Elevator At Goal Height", elevator.AT_GOAL_HEIGHT.getAsBoolean());
     DogLog.log("Trigger/Arm At Goal Angle", arm.AT_GOAL_ANGLE.getAsBoolean());
+    DogLog.log("Trigger/Is Prepscore", IS_PREPSCORE.getAsBoolean());
 
     DogLog.log("Match Timer", DriverStation.getMatchTime());
   }

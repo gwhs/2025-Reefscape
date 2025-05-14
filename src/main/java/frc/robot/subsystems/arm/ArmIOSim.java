@@ -30,7 +30,7 @@ public class ArmIOSim implements ArmIO {
   }
 
   public double getPIDGoalDegrees() {
-    return this.pidController.getSetpoint().position;
+    return this.pidController.getGoal().position;
   }
 
   public double getPosition() {
