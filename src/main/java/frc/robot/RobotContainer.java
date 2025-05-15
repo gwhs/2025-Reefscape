@@ -493,27 +493,23 @@ public class RobotContainer {
         .and(m_driverController.a())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
 
-    // IS_L2
-    //     .and(m_driverController.a())
-    //     .whileTrue(alignToPose(() ->
-    // EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
+    IS_L2
+        .and(m_driverController.a())
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
 
     IS_L4
         .or(IS_L3)
-        .or(IS_L2)
         .and(m_driverController.a())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
 
     IS_L4
         .or(IS_L3)
-        .or(IS_L2)
         .and(m_driverController.b())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
 
-    // IS_L2
-    //     .and(m_driverController.b())
-    //     .whileTrue(alignToPose(() ->
-    // EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
+    IS_L2
+        .and(m_driverController.b())
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
 
     IS_L1
         .and(m_driverController.b())
@@ -758,7 +754,6 @@ public class RobotContainer {
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L1).onlyIf(IS_L1),
                 Commands.waitSeconds(0.05),
-                drivetrain.driveBackward(1).withTimeout(0.2).onlyIf(IS_L2),
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
                 endEffector.stopMotor())
