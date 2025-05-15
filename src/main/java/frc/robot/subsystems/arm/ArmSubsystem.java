@@ -12,11 +12,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import java.util.function.DoubleSupplier;
 
 public class ArmSubsystem extends SubsystemBase {
   private ArmIO armIO;
+
+  public Trigger AT_GOAL_ANGLE =
+      new Trigger(() -> MathUtil.isNear(0, armIO.getPosition() - armIO.getPIDGoalDegrees(), 3));
 
   private final SysIdRoutine m_sysIdRoutine =
       new SysIdRoutine(
