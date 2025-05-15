@@ -12,4 +12,6 @@ public interface ArmIO {
   public void setEmergencyMode(boolean emergency);
 
   public double getPositionError();
+
+  public double getPIDGoalDegrees();
 }
