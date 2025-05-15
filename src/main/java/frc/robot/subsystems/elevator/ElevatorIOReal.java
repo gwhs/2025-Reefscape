@@ -143,6 +143,10 @@ public class ElevatorIOReal implements ElevatorIO {
         backElevatorMotorStatorCurrent);
   }
 
+  public double getPIDGoalRotation() {
+    return frontElevatorMotorPIDGoal.getValueAsDouble();
+  }
+
   public void setRotation(double rotation) {
     differentialMechanism.setControl(m_request.withTargetPosition(rotation));
   }

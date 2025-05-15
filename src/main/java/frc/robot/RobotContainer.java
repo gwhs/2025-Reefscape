@@ -62,13 +62,15 @@ public class RobotContainer {
 
   public enum RobotState {
     IDLE,
-    INTAKE
+    INTAKE,
+    PREPSCORE
   }
 
   public static RobotState robotState = RobotState.IDLE;
 
   public static final Trigger IS_IDLE = new Trigger(() -> robotState == RobotState.IDLE);
   public static final Trigger IS_INTAKE = new Trigger(() -> robotState == RobotState.INTAKE);
+  public static final Trigger IS_PREPSCORE = new Trigger(() -> robotState == RobotState.PREPSCORE);
 
   public static Robot getRobot() {
     if (RobotController.getSerialNumber().equals("032414F0")) {
@@ -468,6 +470,14 @@ public class RobotContainer {
                     })
                 .withName("Slow and Robot Centric"));
 
+    drivetrain
+        .IS_AT_TARGET_POSE
+        .and(IS_PREPSCORE)
+        .and(elevator.AT_GOAL_HEIGHT)
+        .and(arm.AT_GOAL_ANGLE)
+        .debounce(0.5)
+        .onTrue(scoreCoral());
+
     IS_L1
         .and(m_driverController.a())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
@@ -578,6 +588,10 @@ public class RobotContainer {
     DogLog.log("Trigger/Algae High", ALGAE_HIGH.getAsBoolean());
     DogLog.log("Trigger/Is Near Coarl Station", IS_NEAR_CORAL_STATION.getAsBoolean());
     DogLog.log("Trigger/Is Coral Loaded", IS_CORAL_LOADED.getAsBoolean());
+
+    DogLog.log("Trigger/Elevator At Goal Height", elevator.AT_GOAL_HEIGHT.getAsBoolean());
+    DogLog.log("Trigger/Arm At Goal Angle", arm.AT_GOAL_ANGLE.getAsBoolean());
+    DogLog.log("Trigger/Is Prepscore", IS_PREPSCORE.getAsBoolean());
 
     DogLog.log("Match Timer", DriverStation.getMatchTime());
   }
@@ -690,7 +704,8 @@ public class RobotContainer {
     return Commands.parallel(
             endEffector.holdCoral(),
             elevator.setHeight(elevatorHeight).withTimeout(1.5),
-            arm.setAngle(armAngle).withTimeout(1.5))
+            arm.setAngle(armAngle).withTimeout(1.5),
+            Commands.runOnce(() -> robotState = RobotState.PREPSCORE))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
@@ -699,7 +714,8 @@ public class RobotContainer {
     return Commands.parallel(
             endEffector.holdCoral(),
             elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
-            arm.setAngleSupplier(armAngle).withTimeout(.5))
+            arm.setAngleSupplier(armAngle).withTimeout(.5),
+            Commands.runOnce(() -> robotState = RobotState.PREPSCORE))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
@@ -761,7 +777,9 @@ public class RobotContainer {
 
     return Commands.sequence(
         Commands.either(deAlgae, scoreCoral, m_driverController.leftTrigger())
-            .withName("Score Coral/deAlgae"));
+            .withName("Score Coral/deAlgae"),
+        Commands.runOnce(() -> robotState = RobotState.IDLE)
+            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
   }
 
   // DeAlgae Commands

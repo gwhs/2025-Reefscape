@@ -29,6 +29,10 @@ public class ArmIOSim implements ArmIO {
     pidController.setGoal(90);
   }
 
+  public double getPIDGoalDegrees() {
+    return this.pidController.getGoal().position;
+  }
+
   public double getPosition() {
     return Units.radiansToDegrees(armSim.getAngleRads());
   }

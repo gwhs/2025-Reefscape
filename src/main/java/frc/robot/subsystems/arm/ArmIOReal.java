@@ -133,6 +133,10 @@ public class ArmIOReal implements ArmIO {
     }
   }
 
+  public double getPIDGoalDegrees() {
+    return Units.rotationsToDegrees(armPIDGoal.getValueAsDouble());
+  }
+
   // set arm angle in degrees
   @Override
   public void setAngle(double angle) {

@@ -25,4 +25,6 @@ public interface ElevatorIO {
   public void setNeutralMode(NeutralModeValue mode);
 
   public void setEmergencyMode(boolean emergency);
+
+  public double getPIDGoalRotation();
 }

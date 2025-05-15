@@ -12,5 +12,5 @@ public class EndEffectorConstants {
   public static final double VOLTAGE_L4 = 9;
   public static final double VOLTAGE_L3 = 5;
   public static final double VOLTAGE_L2 = 5;
-  public static final double VOLTAGE_L1 = 3.5;
+  public static final double VOLTAGE_L1 = 2.85;
 }
