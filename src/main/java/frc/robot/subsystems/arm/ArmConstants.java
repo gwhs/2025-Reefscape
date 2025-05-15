@@ -10,7 +10,7 @@ public class ArmConstants {
 
   // Position constants: in degrees
   public static final double L1_PREP_POSITION = -75;
-  public static final double L2_PREP_POSITION = -83.320;
+  public static final double L2_PREP_POSITION = -80.320;
   public static final double L3_PREP_POSITION = 124.565;
   public static final double L4_PREP_POSITION = 120;
 
