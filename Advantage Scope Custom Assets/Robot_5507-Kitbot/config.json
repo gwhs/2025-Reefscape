@@ -18,7 +18,7 @@
   ],
   "cameras": [
     {
-      "name": "Left Camera",
+      "name": "Front Left Camera",
       "rotations": [
         {
           "axis": "z",
@@ -30,9 +30,9 @@
         }
       ],
       "position": [
-        0.140081,
-        0.2954274,
-        0.2088388
+        0.1371854,
+        0.3024632,
+        0.1786382
       ],
       "resolution": [
         1280,
@@ -41,7 +41,7 @@
       "fov": 75
     },
     {
-      "name": "Right Camera",
+      "name": "Front Right Camera",
       "rotations": [
         {
           "axis": "z",
@@ -53,9 +53,55 @@
         }
       ],
       "position": [
-        0.140081,
-        -0.2954274,
-        0.2088388
+        0.1371854,
+        -0.3024632,
+        0.1786382
+      ],
+      "resolution": [
+        1280,
+        800
+      ],
+      "fov": 75
+    },
+    {
+      "name": "Back Right Camera",
+      "rotations": [
+        {
+          "axis": "z",
+          "degrees": 162
+        },
+        {
+          "axis": "y",
+          "degrees": -20
+        }
+      ],
+      "position": [
+        -0.1371854,
+        -0.3024632,
+        0.1786382
+      ],
+      "resolution": [
+        1280,
+        800
+      ],
+      "fov": 75
+    },
+    {
+      "name": "Elevator Camera",
+      "rotations": [
+        {
+          "axis": "x",
+          "degrees": 2
+        },
+        {
+          "axis": "y",
+          "degrees": 150
+        }
+      ],
+      "position": [
+        -0.1194308,
+        0.1560068,
+        0.8362188
       ],
       "resolution": [
         1280,

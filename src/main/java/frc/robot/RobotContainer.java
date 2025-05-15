@@ -141,6 +141,8 @@ public class RobotContainer {
 
   private AprilTagCam backRightCam;
 
+  private AprilTagCam elevatorCam;
+
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm, groundIntake);
 
   private final BiConsumer<Runnable, Double> addPeriodic;
@@ -175,6 +177,15 @@ public class RobotContainer {
                 drivetrain::addVisionMeasurent,
                 () -> drivetrain.getPose(),
                 () -> drivetrain.getState().Speeds);
+
+        elevatorCam =
+            new AprilTagCam(
+                AprilTagCamConstants.ELEVATOR_CAMERA_COMP_NAME,
+                AprilTagCamConstants.ELEVATOR_CAMERA_LOCATION_COMP,
+                drivetrain::addVisionMeasurent,
+                () -> drivetrain.getPose(),
+                () -> drivetrain.getState().Speeds);
+
         break;
       case DEV:
         drivetrain = TunerConstants_practiceDrivetrain.createDrivetrain();
@@ -425,6 +436,7 @@ public class RobotContainer {
     //             .withName("Algae Normal"));
 
     IS_L1
+        .or(IS_L2)
         .and(IS_REEF_MODE)
         .onTrue(
             Commands.runOnce(
@@ -432,8 +444,7 @@ public class RobotContainer {
                   driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
                 }));
 
-    IS_L2
-        .or(IS_L3)
+    IS_L3
         .or(IS_L4)
         .and(IS_REEF_MODE)
         .onTrue(
@@ -568,6 +579,9 @@ public class RobotContainer {
     }
     if (backRightCam != null) {
       backRightCam.updatePoseEstim();
+    }
+    if (elevatorCam != null) {
+      elevatorCam.updatePoseEstim();
     }
 
     startTime = HALUtil.getFPGATime();
