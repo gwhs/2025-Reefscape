@@ -436,7 +436,6 @@ public class RobotContainer {
     //             .withName("Algae Normal"));
 
     IS_L1
-        .or(IS_L2)
         .and(IS_REEF_MODE)
         .onTrue(
             Commands.runOnce(
@@ -444,7 +443,8 @@ public class RobotContainer {
                   driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
                 }));
 
-    IS_L3
+    IS_L2
+        .or(IS_L3)
         .or(IS_L4)
         .and(IS_REEF_MODE)
         .onTrue(
