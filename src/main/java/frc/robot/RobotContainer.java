@@ -483,6 +483,7 @@ public class RobotContainer {
 
     drivetrain
         .IS_AT_TARGET_POSE
+        .and(drivetrain.IS_ALIGNING_TO_POSE)
         .and(IS_PREPSCORE)
         .and(elevator.AT_GOAL_HEIGHT)
         .and(arm.AT_GOAL_ANGLE)
