@@ -338,10 +338,10 @@ public class RobotContainer {
                 ElevatorConstants.INTAKE_METER_BACKUP, ArmConstants.ARM_INTAKE_ANGLE_BACKUP))
         .onFalse(stopIntake());
 
-    IS_TELEOP
-        .and(IS_CORAL_LOADED)
-        .and(IS_INTAKE.debounce(.5))
-        .onTrue(drivetrain.driveBackward(-4.5).withTimeout(.5));
+    // IS_TELEOP
+    //     .and(IS_CORAL_LOADED)
+    //     .and(IS_INTAKE.debounce(.5))
+    //     .onTrue(drivetrain.driveBackward(-4.5).withTimeout(.5));
 
     // IS_TELEOP
     //     .and(IS_REEFMODE)
@@ -486,6 +486,7 @@ public class RobotContainer {
         .and(IS_PREPSCORE)
         .and(elevator.AT_GOAL_HEIGHT)
         .and(arm.AT_GOAL_ANGLE)
+        .and(IS_TELEOP)
         .debounce(0.5)
         .onTrue(scoreCoral());
 
