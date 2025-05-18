@@ -178,13 +178,13 @@ public class RobotContainer {
                 () -> drivetrain.getPose(),
                 () -> drivetrain.getState().Speeds);
 
-        elevatorCam =
-            new AprilTagCam(
-                AprilTagCamConstants.ELEVATOR_CAMERA_COMP_NAME,
-                AprilTagCamConstants.ELEVATOR_CAMERA_LOCATION_COMP,
-                drivetrain::addVisionMeasurent,
-                () -> drivetrain.getPose(),
-                () -> drivetrain.getState().Speeds);
+        // elevatorCam =
+        //     new AprilTagCam(
+        //         AprilTagCamConstants.ELEVATOR_CAMERA_COMP_NAME,
+        //         AprilTagCamConstants.ELEVATOR_CAMERA_LOCATION_COMP,
+        //         drivetrain::addVisionMeasurent,
+        //         () -> drivetrain.getPose(),
+        //         () -> drivetrain.getState().Speeds);
 
         break;
       case DEV:
