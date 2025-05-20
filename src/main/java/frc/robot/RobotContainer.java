@@ -178,13 +178,13 @@ public class RobotContainer {
                 () -> drivetrain.getPose(),
                 () -> drivetrain.getState().Speeds);
 
-        elevatorCam =
-            new AprilTagCam(
-                AprilTagCamConstants.ELEVATOR_CAMERA_COMP_NAME,
-                AprilTagCamConstants.ELEVATOR_CAMERA_LOCATION_COMP,
-                drivetrain::addVisionMeasurent,
-                () -> drivetrain.getPose(),
-                () -> drivetrain.getState().Speeds);
+        // elevatorCam =
+        //     new AprilTagCam(
+        //         AprilTagCamConstants.ELEVATOR_CAMERA_COMP_NAME,
+        //         AprilTagCamConstants.ELEVATOR_CAMERA_LOCATION_COMP,
+        //         drivetrain::addVisionMeasurent,
+        //         () -> drivetrain.getPose(),
+        //         () -> drivetrain.getState().Speeds);
 
         break;
       case DEV:
@@ -338,10 +338,10 @@ public class RobotContainer {
                 ElevatorConstants.INTAKE_METER_BACKUP, ArmConstants.ARM_INTAKE_ANGLE_BACKUP))
         .onFalse(stopIntake());
 
-    IS_TELEOP
-        .and(IS_CORAL_LOADED)
-        .and(IS_INTAKE.debounce(.5))
-        .onTrue(drivetrain.driveBackward(-4.5).withTimeout(.5));
+    // IS_TELEOP
+    //     .and(IS_CORAL_LOADED)
+    //     .and(IS_INTAKE.debounce(.5))
+    //     .onTrue(drivetrain.driveBackward(-4.5).withTimeout(.5));
 
     // IS_TELEOP
     //     .and(IS_REEFMODE)
@@ -483,9 +483,11 @@ public class RobotContainer {
 
     drivetrain
         .IS_AT_TARGET_POSE
+        .and(drivetrain.IS_ALIGNING_TO_POSE)
         .and(IS_PREPSCORE)
         .and(elevator.AT_GOAL_HEIGHT)
         .and(arm.AT_GOAL_ANGLE)
+        .and(IS_TELEOP)
         .debounce(0.5)
         .onTrue(scoreCoral());
 
@@ -517,7 +519,7 @@ public class RobotContainer {
 
     IS_L1
         .and(m_driverController.b())
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
 
     m_operatorController.start().onTrue(elevator.homingCommand());
 
