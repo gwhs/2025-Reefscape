@@ -519,7 +519,7 @@ public class RobotContainer {
 
     IS_L1
         .and(m_driverController.b())
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
 
     m_operatorController.start().onTrue(elevator.homingCommand());
 
