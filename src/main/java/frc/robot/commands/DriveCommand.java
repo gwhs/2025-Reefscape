@@ -202,7 +202,7 @@ public class DriveCommand extends Command {
 
     double X = driverController.getLeftY();
     double Y = driverController.getLeftX();
-    if (isInverted) {
+    if (isInverted && driveMode == DriveMode.ROBOT_CENTRIC) {
       X *= -1;
       Y *= -1;
     }
