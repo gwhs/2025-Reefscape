@@ -488,7 +488,7 @@ public class RobotContainer {
         .and(elevator.AT_GOAL_HEIGHT)
         .and(arm.AT_GOAL_ANGLE)
         .and(IS_TELEOP)
-        .debounce(0.5)
+        .debounce(0.33)
         .onTrue(scoreCoral());
 
     IS_L1
@@ -528,10 +528,41 @@ public class RobotContainer {
         .whileTrue(
             alignToPose(() -> EagleUtil.getClosestCoralStation(this.getRobotPose()))); // TODO
 
-    m_operatorController.y().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L4));
-    m_operatorController.b().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L3));
-    m_operatorController.a().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L2));
-    m_operatorController.x().onTrue(Commands.runOnce(() -> coralLevel = CoralLevel.L1));
+    m_operatorController
+        .x()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  coralLevel = CoralLevel.L1;
+                  driveCommand.setInverted(true);
+                }));
+
+    m_operatorController
+        .a()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  coralLevel = CoralLevel.L2;
+                  driveCommand.setInverted(false);
+                }));
+
+    m_operatorController
+        .b()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  coralLevel = CoralLevel.L3;
+                  driveCommand.setInverted(false);
+                }));
+
+    m_operatorController
+        .y()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  coralLevel = CoralLevel.L4;
+                  driveCommand.setInverted(false);
+                }));
 
     // m_operatorController.y().whileTrue(arm.sysIdQuasistatic(Direction.kForward));
     // m_operatorController.b().whileTrue(arm.sysIdQuasistatic(Direction.kReverse));
