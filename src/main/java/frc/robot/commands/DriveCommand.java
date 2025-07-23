@@ -200,8 +200,8 @@ public class DriveCommand extends Command {
     Pose2d currentRobotPose = drivetrain.getState().Pose;
     double currentRotation = currentRobotPose.getRotation().getDegrees();
 
-    double X = driverController.getLeftY();
-    double Y = driverController.getLeftX();
+    double X = -driverController.getLeftY();
+    double Y = -driverController.getLeftX();
     if (isInverted && driveMode == DriveMode.ROBOT_CENTRIC) {
       X *= -1;
       Y *= -1;
