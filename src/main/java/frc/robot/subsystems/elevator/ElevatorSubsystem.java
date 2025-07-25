@@ -24,6 +24,8 @@ import java.util.function.DoubleSupplier;
 public class ElevatorSubsystem extends SubsystemBase {
   private ElevatorIO elevatorIO;
 
+  private double elevatorGoal;
+
   private final SysIdRoutine m_sysIdRoutine =
       new SysIdRoutine(
           new SysIdRoutine.Config(
@@ -48,7 +50,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   public Trigger AT_GOAL_HEIGHT =
       new Trigger(
           () ->
-              MathUtil.isNear(0, elevatorIO.getRotation() - elevatorIO.getPIDGoalRotation(), 0.9));
+              MathUtil.isNear(0, elevatorIO.getRotation() - metersToRotations(elevatorGoal), 0.9));
 
   @Override
   public void periodic() {
@@ -76,6 +78,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     return this.runOnce(
             () -> {
               elevatorIO.setRotation(metersToRotations(clampedMeters));
+              elevatorGoal = clampedMeters;
             })
         .andThen(
             Commands.waitUntil(
@@ -90,6 +93,7 @@ public class ElevatorSubsystem extends SubsystemBase {
               double clampedMeters =
                   MathUtil.clamp(meters.getAsDouble(), 0, ElevatorConstants.TOP_METER);
               elevatorIO.setRotation(metersToRotations(clampedMeters));
+              elevatorGoal = clampedMeters;
             })
         .andThen(
             Commands.waitUntil(

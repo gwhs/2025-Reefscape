@@ -18,9 +18,11 @@ import java.util.function.DoubleSupplier;
 
 public class ArmSubsystem extends SubsystemBase {
   private ArmIO armIO;
+  
+  private double armGoal;
 
   public Trigger AT_GOAL_ANGLE =
-      new Trigger(() -> MathUtil.isNear(0, armIO.getPosition() - armIO.getPIDGoalDegrees(), 3));
+      new Trigger(() -> MathUtil.isNear(0, armIO.getPosition() - armGoal, 3));
 
   private final SysIdRoutine m_sysIdRoutine =
       new SysIdRoutine(
@@ -53,6 +55,7 @@ public class ArmSubsystem extends SubsystemBase {
     return this.runOnce(
             () -> {
               armIO.setAngle(clampedAngle);
+              armGoal = clampedAngle;
             })
         .andThen(Commands.waitUntil(() -> MathUtil.isNear(clampedAngle, armIO.getPosition(), 1)));
   }
@@ -66,6 +69,7 @@ public class ArmSubsystem extends SubsystemBase {
                       ArmConstants.ARM_LOWER_BOUND,
                       ArmConstants.ARM_UPPER_BOUND);
               armIO.setAngle(clampedAngle);
+              armGoal = clampedAngle;
             })
         .andThen(
             Commands.waitUntil(
