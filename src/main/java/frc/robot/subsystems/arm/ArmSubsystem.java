@@ -18,7 +18,7 @@ import java.util.function.DoubleSupplier;
 
 public class ArmSubsystem extends SubsystemBase {
   private ArmIO armIO;
-  
+
   private double armGoal;
 
   public Trigger AT_GOAL_ANGLE =
