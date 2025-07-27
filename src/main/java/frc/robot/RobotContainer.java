@@ -539,7 +539,7 @@ public class RobotContainer {
             Commands.runOnce(
                 () -> {
                   coralLevel = CoralLevel.L2;
-                  driveCommand.setInverted(false);
+                  driveCommand.setInverted(true);
                 }));
 
     m_operatorController
