@@ -37,6 +37,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.EagleUtil;
+import frc.robot.FieldConstants;
 import frc.robot.generated.TunerSwerveDrivetrain;
 import frc.robot.subsystems.aprilTagCam.AprilTagHelp;
 import java.util.function.Supplier;
@@ -51,6 +53,29 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   private final CANcoder[] encoders = new CANcoder[4];
   private final Pigeon2 gyro;
 
+  public enum ReefPositions {
+    RIGHT_SIDE_REEF,
+    BACK_REEF,
+    FRONT_REEF
+  }
+
+  public enum TargetMode {
+    NORMAL,
+    CORAL_STATION,
+    REEF,
+    CAGE,
+    PROCESSOR
+  }
+
+  public enum DriveMode {
+    ROBOT_CENTRIC,
+    FIELD_CENTRIC
+  }
+
+  private ReefPositions reefMode = ReefPositions.FRONT_REEF;
+  private TargetMode mode = TargetMode.NORMAL;
+  private DriveMode driveMode = DriveMode.FIELD_CENTRIC;
+
   public Trigger IS_ALIGNING_TO_POSE =
       new Trigger(
           () -> {
@@ -60,6 +85,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
               return false;
             }
           });
+
+  public Trigger IS_REEF_MODE = new Trigger(() -> getTargetMode() == TargetMode.REEF);
+
+  public Trigger IS_CLOSE_TO_REEF =
+      new Trigger(
+          () ->
+              EagleUtil.getDistanceBetween(getPose(), EagleUtil.getCachedReefPose(getPose()))
+                  < 1.25);
+
+  public Trigger IS_NEAR_CORAL_STATION =
+      new Trigger(
+          () ->
+              EagleUtil.getDistanceBetween(getPose(), EagleUtil.getClosetStationGen(getPose()))
+                  < 0.4);
 
   public Constraints constraints = new TrapezoidProfile.Constraints(3, 2);
   public ProfiledPIDController PID_X = new ProfiledPIDController(3.0, 0, 0, constraints);
@@ -308,6 +347,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     DogLog.log("Swerve/Back Right CANcoder Connected", encoders[3].isConnected());
 
     DogLog.log("Swerve/Pigeon Connected", gyro.isConnected());
+
+    DogLog.log("Swerve/Target Mode", mode);
+    DogLog.log("Swerve/Drive Mode", driveMode);
+    DogLog.log("Swerve/Reef Position", reefMode);
+
+    DogLog.log("Trigger/IS_CLOSE_TO_REEF", IS_CLOSE_TO_REEF.getAsBoolean());
+    DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
+    DogLog.log("Trigger/Is Near Coarl Station", IS_NEAR_CORAL_STATION.getAsBoolean());
   }
 
   private void startSimThread() {
@@ -392,6 +439,89 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    */
   public void runVelocity(ChassisSpeeds speeds) {
     setControl(m_pathApplyRobotSpeeds.withSpeeds(speeds));
+  }
+
+  /**
+   * @param driveMode what mode should the drive be in?
+   */
+  public void setDriveMode(DriveMode driveMode) {
+    this.driveMode = driveMode;
+  }
+
+  public DriveMode getDriveMode() {
+    return this.driveMode;
+  }
+
+  /**
+   * @return the target mode we have
+   */
+  public TargetMode getTargetMode() {
+    return this.mode;
+  }
+
+  /**
+   * @param mode what mode should it set to?
+   */
+  public void setTargetMode(TargetMode mode) {
+    this.mode = mode;
+  }
+
+  public void setReefMode(ReefPositions mode) {
+    reefMode = mode;
+  }
+
+  /**
+   * @param currentRobotPose the current pose of the robot via drivetrain.getpose();
+   * @return returns the angle?
+   */
+  public double calculateSetpoint(Pose2d currentRobotPose) {
+    if (mode == TargetMode.CORAL_STATION) {
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        // Blue Alliance
+        if (currentRobotPose.getY() <= FieldConstants.HALF_WIDTH_FIELD) {
+          // Low Y => "Right" station for Blue
+          return FieldConstants.BLUE_LEFT_STATION_ANGLE;
+        } else {
+          // High Y => "Left" station for Blue
+          return FieldConstants.BLUE_RIGHT_STATION_ANGLE;
+        }
+      } else {
+        // Red Alliance or invalid
+        if (currentRobotPose.getY() <= FieldConstants.HALF_WIDTH_FIELD) {
+          return FieldConstants.RED_LEFT_STATION_ANGLE;
+        } else {
+          return FieldConstants.RED_RIGHT_STATION_ANGLE;
+        }
+      }
+
+    } else if (mode == TargetMode.REEF) {
+      if (reefMode == ReefPositions.FRONT_REEF) {
+        return EagleUtil.getRotationCenterReef(currentRobotPose);
+      } else if (reefMode == ReefPositions.RIGHT_SIDE_REEF) {
+        return EagleUtil.getRotationCenterReef(currentRobotPose) + 90;
+      } else if (reefMode == ReefPositions.BACK_REEF) {
+        return EagleUtil.getRotationCenterReef(currentRobotPose) + 180;
+      } else {
+        return 0;
+      }
+    } else if (mode == TargetMode.CAGE) {
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        return FieldConstants.BLUE_CAGE_ANGLE;
+      } else {
+        return FieldConstants.RED_CAGE_ANGLE;
+      }
+    } else if (mode == TargetMode.PROCESSOR) {
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        return 90;
+      } else {
+        return -90;
+      }
+    } else {
+      return 0;
+    }
   }
 
   public Command driveBackward(double velocity) {

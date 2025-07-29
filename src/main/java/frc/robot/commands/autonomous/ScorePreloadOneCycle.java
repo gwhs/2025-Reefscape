@@ -11,13 +11,18 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.CommandFactory;
 import frc.robot.EagleUtil;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 
 public class ScorePreloadOneCycle extends PathPlannerAuto {
-  public ScorePreloadOneCycle(RobotContainer robotContainer) {
+  public ScorePreloadOneCycle(
+      RobotContainer robotContainer,
+      CommandFactory commandFactory,
+      CommandSwerveDrivetrain drivetrain) {
     super(Commands.run(() -> {}));
 
     try {
@@ -31,20 +36,19 @@ public class ScorePreloadOneCycle extends PathPlannerAuto {
           .onTrue(
               Commands.sequence(
                       AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
-                      robotContainer.zeroElevator().onlyIf(() -> RobotBase.isReal()),
+                      commandFactory.zeroElevator().onlyIf(() -> RobotBase.isReal()),
                       AutoBuilder.followPath(SCpreloadScore)
                           .deadlineFor(
-                              robotContainer.prepScoreCoral(
+                              commandFactory.prepScoreCoral(
                                   ElevatorConstants.L4_PREP_POSITION,
                                   ArmConstants.L4_PREP_POSITION)),
-                      robotContainer
+                      commandFactory
                           .prepScoreCoral(
                               ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)
                           .deadlineFor(
-                              robotContainer.alignToPose(
-                                  () ->
-                                      EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
-                      robotContainer.scoreCoral())
+                              commandFactory.alignToPose(
+                                  () -> EagleUtil.getCachedReefPose(drivetrain.getPose()))),
+                      commandFactory.scoreCoral())
                   .withName("Leave and score preload coral"));
 
     } catch (Exception e) {

@@ -10,22 +10,17 @@ import com.ctre.phoenix6.CANBus.CANBusStatus;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
 import edu.wpi.first.hal.HALUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.AlignToPose;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.DriveCommand.TargetMode;
 import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.commands.autonomous.*;
 import frc.robot.generated.TunerConstants_Comp;
@@ -39,13 +34,9 @@ import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
-import frc.robot.subsystems.endEffector.EndEffectorConstants;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
-import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 import java.util.function.BiConsumer;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 
 public class RobotContainer {
 
@@ -87,7 +78,6 @@ public class RobotContainer {
 
   private final CommandXboxController m_driverController = new CommandXboxController(0);
   private final CommandXboxController m_operatorController = new CommandXboxController(1);
-  private final Alert batteryUnderTwelveVolts = new Alert("BATTERY UNDER 12V", AlertType.kWarning);
   private final Telemetry logger =
       new Telemetry(TunerConstants_Comp.kSpeedAt12Volts.in(MetersPerSecond));
 
@@ -99,6 +89,8 @@ public class RobotContainer {
   private final GroundIntakeSubsystem groundIntake = new GroundIntakeSubsystem();
   private final ClimbSubsystem climb = new ClimbSubsystem();
   private final DriveCommand driveCommand;
+
+  private final CommandFactory commandFactory;
 
   public enum CoralLevel {
     L1(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION),
@@ -125,15 +117,10 @@ public class RobotContainer {
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
   public static final Trigger BATTERY_BROWN_OUT = new Trigger(() -> RobotController.isBrownedOut());
   public static Trigger ALGAE_HIGH;
-  public final Trigger IS_NEAR_CORAL_STATION;
 
   public final Trigger IS_CORAL_LOADED;
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-
-  private final Trigger IS_REEF_MODE;
-
-  private final Trigger IS_CLOSE_TO_REEF;
 
   private AprilTagCam frontLeftCam;
 
@@ -216,23 +203,7 @@ public class RobotContainer {
     driveCommand =
         new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
 
-    IS_REEF_MODE = new Trigger(() -> driveCommand.getTargetMode() == TargetMode.REEF);
-
-    IS_CLOSE_TO_REEF =
-        new Trigger(
-            () ->
-                EagleUtil.getDistanceBetween(
-                        drivetrain.getPose(), EagleUtil.getCachedReefPose(drivetrain.getPose()))
-                    < 1.25);
-
-    IS_NEAR_CORAL_STATION =
-        new Trigger(
-            () ->
-                EagleUtil.getDistanceBetween(
-                        drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
-                    < 0.4);
-
-    ALGAE_HIGH = new Trigger(() -> EagleUtil.isHighAlgae(getRobotPose()));
+    ALGAE_HIGH = new Trigger(() -> EagleUtil.isHighAlgae(drivetrain.getPose()));
     IS_CORAL_LOADED = new Trigger(() -> endEffector.coralLoaded()).debounce(0.06);
 
     configureAutonomous();
@@ -245,8 +216,20 @@ public class RobotContainer {
 
     PathfindingCommand.warmupCommand().schedule();
 
+    commandFactory =
+        new CommandFactory(
+            drivetrain,
+            arm,
+            elevator,
+            endEffector,
+            climb,
+            groundIntake,
+            m_driverController,
+            m_operatorController,
+            driveCommand);
+
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
-    SmartDashboard.putData("Unprep Climb", unPrepClimbCommand());
+    SmartDashboard.putData("Unprep Climb", commandFactory.unPrepClimbCommand());
 
     // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
@@ -271,313 +254,17 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // BATTERY_BROWN_OUT.onTrue(drivetrain.setDriveMotorCurrentLimit());
-
-    // drivetrain
-    //     .IS_ALIGNING_TO_POSE
-    //     .and(drivetrain.IS_AT_TARGET_POSE)
-    //     .onTrue(led.setPattern(LEDPattern.solid(Color.kGreen)));
-    // drivetrain
-    //     .IS_ALIGNING_TO_POSE
-    //     .and(drivetrain.IS_AT_TARGET_POSE.negate())
-    //     .onTrue(led.setPattern(LEDPattern.solid(Color.kBlack)));
-
-    IS_DISABLED.onTrue(
-        Commands.runOnce(
-                () -> {
-                  // drivetrain.configNeutralMode(NeutralModeValue.Coast);
-                  // elevator.setNeutralMode(NeutralModeValue.Coast);
-                  driveCommand.stopDrivetrain();
-                })
-            .ignoringDisable(true));
-
-    // IS_DISABLED
-    //     .and(() -> RobotController.getBatteryVoltage() >= 12)
-    //     .onTrue(led.setPattern(LEDPattern.solid(Color.kGreen)));
-
-    // IS_DISABLED
-    //     .and(() -> RobotController.getBatteryVoltage() < 12)
-    //     .onTrue(led.setPattern(LEDPattern.solid(Color.kRed)));
-
-    IS_DISABLED.onFalse(
-        Commands.runOnce(
-                () -> {
-                  // drivetrain.configNeutralMode(NeutralModeValue.Brake);
-                  // elevator.setNeutralMode(NeutralModeValue.Brake);
-                })
-            .andThen(groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 0))
-            .ignoringDisable(false));
-
-    // IS_DISABLED
-    //     .and(() -> RobotController.getBatteryVoltage() < 12)
-    //     .onTrue(EagleUtil.triggerAlert(batteryUnderTwelveVolts));
-
-    m_driverController
-        .x()
-        .or(m_driverController.y())
-        .whileTrue(
-            Commands.startEnd(
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
-                    () -> {
-                      driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
-                      driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
-                    })
-                .withName("Face Coral Station"));
-
-    // m_driverController
-    //     .x()
-    //     .and(IS_NEAR_CORAL_STATION)
-    //     .onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)))
-    //     .onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0)));
-
-    m_driverController.x().whileTrue(prepCoralIntake()).onFalse(stopIntake());
-    m_driverController
-        .y()
-        .whileTrue(
-            prepCoralIntake(
-                ElevatorConstants.INTAKE_METER_BACKUP, ArmConstants.ARM_INTAKE_ANGLE_BACKUP))
-        .onFalse(stopIntake());
-
-    // IS_TELEOP
-    //     .and(IS_CORAL_LOADED)
-    //     .and(IS_INTAKE.debounce(.5))
-    //     .onTrue(drivetrain.driveBackward(-4.5).withTimeout(.5));
-
-    // IS_TELEOP
-    //     .and(IS_REEFMODE)
-    //     .and(IS_CLOSE_TO_REEF)
-    //     .onTrue(
-    //         prepScoreCoral(ElevatorConstants.STOW_METER, 220).withName("auto prep score coral"));
-
-    m_driverController
-        .leftBumper()
-        .onTrue(
-            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
-                .withName("Back to Original State"));
-
-    m_driverController
-        .rightTrigger()
-        .onFalse(
-            scoreCoral()
-                .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
-                .withName("score Coral"));
-
-    m_driverController
-        .rightTrigger()
-        .negate()
-        .and(ALGAE_HIGH.negate())
-        .and(m_driverController.leftTrigger())
-        .onTrue(prepDealgaeLow());
-
-    m_driverController
-        .rightTrigger()
-        .negate()
-        .and(ALGAE_HIGH)
-        .and(m_driverController.leftTrigger())
-        .onTrue(prepDealgaeHigh());
-
-    m_driverController
-        .rightTrigger()
-        .negate()
-        .and(m_driverController.leftTrigger())
-        .whileTrue(alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose())))
-        .whileTrue(
-            Commands.startEnd(
-                    () -> {
-                      driveCommand.setDriveMode(DriveCommand.DriveMode.ROBOT_CENTRIC);
-                    },
-                    () -> {
-                      driveCommand.setDriveMode(DriveCommand.DriveMode.FIELD_CENTRIC);
-                    })
-                .withName("DeALgae Robot Centric"));
-
-    m_driverController.leftTrigger().onFalse(dealgae());
-
-    IS_L4.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L4));
-    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L3));
-    IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L2));
-    IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L1));
-
-    // m_operatorController
-    //     .leftStick()
-    //     .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_ALGAE_ANGLE, 6))
-    //     .onFalse(groundIntake.setAngleAndVoltage(GroundIntakeConstants.ALGAE_STOW_ANGLE, 2));
-
-    m_operatorController
-        .rightStick()
-        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, 1))
-        .onFalse(scoreAlgae());
-
-    m_operatorController
-        .rightStick()
-        .whileTrue(
-            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.PROCESSOR))
-                .withName("Face Processor"))
-        .onFalse(
-            Commands.waitSeconds(0.5)
-                .andThen(
-                    Commands.runOnce(
-                        () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))));
-
-    // m_operatorController
-    //     .leftStick()
-    //     .whileTrue(
-    //         Commands.startEnd(
-    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL),
-    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
-    //             .withName("Ground Intake normal"));
-
-    // m_operatorController
-    //     .x()
-    //     .whileTrue(
-    //         Commands.startEnd(
-    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL),
-    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
-    //             .withName("Algae Normal"));
-
-    IS_L1
-        .and(IS_REEF_MODE)
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
-                }));
-
-    IS_L2
-        .or(IS_L3)
-        .or(IS_L4)
-        .and(IS_REEF_MODE)
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
-                }));
-
-    m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
-
-    m_driverController
-        .rightBumper()
-        .whileTrue(
-            Commands.startEnd(
-                    () -> {
-                      driveCommand.setSlowMode(true, 0.25);
-                    },
-                    () -> {
-                      driveCommand.setSlowMode(false, 0.25);
-                    })
-                .withName("Slow Mode"));
-
-    m_driverController
-        .rightTrigger()
-        .whileTrue(
-            Commands.startEnd(
-                    () -> {
-                      driveCommand.setDriveMode(DriveCommand.DriveMode.ROBOT_CENTRIC);
-                      driveCommand.setSlowMode(true, 0.25);
-                    },
-                    () -> {
-                      driveCommand.setDriveMode(DriveCommand.DriveMode.FIELD_CENTRIC);
-                      driveCommand.setSlowMode(false, 0.25);
-                    })
-                .withName("Slow and Robot Centric"));
-
-    drivetrain
-        .IS_AT_TARGET_POSE
-        .and(drivetrain.IS_ALIGNING_TO_POSE)
-        .and(IS_PREPSCORE)
-        .and(elevator.AT_GOAL_HEIGHT)
-        .and(arm.AT_GOAL_ANGLE)
-        .and(IS_TELEOP)
-        .debounce(0.33)
-        .onTrue(scoreCoral());
-
-    IS_L1
-        .and(m_driverController.a())
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
-
-    // IS_L2
-    //     .and(m_driverController.a())
-    //     .whileTrue(alignToPose(() ->
-    // EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
-
-    IS_L4
-        .or(IS_L3)
-        .or(IS_L2)
-        .and(m_driverController.a())
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
-
-    IS_L4
-        .or(IS_L3)
-        .or(IS_L2)
-        .and(m_driverController.b())
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
-
-    // IS_L2
-    //     .and(m_driverController.b())
-    //     .whileTrue(alignToPose(() ->
-    // EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
-
-    IS_L1
-        .and(m_driverController.b())
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
-
-    m_operatorController.start().onTrue(elevator.homingCommand());
-
-    m_operatorController
-        .leftStick()
-        .whileTrue(
-            alignToPose(() -> EagleUtil.getClosestCoralStation(this.getRobotPose()))); // TODO
-
-    m_operatorController
-        .x()
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  coralLevel = CoralLevel.L1;
-                  driveCommand.setInverted(true);
-                }));
-
-    m_operatorController
-        .a()
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  coralLevel = CoralLevel.L2;
-                  driveCommand.setInverted(false);
-                }));
-
-    m_operatorController
-        .b()
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  coralLevel = CoralLevel.L3;
-                  driveCommand.setInverted(false);
-                }));
-
-    m_operatorController
-        .y()
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  coralLevel = CoralLevel.L4;
-                  driveCommand.setInverted(false);
-                }));
-
-    // m_operatorController.y().whileTrue(arm.sysIdQuasistatic(Direction.kForward));
-    // m_operatorController.b().whileTrue(arm.sysIdQuasistatic(Direction.kReverse));
-    // m_operatorController.a().whileTrue(arm.sysIdDynamic(Direction.kForward));
-    // m_operatorController.x().whileTrue(arm.sysIdDynamic(Direction.kReverse));
-
-    m_operatorController.povRight().onTrue(arm.increaseAngle(3.0));
-    m_operatorController.povLeft().onTrue(arm.decreaseAngle(3.0));
-    m_operatorController.povUp().onTrue(elevator.increaseHeight(0.02));
-    m_operatorController.povDown().onTrue(elevator.decreaseHeight(0.02));
-
-    // m_operatorController.leftBumper().onTrue(groundIntake.decreaseAngle(3));
-    // m_operatorController.rightBumper().onTrue(groundIntake.increaseAngle(3));
-
-    m_operatorController.leftTrigger().and(m_operatorController.rightTrigger()).onTrue(climb());
+    TriggerBindings.configureBindings(
+        drivetrain,
+        arm,
+        elevator,
+        endEffector,
+        climb,
+        groundIntake,
+        m_driverController,
+        m_operatorController,
+        driveCommand,
+        commandFactory);
   }
 
   public void periodic() {
@@ -628,12 +315,9 @@ public class RobotContainer {
     DogLog.log("Trigger/At L4", IS_L4.getAsBoolean());
     DogLog.log("Trigger/Is Disabled", IS_DISABLED.getAsBoolean());
     DogLog.log("Trigger/Is Telop", IS_TELEOP.getAsBoolean());
-    DogLog.log("Trigger/Is Close to Reef", IS_CLOSE_TO_REEF.getAsBoolean());
     DogLog.log("Current Robot", getRobot().toString());
-    DogLog.log("Trigger/Is Reefmode", IS_REEF_MODE.getAsBoolean());
 
     DogLog.log("Trigger/Algae High", ALGAE_HIGH.getAsBoolean());
-    DogLog.log("Trigger/Is Near Coarl Station", IS_NEAR_CORAL_STATION.getAsBoolean());
     DogLog.log("Trigger/Is Coral Loaded", IS_CORAL_LOADED.getAsBoolean());
 
     DogLog.log("Trigger/Elevator At Goal Height", elevator.AT_GOAL_HEIGHT.getAsBoolean());
@@ -653,245 +337,20 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("Five_Cycle_Processor", new FiveCycle(this, false));
-    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycle(this, true));
-    autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
+    autoChooser.setDefaultOption(
+        "Five_Cycle_Processor", new FiveCycle(this, commandFactory, false, drivetrain));
+    autoChooser.addOption(
+        "Five_Cycle_Non_Processor", new FiveCycle(this, commandFactory, true, drivetrain));
+    autoChooser.addOption(
+        "Score_Preload_One_Cycle", new ScorePreloadOneCycle(this, commandFactory, drivetrain));
     autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
     autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
-    autoChooser.addOption("Push_One_Cycle", new PushOneCycle(this));
+    autoChooser.addOption("Push_One_Cycle", new PushOneCycle(this, commandFactory, drivetrain));
     autoChooser.addOption(
         "Wheel_Radius_Chracterizaton",
         WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
     autoChooser.addOption("Do Notion", Commands.none());
 
     SmartDashboard.putData("autonomous", autoChooser);
-  }
-
-  public Pose2d getRobotPose() {
-    return drivetrain.getPose();
-  }
-
-  public Command zeroElevator() {
-    return elevator.homingCommand();
-  }
-
-  /**
-   * this is a wrapper for the command of the same name
-   *
-   * @param Pose pose to go to
-   * @return run the command
-   */
-  public Command alignToPose(Supplier<Pose2d> Pose) {
-    return new AlignToPose(Pose, drivetrain, () -> elevator.getHeightMeters(), m_driverController);
-  }
-
-  /**
-   * @return prep to pickup coral
-   */
-  public Command prepCoralIntake(double elevatorHeight, double armAngle) {
-    return Commands.parallel(
-            endEffector.intake(),
-            elevator.setHeight(elevatorHeight).withTimeout(0.5),
-            arm.setAngle(armAngle).withTimeout(1),
-            Commands.runOnce(() -> robotState = RobotState.INTAKE))
-        .withName("Prepare Coral Intake");
-  }
-
-  public Command prepCoralIntakeAuton() {
-    return Commands.parallel(
-            endEffector.intake(),
-            elevator.setHeight(ElevatorConstants.INTAKE_METER_AUTON).withTimeout(0.5),
-            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
-        .withName("Prepare Coral Intake Auton");
-  }
-
-  public Command prepCoralIntake() {
-    return prepCoralIntake(ElevatorConstants.INTAKE_METER, ArmConstants.ARM_INTAKE_ANGLE);
-  }
-
-  public Command stopIntake() {
-    return Commands.parallel(
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
-            elevator.setHeight(ElevatorConstants.STOW_METER),
-            endEffector.holdCoral(),
-            Commands.runOnce(() -> robotState = RobotState.IDLE))
-        .withName("stop Intake");
-  }
-
-  public Command groundIntakeScoreL1() {
-    return Commands.sequence(
-            groundIntake
-                .setAngleAndVoltage(GroundIntakeConstants.SCORE_CORAL_ANGLE, 6)
-                .withTimeout(0.5),
-            Commands.waitSeconds(0.3),
-            groundIntake
-                .setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 0)
-                .withTimeout(0.5))
-        .withName("Ground Intake Score Coral L1");
-  }
-
-  public Command scoreAlgae() {
-    return Commands.sequence(
-            groundIntake
-                .setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, -6)
-                .withTimeout(0.5),
-            Commands.waitSeconds(0.7),
-            groundIntake
-                .setAngleAndVoltage(GroundIntakeConstants.ALGAE_STOW_ANGLE, 0)
-                .withTimeout(0.5))
-        .withName("Score Algae");
-  }
-
-  /**
-   * @param elevatorHeight how tall should the elavator be?
-   * @param armAngle what angle should the arm be at
-   * @return run the command
-   */
-  public Command prepScoreCoral(double elevatorHeight, double armAngle) {
-    return Commands.parallel(
-            endEffector.holdCoral(),
-            elevator.setHeight(elevatorHeight).withTimeout(1.5),
-            arm.setAngle(armAngle).withTimeout(1.5),
-            Commands.runOnce(() -> robotState = RobotState.PREPSCORE))
-        .withName(
-            "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
-  }
-
-  public Command prepScoreCoral(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
-    return Commands.parallel(
-            endEffector.holdCoral(),
-            elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
-            arm.setAngleSupplier(armAngle).withTimeout(.5),
-            Commands.runOnce(() -> robotState = RobotState.PREPSCORE))
-        .withName(
-            "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
-  }
-
-  public Command prepScoreCoral(CoralLevel level) {
-    DoubleSupplier elevatorHeightSupplier =
-        () -> EagleUtil.getOffsetElevatorHeight(level, drivetrain.getPose());
-    DoubleSupplier armAngleSupplier =
-        () -> EagleUtil.getOffsetArmAngle(level, drivetrain.getPose());
-    return prepScoreCoral(elevatorHeightSupplier, armAngleSupplier).repeatedly();
-  }
-
-  public Command autonScoreCoral() {
-    return Commands.sequence(
-        endEffector.shoot(EndEffectorConstants.VOLTAGE_L4), Commands.waitSeconds(0.05));
-  }
-
-  /**
-   * @return score the coral
-   */
-  public Command scoreCoral() {
-    Command scoreCoral =
-        Commands.sequence(
-                endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
-                endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
-                endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
-                endEffector.shoot(EndEffectorConstants.VOLTAGE_L1).onlyIf(IS_L1),
-                Commands.waitSeconds(0.05),
-                drivetrain.driveBackward(1).withTimeout(0.2).onlyIf(IS_L2),
-                arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
-                elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
-                endEffector.stopMotor())
-            .withTimeout(0.5);
-
-    Command deAlgae =
-        Commands.sequence(
-                endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
-                endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
-                endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
-                endEffector.shoot(EndEffectorConstants.VOLTAGE_L1).onlyIf(IS_L1),
-                Commands.waitSeconds(0.04), // .05
-                endEffector.stopMotor(),
-                alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))
-                    .withTimeout(0.6)
-                    .alongWith(
-                        arm.setAngle(90)
-                            .alongWith(
-                                Commands.either(
-                                    elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
-                                    elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
-                                    ALGAE_HIGH))
-                            .withTimeout(0.4)), // .5
-                Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
-                    .withTimeout(.1) // .6
-                    .deadlineFor(
-                        alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))),
-                dealgae())
-            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
-
-    return Commands.sequence(
-        Commands.either(deAlgae, scoreCoral, m_driverController.leftTrigger())
-            .withName("Score Coral/deAlgae"),
-        Commands.runOnce(() -> robotState = RobotState.IDLE)
-            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-  }
-
-  // DeAlgae Commands
-  public Command prepDealgaeLow() {
-    return Commands.parallel(
-            elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
-            arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
-            endEffector.setVoltage(0))
-        .withName("prep Delalgae low");
-  }
-
-  public Command prepDealgaeHigh() {
-    return Commands.parallel(
-            elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
-            arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
-            endEffector.setVoltage(0))
-        .withName("prep Dealgae high");
-  }
-
-  public Command dealgae() {
-    return Commands.sequence(
-            arm.setAngle(ArmConstants.DEALGAE_ANGLE)
-                .alongWith(elevator.decreaseHeight(0.1))
-                .withTimeout(0.2),
-            drivetrain.driveBackward(1).withTimeout(0.6),
-            Commands.parallel(
-                elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(.1),
-                arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(.1),
-                endEffector.stopMotor()))
-        .withName("Dealgae");
-  }
-
-  public Command unPrepClimbCommand() {
-    return Commands.sequence(
-            arm.setAngle(ArmConstants.CLIMB_ANGLE).withTimeout(1),
-            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
-            climb.stow().withTimeout(5),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(1),
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE))
-        .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
-        .withName("unPrepClimb");
-  }
-
-  public Command climb() {
-    Trigger climbTrigger =
-        m_operatorController.rightBumper().and(m_operatorController.leftBumper());
-
-    Command climbCommand =
-        Commands.parallel(
-                climb.climb(),
-                elevator.setHeight(0),
-                arm.setAngle(ArmConstants.CLIMB_ANGLE),
-                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL)))
-            .withTimeout(0.5);
-
-    return Commands.sequence(
-            Commands.sequence(
-                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE))),
-            groundIntake.setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0).withTimeout(1),
-            arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
-            elevator.setHeight(0).withTimeout(1),
-            climb.latch().withTimeout(1),
-            Commands.waitUntil(climbTrigger),
-            climbCommand)
-        .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
-        .withName("Climb");
   }
 }
