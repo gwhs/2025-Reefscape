@@ -436,6 +436,7 @@ public class RobotContainer {
     //             .withName("Algae Normal"));
 
     IS_L1
+        .or(IS_L2)
         .and(IS_REEF_MODE)
         .onTrue(
             Commands.runOnce(
@@ -443,8 +444,7 @@ public class RobotContainer {
                   driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
                 }));
 
-    IS_L2
-        .or(IS_L3)
+    IS_L3
         .or(IS_L4)
         .and(IS_REEF_MODE)
         .onTrue(
@@ -495,31 +495,27 @@ public class RobotContainer {
         .and(m_driverController.a())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
 
-    // IS_L2
-    //     .and(m_driverController.a())
-    //     .whileTrue(alignToPose(() ->
-    // EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
+    IS_L2
+        .and(m_driverController.a())
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
 
     IS_L4
         .or(IS_L3)
-        .or(IS_L2)
         .and(m_driverController.a())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
 
     IS_L4
         .or(IS_L3)
-        .or(IS_L2)
         .and(m_driverController.b())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
 
-    // IS_L2
-    //     .and(m_driverController.b())
-    //     .whileTrue(alignToPose(() ->
-    // EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
+    IS_L2
+        .and(m_driverController.b())
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
 
     IS_L1
         .and(m_driverController.b())
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
 
     m_operatorController.start().onTrue(elevator.homingCommand());
 
@@ -543,7 +539,7 @@ public class RobotContainer {
             Commands.runOnce(
                 () -> {
                   coralLevel = CoralLevel.L2;
-                  driveCommand.setInverted(false);
+                  driveCommand.setInverted(true);
                 }));
 
     m_operatorController
@@ -791,7 +787,6 @@ public class RobotContainer {
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L1).onlyIf(IS_L1),
                 Commands.waitSeconds(0.05),
-                drivetrain.driveBackward(1).withTimeout(0.2).onlyIf(IS_L2),
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
                 endEffector.stopMotor())
