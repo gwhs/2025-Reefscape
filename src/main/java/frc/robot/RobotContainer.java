@@ -419,13 +419,13 @@ public class RobotContainer {
                     Commands.runOnce(
                         () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))));
 
-    m_operatorController
-        .leftStick()
-        .whileTrue(
-            Commands.startEnd(
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL),
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
-                .withName("Ground Intake normal"));
+    // m_operatorController
+    //     .leftStick()
+    //     .whileTrue(
+    //         Commands.startEnd(
+    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL),
+    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
+    //             .withName("Ground Intake normal"));
 
     // m_operatorController
     //     .x()
