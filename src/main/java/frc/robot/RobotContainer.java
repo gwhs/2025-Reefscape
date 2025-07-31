@@ -455,13 +455,13 @@ public class RobotContainer {
                   driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
                 }));
 
-    //m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
+    // m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
     m_driverController
         .back()
         .whileTrue(
             Commands.startEnd(
-                  () -> {
+                    () -> {
                       driveCommand.setSlowMode(true, 0.25);
                     },
                     () -> {
@@ -883,18 +883,20 @@ public class RobotContainer {
             .andThen(Commands.runOnce(() -> isPreppedClimb = false))
             .withName("Climb");
 
-        Command prepClimb = Commands.sequence(
-              Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE)),
-              groundIntake.setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0).withTimeout(1),
-              arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
-              elevator.setHeight(0).withTimeout(1),
-              climb.latch().withTimeout(1),
-              Commands.runOnce(() -> isPreppedClimb = true))
-          .withName("Prep Climb");
-  
+    Command prepClimb =
+        Commands.sequence(
+                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE)),
+                groundIntake
+                    .setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0)
+                    .withTimeout(1),
+                arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
+                elevator.setHeight(0).withTimeout(1),
+                climb.latch().withTimeout(1),
+                Commands.runOnce(() -> isPreppedClimb = true))
+            .withName("Prep Climb");
+
     return Commands.either(climbCommand, prepClimb, () -> isPreppedClimb)
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
         .withName("Climb Sequence");
   }
-  
 }
