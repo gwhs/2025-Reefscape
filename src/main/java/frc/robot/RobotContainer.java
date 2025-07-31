@@ -68,7 +68,7 @@ public class RobotContainer {
 
   public static RobotState robotState = RobotState.IDLE;
 
-  private boolean preppedClimb = false;
+  private boolean isPreppedClimb = false;
 
   public static final Trigger IS_IDLE = new Trigger(() -> robotState == RobotState.IDLE);
   public static final Trigger IS_INTAKE = new Trigger(() -> robotState == RobotState.INTAKE);
@@ -455,13 +455,13 @@ public class RobotContainer {
                   driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
                 }));
 
-    // m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
+    //m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
     m_driverController
-        .rightBumper()
+        .back()
         .whileTrue(
             Commands.startEnd(
-                    () -> {
+                  () -> {
                       driveCommand.setSlowMode(true, 0.25);
                     },
                     () -> {
@@ -880,23 +880,21 @@ public class RobotContainer {
                 arm.setAngle(ArmConstants.CLIMB_ANGLE),
                 Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL)))
             .withTimeout(0.5)
-            .andThen(Commands.runOnce(() -> preppedClimb = false))
+            .andThen(Commands.runOnce(() -> isPreppedClimb = false))
             .withName("Climb");
 
-    Command prepClimb =
-        Commands.sequence(
-                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE)),
-                groundIntake
-                    .setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0)
-                    .withTimeout(1),
-                arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
-                elevator.setHeight(0).withTimeout(1),
-                climb.latch().withTimeout(1),
-                Commands.runOnce(() -> preppedClimb = true))
-            .withName("Prep Climb");
-
-    return Commands.either(climbCommand, prepClimb, () -> preppedClimb)
+        Command prepClimb = Commands.sequence(
+              Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE)),
+              groundIntake.setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0).withTimeout(1),
+              arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
+              elevator.setHeight(0).withTimeout(1),
+              climb.latch().withTimeout(1),
+              Commands.runOnce(() -> isPreppedClimb = true))
+          .withName("Prep Climb");
+  
+    return Commands.either(climbCommand, prepClimb, () -> isPreppedClimb)
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
         .withName("Climb Sequence");
   }
+  
 }
