@@ -315,8 +315,8 @@ public class RobotContainer {
     //     .onTrue(EagleUtil.triggerAlert(batteryUnderTwelveVolts));
 
     m_driverController
-        .x()
-        .or(m_driverController.y())
+        .rightBumper()
+        .or(m_driverController.povLeft())
         .whileTrue(
             Commands.startEnd(
                     () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
@@ -525,8 +525,8 @@ public class RobotContainer {
 
     m_operatorController.start().onTrue(elevator.homingCommand());
 
-    m_operatorController
-        .leftStick()
+    m_driverController
+        .povLeft()
         .whileTrue(
             alignToPose(() -> EagleUtil.getClosestCoralStation(this.getRobotPose()))); // TODO
 
