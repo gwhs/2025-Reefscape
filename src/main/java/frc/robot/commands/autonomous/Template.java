@@ -14,22 +14,23 @@ public class Template extends SequentialCommandGroup {
     /* All your code should go inside this try-catch block */
     try {
 
-      /* 
+      /*
         TODO: Load Paths
       */
       PathPlannerPath startingPath = PathPlannerPath.fromChoreoTrajectory("PATH NAME");
       // PathPlannerPath another_path = PathPlannerPath.fromChoreoTrajectory("PATH NAME");
 
       Pose2d startingPose =
-          new Pose2d(startingPath.getPoint(0).position, startingPath.getIdealStartingState().rotation());
+          new Pose2d(
+              startingPath.getPoint(0).position, startingPath.getIdealStartingState().rotation());
 
       addCommands(
-        AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
-        AutoBuilder.followPath(startingPath)
-        /*
-         * TODO: The rest of the autonomous routine command
-         */
-      );
+          AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
+          AutoBuilder.followPath(startingPath)
+          /*
+           * TODO: The rest of the autonomous routine command
+           */
+          );
 
     } catch (Exception e) {
       DriverStation.reportError("Path Not Found: " + e.getMessage(), e.getStackTrace());
