@@ -5,6 +5,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import dev.doglog.DogLog;
@@ -43,6 +44,8 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
   private final StatusSignal<Double> groundIntakePIDGoal = pivotMotor.getClosedLoopReference();
 
   private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
+
+  private TorqueCurrentFOC currentControl = new TorqueCurrentFOC(0);
 
   public GroundIntakeIOReal() {
     // configuration for the pivot motor

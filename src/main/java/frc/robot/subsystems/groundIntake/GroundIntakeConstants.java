@@ -27,4 +27,6 @@ public class GroundIntakeConstants {
   public static final double SCORE_CORAL_ANGLE = -5; // TODO
 
   public static final double CLIMB_ANGLE = -15; // TODO
+
+  public static final double CURRENT_LIMIT = 10;
 }
