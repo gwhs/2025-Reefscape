@@ -1,11 +1,6 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
-
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
@@ -499,6 +494,9 @@ public class RobotContainer {
     //     .and(m_driverController.a())
     //     .whileTrue(alignToPose(() ->
     // EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
+    IS_L1
+	    .and(m_driverController.rightBumper())
+	    .whileTrue(alignToPose(() -> EagleUtil.aligntobarge(drivetrain)));
 
     IS_L4
         .or(IS_L3)
