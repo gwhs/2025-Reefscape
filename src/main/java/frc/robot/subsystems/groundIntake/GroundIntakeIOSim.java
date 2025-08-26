@@ -68,4 +68,7 @@ public class GroundIntakeIOSim implements GroundIntakeIO {
 
   @Override
   public void resetPivotEncoder() {}
+
+  @Override
+  public void runAmp(double amp, double dutyCycle) {}
 }

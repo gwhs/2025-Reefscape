@@ -185,4 +185,9 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
       pivotMotor.setPosition(encoderAngle);
     }
   }
+
+  @Override
+  public void runAmp(double amp, double dutyCycle) {
+    pivotMotor.setControl(currentControl.withOutput(amp).withMaxAbsDutyCycle(dutyCycle));
+  }
 }
