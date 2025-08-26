@@ -22,7 +22,7 @@ import java.util.List;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private final RobotContainer m_robotContainer;
+  private final RobotContainerExercise m_robotContainer;
   private double prevTime = HALUtil.getFPGATime();
   private final GcStatsCollector gcStatsCollector = new GcStatsCollector();
 
@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
         new DogLogOptions().withNtPublish(true).withCaptureNt(true).withCaptureDs(true));
     DogLog.setPdh(new PowerDistribution());
 
-    m_robotContainer = new RobotContainer(this::addPeriodic);
+    m_robotContainer = new RobotContainerExercise();
 
     LiveWindow.disableAllTelemetry();
 
@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
