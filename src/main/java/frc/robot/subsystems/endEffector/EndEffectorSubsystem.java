@@ -62,6 +62,30 @@ public class EndEffectorSubsystem extends SubsystemBase {
     return Commands.runOnce(() -> endEffectorIO.stopMotor());
   }
 
+
+
+  public boolean algaeLoaded() {
+    return endEffectorIO.coralLoaded();
+  }
+
+  public Command setAlgaeVoltage(double voltage) {
+    return Commands.runOnce(() -> endEffectorIO.setVoltage(voltage));
+  }
+
+  public Command shootAlgae(double voltage) {
+    return Commands.runOnce(() -> endEffectorIO.setVoltage(-voltage));
+  }
+
+  public Command intakeAlgae() {
+    return Commands.runOnce(
+        () -> endEffectorIO.setAmps(EndEffectorConstants.INTAKE_ALGAE_CURRENT, 0.35));
+  }
+
+  public Command holdAlgae() {
+    return Commands.runOnce(
+        () -> endEffectorIO.setAmps(EndEffectorConstants.HOLD_CORAL_CURRENT, 0.2));
+  }
+
   @Override
   public void periodic() {
     double startTime = HALUtil.getFPGATime();
