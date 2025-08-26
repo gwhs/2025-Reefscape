@@ -137,6 +137,10 @@ public class RobotContainer {
 
   private final Trigger IS_CLOSE_TO_REEF;
 
+  private final Trigger IS_CONTROLLER_LEFT;
+
+  private final Trigger IS_CONTROLLER_RIGHT;
+
   private AprilTagCam frontLeftCam;
 
   private AprilTagCam frontRightCam;
@@ -234,6 +238,10 @@ public class RobotContainer {
                         drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
                     < 0.4);
 
+    IS_CONTROLLER_LEFT = new Trigger(() -> m_driverController.getLeftX() >= -0.5);
+
+    IS_CONTROLLER_RIGHT = new Trigger(() -> m_driverController.getLeftX() >= 0.5);
+
     ALGAE_HIGH = new Trigger(() -> EagleUtil.isHighAlgae(getRobotPose()));
     IS_CORAL_LOADED = new Trigger(() -> endEffector.coralLoaded()).debounce(0.06);
 
@@ -292,6 +300,14 @@ public class RobotContainer {
                   driveCommand.stopDrivetrain();
                 })
             .ignoringDisable(true));
+
+    IS_CONTROLLER_LEFT
+        .and(drivetrain.IS_ALIGNING_TO_POSE)
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
+
+    IS_CONTROLLER_RIGHT
+        .and(drivetrain.IS_ALIGNING_TO_POSE)
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
 
     // IS_DISABLED
     //     .and(() -> RobotController.getBatteryVoltage() >= 12)
@@ -698,6 +714,17 @@ public class RobotContainer {
             Commands.runOnce(() -> robotState = RobotState.INTAKE))
         .withName("Prepare Coral Intake");
   }
+
+  //   public Command fullAutoScore(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
+  //     return Commands.parallel(
+  //       endEffector.holdCoral(),
+  //       elevator.setHeight(elevatorHeight).withTimeout(1.5),
+  //       arm.setAngle(armAngle).withTimeout(1.5),
+  //       Commands.runOnce(() -> robotState = RobotState.PREPSCORE),
+  //       endEffector.shoot(EndEffectorConstants.VOLTAGE_L4), Commands.waitSeconds(0.05))
+  //         .withName("Prepare Coral Intake Auton");
+  // }
+  //   }
 
   public Command prepCoralIntakeAuton() {
     return Commands.parallel(
