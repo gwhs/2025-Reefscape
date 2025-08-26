@@ -11,10 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer.CoralLevel;
-import frc.robot.commands.AlignToPose;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.elevator.ElevatorConstants;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -572,12 +569,11 @@ public class EagleUtil {
   }
 
   public static Pose2d aligntobarge(CommandSwerveDrivetrain drive) {
-	if (!isRedAlliance()) {
-	Pose2d pose_blue = new Pose2d(8, drive.getPose().getY(), Rotation2d.fromRadians(180));
-	return pose_blue;
-	}
-	Pose2d pose_red = new Pose2d(9.6, drive.getPose().getY(), Rotation2d.fromRadians(180));
-	return pose_red;
+    if (!isRedAlliance()) {
+      Pose2d pose_blue = new Pose2d(8, drive.getPose().getY(), Rotation2d.fromRadians(180));
+      return pose_blue;
+    }
+    Pose2d pose_red = new Pose2d(9.6, drive.getPose().getY(), Rotation2d.fromRadians(180));
+    return pose_red;
   }
-
 }

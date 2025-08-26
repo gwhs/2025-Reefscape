@@ -1,6 +1,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
@@ -495,8 +496,8 @@ public class RobotContainer {
     //     .whileTrue(alignToPose(() ->
     // EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
     IS_L1
-	    .and(m_driverController.rightBumper())
-	    .whileTrue(alignToPose(() -> EagleUtil.aligntobarge(drivetrain)));
+        .and(m_driverController.rightBumper())
+        .whileTrue(alignToPose(() -> EagleUtil.aligntobarge(drivetrain)));
 
     IS_L4
         .or(IS_L3)
