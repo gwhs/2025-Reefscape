@@ -568,12 +568,12 @@ public class EagleUtil {
     return reef.getTranslation().minus(pose.getTranslation()).getAngle().getDegrees();
   }
 
-  public static Pose2d aligntobarge(CommandSwerveDrivetrain drive) {
-    if (FieldConstants.HALF_THE_FIELD > drive.getPose().getX()) {
-      Pose2d poseBlue = new Pose2d(8, drive.getPose().getY(), Rotation2d.fromDegrees(0));
+  public static Pose2d aligntobarge(Pose2d pose) {
+    if (FieldConstants.HALF_THE_FIELD > pose.getX()) {
+      Pose2d poseBlue = new Pose2d(FieldConstants.ON_LEFT, pose.getY(), Rotation2d.fromDegrees(0));
       return poseBlue;
     }
-    Pose2d poseRed = new Pose2d(9.6, drive.getPose().getY(), Rotation2d.fromDegrees(180));
+    Pose2d poseRed = new Pose2d(FieldConstants.ON_RIGHT, pose.getY(), Rotation2d.fromDegrees(180));
     return poseRed;
   }
 }
