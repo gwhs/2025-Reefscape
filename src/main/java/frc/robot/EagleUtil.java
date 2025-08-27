@@ -569,7 +569,7 @@ public class EagleUtil {
   }
 
   public static Pose2d aligntobarge(CommandSwerveDrivetrain drive) {
-    if (!isRedAlliance()) {
+    if (FieldConstants.HALF_THE_FIELD > drive.getPose().getX()) {
       Pose2d poseBlue = new Pose2d(8, drive.getPose().getY(), Rotation2d.fromDegrees(0));
       return poseBlue;
     }
