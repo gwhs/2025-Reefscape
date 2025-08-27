@@ -41,10 +41,13 @@ public class RobotContainerExercise {
 
     // TODO 1: press left bumper: set arm angle to 120
 
-    // TODO 2: press left bumper -> set arm angle to -90
+
+    // TODO 2: press right bumper -> set arm angle to -90
+
 
     // TODO 3: press start -> score L4 Coral (finish in command composition first)
 
+    
   }
 
   public void periodic() {
