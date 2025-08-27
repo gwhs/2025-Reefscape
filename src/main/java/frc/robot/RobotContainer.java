@@ -331,7 +331,7 @@ public class RobotContainer {
     //     .onTrue(EagleUtil.triggerAlert(batteryUnderTwelveVolts));
 
     m_driverController
-        .rightBumper()
+        .x()
         .or(m_driverController.povLeft())
         .whileTrue(
             Commands.startEnd(
@@ -348,9 +348,9 @@ public class RobotContainer {
     //     .onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)))
     //     .onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0)));
 
-    m_driverController.x().whileTrue(prepCoralIntake()).onFalse(stopIntake());
+    // m_driverController.rightBumper().whileTrue(prepCoralIntake()).onFalse(stopIntake());
     m_driverController
-        .y()
+        .x()
         .whileTrue(
             prepCoralIntake(
                 ElevatorConstants.INTAKE_METER_BACKUP, ArmConstants.ARM_INTAKE_ANGLE_BACKUP))
@@ -367,12 +367,13 @@ public class RobotContainer {
     //     .onTrue(
     //         prepScoreCoral(ElevatorConstants.STOW_METER, 220).withName("auto prep score coral"));
 
-    m_driverController
-        .leftBumper()
-        .onTrue(
-            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
-                .withName("Back to Original State"));
+    // m_driverController
+    //     .leftBumper()
+    //     .onTrue(
+    //         Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
+    //             .withName("Back to Original State"));
 
+    // make this force release
     m_driverController
         .rightTrigger()
         .onFalse(
@@ -411,10 +412,10 @@ public class RobotContainer {
 
     m_driverController.leftTrigger().onFalse(dealgae());
 
-    IS_L4.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L4));
-    IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L3));
-    IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L2));
-    IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L1));
+    IS_L4.and(m_driverController.y()).whileTrue(prepScoreCoral(CoralLevel.L4));
+    IS_L3.and(m_driverController.b()).whileTrue(prepScoreCoral(CoralLevel.L3));
+    IS_L2.and(m_driverController.a()).whileTrue(prepScoreCoral(CoralLevel.L2));
+    // IS_L1.and(m_driverController.x()).whileTrue(prepScoreCoral(CoralLevel.L1));
 
     // m_operatorController
     //     .leftStick()
@@ -518,17 +519,17 @@ public class RobotContainer {
     //     .whileTrue(alignToPose(() ->
     // EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
 
-    IS_L4
-        .or(IS_L3)
-        .or(IS_L2)
-        .and(m_driverController.a())
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
-
-    IS_L4
-        .or(IS_L3)
-        .or(IS_L2)
-        .and(m_driverController.b())
+    m_driverController
+        .b()
+        .or(m_driverController.y())
+        .or(m_driverController.a())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
+
+    // IS_L4
+    //     .or(IS_L3)
+    //     .or(IS_L2)
+    //     .and(m_driverController.b())
+    //     .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
 
     // IS_L2
     //     .and(m_driverController.b())
@@ -546,16 +547,16 @@ public class RobotContainer {
         .whileTrue(
             alignToPose(() -> EagleUtil.getClosestCoralStation(this.getRobotPose()))); // TODO
 
-    m_operatorController
-        .x()
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  coralLevel = CoralLevel.L1;
-                  driveCommand.setInverted(true);
-                }));
+    // m_driverController
+    //     .x()
+    //     .onTrue(
+    //         Commands.runOnce(
+    //             () -> {
+    //               coralLevel = CoralLevel.L1;
+    //               driveCommand.setInverted(true);
+    //             }));
 
-    m_operatorController
+    m_driverController
         .a()
         .onTrue(
             Commands.runOnce(
@@ -564,7 +565,7 @@ public class RobotContainer {
                   driveCommand.setInverted(false);
                 }));
 
-    m_operatorController
+    m_driverController
         .b()
         .onTrue(
             Commands.runOnce(
@@ -573,7 +574,7 @@ public class RobotContainer {
                   driveCommand.setInverted(false);
                 }));
 
-    m_operatorController
+    m_driverController
         .y()
         .onTrue(
             Commands.runOnce(
