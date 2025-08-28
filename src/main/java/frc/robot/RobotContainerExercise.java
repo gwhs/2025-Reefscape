@@ -45,7 +45,8 @@ public class RobotContainerExercise {
     // TODO 2: press right bumper -> set arm angle to -90
 
 
-    // TODO 3: press start -> score L4 Coral (finish in command composition first)
+    // TODO 3: press start -> score L4 Coral
+    // ↓↓↓↓↓↓↓↓↓↓ COMPLETE THE COMMAND COMPOSITION IN scoreL4Coral() METHOD BELOW FIRST ↓↓↓↓↓↓↓↓↓↓
 
     
   }
@@ -60,10 +61,15 @@ public class RobotContainerExercise {
   public Command scoreL4Coral() {
     return Commands.sequence(
         // TODO: 
-        // Command 1: In parallel: extend elevator to ElevatorConstants.L4_PREP_POSITION + rotate arm to ArmConstants.L4_PREP_POSITION (Commands.parallel())
+        // Command 1: In parallel: (Commands.parallel())
+        //     Command 1a: extend elevator to ElevatorConstants.L4_PREP_POSITION
+        //     Command 1b: rotate arm to ArmConstants.L4_PREP_POSITION
         // Command 2: Spin endeffector at EndEffectorConstants.VOLTAGE_L4
         // Command 3: Wait 0.05 seconds (Commands.waitSeconds())
-        // Command 4: In parallel: retract elevator to ElevatorConstants.STOW_METER + rotate arm to ArmConstants.ARM_STOW_ANGLE + spin endeffector at 0 volts
+        // Command 4: In parallel: 
+        //     Command 4a: retract elevator to ElevatorConstants.STOW_METER
+        //     Command 4b: rotate arm to ArmConstants.ARM_STOW_ANGLE
+        //     Command 4c: spin endeffector at 0 volts
         );
   }
 }
