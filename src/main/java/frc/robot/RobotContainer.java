@@ -303,11 +303,17 @@ public class RobotContainer {
 
     IS_CONTROLLER_LEFT
         .and(m_driverController.a().or(m_driverController.b()).or(m_driverController.y()))
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
+        .onTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
+
+    m_driverController
+        .a()
+        .or(m_driverController.b())
+        .or(m_driverController.y())
+        .onFalse(driveCommand);
 
     IS_CONTROLLER_RIGHT
         .and(m_driverController.a().or(m_driverController.b()).or(m_driverController.y()))
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
+        .onTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
 
     // IS_DISABLED
     //     .and(() -> RobotController.getBatteryVoltage() >= 12)
