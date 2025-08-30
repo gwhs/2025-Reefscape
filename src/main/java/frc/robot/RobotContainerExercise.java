@@ -11,6 +11,7 @@ import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.endEffector.EndEffectorConstants;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 
@@ -63,13 +64,19 @@ public class RobotContainerExercise {
         // TODO:
         // Command 1: In parallel: extend elevator to ElevatorConstants.L4_PREP_POSITION + rotate
         // arm to ArmConstants.L4_PREP_POSITION (Commands.parallel())
-      Commands.parallel(arm.setAngle(ArmConstants.L4_PREP_POSITION),elevator.setHeight(ElevatorConstants.L4_PREP_POSITION))), 
-      
-        
+        Commands.parallel(
+            arm.setAngle(ArmConstants.L4_PREP_POSITION),
+            elevator.setHeight(ElevatorConstants.L4_PREP_POSITION)),
         // Command 2: Spin endeffector at EndEffectorConstants.VOLTAGE_L4
+        endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L4),
         // Command 3: Wait 0.05 seconds (Commands.waitSeconds())
+        Commands.waitSeconds(0.5),
         // Command 4: In parallel: retract elevator to ElevatorConstants.STOW_METER + rotate arm to
-        // ArmConstants.ARM_STOW_ANGLE + spin endeffector at 0 git volts
-        
+        Commands.parallel(
+            elevator.setHeight(ElevatorConstants.STOW_METER),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
+            endEffector.setVoltage(0)));
+    // ArmConstants.ARM_STOW_ANGLE + spin endeffector at 0 git volts
+
   }
 }
