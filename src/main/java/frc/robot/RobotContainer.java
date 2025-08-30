@@ -291,27 +291,6 @@ public class RobotContainer {
                 })
             .ignoringDisable(true));
 
-    // IS_DISABLED
-    //     .and(() -> RobotController.getBatteryVoltage() >= 12)
-    //     .onTrue(led.setPattern(LEDPattern.solid(Color.kGreen)));
-
-    // IS_DISABLED
-    //     .and(() -> RobotController.getBatteryVoltage() < 12)
-    //     .onTrue(led.setPattern(LEDPattern.solid(Color.kRed)));
-
-    IS_DISABLED.onFalse(
-        Commands.runOnce(
-                () -> {
-                  // drivetrain.configNeutralMode(NeutralModeValue.Brake);
-                  // elevator.setNeutralMode(NeutralModeValue.Brake);
-                })
-            .andThen(groundIntake.setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 0))
-            .ignoringDisable(false));
-
-    // IS_DISABLED
-    //     .and(() -> RobotController.getBatteryVoltage() < 12)
-    //     .onTrue(EagleUtil.triggerAlert(batteryUnderTwelveVolts));
-
     m_driverController
         .x()
         .or(m_driverController.y())
@@ -397,43 +376,6 @@ public class RobotContainer {
     IS_L3.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L3));
     IS_L2.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L2));
     IS_L1.and(m_driverController.rightTrigger()).whileTrue(prepScoreCoral(CoralLevel.L1));
-
-    // m_operatorController
-    //     .leftStick()
-    //     .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_ALGAE_ANGLE, 6))
-    //     .onFalse(groundIntake.setAngleAndVoltage(GroundIntakeConstants.ALGAE_STOW_ANGLE, 2));
-
-    m_operatorController
-        .rightStick()
-        .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, 1))
-        .onFalse(scoreAlgae());
-
-    m_operatorController
-        .rightStick()
-        .whileTrue(
-            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.PROCESSOR))
-                .withName("Face Processor"))
-        .onFalse(
-            Commands.waitSeconds(0.5)
-                .andThen(
-                    Commands.runOnce(
-                        () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))));
-
-    // m_operatorController
-    //     .leftStick()
-    //     .whileTrue(
-    //         Commands.startEnd(
-    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL),
-    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
-    //             .withName("Ground Intake normal"));
-
-    // m_operatorController
-    //     .x()
-    //     .whileTrue(
-    //         Commands.startEnd(
-    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL),
-    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
-    //             .withName("Algae Normal"));
 
     IS_L1
         .and(IS_REEF_MODE)
@@ -721,25 +663,16 @@ public class RobotContainer {
   public Command groundIntakeScoreL1() {
     return Commands.sequence(
             groundIntake
-                .setAngleAndVoltage(GroundIntakeConstants.SCORE_CORAL_ANGLE, 6)
+                .setAngleAndAmp(
+                    GroundIntakeConstants.SCORE_CORAL_ANGLE,
+                    GroundIntakeConstants.SCORE_CORAL_AMP,
+                    GroundIntakeConstants.SCORE_CORAL_DUTYCYCLE)
                 .withTimeout(0.5),
             Commands.waitSeconds(0.3),
             groundIntake
-                .setAngleAndVoltage(GroundIntakeConstants.CORAL_STOW_ANGLE, 0)
+                .setAngleAndAmp(GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0)
                 .withTimeout(0.5))
         .withName("Ground Intake Score Coral L1");
-  }
-
-  public Command scoreAlgae() {
-    return Commands.sequence(
-            groundIntake
-                .setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, -6)
-                .withTimeout(0.5),
-            Commands.waitSeconds(0.7),
-            groundIntake
-                .setAngleAndVoltage(GroundIntakeConstants.ALGAE_STOW_ANGLE, 0)
-                .withTimeout(0.5))
-        .withName("Score Algae");
   }
 
   /**
@@ -885,7 +818,7 @@ public class RobotContainer {
     return Commands.sequence(
             Commands.sequence(
                 Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE))),
-            groundIntake.setAngleAndVoltage(GroundIntakeConstants.CLIMB_ANGLE, 0).withTimeout(1),
+            groundIntake.setAngleAndAmp(GroundIntakeConstants.CLIMB_ANGLE, 0, 0).withTimeout(1),
             arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
             elevator.setHeight(0).withTimeout(1),
             climb.latch().withTimeout(1),
