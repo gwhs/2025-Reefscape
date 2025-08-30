@@ -302,11 +302,11 @@ public class RobotContainer {
             .ignoringDisable(true));
 
     IS_CONTROLLER_LEFT
-        .and(drivetrain.IS_ALIGNING_TO_POSE)
+        .and(m_driverController.a().or(m_driverController.b()).or(m_driverController.y()))
         .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
 
     IS_CONTROLLER_RIGHT
-        .and(drivetrain.IS_ALIGNING_TO_POSE)
+        .and(m_driverController.a().or(m_driverController.b()).or(m_driverController.y()))
         .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
 
     // IS_DISABLED
