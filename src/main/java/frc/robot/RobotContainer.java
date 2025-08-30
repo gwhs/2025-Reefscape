@@ -416,8 +416,14 @@ public class RobotContainer {
         .and(m_driverController.y())
         .whileTrue(prepScoreCoral(CoralLevel.L4))
         .onFalse(stowArmAndElevator());
-    IS_L3.and(m_driverController.b()).whileTrue(prepScoreCoral(CoralLevel.L3)).onFalse(stowArmAndElevator());
-    IS_L2.and(m_driverController.a()).whileTrue(prepScoreCoral(CoralLevel.L2)).onFalse(stowArmAndElevator());
+    IS_L3
+        .and(m_driverController.b())
+        .whileTrue(prepScoreCoral(CoralLevel.L3))
+        .onFalse(stowArmAndElevator());
+    IS_L2
+        .and(m_driverController.a())
+        .whileTrue(prepScoreCoral(CoralLevel.L2))
+        .onFalse(stowArmAndElevator());
     // IS_L1.and(m_driverController.x()).whileTrue(prepScoreCoral(CoralLevel.L1));
 
     // m_operatorController
