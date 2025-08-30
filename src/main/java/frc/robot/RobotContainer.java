@@ -238,7 +238,7 @@ public class RobotContainer {
                         drivetrain.getPose(), EagleUtil.getClosetStationGen(drivetrain.getPose()))
                     < 0.4);
 
-    IS_CONTROLLER_LEFT = new Trigger(() -> m_driverController.getLeftX() >= -0.5);
+    IS_CONTROLLER_LEFT = new Trigger(() -> m_driverController.getLeftX() <= -0.5);
 
     IS_CONTROLLER_RIGHT = new Trigger(() -> m_driverController.getLeftX() >= 0.5);
 
