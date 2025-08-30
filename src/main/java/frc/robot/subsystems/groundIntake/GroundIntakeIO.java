@@ -13,4 +13,6 @@ public interface GroundIntakeIO {
   public void resetPivotEncoder();
 
   public void update();
+
+  public void runAmp(double amp, double dutyCycle);
 }
