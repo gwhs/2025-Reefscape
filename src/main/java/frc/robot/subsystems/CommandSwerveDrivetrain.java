@@ -2,8 +2,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
-import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.Utils; import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
@@ -62,8 +61,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
           });
 
   public Constraints constraints = new TrapezoidProfile.Constraints(3, 2);
-  public ProfiledPIDController PID_X = new ProfiledPIDController(3.0, 0, 0, constraints);
-  public ProfiledPIDController PID_Y = new ProfiledPIDController(3.0, 0, 0, constraints);
+  public ProfiledPIDController PID_X = new ProfiledPIDController(2.5, 0, 0, constraints);
+  public ProfiledPIDController PID_Y = new ProfiledPIDController(2.5, 0, 0, constraints);
 
   public PIDController PID_Rotation = new PIDController(0.1, 0, 0);
   public Trigger IS_AT_TARGET_POSE =
@@ -166,8 +165,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     ChassisSpeeds currentSpeed =
         ChassisSpeeds.fromRobotRelativeSpeeds(getState().Speeds, getRotation());
 
-    double predicted_X = (targetPose.getX() - getPose().getX()) * 0.4 + getPose().getX();
-    double predicted_Y = (targetPose.getY() - getPose().getY()) * 0.4 + getPose().getY();
+    double predicted_X = (targetPose.getX() - getPose().getX()) * 0.3 + getPose().getX();
+    double predicted_Y = (targetPose.getY() - getPose().getY()) * 0.3 + getPose().getY();
 
     PID_X.reset(predicted_X, currentSpeed.vxMetersPerSecond * 0.4);
     PID_Y.reset(predicted_Y, currentSpeed.vyMetersPerSecond * 0.4);
