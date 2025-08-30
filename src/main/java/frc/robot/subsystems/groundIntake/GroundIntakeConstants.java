@@ -28,8 +28,6 @@ public class GroundIntakeConstants {
 
   public static final double CLIMB_ANGLE = -15; // TODO
 
-  public static final double CURRENT_LIMIT = 10;
-
   public static final double INTAKE_CORAL_AMP = 20;
   public static final double INTAKE_CORAL_DUTYCYCLE = 1;
   public static final double HOLD_CORAL_AMP = 10;
