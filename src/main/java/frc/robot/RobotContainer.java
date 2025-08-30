@@ -870,9 +870,7 @@ public class RobotContainer {
     Command prepClimb =
         Commands.sequence(
                 Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE)),
-                groundIntake
-                    .setAngleAndAmp(GroundIntakeConstants.CLIMB_ANGLE, 0, 0)
-                    .withTimeout(1),
+                groundIntake.setAngleAndAmp(GroundIntakeConstants.CLIMB_ANGLE, 0, 0).withTimeout(1),
                 arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
                 elevator.setHeight(0).withTimeout(1),
                 climb.latch().withTimeout(1),
