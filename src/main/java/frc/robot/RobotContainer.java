@@ -412,9 +412,12 @@ public class RobotContainer {
 
     m_driverController.leftTrigger().onFalse(dealgae());
 
-    IS_L4.and(m_driverController.y()).whileTrue(prepScoreCoral(CoralLevel.L4));
-    IS_L3.and(m_driverController.b()).whileTrue(prepScoreCoral(CoralLevel.L3));
-    IS_L2.and(m_driverController.a()).whileTrue(prepScoreCoral(CoralLevel.L2));
+    IS_L4
+        .and(m_driverController.y())
+        .whileTrue(prepScoreCoral(CoralLevel.L4))
+        .onFalse(stowArmAndElevator());
+    IS_L3.and(m_driverController.b()).whileTrue(prepScoreCoral(CoralLevel.L3)).onFalse(stowArmAndElevator());
+    IS_L2.and(m_driverController.a()).whileTrue(prepScoreCoral(CoralLevel.L2)).onFalse(stowArmAndElevator());
     // IS_L1.and(m_driverController.x()).whileTrue(prepScoreCoral(CoralLevel.L1));
 
     // m_operatorController
@@ -795,6 +798,14 @@ public class RobotContainer {
             Commands.runOnce(() -> robotState = RobotState.PREPSCORE))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
+  }
+
+  public Command stowArmAndElevator() {
+    return Commands.parallel(
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(1.0),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(1.0),
+            endEffector.holdCoral())
+        .withName("Stow Arm and Elevator");
   }
 
   public Command prepScoreCoral(CoralLevel level) {
