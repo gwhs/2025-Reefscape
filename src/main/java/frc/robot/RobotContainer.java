@@ -432,12 +432,12 @@ public class RobotContainer {
         .onFalse(stowArmAndElevator());
     // IS_L1.and(m_driverController.x()).whileTrue(prepScoreCoral(CoralLevel.L1));
 
-    // m_operatorController
+    // .
     //     .leftStick()
     //     .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.INTAKE_ALGAE_ANGLE, 6))
     //     .onFalse(groundIntake.setAngleAndVoltage(GroundIntakeConstants.ALGAE_STOW_ANGLE, 2));
 
-    m_operatorController
+    m_operatorControllerx
         .rightStick()
         .whileTrue(groundIntake.setAngleAndVoltage(GroundIntakeConstants.SCORE_ALGAE_ANGLE, 1))
         .onFalse(scoreAlgae());
