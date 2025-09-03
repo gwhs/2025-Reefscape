@@ -834,7 +834,7 @@ public class RobotContainer {
     return Commands.parallel(
             elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
             arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
-            endEffector.setVoltage(0))
+            endEffector.intakeAlgae())
         .withName("prep Delalgae low");
   }
 
@@ -848,14 +848,14 @@ public class RobotContainer {
 
   public Command dealgae() {
     return Commands.sequence(
-            arm.setAngle(ArmConstants.DEALGAE_ANGLE)
-                .alongWith(elevator.decreaseHeight(0.1))
-                .withTimeout(0.2),
+            drivetrain.driveBackward(-1).withTimeout(0.6),
+            arm.setAngle(ArmConstants.DEALGAE_ANGLE).withTimeout(0.2),
             drivetrain.driveBackward(1).withTimeout(0.6),
+            arm.setAngle(ArmConstants.MOVING_DEALGAE_ANGLE),
             Commands.parallel(
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(.1),
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(.1),
-                endEffector.stopMotor()))
+                endEffector.holdAlgae()))
         .withName("Dealgae");
   }
 

@@ -21,8 +21,9 @@ public class ArmConstants {
   public static final double ARM_INTAKE_ANGLE_BACKUP = -65;
   public static final double ARM_STOW_ANGLE = -90.0;
 
-  public static final double PRE_DEALGAE_ANGLE = 155;
-  public static final double DEALGAE_ANGLE = 170;
+  public static final double PRE_DEALGAE_ANGLE = -120;
+  public static final double DEALGAE_ANGLE = -130;
+  public static final double MOVING_DEALGAE_ANGLE = -110;
 
   public static final double MAGNET_OFFSET_DEGREES = -269.82;
 

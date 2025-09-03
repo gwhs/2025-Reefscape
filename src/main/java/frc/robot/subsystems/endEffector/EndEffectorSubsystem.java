@@ -62,8 +62,6 @@ public class EndEffectorSubsystem extends SubsystemBase {
     return Commands.runOnce(() -> endEffectorIO.stopMotor());
   }
 
-
-
   public boolean algaeLoaded() {
     return endEffectorIO.coralLoaded();
   }
