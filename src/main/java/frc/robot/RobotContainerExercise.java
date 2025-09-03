@@ -7,7 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
@@ -40,15 +42,14 @@ public class RobotContainerExercise {
     controller.x().onTrue(elevator.setHeight(0));
 
     // TODO 1: press left bumper: set arm angle to 120
-
+    controller.leftBumper().onTrue(arm.setAngle(120));
 
     // TODO 2: press right bumper -> set arm angle to -90
-
+    controller.rightBumper().onTrue(arm.setAngle(-90));
 
     // TODO 3: press start -> score L4 Coral
     // ↓↓↓↓↓↓↓↓↓↓ COMPLETE THE COMMAND COMPOSITION IN scoreL4Coral() METHOD BELOW FIRST ↓↓↓↓↓↓↓↓↓↓
-
-    
+    controller.start().onTrue(scoreL4Coral());
   }
 
   public void periodic() {
@@ -60,16 +61,21 @@ public class RobotContainerExercise {
    ********************/
   public Command scoreL4Coral() {
     return Commands.sequence(
-        // TODO: 
+        // TODO:
         // Command 1: In parallel: (Commands.parallel())
         //     Command 1a: extend elevator to ElevatorConstants.L4_PREP_POSITION
         //     Command 1b: rotate arm to ArmConstants.L4_PREP_POSITION
         // Command 2: Spin endeffector at EndEffectorConstants.VOLTAGE_L4
         // Command 3: Wait 0.05 seconds (Commands.waitSeconds())
-        // Command 4: In parallel: 
+        // Command 4: In parallel:
         //     Command 4a: retract elevator to ElevatorConstants.STOW_METER
         //     Command 4b: rotate arm to ArmConstants.ARM_STOW_ANGLE
         //     Command 4c: spin endeffector at 0 volts
+        Commands.parallel(ElevatorConstants.L4_PREP_POSITION),
+        Commands.parallel(ArmConstants.L4_PREP_POSITION)
+        l(EndEffectorSubsystem.VOLTAGE_L4)
+
+
         );
   }
 }
