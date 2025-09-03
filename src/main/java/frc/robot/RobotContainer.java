@@ -421,12 +421,6 @@ public class RobotContainer {
                     })
                 .withName("Ground Intake with Back Reef on Release"));
 
-    IS_L1
-        .and(m_driverController.povDown().negate())
-        .onTrue(
-            Commands.runOnce(() -> driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF))
-                .withName("Set Back Reef on POVDown Release in L1"));
-
     m_driverController
         .rightTrigger()
         .onFalse(
