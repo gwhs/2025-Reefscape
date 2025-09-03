@@ -417,6 +417,7 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
+                  driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES);
                   driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
                 }));
 
@@ -427,6 +428,7 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
+                  driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
                   driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
                 }));
 
@@ -879,7 +881,7 @@ public class RobotContainer {
 
   public Command retractGroundIntake() {
     return Commands.parallel(
-        Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
+        Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES)),
         groundIntake
             .setAngleAndAmp(
                 GroundIntakeConstants.CORAL_STOW_ANGLE,
