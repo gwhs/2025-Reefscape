@@ -257,6 +257,13 @@ public class RobotContainer {
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     SmartDashboard.putData("Unprep Climb", unPrepClimbCommand());
+    SmartDashboard.putData("Home Elevator", zeroElevator());
+    // SmartDashboard.putData("Arm Angle Increase", arm.increaseAngle(3.0));
+    // SmartDashboard.putData("Arm Angle Decrease", arm.decreaseAngle(3.0));
+    // SmartDashboard.putData("Elevator Increase", elevator.increaseHeight(0.02));
+    // SmartDashboard.putData("Elevator Decrease", elevator.decreaseHeight(0.02));
+    // SmartDashboard.putData("Ground Intake UP", groundIntake.increaseAngle(3));
+    // SmartDashboard.putData("Ground Intake DOWN", groundIntake.decreaseAngle(3));
 
     // Calculate reef setpoints at startup
     EagleUtil.calculateBlueReefSetPoints();
@@ -315,17 +322,17 @@ public class RobotContainer {
         .and(m_driverController.a().or(m_driverController.b()).or(m_driverController.y()))
         .onTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
 
-    m_driverController
-        .x()
-        .or(m_driverController.povLeft())
-        .whileTrue(
-            Commands.startEnd(
-                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
-                    () -> {
-                      driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
-                      driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
-                    })
-                .withName("Face Coral Station"));
+    // m_driverController
+    //     .x()
+    //     .or(m_driverController.povLeft())
+    //     .whileTrue(
+    //         Commands.startEnd(
+    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
+    //                 () -> {
+    //                   driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
+    //                   driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+    //                 })
+    //             .withName("Face Coral Station"));
 
     // m_driverController
     //     .x()
@@ -341,17 +348,6 @@ public class RobotContainer {
                 ElevatorConstants.INTAKE_METER_BACKUP, ArmConstants.ARM_INTAKE_ANGLE_BACKUP))
         .onFalse(stopIntake());
 
-    // IS_TELEOP
-    //     .and(IS_CORAL_LOADED)
-    //     .and(IS_INTAKE.debounce(.5))
-    //     .onTrue(drivetrain.driveBackward(-4.5).withTimeout(.5));
-
-    // IS_TELEOP
-    //     .and(IS_REEFMODE)
-    //     .and(IS_CLOSE_TO_REEF)
-    //     .onTrue(
-    //         prepScoreCoral(ElevatorConstants.STOW_METER, 220).withName("auto prep score coral"));
-
     // m_driverController
     //     .leftBumper()
     //     .onTrue(
@@ -359,6 +355,41 @@ public class RobotContainer {
     //             .withName("Back to Original State"));
 
     // make this force release
+
+    m_driverController
+        .povLeft()
+        .whileTrue(
+            groundIntake
+                .setAngleAndAmp(
+                    GroundIntakeConstants.INTAKE_CORAL_ANGLE,
+                    GroundIntakeConstants.INTAKE_CORAL_AMP,
+                    GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE)
+                .withName("Ground Intake Extend"));
+
+    m_driverController
+        .povLeft()
+        .whileTrue(
+            groundIntake
+                .setAngleAndAmp(
+                    GroundIntakeConstants.CORAL_STOW_ANGLE,
+                    GroundIntakeConstants.HOLD_CORAL_AMP,
+                    GroundIntakeConstants.HOLD_CORAL_DUTYCYCLE)
+                .withName("Ground Intake Stow"));
+
+    m_driverController
+        .povLeft()
+        .whileTrue(
+            Commands.startEnd(
+                    () -> {
+                      driveCommand.setDriveMode(DriveCommand.DriveMode.ROBOT_CENTRIC);
+                      driveCommand.setSlowMode(true, 0.5);
+                    },
+                    () -> {
+                      driveCommand.setDriveMode(DriveCommand.DriveMode.FIELD_CENTRIC);
+                      driveCommand.setSlowMode(false, 0.5);
+                    })
+                .withName("Slow and Robot Centric"));
+
     m_driverController
         .rightTrigger()
         .onFalse(
@@ -497,12 +528,10 @@ public class RobotContainer {
         .and(m_driverController.b())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
 
-    m_operatorController.start().onTrue(elevator.homingCommand());
-
-    m_driverController
-        .povLeft()
-        .whileTrue(
-            alignToPose(() -> EagleUtil.getClosestCoralStation(this.getRobotPose()))); // TODO
+    // m_driverController
+    //     .povLeft()
+    //     .whileTrue(
+    //         alignToPose(() -> EagleUtil.getClosestCoralStation(this.getRobotPose()))); // TODO
 
     // m_driverController
     //     .x()
@@ -544,14 +573,6 @@ public class RobotContainer {
     // m_operatorController.b().whileTrue(arm.sysIdQuasistatic(Direction.kReverse));
     // m_operatorController.a().whileTrue(arm.sysIdDynamic(Direction.kForward));
     // m_operatorController.x().whileTrue(arm.sysIdDynamic(Direction.kReverse));
-
-    m_operatorController.povRight().onTrue(arm.increaseAngle(3.0));
-    m_operatorController.povLeft().onTrue(arm.decreaseAngle(3.0));
-    m_operatorController.povUp().onTrue(elevator.increaseHeight(0.02));
-    m_operatorController.povDown().onTrue(elevator.decreaseHeight(0.02));
-
-    // m_operatorController.leftBumper().onTrue(groundIntake.decreaseAngle(3));
-    // m_operatorController.rightBumper().onTrue(groundIntake.increaseAngle(3));
 
     m_driverController.start().onTrue(climb());
   }
@@ -672,17 +693,6 @@ public class RobotContainer {
             Commands.runOnce(() -> robotState = RobotState.INTAKE))
         .withName("Prepare Coral Intake");
   }
-
-  //   public Command fullAutoScore(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
-  //     return Commands.parallel(
-  //       endEffector.holdCoral(),
-  //       elevator.setHeight(elevatorHeight).withTimeout(1.5),
-  //       arm.setAngle(armAngle).withTimeout(1.5),
-  //       Commands.runOnce(() -> robotState = RobotState.PREPSCORE),
-  //       endEffector.shoot(EndEffectorConstants.VOLTAGE_L4), Commands.waitSeconds(0.05))
-  //         .withName("Prepare Coral Intake Auton");
-  // }
-  //   }
 
   public Command prepCoralIntakeAuton() {
     return Commands.parallel(
