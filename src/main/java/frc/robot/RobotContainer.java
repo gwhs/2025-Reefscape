@@ -402,6 +402,7 @@ public class RobotContainer {
             Commands.startEnd(
                     () -> {
                       driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL);
+                      coralLevel = CoralLevel.L1;
                       groundIntake
                           .setAngleAndAmp(
                               GroundIntakeConstants.INTAKE_CORAL_ANGLE,
