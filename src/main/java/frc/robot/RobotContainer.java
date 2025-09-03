@@ -356,39 +356,76 @@ public class RobotContainer {
 
     // make this force release
 
-    m_driverController
-        .povDown()
-        .whileTrue(
-            groundIntake
-                .setAngleAndAmp(
-                    GroundIntakeConstants.INTAKE_CORAL_ANGLE,
-                    GroundIntakeConstants.INTAKE_CORAL_AMP,
-                    GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE)
-                .withName("Ground Intake Extend"));
+    // m_driverController
+    //     .povDown()
+    //     .whileTrue(
+    //         groundIntake
+    //             .setAngleAndAmp(
+    //                 GroundIntakeConstants.INTAKE_CORAL_ANGLE,
+    //                 GroundIntakeConstants.INTAKE_CORAL_AMP,
+    //                 GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE)
+    //             .withName("Ground Intake Extend"));
 
-    m_driverController
-        .povDown()
-        .onFalse(
-            groundIntake
-                .setAngleAndAmp(
-                    GroundIntakeConstants.CORAL_STOW_ANGLE,
-                    GroundIntakeConstants.HOLD_CORAL_AMP,
-                    GroundIntakeConstants.HOLD_CORAL_DUTYCYCLE)
-                .withName("Ground Intake Stow"));
+    // m_driverController
+    //     .povDown()
+    //     .whileTrue(
+    //         Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
+    //             .withName("Back to Original State"));
+
+    // m_driverController
+    //     .povDown()
+    //     .whileFalse(
+    //         Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
+    //             .withName("Reef mode"));
+
+    // m_driverController
+    //     .povDown()
+    //     .onFalse(
+    //         groundIntake
+    //             .setAngleAndAmp(
+    //                 GroundIntakeConstants.CORAL_STOW_ANGLE,
+    //                 GroundIntakeConstants.HOLD_CORAL_AMP,
+    //                 GroundIntakeConstants.HOLD_CORAL_DUTYCYCLE)
+    //             .withName("Ground Intake Stow"));
+
+    // m_driverController
+    //     .povDown()
+    //     .onFalse(
+    //         Commands.runOnce(
+    //             () -> {
+    //               driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
+    //             }));
 
     m_driverController
         .povDown()
         .whileTrue(
             Commands.startEnd(
                     () -> {
-                      driveCommand.setDriveMode(DriveCommand.DriveMode.ROBOT_CENTRIC);
-                      driveCommand.setSlowMode(true, 0.5);
+                      driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL);
+                      groundIntake
+                          .setAngleAndAmp(
+                              GroundIntakeConstants.INTAKE_CORAL_ANGLE,
+                              GroundIntakeConstants.INTAKE_CORAL_AMP,
+                              GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE)
+                          .schedule();
                     },
                     () -> {
-                      driveCommand.setDriveMode(DriveCommand.DriveMode.FIELD_CENTRIC);
-                      driveCommand.setSlowMode(false, 0.5);
+                      driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
+                      driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
+                      groundIntake
+                          .setAngleAndAmp(
+                              GroundIntakeConstants.CORAL_STOW_ANGLE,
+                              GroundIntakeConstants.HOLD_CORAL_AMP,
+                              GroundIntakeConstants.HOLD_CORAL_DUTYCYCLE)
+                          .schedule();
                     })
-                .withName("Slow and Robot Centric"));
+                .withName("Ground Intake with Back Reef on Release"));
+
+    IS_L1
+        .and(m_driverController.povDown().negate())
+        .onTrue(
+            Commands.runOnce(() -> driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF))
+                .withName("Set Back Reef on POVDown Release in L1"));
 
     m_driverController
         .rightTrigger()
