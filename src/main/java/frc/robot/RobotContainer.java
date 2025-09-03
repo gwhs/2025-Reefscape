@@ -322,17 +322,17 @@ public class RobotContainer {
         .and(m_driverController.a().or(m_driverController.b()).or(m_driverController.y()))
         .onTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
 
-    // m_driverController
-    //     .x()
-    //     .or(m_driverController.povLeft())
-    //     .whileTrue(
-    //         Commands.startEnd(
-    //                 () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
-    //                 () -> {
-    //                   driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
-    //                   driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
-    //                 })
-    //             .withName("Face Coral Station"));
+    m_driverController
+        .x()
+        .or(m_driverController.povLeft())
+        .whileTrue(
+            Commands.startEnd(
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION),
+                    () -> {
+                      driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
+                      driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+                    })
+                .withName("Face Coral Station"));
 
     // m_driverController
     //     .x()
@@ -357,7 +357,7 @@ public class RobotContainer {
     // make this force release
 
     m_driverController
-        .povLeft()
+        .povDown()
         .whileTrue(
             groundIntake
                 .setAngleAndAmp(
@@ -367,8 +367,8 @@ public class RobotContainer {
                 .withName("Ground Intake Extend"));
 
     m_driverController
-        .povLeft()
-        .whileTrue(
+        .povDown()
+        .onFalse(
             groundIntake
                 .setAngleAndAmp(
                     GroundIntakeConstants.CORAL_STOW_ANGLE,
@@ -377,7 +377,7 @@ public class RobotContainer {
                 .withName("Ground Intake Stow"));
 
     m_driverController
-        .povLeft()
+        .povDown()
         .whileTrue(
             Commands.startEnd(
                     () -> {
@@ -528,10 +528,10 @@ public class RobotContainer {
         .and(m_driverController.b())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
 
-    // m_driverController
-    //     .povLeft()
-    //     .whileTrue(
-    //         alignToPose(() -> EagleUtil.getClosestCoralStation(this.getRobotPose()))); // TODO
+    m_driverController
+        .povLeft()
+        .whileTrue(
+            alignToPose(() -> EagleUtil.getClosestCoralStation(this.getRobotPose()))); // TODO
 
     // m_driverController
     //     .x()
