@@ -358,6 +358,8 @@ public class RobotContainer {
 
     m_driverController.povDown().whileTrue(deployGroundIntake()).onFalse(retractGroundIntake());
 
+    IS_L1.and(m_driverController.rightTrigger()).onTrue(scoreGroundIntake());
+
     m_driverController
         .rightTrigger()
         .onFalse(
@@ -884,5 +886,19 @@ public class RobotContainer {
                 GroundIntakeConstants.HOLD_CORAL_AMP,
                 GroundIntakeConstants.HOLD_CORAL_DUTYCYCLE)
             .withName("Ground Intake Extend"));
+  }
+
+  public Command scoreGroundIntake() {
+    return Commands.sequence(
+        groundIntake.setAngleAndAmp(
+            GroundIntakeConstants.SCORE_CORAL_ANGLE,
+            GroundIntakeConstants.HOLD_CORAL_AMP,
+            GroundIntakeConstants.HOLD_CORAL_DUTYCYCLE),
+        groundIntake.setAngleAndAmp(
+            GroundIntakeConstants.SCORE_CORAL_ANGLE,
+            GroundIntakeConstants.SCORE_CORAL_AMP,
+            GroundIntakeConstants.SCORE_CORAL_DUTYCYCLE),
+        Commands.waitSeconds(0.5),
+        groundIntake.setAngleAndAmp(GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0));
   }
 }
