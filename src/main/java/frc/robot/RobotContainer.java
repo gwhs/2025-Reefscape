@@ -322,13 +322,6 @@ public class RobotContainer {
         .and(m_driverController.a().or(m_driverController.b()).or(m_driverController.y()))
         .onTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
 
-    // m_driverController
-    //     .x()
-    //     .and(IS_NEAR_CORAL_STATION)
-    //     .onTrue(Commands.runOnce(() -> driveCommand.setSlowMode(true, 0.25)))
-    //     .onFalse(Commands.runOnce(() -> driveCommand.setSlowMode(false, 0)));
-
-    // m_driverController.rightBumper().whileTrue(prepCoralIntake()).onFalse(stopIntake());
     m_driverController
         .x()
         .whileTrue(
@@ -398,16 +391,6 @@ public class RobotContainer {
         .and(m_driverController.a())
         .whileTrue(prepScoreCoral(CoralLevel.L2))
         .onFalse(stowArmAndElevator());
-    // IS_L1.and(m_driverController.x()).whileTrue(prepScoreCoral(CoralLevel.L1));
-
-    IS_L1
-        .and(IS_REEF_MODE)
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES);
-                  driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
-                }));
 
     IS_L2
         .or(IS_L3)
@@ -419,8 +402,6 @@ public class RobotContainer {
                   driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
                   driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
                 }));
-
-    // m_driverController.start().onTrue(Commands.runOnce(drivetrain::seedFieldCentric));
 
     m_driverController
         .back()
@@ -528,11 +509,6 @@ public class RobotContainer {
                   coralLevel = CoralLevel.L4;
                   driveCommand.setInverted(false);
                 }));
-
-    // m_operatorController.y().whileTrue(arm.sysIdQuasistatic(Direction.kForward));
-    // m_operatorController.b().whileTrue(arm.sysIdQuasistatic(Direction.kReverse));
-    // m_operatorController.a().whileTrue(arm.sysIdDynamic(Direction.kForward));
-    // m_operatorController.x().whileTrue(arm.sysIdDynamic(Direction.kReverse));
 
     m_driverController.start().onTrue(climb());
   }
