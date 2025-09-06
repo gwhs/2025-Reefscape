@@ -667,6 +667,7 @@ public class RobotContainer {
   }
 
   public Command prepCoralIntakeAuton() {
+
     return Commands.parallel(
             endEffector.intake(),
             elevator.setHeight(ElevatorConstants.INTAKE_METER_AUTON).withTimeout(0.5),
@@ -675,11 +676,18 @@ public class RobotContainer {
   }
 
   public Command prepCoralIntake() {
+    driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+
     return prepCoralIntake(ElevatorConstants.INTAKE_METER, ArmConstants.ARM_INTAKE_ANGLE);
   }
 
   public Command stopIntake() {
+    driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+
     return Commands.parallel(
+      Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
+      
+
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
             elevator.setHeight(ElevatorConstants.STOW_METER),
             endEffector.holdCoral(),
@@ -719,8 +727,7 @@ public class RobotContainer {
 
   public Command prepScoreCoral(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
     return Commands.parallel(
-      Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
-
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
             endEffector.holdCoral(),
             elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
             arm.setAngleSupplier(armAngle).withTimeout(.5),
@@ -755,11 +762,8 @@ public class RobotContainer {
    */
   public Command scoreCoral() {
     Command scoreCoral =
-
-
         Commands.sequence(
-          Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
-
+                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
