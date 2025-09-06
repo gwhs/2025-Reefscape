@@ -719,6 +719,8 @@ public class RobotContainer {
 
   public Command prepScoreCoral(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
     return Commands.parallel(
+      Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
+
             endEffector.holdCoral(),
             elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
             arm.setAngleSupplier(armAngle).withTimeout(.5),
@@ -753,7 +755,11 @@ public class RobotContainer {
    */
   public Command scoreCoral() {
     Command scoreCoral =
+
+
         Commands.sequence(
+          Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
+
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
