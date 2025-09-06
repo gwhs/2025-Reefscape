@@ -70,7 +70,6 @@ public class DriveCommand extends Command {
     REEF,
     CAGE,
     REEF_FACES,
-    BACK_REEF_FACES,
     PROCESSOR
   }
 
