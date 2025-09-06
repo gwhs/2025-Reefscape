@@ -159,15 +159,12 @@ public class DriveCommand extends Command {
     } else if (mode == TargetMode.REEF_FACES) {
       if (reefMode == ReefPositions.FRONT_REEF) {
         Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
-        setReefMode(DriveCommand.ReefPositions.BACK_REEF);
         return nearest.getRotation().getDegrees();
       } else if (reefMode == ReefPositions.RIGHT_SIDE_REEF) {
         Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
-        setReefMode(DriveCommand.ReefPositions.BACK_REEF);
         return nearest.getRotation().getDegrees() + 90;
       } else if (reefMode == ReefPositions.BACK_REEF) {
         Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
-        setReefMode(DriveCommand.ReefPositions.BACK_REEF);
         return nearest.getRotation().getDegrees() + 180;
       } else {
         return 0;
