@@ -647,9 +647,10 @@ public class RobotContainer {
    */
   public Command prepCoralIntake(double elevatorHeight, double armAngle) {
     return Commands.parallel(
-      Commands.runOnce(() -> {
-        driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION);
-      }),
+            Commands.runOnce(
+                () -> {
+                  driveCommand.setTargetMode(DriveCommand.TargetMode.CORAL_STATION);
+                }),
             endEffector.intake(),
             elevator.setHeight(elevatorHeight).withTimeout(0.5),
             arm.setAngle(armAngle).withTimeout(1),
@@ -664,15 +665,14 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE).withTimeout(1))
         .withName("Prepare Coral Intake Auton");
   }
-  
+
   public Command stopIntake() {
     return Commands.parallel(
-            Commands.runOnce(() -> {
-
-            driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
-            driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
-            
-            }),
+            Commands.runOnce(
+                () -> {
+                  driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
+                  driveCommand.setTargetMode(DriveCommand.TargetMode.REEF);
+                }),
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
             elevator.setHeight(ElevatorConstants.STOW_METER),
             endEffector.holdCoral(),
