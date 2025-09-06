@@ -889,7 +889,11 @@ public class RobotContainer {
 
   public Command retractGroundIntake() {
     return Commands.parallel(
-        Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES)),
+        Commands.runOnce(
+            () -> {
+              driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES);
+              driveCommand.setReefMode(DriveCommand.ReefPositions.BACK_REEF);
+            }),
         groundIntake
             .setAngleAndAmp(
                 GroundIntakeConstants.CORAL_STOW_ANGLE,
