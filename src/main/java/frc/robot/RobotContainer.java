@@ -685,9 +685,7 @@ public class RobotContainer {
     driveCommand.setReefMode(DriveCommand.ReefPositions.FRONT_REEF);
 
     return Commands.parallel(
-      Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
-      
-
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
             elevator.setHeight(ElevatorConstants.STOW_METER),
             endEffector.holdCoral(),
