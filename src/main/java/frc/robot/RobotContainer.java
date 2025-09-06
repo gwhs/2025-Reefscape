@@ -743,7 +743,7 @@ public class RobotContainer {
   }
 
   /**
-   * @param elevatorHeight how tall should the elavator be?
+   * @param elevatorHeight how tall should the elevator be?
    * @param armAngle what angle should the arm be at
    * @return run the command
    */

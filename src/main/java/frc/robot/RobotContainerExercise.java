@@ -77,11 +77,6 @@ public class RobotContainerExercise {
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
             endEffector.setVoltage(0)));
     // ArmConstants.ARM_STOW_ANGLE + spin endeffector at 0 git volts
-      Commands.parallel(
-            elevator.setHeight().withTimeout(0.05),
-        
-
-      )
 
   }
 }
