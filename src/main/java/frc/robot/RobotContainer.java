@@ -673,7 +673,7 @@ public class RobotContainer {
 
   public Command prepScoreCoral(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
     return Commands.parallel(
-            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES)),
             endEffector.holdCoral(),
             elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
             arm.setAngleSupplier(armAngle).withTimeout(.5),
@@ -709,7 +709,8 @@ public class RobotContainer {
   public Command scoreCoral() {
     Command scoreCoral =
         Commands.sequence(
-                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
+                Commands.runOnce(
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES)),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
@@ -718,7 +719,8 @@ public class RobotContainer {
                 drivetrain.driveBackward(1).withTimeout(0.2).onlyIf(IS_L2),
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
-                endEffector.stopMotor())
+                endEffector.stopMotor(),
+                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)))
             .withTimeout(0.5);
 
     Command deAlgae =
@@ -740,7 +742,8 @@ public class RobotContainer {
                                     ALGAE_HIGH))
                             .withTimeout(0.4)), // .5
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
-                    .withTimeout(.1) // .6
+                    .withTimeout(.1), // .6
+                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                     .deadlineFor(
                         alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))),
                 dealgae())
@@ -756,6 +759,7 @@ public class RobotContainer {
   // DeAlgae Commands
   public Command prepDealgaeLow() {
     return Commands.parallel(
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES)),
             elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
             arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
             endEffector.setVoltage(0))
@@ -764,6 +768,7 @@ public class RobotContainer {
 
   public Command prepDealgaeHigh() {
     return Commands.parallel(
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES)),
             elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
             arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
             endEffector.setVoltage(0))
