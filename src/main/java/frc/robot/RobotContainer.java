@@ -102,7 +102,8 @@ public class RobotContainer {
     L1(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION),
     L2(ElevatorConstants.L2_PREP_POSITION, ArmConstants.L2_PREP_POSITION),
     L3(ElevatorConstants.L3_PREP_POSITION, ArmConstants.L3_PREP_POSITION),
-    L4(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION);
+    L4(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
+    ALGAE(0, 0);
 
     public final double elevatorHeight;
     public final double armAngle;
@@ -119,6 +120,7 @@ public class RobotContainer {
   public static final Trigger IS_L2 = new Trigger(() -> coralLevel == CoralLevel.L2);
   public static final Trigger IS_L3 = new Trigger(() -> coralLevel == CoralLevel.L3);
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
+  public static final Trigger IS_ALGAE_MODE = new Trigger(() -> coralLevel == CoralLevel.ALGAE);
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
   public static final Trigger BATTERY_BROWN_OUT = new Trigger(() -> RobotController.isBrownedOut());
@@ -340,9 +342,10 @@ public class RobotContainer {
     m_driverController
         .rightTrigger()
         .onFalse(
-            scoreCoral()
+            Commands.either(scoreCoral(), scoreAlgeaNet(), IS_L2.or(IS_L3).or(IS_L4))
+                .onlyIf(IS_L2.or(IS_L3).or(IS_L4).or(IS_ALGAE_MODE))
                 .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
-                .withName("score Coral"));
+                .withName("score on trigger release"));
 
     m_driverController
         .rightTrigger()
@@ -669,7 +672,7 @@ public class RobotContainer {
 
   public Command prepScoreCoral(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
     return Commands.parallel(
-            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES)),
             endEffector.holdCoral(),
             elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
             arm.setAngleSupplier(armAngle).withTimeout(.5),
@@ -705,7 +708,8 @@ public class RobotContainer {
   public Command scoreCoral() {
     Command scoreCoral =
         Commands.sequence(
-                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
+                Commands.runOnce(
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES)),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L4).onlyIf(IS_L4),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L3).onlyIf(IS_L3),
                 endEffector.shoot(EndEffectorConstants.VOLTAGE_L2).onlyIf(IS_L2),
@@ -714,7 +718,8 @@ public class RobotContainer {
                 drivetrain.driveBackward(1).withTimeout(0.2).onlyIf(IS_L2),
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.0),
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.0),
-                endEffector.stopMotor())
+                endEffector.stopMotor(),
+                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)))
             .withTimeout(0.5);
 
     Command deAlgae =
@@ -736,7 +741,8 @@ public class RobotContainer {
                                     ALGAE_HIGH))
                             .withTimeout(0.4)), // .5
                 Commands.either(prepDealgaeHigh(), prepDealgaeLow(), ALGAE_HIGH)
-                    .withTimeout(.1) // .6
+                    .withTimeout(.1), // .6
+                Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                     .deadlineFor(
                         alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))),
                 dealgae())
@@ -752,6 +758,7 @@ public class RobotContainer {
   // DeAlgae Commands
   public Command prepDealgaeLow() {
     return Commands.parallel(
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES)),
             elevator.setHeight(ElevatorConstants.DEALGAE_LOW_POSITION),
             arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
             endEffector.setVoltage(0))
@@ -760,6 +767,7 @@ public class RobotContainer {
 
   public Command prepDealgaeHigh() {
     return Commands.parallel(
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES)),
             elevator.setHeight(ElevatorConstants.DEALGAE_HIGH_POSITION),
             arm.setAngle(ArmConstants.PRE_DEALGAE_ANGLE),
             endEffector.setVoltage(0))
@@ -775,7 +783,8 @@ public class RobotContainer {
             Commands.parallel(
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(.1),
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(.1),
-                endEffector.stopMotor()))
+                endEffector.stopMotor()),
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)))
         .withName("Dealgae");
   }
 
@@ -857,6 +866,15 @@ public class RobotContainer {
             GroundIntakeConstants.SCORE_CORAL_AMP,
             GroundIntakeConstants.SCORE_CORAL_DUTYCYCLE),
         Commands.waitSeconds(0.5),
-        groundIntake.setAngleAndAmp(GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0));
+        groundIntake.setAngleAndAmp(GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0),
+        Commands.runOnce(
+            () -> {
+              driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL);
+            }));
+  }
+
+  public Command scoreAlgeaNet() {
+    return null;
+    // TODO
   }
 }
