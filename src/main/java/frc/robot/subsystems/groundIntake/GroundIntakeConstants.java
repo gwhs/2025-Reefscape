@@ -9,8 +9,6 @@ public class GroundIntakeConstants {
   public static final double PIVOT_GEAR_RATIO = 48.222;
   public static final double SPIN_GEAR_RATIO = 2.0;
 
-  public static final double ENCODER_OFFSET = 295.0;
-
   public static final double GROUND_INTAKE_LOWER_BOUND = -130.0;
   public static final double GROUND_INTAKE_UPPER_BOUND = 0.0;
 
