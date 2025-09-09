@@ -42,15 +42,15 @@ public class RobotContainerExercise {
     controller.b().onTrue(elevator.setHeight(.75));
     controller.x().onTrue(elevator.setHeight(0));
 
-    // TODO 1: press left bumper: set arm angle to 120
-    controller.leftBumper().onTrue(arm.setAngle(120));
+    // TODO 1: press right bumper: set arm angle to 120
+    controller.rightBumper().onTrue(arm.setAngle(120));
 
-    // TODO 2: press right bumper -> set arm angle to -90
-    controller.rightBumper().onTrue(arm.setAngle(-90));
+    // TODO 2: press left bumper -> set arm angle to -90
+    controller.leftBumper().onTrue(arm.setAngle(-90));
 
-    // TODO 3: press start -> score L4 Coral
+    // TODO 3: press right trigger -> score L4 Coral
     // ↓↓↓↓↓↓↓↓↓↓ COMPLETE THE COMMAND COMPOSITION IN scoreL4Coral() METHOD BELOW FIRST ↓↓↓↓↓↓↓↓↓↓
-    controller.start().onTrue(scoreL4Coral());
+    controller.rightTrigger().onTrue(scoreL4Coral());
   }
 
   public void periodic() {

@@ -59,6 +59,7 @@ public class FiveCycle extends PathPlannerAuto {
       isRunning()
           .onTrue(
               Commands.sequence(
+
                   AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
                   AutoBuilder.followPath(SC_F)
                       .deadlineFor(
