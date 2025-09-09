@@ -344,7 +344,7 @@ public class RobotContainer {
     m_driverController
         .rightTrigger()
         .onFalse(
-            scoreCoral()
+            scoreCoral().onlyIf(IS_L2.or(IS_L3).or(IS_L4))
                 .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
                 .withName("score Coral"));
 
@@ -784,7 +784,8 @@ public class RobotContainer {
             Commands.parallel(
                 elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(.1),
                 arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(.1),
-                endEffector.stopMotor()))
+                endEffector.stopMotor()),
+            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)))
         .withName("Dealgae");
   }
 
@@ -866,6 +867,10 @@ public class RobotContainer {
             GroundIntakeConstants.SCORE_CORAL_AMP,
             GroundIntakeConstants.SCORE_CORAL_DUTYCYCLE),
         Commands.waitSeconds(0.5),
-        groundIntake.setAngleAndAmp(GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0));
+        groundIntake.setAngleAndAmp(GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0),
+        Commands.runOnce(
+            () -> {
+              driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL);
+            }));
   }
 }
