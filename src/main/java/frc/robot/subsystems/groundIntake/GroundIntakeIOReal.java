@@ -131,7 +131,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
 
     CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
     cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5; // TODO
-    cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive; // TODO
+    cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
     cc_cfg.MagnetSensor.withMagnetOffset(GroundIntakeConstants.MAGNET_OFFSET_ROTATIONS); // TODO
     for (int i = 0; i < 5; i++) {
       status = pivotEncoder.getConfigurator().apply(cc_cfg);
