@@ -571,11 +571,11 @@ public class EagleUtil {
     if (FieldConstants.HALF_THE_FIELD > pose.getX()) {
       Pose2d poseBlue =
           new Pose2d(
-              FieldConstants.SCORE_NET_BLUE_SIDE_X, pose.getY(), Rotation2d.fromDegrees(180));
+              FieldConstants.SCORE_NET_BLUE_SIDE_X, pose.getY(), Rotation2d.fromDegrees(-44));
       return poseBlue;
     }
     Pose2d poseRed =
-        new Pose2d(FieldConstants.SCORE_NET_RED_SIDE_X, pose.getY(), Rotation2d.fromDegrees(0));
+        new Pose2d(FieldConstants.SCORE_NET_RED_SIDE_X, pose.getY(), Rotation2d.fromDegrees(44));
     return poseRed;
   }
 }

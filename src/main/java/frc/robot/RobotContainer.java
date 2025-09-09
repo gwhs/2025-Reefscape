@@ -439,6 +439,10 @@ public class RobotContainer {
     // EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
 
     IS_L4
+        .and(m_driverController.rightBumper())
+        .whileTrue(alignToPose(() -> EagleUtil.aligntobarge(drivetrain.getPose())));
+
+    IS_L4
         .or(IS_L3)
         .or(IS_L2)
         .and(m_driverController.a())
