@@ -69,16 +69,20 @@ public class RobotContainerExercise {
         //     Command 1a: extend elevator to ElevatorConstants.L4_PREP_POSITION
         //     Command 1b: rotate arm to ArmConstants.L4_PREP_POSITION
 
-        Commands.parallel(elevator.setHeight(ElevatorConstants.L4_PREP_POSITION), arm.setAngle(ArmConstants.L4_PREP_POSITION);
+        Commands.parallel(
+            elevator.setHeight(ElevatorConstants.L4_PREP_POSITION),
+            arm.setAngle(ArmConstants.L4_PREP_POSITION)) ,
         // Command 2: Spin endeffector at EndEffectorConstants.VOLTAGE_L4
-        endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L4);
+        endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L4),
         // Command 3: Wait 0.05 seconds (Commands.waitSeconds())
         Commands.waitSeconds(0.05),
         // Command 4: In parallel:
         //     Command 4a: retract elevator to ElevatorConstants.STOW_METER
         //     Command 4b: rotate arm to ArmConstants.ARM_STOW_ANGLE
         //     Command 4c: spin endeffector at 0 volts
-        Commands.parallel(elevator.setHeight(ElevatorConstants.STOW_METER), arm.setAngle(ArmConstants.ARM_STOW_ANGLE, endEffector.setVoltage(0)));
-        );
+        Commands.parallel(
+            elevator.setHeight(ElevatorConstants.STOW_METER),
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
+            endEffector.setVoltage(0)));
   }
 }
