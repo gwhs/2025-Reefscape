@@ -33,5 +33,5 @@ public class GroundIntakeConstants {
   public static final double SCORE_CORAL_AMP = -20;
   public static final double SCORE_CORAL_DUTYCYCLE = -0.9;
 
-  public static final double MAGNET_OFFSET_ROTATIONS = 0.36;
+  public static final double MAGNET_OFFSET_ROTATIONS = 0.7;
 }
