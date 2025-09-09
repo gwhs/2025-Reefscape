@@ -106,7 +106,8 @@ public class RobotContainer {
     L1(ElevatorConstants.L1_PREP_POSITION, ArmConstants.L1_PREP_POSITION),
     L2(ElevatorConstants.L2_PREP_POSITION, ArmConstants.L2_PREP_POSITION),
     L3(ElevatorConstants.L3_PREP_POSITION, ArmConstants.L3_PREP_POSITION),
-    L4(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION);
+    L4(ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION),
+    ALGAE(0, 0);
 
     public final double elevatorHeight;
     public final double armAngle;
@@ -123,6 +124,7 @@ public class RobotContainer {
   public static final Trigger IS_L2 = new Trigger(() -> coralLevel == CoralLevel.L2);
   public static final Trigger IS_L3 = new Trigger(() -> coralLevel == CoralLevel.L3);
   public static final Trigger IS_L4 = new Trigger(() -> coralLevel == CoralLevel.L4);
+  public static final Trigger IS_ALGAE_MODE = new Trigger(() -> coralLevel == CoralLevel.ALGAE);
   public static final Trigger IS_DISABLED = new Trigger(() -> DriverStation.isDisabled());
   public static final Trigger IS_TELEOP = new Trigger(() -> DriverStation.isTeleopEnabled());
   public static final Trigger BATTERY_BROWN_OUT = new Trigger(() -> RobotController.isBrownedOut());
@@ -344,9 +346,10 @@ public class RobotContainer {
     m_driverController
         .rightTrigger()
         .onFalse(
-            scoreCoral().onlyIf(IS_L2.or(IS_L3).or(IS_L4))
+            Commands.either(scoreCoral(), scoreAlgeaNet(), IS_L2.or(IS_L3).or(IS_L4))
+                .onlyIf(IS_L2.or(IS_L3).or(IS_L4).or(IS_ALGAE_MODE))
                 .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
-                .withName("score Coral"));
+                .withName("score on trigger release"));
 
     m_driverController
         .rightTrigger()
@@ -872,5 +875,10 @@ public class RobotContainer {
             () -> {
               driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL);
             }));
+  }
+
+  public Command scoreAlgeaNet() {
+    return null;
+    // TODO
   }
 }
