@@ -71,7 +71,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     feedbackConfigs.FeedbackRotorOffset = 0;
     feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     feedbackConfigs.FeedbackRemoteSensorID = GroundIntakeConstants.PIVOT_ENCODER_ID;
-    feedbackConfigs.SensorToMechanismRatio = 1;
+    feedbackConfigs.SensorToMechanismRatio = 2;
     feedbackConfigs.RotorToSensorRatio = GroundIntakeConstants.PIVOT_GEAR_RATIO;
 
     motionMagicConfigs.MotionMagicCruiseVelocity = GroundIntakeConstants.MAX_VELOCITY;
@@ -130,7 +130,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
         pivotEncoderPosition);
 
     CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
-    cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5; // TODO
+    cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1; // TODO
     cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
     cc_cfg.MagnetSensor.withMagnetOffset(GroundIntakeConstants.MAGNET_OFFSET_ROTATIONS); // TODO
     for (int i = 0; i < 5; i++) {
