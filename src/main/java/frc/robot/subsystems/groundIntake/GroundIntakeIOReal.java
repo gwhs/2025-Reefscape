@@ -113,7 +113,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     currentConfig.withStatorCurrentLimitEnable(true);
-    currentConfig.withStatorCurrentLimit(40);
+    currentConfig.withStatorCurrentLimit(80);
 
     status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; i++) {
