@@ -61,7 +61,10 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
 
     slot0Configs.kS = 0.18205; // Add 0.25 V output to overcome static friction
     slot0Configs.kG = 0; // Add 0 V to overcome gravity
-    slot0Configs.kV = 70.12 * GroundIntakeConstants.PIVOT_GEAR_RATIO; // A velocity target of 1 rps results in 0.12 V output
+    slot0Configs.kV =
+        70.12
+            * GroundIntakeConstants
+                .PIVOT_GEAR_RATIO; // A velocity target of 1 rps results in 0.12 V output
     slot0Configs.kA = 0.086264; // An acceleration of 1 rps/s requires 0.01 V output
     slot0Configs.kP = 30; // A position error of 2.5 rotations results in 12 V output
     slot0Configs.kI = 0; // no output for integrated error

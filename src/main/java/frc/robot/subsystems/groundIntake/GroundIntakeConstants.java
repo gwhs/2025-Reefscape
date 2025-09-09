@@ -11,8 +11,8 @@ public class GroundIntakeConstants {
 
   public static final double ENCODER_OFFSET = 295.0;
 
-  public static final double GROUND_INTAKE_LOWER_BOUND = -120.0;
-  public static final double GROUND_INTAKE_UPPER_BOUND = 10.0;
+  public static final double GROUND_INTAKE_LOWER_BOUND = -130.0;
+  public static final double GROUND_INTAKE_UPPER_BOUND = 0.0;
 
   public static final double MAX_VELOCITY = 1.2;
   public static final double MAX_ACCELERATION = 2;
@@ -35,5 +35,5 @@ public class GroundIntakeConstants {
   public static final double SCORE_CORAL_AMP = -20;
   public static final double SCORE_CORAL_DUTYCYCLE = -0.9;
 
-  public static final double MAGNET_OFFSET_ROTATIONS = 0;
+  public static final double MAGNET_OFFSET_ROTATIONS = -0.36;
 }
