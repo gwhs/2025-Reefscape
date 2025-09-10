@@ -16,6 +16,8 @@ import frc.robot.EagleUtil;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.elevator.ElevatorConstants;
+import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
+import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 
 public class FiveCycle extends PathPlannerAuto {
 
@@ -23,7 +25,10 @@ public class FiveCycle extends PathPlannerAuto {
 
   private double waitTime = 0;
 
-  public FiveCycle(RobotContainer robotContainer, boolean nonProcessorSide) {
+  public FiveCycle(
+      RobotContainer robotContainer,
+      boolean nonProcessorSide,
+      GroundIntakeSubsystem groundIntakeSubsystem) {
     super(Commands.run(() -> {}));
 
     this.robotContainer = robotContainer;
@@ -59,6 +64,10 @@ public class FiveCycle extends PathPlannerAuto {
       isRunning()
           .onTrue(
               Commands.sequence(
+
+                  // code here
+                  groundIntakeSubsystem.setAngleAndAmp(
+                      GroundIntakeConstants.INTAKE_CORAL_ANGLE, 0, 0),
                   AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
                   AutoBuilder.followPath(SC_F)
                       .deadlineFor(
@@ -75,6 +84,9 @@ public class FiveCycle extends PathPlannerAuto {
                       .deadlineFor(
                           robotContainer.alignToPose(
                               () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
+                  // yourcode is here
+                  groundIntakeSubsystem.setAngleAndAmp(
+                      GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0),
                   AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntakeAuton()),
                   autoHelper(CSP_D, D_CSP),
                   autoHelper(CSP_C, C_CSP),
