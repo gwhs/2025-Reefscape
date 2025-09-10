@@ -69,6 +69,7 @@ public class DriveCommand extends Command {
     CORAL_STATION,
     REEF,
     CAGE,
+    REEF_FACES,
     PROCESSOR
   }
 
@@ -153,6 +154,19 @@ public class DriveCommand extends Command {
         return 90;
       } else {
         return -90;
+      }
+    } else if (mode == TargetMode.REEF_FACES) {
+      if (reefMode == ReefPositions.FRONT_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees();
+      } else if (reefMode == ReefPositions.RIGHT_SIDE_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees() + 90;
+      } else if (reefMode == ReefPositions.BACK_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees() + 180;
+      } else {
+        return 0;
       }
     } else {
       return 0;
