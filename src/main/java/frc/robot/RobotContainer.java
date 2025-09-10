@@ -874,7 +874,7 @@ public class RobotContainer {
   }
 
   public Command scoreAlgeaNet() {
-    return null;
+    return Commands.none();
     // TODO
   }
 }
