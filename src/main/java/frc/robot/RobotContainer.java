@@ -550,6 +550,7 @@ public class RobotContainer {
     autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
     autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
     autoChooser.addOption("Push_One_Cycle", new PushOneCycle(this));
+    autoChooser.addOption("CenterAuton", new CenterAuton(this, false));
     autoChooser.addOption(
         "Wheel_Radius_Chracterizaton",
         WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
