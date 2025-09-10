@@ -861,6 +861,8 @@ public class RobotContainer {
             GroundIntakeConstants.SCORE_CORAL_ANGLE,
             GroundIntakeConstants.HOLD_CORAL_AMP,
             GroundIntakeConstants.HOLD_CORAL_DUTYCYCLE),
+        Commands.waitUntil(m_driverController.rightTrigger().negate()),
+
         groundIntake.setAngleAndAmp(
             GroundIntakeConstants.SCORE_CORAL_ANGLE,
             GroundIntakeConstants.SCORE_CORAL_AMP,
