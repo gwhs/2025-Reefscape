@@ -9,13 +9,13 @@ public class GroundIntakeConstants {
   public static final double PIVOT_GEAR_RATIO = 48.222;
   public static final double SPIN_GEAR_RATIO = 3.5;
 
-  public static final double GROUND_INTAKE_LOWER_BOUND = -130.0;
+  public static final double GROUND_INTAKE_LOWER_BOUND = -153.0;
   public static final double GROUND_INTAKE_UPPER_BOUND = 0.0;
 
   public static final double MAX_VELOCITY = 1.2;
   public static final double MAX_ACCELERATION = 2;
 
-  public static final double INTAKE_CORAL_ANGLE = -95; // TODO
+  public static final double INTAKE_CORAL_ANGLE = -153; // TODO
   public static final double CORAL_STOW_ANGLE = 0; // TODO
 
   public static final double INTAKE_ALGAE_ANGLE = -45; // TODO
