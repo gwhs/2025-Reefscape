@@ -7,7 +7,7 @@ public class GroundIntakeConstants {
   public static final int PIVOT_ENCODER_ID = 33;
 
   public static final double PIVOT_GEAR_RATIO = 48.222;
-  public static final double SPIN_GEAR_RATIO = 2.0;
+  public static final double SPIN_GEAR_RATIO = 3.5;
 
   public static final double GROUND_INTAKE_LOWER_BOUND = -130.0;
   public static final double GROUND_INTAKE_UPPER_BOUND = 0.0;
@@ -30,8 +30,8 @@ public class GroundIntakeConstants {
   public static final double INTAKE_CORAL_DUTYCYCLE = 1;
   public static final double HOLD_CORAL_AMP = 10;
   public static final double HOLD_CORAL_DUTYCYCLE = 0.1;
-  public static final double SCORE_CORAL_AMP = -20;
+  public static final double SCORE_CORAL_AMP = -80;
   public static final double SCORE_CORAL_DUTYCYCLE = -0.9;
 
-  public static final double MAGNET_OFFSET_ROTATIONS = 0.7;
+  public static final double MAGNET_OFFSET_ROTATIONS = 0;
 }
