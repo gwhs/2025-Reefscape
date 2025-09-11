@@ -200,6 +200,6 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
 
   @Override
   public void runAmp(double amp, double dutyCycle) {
-    pivotMotor.setControl(currentControl.withOutput(amp).withMaxAbsDutyCycle(dutyCycle));
+    spinMotor.setControl(currentControl.withOutput(amp).withMaxAbsDutyCycle(dutyCycle));
   }
 }
