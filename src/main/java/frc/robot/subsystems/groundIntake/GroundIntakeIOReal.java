@@ -74,7 +74,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     feedbackConfigs.FeedbackRotorOffset = 0;
     feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     feedbackConfigs.FeedbackRemoteSensorID = GroundIntakeConstants.PIVOT_ENCODER_ID;
-    feedbackConfigs.SensorToMechanismRatio =  2;
+    feedbackConfigs.SensorToMechanismRatio = 2;
     feedbackConfigs.RotorToSensorRatio = GroundIntakeConstants.PIVOT_GEAR_RATIO;
 
     motionMagicConfigs.MotionMagicCruiseVelocity = GroundIntakeConstants.MAX_VELOCITY;
@@ -157,12 +157,12 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
 
   @Override
   public double getPivotAngle() {
-    return Units.rotationsToDegrees(pivotEncoderPosition.getValueAsDouble());
+    return Units.rotationsToDegrees(pivotEncoderPosition.getValueAsDouble() / 2);
   }
 
   @Override
   public void setAngle(double angle) {
-    pivotMotor.setControl(m_request.withPosition(Units.degreesToRotations(angle)));
+    pivotMotor.setControl(m_request.withPosition(Units.degreesToRotations(angle) * 2));
   }
 
   @Override
