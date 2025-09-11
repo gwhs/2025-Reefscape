@@ -95,32 +95,32 @@ public class ObjectDetectionCam {
     }
 
     for (PhotonPipelineResult result : results) {
-      ArrayList<PhotonTrackedTarget> targets = (ArrayList<PhotonTrackedTarget>) result.getTargets();
-      if (targets.isEmpty()) {
+      PhotonTrackedTarget targets = result.getBestTarget();
+      if (targets == null) {
         continue;
       }
-      for (PhotonTrackedTarget target : targets) {
+      
         Pose3d targetPose;
         if (RobotBase.isSimulation()) {
-          double targetYaw = -target.getYaw();
-          double targetPitch = target.getPitch();
+          double targetYaw = -targets.getYaw();
+          double targetPitch = targets.getPitch();
           Translation2d targetLocationToCamera = this.getCameraToTarget(targetYaw, targetPitch);
           Transform2d cameraToTargetTransform2d =
               new Transform2d(targetLocationToCamera, new Rotation2d());
           targetPose =
               new Pose3d(cameraPose3d.toPose2d().plus(cameraToTargetTransform2d.inverse()));
         } else {
-          Transform3d targetLocationToCamera = target.getBestCameraToTarget();
+          Transform3d targetLocationToCamera = targets.getBestCameraToTarget();
           targetPose = cameraPose3d.transformBy(targetLocationToCamera.inverse());
         }
         if (filterResults(targetPose)) {
           targetPoses.add(targetPose);
         }
-      }
+    }
       DogLog.log(ntKey + "Target Pose Array/", targetPoses.toArray(new Pose3d[0]));
       targetPoses.clear();
     }
-  }
+  
 
   private Translation2d getCameraToTarget(double targetYaw, double targetPitch) {
     // Define the vector
