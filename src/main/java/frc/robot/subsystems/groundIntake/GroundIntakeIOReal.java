@@ -17,7 +17,6 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-
 public class GroundIntakeIOReal implements GroundIntakeIO {
 
   private final TalonFX spinMotor = new TalonFX(GroundIntakeConstants.SPIN_MOTOR_ID, "rio");
