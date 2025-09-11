@@ -74,7 +74,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     feedbackConfigs.FeedbackRotorOffset = 0;
     feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     feedbackConfigs.FeedbackRemoteSensorID = GroundIntakeConstants.PIVOT_ENCODER_ID;
-    feedbackConfigs.SensorToMechanismRatio = 2;
+    feedbackConfigs.SensorToMechanismRatio = 0.5;
     feedbackConfigs.RotorToSensorRatio = GroundIntakeConstants.PIVOT_GEAR_RATIO;
 
     motionMagicConfigs.MotionMagicCruiseVelocity = GroundIntakeConstants.MAX_VELOCITY;
@@ -82,7 +82,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     motionMagicConfigs.MotionMagicJerk = 0; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
     motorOutput.NeutralMode = NeutralModeValue.Brake;
-    motorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     softwareLimitSwitch.ForwardSoftLimitEnable = false;
     softwareLimitSwitch.ForwardSoftLimitThreshold =
