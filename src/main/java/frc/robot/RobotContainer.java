@@ -851,7 +851,7 @@ public class RobotContainer {
             .setAngleAndAmp(
                 GroundIntakeConstants.CORAL_STOW_ANGLE,
                 GroundIntakeConstants.HOLD_CORAL_AMP,
-                GroundIntakeConstants.HOLD_CORAL_DUTYCYCLE)
+                - GroundIntakeConstants.HOLD_CORAL_DUTYCYCLE)
             .withName("Ground Intake Extend"));
   }
 
