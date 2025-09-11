@@ -850,8 +850,8 @@ public class RobotContainer {
         groundIntake
             .setAngleAndAmp(
                 GroundIntakeConstants.CORAL_STOW_ANGLE,
-                -GroundIntakeConstants.HOLD_CORAL_AMP,
-                -GroundIntakeConstants.HOLD_CORAL_DUTYCYCLE)
+                GroundIntakeConstants.HOLD_CORAL_AMP,
+                GroundIntakeConstants.HOLD_CORAL_DUTYCYCLE)
             .withName("Ground Intake Extend"));
   }
 
@@ -864,8 +864,8 @@ public class RobotContainer {
         Commands.waitUntil(m_driverController.rightTrigger().negate()),
         groundIntake.setAngleAndAmp(
             GroundIntakeConstants.SCORE_CORAL_ANGLE,
-            GroundIntakeConstants.INTAKE_CORAL_AMP,
-            GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE),
+           - GroundIntakeConstants.INTAKE_CORAL_AMP,
+            -GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE),
         Commands.waitSeconds(0.5),
         groundIntake.setAngleAndAmp(GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0),
         Commands.runOnce(
