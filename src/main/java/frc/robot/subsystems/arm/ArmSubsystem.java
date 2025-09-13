@@ -12,11 +12,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import java.util.function.DoubleSupplier;
 
 public class ArmSubsystem extends SubsystemBase {
   private ArmIO armIO;
+
+  private double armGoal;
+
+  public Trigger AT_GOAL_ANGLE =
+      new Trigger(() -> MathUtil.isNear(0, armIO.getPosition() - armGoal, 3));
 
   private final SysIdRoutine m_sysIdRoutine =
       new SysIdRoutine(
@@ -49,6 +55,7 @@ public class ArmSubsystem extends SubsystemBase {
     return this.runOnce(
             () -> {
               armIO.setAngle(clampedAngle);
+              armGoal = clampedAngle;
             })
         .andThen(Commands.waitUntil(() -> MathUtil.isNear(clampedAngle, armIO.getPosition(), 1)));
   }
@@ -62,6 +69,7 @@ public class ArmSubsystem extends SubsystemBase {
                       ArmConstants.ARM_LOWER_BOUND,
                       ArmConstants.ARM_UPPER_BOUND);
               armIO.setAngle(clampedAngle);
+              armGoal = clampedAngle;
             })
         .andThen(
             Commands.waitUntil(

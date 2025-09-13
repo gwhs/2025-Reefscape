@@ -18,7 +18,7 @@ public class ElevatorConstants {
   public static final double TOP_METER = .75;
 
   // Position constants:
-  public static final double L1_PREP_POSITION = 0;
+  public static final double L1_PREP_POSITION = 0.11;
   public static final double L2_PREP_POSITION = 0;
   public static final double L3_PREP_POSITION = 0.2;
   public static final double L4_PREP_POSITION = .75;

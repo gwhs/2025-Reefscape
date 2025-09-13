@@ -47,7 +47,7 @@ public class EagleUtil {
   private static Pose2d[] redAlgaePoses = new Pose2d[6];
 
   private static final double ALGAE_Y_OFFSET = Units.inchesToMeters(0.6);
-  private static final double ALGAE_X_OFFSET = Units.inchesToMeters(0.2);
+  private static final double ALGAE_X_OFFSET = Units.inchesToMeters(0.10);
   // ALGAE_Y_OFFSET = move to left
   // ALGAE_X_OFFSET = move to right
 
@@ -293,6 +293,19 @@ public class EagleUtil {
     }
   }
 
+  public static Pose2d getClosestL1Back(Pose2d pose) {
+    Pose2d targetPose;
+    if (DriverStation.getAlliance().isPresent()
+        && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      targetPose = pose.nearest(FieldConstants.blueAlgaeSetpointList);
+    } else {
+      targetPose = pose.nearest(FieldConstants.redAlgaeSetpointList);
+    }
+    Rotation2d targetRotation = new Rotation2d(targetPose.getRotation().getRadians() + Math.PI);
+    targetPose = new Pose2d(targetPose.getX(), targetPose.getY(), targetRotation);
+    return targetPose;
+  }
+
   /**
    * @param pose the pose to compare to
    * @return cached Pose2d
@@ -476,6 +489,25 @@ public class EagleUtil {
     }
   }
 
+  public static Pose2d getClosestLeftReefBack(Pose2d pose) {
+    int closestReef = findClosestReefIndex(pose);
+    if (closestReef % 2 > 0) {
+      closestReef -= 1;
+    }
+
+    Pose2d targetPose;
+    if (isRedAlliance()) {
+      calculateRedReefSetPoints();
+      targetPose = redPoses[closestReef];
+    } else {
+      calculateBlueReefSetPoints();
+      targetPose = bluePoses[closestReef];
+    }
+    Rotation2d targetRotation = new Rotation2d(targetPose.getRotation().getRadians() + Math.PI);
+    targetPose = new Pose2d(targetPose.getX(), targetPose.getY(), targetRotation);
+    return targetPose;
+  }
+
   public static Pose2d getClosestRightReef(Pose2d pose) {
     int closestReef = findClosestReefIndex(pose);
     if (closestReef % 2 == 0) {
@@ -491,16 +523,59 @@ public class EagleUtil {
     }
   }
 
+  public static Pose2d getClosestRightReefBack(Pose2d pose) {
+    int closestReef = findClosestReefIndex(pose);
+    if (closestReef % 2 == 0) {
+      closestReef += 1;
+    }
+
+    Pose2d targetPose;
+    if (isRedAlliance()) {
+      calculateRedReefSetPoints();
+      targetPose = redPoses[closestReef];
+    } else {
+      calculateBlueReefSetPoints();
+      targetPose = bluePoses[closestReef];
+    }
+    Rotation2d targetRotation = new Rotation2d(targetPose.getRotation().getRadians() + Math.PI);
+    targetPose = new Pose2d(targetPose.getX(), targetPose.getY(), targetRotation);
+    return targetPose;
+  }
+
   private static List<Pose2d> coralStationPoints =
       new ArrayList<>(
           Arrays.asList(
-              new Pose2d(16.05, 7.42, Rotation2d.fromDegrees(-126)), // Red Processor Side
-              new Pose2d(16.05, 0.63, Rotation2d.fromDegrees(126)), // Red Non-Processor Side
-              new Pose2d(1.5, 0.63, Rotation2d.fromDegrees(54)), // Blue Processor Side
-              new Pose2d(1.5, 7.42, Rotation2d.fromDegrees(-54)) // Blue Non-Processor Side
+              new Pose2d(15.95, 7.37, Rotation2d.fromDegrees(-126)), // Red Processor Side
+              new Pose2d(15.95, 0.66, Rotation2d.fromDegrees(126)), // Red Non-Processor Side
+              new Pose2d(1.62, 0.66, Rotation2d.fromDegrees(54)), // Blue Processor Side
+              new Pose2d(1.62, 7.37, Rotation2d.fromDegrees(-54)) // Blue Non-Processor Side
               ));
 
   public static Pose2d getClosestCoralStation(Pose2d pose) {
     return pose.nearest(coralStationPoints);
+  }
+
+  public static double getRotationCenterReef(Pose2d pose) {
+    Pose2d reef;
+
+    if (isRedAlliance()) {
+      reef = RED_REEF;
+    } else {
+      reef = BLUE_REEF;
+    }
+
+    return reef.getTranslation().minus(pose.getTranslation()).getAngle().getDegrees();
+  }
+
+  public static Pose2d aligntobarge(Pose2d pose) {
+    if (FieldConstants.HALF_THE_FIELD > pose.getX()) {
+      Pose2d poseBlue =
+          new Pose2d(
+              FieldConstants.SCORE_NET_BLUE_SIDE_X, pose.getY(), Rotation2d.fromDegrees(-44));
+      return poseBlue;
+    }
+    Pose2d poseRed =
+        new Pose2d(FieldConstants.SCORE_NET_RED_SIDE_X, pose.getY(), Rotation2d.fromDegrees(44));
+    return poseRed;
   }
 }

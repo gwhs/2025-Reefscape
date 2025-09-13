@@ -20,11 +20,14 @@ public class GroundIntakeConstants {
   public static final double INTAKE_CORAL_ANGLE = -95; // TODO
   public static final double CORAL_STOW_ANGLE = 0; // TODO
 
-  public static final double INTAKE_ALGAE_ANGLE = -45; // TODO
-  public static final double ALGAE_STOW_ANGLE = -10; // TODO
-
-  public static final double SCORE_ALGAE_ANGLE = -10; // TODO
   public static final double SCORE_CORAL_ANGLE = -5; // TODO
 
   public static final double CLIMB_ANGLE = -15; // TODO
+
+  public static final double INTAKE_CORAL_AMP = 20;
+  public static final double INTAKE_CORAL_DUTYCYCLE = 1;
+  public static final double HOLD_CORAL_AMP = 10;
+  public static final double HOLD_CORAL_DUTYCYCLE = 0.1;
+  public static final double SCORE_CORAL_AMP = -20;
+  public static final double SCORE_CORAL_DUTYCYCLE = -0.9;
 }
