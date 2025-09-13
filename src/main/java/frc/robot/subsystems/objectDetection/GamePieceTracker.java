@@ -20,6 +20,7 @@ public class GamePieceTracker {
         Optional<Pose2d> currentFocusedGamePiece = getGamePiece();
 
         if(currentFocusedGamePiece.isEmpty()) { 
+            add to linked list
         }
 
         if (currentFocusedGamePiece > NEW_TARGET_THRESHOLD )
