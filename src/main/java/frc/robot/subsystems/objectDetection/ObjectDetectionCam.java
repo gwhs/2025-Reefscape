@@ -82,8 +82,8 @@ public class ObjectDetectionCam {
 
     counter++;
     List<PhotonPipelineResult> results = cam.getAllUnreadResults();
-    DogLog.log(ntKey + "Number of Results/", results.size());
-    DogLog.log(ntKey + "counter", counter);
+    DogLog.log(ntKey + "Number of Results/", results.size()); 
+    DogLog.log(ntKey + "counter", counter); 
 
     Pose2d robotPose = this.robotPose.get();
     Pose3d robotPose3d = new Pose3d(robotPose);
@@ -100,6 +100,7 @@ public class ObjectDetectionCam {
         continue;
       }
       
+        // Calculate the target's position in the field
         Pose3d targetPose;
         if (RobotBase.isSimulation()) {
           double targetYaw = -targets.getYaw();
@@ -115,7 +116,7 @@ public class ObjectDetectionCam {
         }
         if (filterResults(targetPose)) {
           targetPoses.add(targetPose);
-        }
+        } 
     }
       DogLog.log(ntKey + "Target Pose Array/", targetPoses.toArray(new Pose3d[0]));
       targetPoses.clear();
