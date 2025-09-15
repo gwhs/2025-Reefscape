@@ -3,57 +3,122 @@
  "version":1,
  "type":"Swerve",
  "variables":{
-  "expressions":{},
-  "poses":{}
+  "expressions":{
+   "CoralStationAcc":{
+    "dimension":"LinAcc",
+    "var":{
+     "exp":"3.2 m / s / s",
+     "val":3.2
+    }
+   },
+   "GlobalAcc":{
+    "dimension":"LinAcc",
+    "var":{
+     "exp":"4.5 m / s / s",
+     "val":4.5
+    }
+   },
+   "ReefAcc":{
+    "dimension":"LinAcc",
+    "var":{
+     "exp":"2.1 m / s / s",
+     "val":2.1
+    }
+   }
+  },
+  "poses":{
+   "C":{
+    "x":{
+     "exp":"3.71 m",
+     "val":3.71
+    },
+    "y":{
+     "exp":"2.98 m",
+     "val":2.98
+    },
+    "heading":{
+     "exp":"60 deg",
+     "val":1.0471975511965976
+    }
+   },
+   "CoralStation":{
+    "x":{
+     "exp":"1.47 m",
+     "val":1.47
+    },
+    "y":{
+     "exp":"0.61 m",
+     "val":0.61
+    },
+    "heading":{
+     "exp":"54 deg",
+     "val":0.942477796076938
+    }
+   },
+   "F":{
+    "x":{
+     "exp":"5.29 m",
+     "val":5.29
+    },
+    "y":{
+     "exp":"2.99 m",
+     "val":2.99
+    },
+    "heading":{
+     "exp":"120 deg",
+     "val":2.0943951023931953
+    }
+   }
+  }
  },
  "config":{
   "frontLeft":{
    "x":{
-    "exp":"11 in",
-    "val":0.2794
+    "exp":"11.125 in",
+    "val":0.28257499999999997
    },
    "y":{
-    "exp":"11 in",
-    "val":0.2794
+    "exp":"11.125 in",
+    "val":0.28257499999999997
    }
   },
   "backLeft":{
    "x":{
-    "exp":"-11 in",
-    "val":-0.2794
+    "exp":"-11.125 in",
+    "val":-0.28257499999999997
    },
    "y":{
-    "exp":"11 in",
-    "val":0.2794
+    "exp":"11.125 in",
+    "val":0.28257499999999997
    }
   },
   "mass":{
-   "exp":"150 lbs",
-   "val":68.0388555
+   "exp":"140 lbs",
+   "val":63.502931800000006
   },
   "inertia":{
    "exp":"6 kg m ^ 2",
    "val":6.0
   },
   "gearing":{
-   "exp":"6.5",
-   "val":6.5
+   "exp":"6.746031746",
+   "val":6.746031746
   },
   "radius":{
    "exp":"2 in",
    "val":0.0508
   },
   "vmax":{
-   "exp":"6000 RPM",
-   "val":628.3185307179587
+   "exp":"5800 * 0.8 RPM",
+   "val":485.8996637552213
   },
   "tmax":{
-   "exp":"1.2 N * m",
-   "val":1.2
+   "exp":"1 N * m",
+   "val":1.0
   },
   "cof":{
-   "exp":"1.5",
-   "val":1.5
+   "exp":"1",
+   "val":1.0
   },
   "bumper":{
    "front":{
