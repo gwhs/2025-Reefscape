@@ -21,4 +21,7 @@ public class GroundIntakeIODisabled implements GroundIntakeIO {
 
   @Override
   public void update() {}
+
+  @Override
+  public void runAmp(double amp, double dutyCycle) {}
 }
