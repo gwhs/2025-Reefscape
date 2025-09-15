@@ -75,7 +75,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     feedbackConfigs.FeedbackRemoteSensorID = GroundIntakeConstants.PIVOT_ENCODER_ID;
     feedbackConfigs.SensorToMechanismRatio = 2;
-    feedbackConfigs.RotorToSensorRatio = GroundIntakeConstants.PIVOT_GEAR_RATIO;
+    feedbackConfigs.RotorToSensorRatio = GroundIntakeConstants.PIVOT_GEAR_RATIO / 2;
 
     motionMagicConfigs.MotionMagicCruiseVelocity = GroundIntakeConstants.MAX_VELOCITY;
     motionMagicConfigs.MotionMagicAcceleration = GroundIntakeConstants.MAX_ACCELERATION;
@@ -84,10 +84,10 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     motorOutput.NeutralMode = NeutralModeValue.Brake;
     motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-    softwareLimitSwitch.ForwardSoftLimitEnable = false;
+    softwareLimitSwitch.ForwardSoftLimitEnable = true;
     softwareLimitSwitch.ForwardSoftLimitThreshold =
         Units.degreesToRotations(GroundIntakeConstants.GROUND_INTAKE_UPPER_BOUND);
-    softwareLimitSwitch.ReverseSoftLimitEnable = false;
+    softwareLimitSwitch.ReverseSoftLimitEnable = true;
     softwareLimitSwitch.ReverseSoftLimitThreshold =
         Units.degreesToRotations(GroundIntakeConstants.GROUND_INTAKE_LOWER_BOUND);
 
@@ -162,7 +162,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
 
   @Override
   public void setAngle(double angle) {
-    pivotMotor.setControl(m_request.withPosition(Units.degreesToRotations(angle) * 2));
+    pivotMotor.setControl(m_request.withPosition(Units.degreesToRotations(angle)));
   }
 
   @Override
