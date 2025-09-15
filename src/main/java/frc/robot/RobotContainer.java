@@ -865,7 +865,7 @@ public class RobotContainer {
         groundIntake.setAngleAndAmp(
             GroundIntakeConstants.SCORE_CORAL_ANGLE,
             -GroundIntakeConstants.SCORE_CORAL_AMP,
-            -GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE),
+            -GroundIntakeConstants.SCORE_CORAL_DUTYCYCLE),
         Commands.waitSeconds(0.5),
         groundIntake.setAngleAndAmp(GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0),
         Commands.runOnce(
