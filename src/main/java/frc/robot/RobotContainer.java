@@ -585,8 +585,8 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("Five_Cycle_Processor", new FiveCycle(this, false));
-    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycle(this, true));
+    autoChooser.setDefaultOption("Five_Cycle_Processor", new FiveCycle(this, groundIntake, false));
+    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycle(this, groundIntake, true));
     autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
     autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
     autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
