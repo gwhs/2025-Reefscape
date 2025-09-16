@@ -27,8 +27,8 @@ public class FiveCycle extends PathPlannerAuto {
 
   public FiveCycle(
       RobotContainer robotContainer,
-      boolean nonProcessorSide,
-      GroundIntakeSubsystem groundIntakeSubsystem) {
+      GroundIntakeSubsystem groundIntakeSubsystem,
+      boolean nonProcessorSide) {
     super(Commands.run(() -> {}));
 
     this.robotContainer = robotContainer;
@@ -64,8 +64,6 @@ public class FiveCycle extends PathPlannerAuto {
       isRunning()
           .onTrue(
               Commands.sequence(
-
-                  // code here
                   groundIntakeSubsystem.setAngleAndAmp(
                       GroundIntakeConstants.INTAKE_CORAL_ANGLE, 0, 0),
                   AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
@@ -84,7 +82,6 @@ public class FiveCycle extends PathPlannerAuto {
                       .deadlineFor(
                           robotContainer.alignToPose(
                               () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
-                  // yourcode is here
                   groundIntakeSubsystem.setAngleAndAmp(
                       GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0),
                   AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntakeAuton()),
