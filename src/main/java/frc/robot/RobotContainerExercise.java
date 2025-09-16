@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.arm.ArmConstants;
@@ -32,7 +34,9 @@ public class RobotContainerExercise {
 
   public RobotContainerExercise() {
     configureBindings();
-  }
+  
+    SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
+   }
 
   public void configureBindings() {
     /********************
@@ -65,8 +69,8 @@ public class RobotContainerExercise {
         // Command 1: In parallel: extend elevator to ElevatorConstants.L4_PREP_POSITION + rotate
         // arm to ArmConstants.L4_PREP_POSITION (Commands.parallel())
         Commands.parallel(
-            arm.setAngle(ArmConstants.L4_PREP_POSITION),
-            elevator.setHeight(ElevatorConstants.L4_PREP_POSITION)),
+                arm.setAngle(ArmConstants.L4_PREP_POSITION),
+                elevator.setHeight(ElevatorConstants.L4_PREP_POSITION)),
         // Command 2: Spin endeffector at EndEffectorConstants.VOLTAGE_L4
         endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L4),
         // Command 3: Wait 0.05 seconds (Commands.waitSeconds())
@@ -75,7 +79,8 @@ public class RobotContainerExercise {
         Commands.parallel(
             elevator.setHeight(ElevatorConstants.STOW_METER),
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
-            endEffector.setVoltage(0)));
+            endEffector.setVoltage(0))).withTimeout(0.01)
+            .withName("Score L4 Coral");
     // ArmConstants.ARM_STOW_ANGLE + spin endeffector at 0 git volts
 
   }
