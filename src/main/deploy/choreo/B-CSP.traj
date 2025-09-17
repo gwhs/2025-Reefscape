@@ -1,5 +1,5 @@
 {
- "name":"CS-C",
+ "name":"B-CSP",
  "version":1,
  "snapshot":{
   "waypoints":[],
@@ -8,15 +8,15 @@
  },
  "params":{
   "waypoints":[
+    {"x":{"exp":"B.x()", "val":3.194}, "y":{"exp":"B.y()", "val":3.848}, "heading":{"exp":"B.heading()", "val":0.0}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"CoralStation.x()", "val":1.47}, "y":{"exp":"CoralStation.y()", "val":0.61}, "heading":{"exp":"CoralStation.heading()", "val":0.942477796076938}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"2.9600231647491455 m", "val":2.9600231647491455}, "y":{"exp":"2.2043070793151855 m", "val":2.2043070793151855}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":40, "split":false, "fixTranslation":false, "fixHeading":false, "overrideIntervals":false},
-    {"x":{"exp":"C.x()", "val":3.71}, "y":{"exp":"C.y()", "val":2.98}, "heading":{"exp":"C.heading()", "val":1.0471975511965976}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
+    {"x":{"exp":"1.949444055557251 m", "val":1.949444055557251}, "y":{"exp":"1.487817645072937 m", "val":1.487817645072937}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":40, "split":false, "fixTranslation":false, "fixHeading":false, "overrideIntervals":false}],
   "constraints":[
     {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":"last", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":"first", "to":"last", "data":{"type":"KeepInRectangle", "props":{"x":{"exp":"0 m", "val":0.0}, "y":{"exp":"0 m", "val":0.0}, "w":{"exp":"17.548 m", "val":17.548}, "h":{"exp":"8.052 m", "val":8.052}}}, "enabled":false},
-    {"from":"first", "to":1, "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"GlobalAcc", "val":4.5}}}, "enabled":true},
-    {"from":1, "to":"last", "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"ReefAcc", "val":2.1}}}, "enabled":true}],
+    {"from":"first", "to":"last", "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"GlobalAcc", "val":4.5}}}, "enabled":true},
+    {"from":1, "to":"last", "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"CoralStationAcc", "val":3.2}}}, "enabled":true}],
   "targetDt":{
    "exp":"0.05 s",
    "val":0.05

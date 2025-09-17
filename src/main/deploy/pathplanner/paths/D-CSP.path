@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5997585935946463,
-        "y": 1.4156286005170002
+        "x": 2.599757303992856,
+        "y": 1.4156298927762532
       },
       "isLocked": false,
       "linkedName": "D"
@@ -66,7 +66,7 @@
     "rotation": 54.0
   },
   "reversed": false,
-  "folder": "Auton-C5 (F-E)",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 59.99999999999999

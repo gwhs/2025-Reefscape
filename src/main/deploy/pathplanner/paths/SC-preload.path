@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.773684210526316,
-        "y": 2.6009868421052635
+        "x": 6.774,
+        "y": 2.601
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.76611761216566,
-        "y": 2.1748511770531036
+        "x": 5.766431717369725,
+        "y": 2.1748683173020478
       },
       "isLocked": false,
       "linkedName": "SC"
@@ -57,7 +57,7 @@
     "rotation": 119.99999999999999
   },
   "reversed": false,
-  "folder": "Auton-C5 (F-E)",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 119.99999999999999

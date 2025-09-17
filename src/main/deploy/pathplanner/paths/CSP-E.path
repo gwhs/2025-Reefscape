@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 4.974424342105263,
-        "y": 2.793421052631579
+        "x": 4.974,
+        "y": 2.793
       },
       "prevControl": {
-        "x": 4.143868421052631,
-        "y": 1.8772664473684206
+        "x": 4.143450915831474,
+        "y": 1.876839196686902
       },
       "nextControl": null,
       "isLocked": false,
@@ -71,7 +71,7 @@
     "rotation": 119.99999999999999
   },
   "reversed": false,
-  "folder": "Auton-C5 (F-E)",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 54.0
