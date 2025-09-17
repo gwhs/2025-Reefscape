@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.EagleUtil;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.climb.ClimbConstants;
+import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
@@ -28,6 +30,7 @@ public class FiveCycle extends PathPlannerAuto {
   public FiveCycle(
       RobotContainer robotContainer,
       GroundIntakeSubsystem groundIntakeSubsystem,
+      ClimbSubsystem climbSubsystem,
       boolean nonProcessorSide) {
     super(Commands.run(() -> {}));
 
@@ -64,6 +67,7 @@ public class FiveCycle extends PathPlannerAuto {
       isRunning()
           .onTrue(
               Commands.sequence(
+                ClimbConstants.STOW_CLIMB_POSITION,
                   groundIntakeSubsystem.setAngleAndAmp(
                       GroundIntakeConstants.INTAKE_CORAL_ANGLE, 0, 0),
                   AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
