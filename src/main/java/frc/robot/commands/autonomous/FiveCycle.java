@@ -67,13 +67,13 @@ public class FiveCycle extends PathPlannerAuto {
       isRunning()
           .onTrue(
               Commands.sequence(
-                ClimbConstants.STOW_CLIMB_POSITION,
                   groundIntakeSubsystem.setAngleAndAmp(
                       GroundIntakeConstants.INTAKE_CORAL_ANGLE, 0, 0),
                   AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
                   AutoBuilder.followPath(SC_F)
                       .deadlineFor(
                           Commands.sequence(
+                            climbSubsystem.stow(),
                               robotContainer.zeroElevator().onlyIf(() -> RobotBase.isReal()),
                               robotContainer.prepScoreCoral(
                                   ElevatorConstants.L4_PREP_POSITION,
