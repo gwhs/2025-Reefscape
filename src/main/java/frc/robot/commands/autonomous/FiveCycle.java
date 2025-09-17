@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.EagleUtil;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.arm.ArmConstants;
-import frc.robot.subsystems.climb.ClimbConstants;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
@@ -73,7 +72,7 @@ public class FiveCycle extends PathPlannerAuto {
                   AutoBuilder.followPath(SC_F)
                       .deadlineFor(
                           Commands.sequence(
-                            climbSubsystem.stow(),
+                              climbSubsystem.stow(),
                               robotContainer.zeroElevator().onlyIf(() -> RobotBase.isReal()),
                               robotContainer.prepScoreCoral(
                                   ElevatorConstants.L4_PREP_POSITION,
