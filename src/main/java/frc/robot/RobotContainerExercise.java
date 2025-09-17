@@ -34,9 +34,9 @@ public class RobotContainerExercise {
 
   public RobotContainerExercise() {
     configureBindings();
-  
+
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
-   }
+  }
 
   public void configureBindings() {
     /********************
@@ -56,8 +56,7 @@ public class RobotContainerExercise {
     controller.start().and(controller.back()).debounce(1).onTrue(scoreL4Coral());
 
     controller.start().and(controller.back()).negate().debounce(1).onTrue(arm.setAngle(90));
-  
-    
+
     controller.start().negate().and(controller.back()).debounce(1).onTrue(arm.setAngle(-90));
   }
 
@@ -70,22 +69,25 @@ public class RobotContainerExercise {
    ********************/
   public Command scoreL4Coral() {
     return Commands.sequence(
-        // TODO:
-        // Command 1: In parallel: extend elevator to ElevatorConstants.L4_PREP_POSITION + rotate
-        // arm to ArmConstants.L4_PREP_POSITION (Commands.parallel())
-        Commands.parallel(
+            // TODO:
+            // Command 1: In parallel: extend elevator to ElevatorConstants.L4_PREP_POSITION +
+            // rotate
+            // arm to ArmConstants.L4_PREP_POSITION (Commands.parallel())
+            Commands.parallel(
                 arm.setAngle(ArmConstants.L4_PREP_POSITION),
                 elevator.setHeight(ElevatorConstants.L4_PREP_POSITION)),
-        // Command 2: Spin endeffector at EndEffectorConstants.VOLTAGE_L4
-        endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L4),
-        // Command 3: Wait 0.05 seconds (Commands.waitSeconds())
-        Commands.waitSeconds(0.5),
-        // Command 4: In parallel: retract elevator to ElevatorConstants.STOW_METER + rotate arm to
-        Commands.parallel(
-            elevator.setHeight(ElevatorConstants.STOW_METER),
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
-            endEffector.setVoltage(0))).withTimeout(0.01)
-            .withName("Score L4 Coral");
+            // Command 2: Spin endeffector at EndEffectorConstants.VOLTAGE_L4
+            endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L4),
+            // Command 3: Wait 0.05 seconds (Commands.waitSeconds())
+            Commands.waitSeconds(0.5),
+            // Command 4: In parallel: retract elevator to ElevatorConstants.STOW_METER + rotate arm
+            // to
+            Commands.parallel(
+                elevator.setHeight(ElevatorConstants.STOW_METER),
+                arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
+                endEffector.setVoltage(0)))
+        .withTimeout(0.01)
+        .withName("Score L4 Coral");
     // ArmConstants.ARM_STOW_ANGLE + spin endeffector at 0 git volts
 
   }
