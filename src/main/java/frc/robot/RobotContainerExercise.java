@@ -53,7 +53,12 @@ public class RobotContainerExercise {
     controller.rightBumper().onTrue(arm.setAngle(-90));
 
     // TODO 3: press start -> score L4 Coral (finish in command composition first)
-    controller.start().onTrue(scoreL4Coral());
+    controller.start().and(controller.back()).debounce(1).onTrue(scoreL4Coral());
+
+    controller.start().and(controller.back()).negate().debounce(1).onTrue(arm.setAngle(90));
+  
+    
+    controller.start().negate().and(controller.back()).debounce(1).onTrue(arm.setAngle(-90));
   }
 
   public void periodic() {
