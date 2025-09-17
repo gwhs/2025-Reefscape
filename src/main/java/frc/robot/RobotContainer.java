@@ -378,6 +378,14 @@ public class RobotContainer {
 
     m_driverController.leftTrigger().onFalse(dealgae());
 
+    m_driverController
+        .leftBumper()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL);
+                }));
+
     IS_L4
         .and(m_driverController.y())
         .whileTrue(prepScoreCoral(CoralLevel.L4))
@@ -403,7 +411,7 @@ public class RobotContainer {
                 }));
 
     m_driverController
-        .back()
+        .rightBumper()
         .whileTrue(
             Commands.startEnd(
                     () -> {
