@@ -70,8 +70,9 @@ public class RobotContainerExercise {
         //     Command 1b: rotate arm to ArmConstants.L4_PREP_POSITION
 
         Commands.parallel(
-            elevator.setHeight(ElevatorConstants.L4_PREP_POSITION),
-            arm.setAngle(ArmConstants.L4_PREP_POSITION)) ,
+                elevator.setHeight(ElevatorConstants.L4_PREP_POSITION),
+                arm.setAngle(ArmConstants.L4_PREP_POSITION))
+            .withTimeout(2),
         // Command 2: Spin endeffector at EndEffectorConstants.VOLTAGE_L4
         endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L4),
         // Command 3: Wait 0.05 seconds (Commands.waitSeconds())
