@@ -17,12 +17,18 @@ public class LeaveProcessor extends PathPlannerAuto {
     super(Commands.run(() -> {}));
 
     try {
-      PathPlannerPath startLnLeave2 = PathPlannerPath.fromPathFile("Startline-Leave2");
+      // PathPlannerPath startLnLeave2 = PathPlannerPath.fromPathFile("Startline-Leave2");
+
+      // Pose2d startingPose =
+      //    new Pose2d(
+      //        startLnLeave2.getPoint(0).position,
+      // startLnLeave2.getIdealStartingState().rotation());
+
+      PathPlannerPath startLnLeave2 = PathPlannerPath.fromChoreoTrajectory("E-CSP");
 
       Pose2d startingPose =
           new Pose2d(
               startLnLeave2.getPoint(0).position, startLnLeave2.getIdealStartingState().rotation());
-
       isRunning()
           .onTrue(
               Commands.sequence(
