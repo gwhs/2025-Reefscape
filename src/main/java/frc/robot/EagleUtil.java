@@ -115,6 +115,15 @@ public class EagleUtil {
     0, // reef L
   };
 
+  private static List<Pose2d> coralStationPoints =
+      new ArrayList<>(
+          Arrays.asList(
+              new Pose2d(16.05, 7.42, Rotation2d.fromDegrees(-126)), // Red Processor Side
+              new Pose2d(16.05, 0.63, Rotation2d.fromDegrees(126)), // Red Non-Processor Side
+              new Pose2d(1.5, 0.63, Rotation2d.fromDegrees(54)), // Blue Processor Side
+              new Pose2d(1.5, 7.42, Rotation2d.fromDegrees(-54)) // Blue Non-Processor Side
+              ));
+
   /**
    * @return returns the calculated set points
    */
@@ -508,21 +517,6 @@ public class EagleUtil {
     return targetPose;
   }
 
-  public static Pose2d getClosestRightReef(Pose2d pose) {
-    int closestReef = findClosestReefIndex(pose);
-    if (closestReef % 2 == 0) {
-      closestReef += 1;
-    }
-
-    if (isRedAlliance()) {
-      calculateRedReefSetPoints();
-      return redPoses[closestReef];
-    } else {
-      calculateBlueReefSetPoints();
-      return bluePoses[closestReef];
-    }
-  }
-
   public static Pose2d getClosestRightReefBack(Pose2d pose) {
     int closestReef = findClosestReefIndex(pose);
     if (closestReef % 2 == 0) {
@@ -541,15 +535,6 @@ public class EagleUtil {
     targetPose = new Pose2d(targetPose.getX(), targetPose.getY(), targetRotation);
     return targetPose;
   }
-
-  private static List<Pose2d> coralStationPoints =
-      new ArrayList<>(
-          Arrays.asList(
-              new Pose2d(15.95, 7.37, Rotation2d.fromDegrees(-126)), // Red Processor Side
-              new Pose2d(15.95, 0.66, Rotation2d.fromDegrees(126)), // Red Non-Processor Side
-              new Pose2d(1.62, 0.66, Rotation2d.fromDegrees(54)), // Blue Processor Side
-              new Pose2d(1.62, 7.37, Rotation2d.fromDegrees(-54)) // Blue Non-Processor Side
-              ));
 
   public static Pose2d getClosestCoralStation(Pose2d pose) {
     return pose.nearest(coralStationPoints);
@@ -577,5 +562,20 @@ public class EagleUtil {
     Pose2d poseRed =
         new Pose2d(FieldConstants.SCORE_NET_RED_SIDE_X, pose.getY(), Rotation2d.fromDegrees(44));
     return poseRed;
+  }
+
+  public static Pose2d getClosestRightReef(Pose2d pose) {
+    int closestReef = findClosestReefIndex(pose);
+    if (closestReef % 2 == 0) {
+      closestReef += 1;
+    }
+
+    if (isRedAlliance()) {
+      calculateRedReefSetPoints();
+      return redPoses[closestReef];
+    } else {
+      calculateBlueReefSetPoints();
+      return bluePoses[closestReef];
+    }
   }
 }
