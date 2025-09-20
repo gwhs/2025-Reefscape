@@ -41,6 +41,7 @@ public class GroundIntakeSubsystem extends SubsystemBase {
   public void periodic() {
     groundintakeIO.update();
     DogLog.log("groundIntake/Pivot/angle", groundintakeIO.getPivotAngle());
+    // DogLog.log("groundIntake/spinMotor/velocity", groundintakeIO.get);
   }
 
   public Command increaseAngle(double angle) {
