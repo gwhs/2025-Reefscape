@@ -65,7 +65,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   public ProfiledPIDController PID_X = new ProfiledPIDController(3.0, 0, 0, constraints);
   public ProfiledPIDController PID_Y = new ProfiledPIDController(3.0, 0, 0, constraints);
 
-  public PIDController PID_Rotation = new PIDController(0.1, 0, 0);
+  public PIDController PID_Rotation = new PIDController(0.05, 0, 0);
   public Trigger IS_AT_TARGET_POSE =
       new Trigger(() -> PID_X.atSetpoint() && PID_Y.atSetpoint() && PID_Rotation.atSetpoint());
 

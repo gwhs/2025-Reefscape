@@ -12,6 +12,8 @@ import com.ctre.phoenix6.signals.*;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularAcceleration;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
@@ -42,6 +44,9 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
   private final StatusSignal<Angle> pivotMotorPosition = pivotMotor.getPosition();
   private final StatusSignal<Double> groundIntakePIDGoal = pivotMotor.getClosedLoopReference();
   private final StatusSignal<Angle> pivotEncoderPosition = pivotEncoder.getPosition();
+  private final StatusSignal<AngularVelocity> spinMotorVelocity = spinMotor.getVelocity();
+  private final StatusSignal<AngularAcceleration> spinMotorAcceleration =
+      spinMotor.getAcceleration();
 
   private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
 
@@ -130,7 +135,9 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
         pivotMotorPosition,
         pivotMotorStatorCurrent,
         groundIntakePIDGoal,
-        pivotEncoderPosition);
+        pivotEncoderPosition,
+        spinMotorVelocity,
+        spinMotorAcceleration);
 
     CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
     cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5; // TODO
@@ -176,7 +183,9 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
         spinMotorStatorCurrent,
         groundIntakePIDGoal,
         pivotMotorPosition,
-        pivotEncoderPosition);
+        pivotEncoderPosition,
+        spinMotorVelocity,
+        spinMotorAcceleration);
 
     DogLog.log("groundIntake/Spin/voltage", spinMotorVoltage.getValueAsDouble());
     DogLog.log("groundIntake/Pivot/voltage", pivotMotorVoltage.getValueAsDouble());
@@ -189,6 +198,8 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     DogLog.log("groundIntake/Spin/Motor Connected", spinMotor.isConnected());
     DogLog.log("groundIntake/Pivot/Motor Connected", pivotMotor.isConnected());
     DogLog.log("groundIntake/Pivot/Encoder Connected", pivotEncoder.isConnected());
+    DogLog.log("groundIntake/Spin/velocity", spinMotorVelocity.getValueAsDouble());
+    DogLog.log("groundIntake/Spin/acceleration", spinMotorAcceleration.getValueAsDouble());
 
     spinMotorConnected.set(!spinMotor.isConnected());
     pivotMotorConnected.set(!pivotMotor.isConnected());
