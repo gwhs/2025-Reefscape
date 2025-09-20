@@ -45,8 +45,8 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
   private final StatusSignal<Double> groundIntakePIDGoal = pivotMotor.getClosedLoopReference();
   private final StatusSignal<Angle> pivotEncoderPosition = pivotEncoder.getPosition();
   private final StatusSignal<AngularVelocity> spinMotorVelocity = spinMotor.getVelocity();
-  private final StatusSignal<AngularAcceleration> spinMotorAcceleration = spinMotor.getAcceleration();
-
+  private final StatusSignal<AngularAcceleration> spinMotorAcceleration =
+      spinMotor.getAcceleration();
 
   private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
 
