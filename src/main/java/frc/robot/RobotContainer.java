@@ -600,7 +600,7 @@ public class RobotContainer {
     autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
     autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
     autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
-    autoChooser.addOption("Push_One_Cycle", new PushOneCycle(this, groundIntake));
+    autoChooser.addOption("Push_One_Cycle", new PushOneCycle(this, groundIntake, climb));
     autoChooser.addOption(
         "Wheel_Radius_Chracterizaton",
         WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
