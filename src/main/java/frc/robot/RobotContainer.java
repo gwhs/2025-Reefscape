@@ -446,10 +446,6 @@ public class RobotContainer {
         .debounce(0.33)
         .onTrue(scoreCoral());
 
-    IS_L1
-        .and(m_driverController.a())
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
-
     // IS_L2
     //     .and(m_driverController.a())
     //     .whileTrue(alignToPose(() ->
@@ -497,7 +493,15 @@ public class RobotContainer {
                 () -> {
                   coralLevel = CoralLevel.L2;
                   driveCommand.setInverted(false);
+                  coralLevel = CoralLevel.L2;
                 }));
+
+    m_driverController
+        .a()
+        .onFalse(
+            groundIntake
+                .setAngleAndAmp(GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0)
+                .onlyIf(IS_L2));
 
     m_driverController
         .b()
@@ -680,22 +684,28 @@ public class RobotContainer {
                 elevator.setHeight(elevatorHeight).withTimeout(1.5),
                 arm.setAngle(armAngle).withTimeout(1.5),
                 Commands.runOnce(() -> robotState = RobotState.PREPSCORE)),
-            groundIntake
-                .setAngleAndAmp(GroundIntakeConstants.INTAKE_CORAL_ANGLE, 0, 0)
-                .onlyIf(IS_L2))
+            groundIntake.setAngleAndAmp(GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0).onlyIf(IS_L2))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
 
   public Command prepScoreCoral(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
-    return Commands.parallel(
-            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES)),
-            endEffector.holdCoral(),
-            elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
-            arm.setAngleSupplier(armAngle).withTimeout(.5),
-            Commands.runOnce(() -> robotState = RobotState.PREPSCORE))
-        .withName(
-            "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
+    return Commands.sequence(
+        groundIntake
+            .setAngleAndAmp(GroundIntakeConstants.INTAKE_CORAL_ANGLE + 80, 0, 0)
+            .onlyIf(IS_L2),
+        Commands.parallel(
+                Commands.runOnce(
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES)),
+                endEffector.holdCoral(),
+                elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
+                arm.setAngleSupplier(armAngle).withTimeout(.5),
+                Commands.runOnce(() -> robotState = RobotState.PREPSCORE))
+            .withName(
+                "Prepare Score Coral; Elevator Height: "
+                    + elevatorHeight
+                    + " Arm Angle: "
+                    + armAngle));
   }
 
   public Command stowArmAndElevator() {
