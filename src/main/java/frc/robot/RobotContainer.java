@@ -692,7 +692,7 @@ public class RobotContainer {
   public Command prepScoreCoral(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
     return Commands.sequence(
         groundIntake
-            .setAngleAndAmp(GroundIntakeConstants.INTAKE_CORAL_ANGLE + 80, 0, 0)
+            .setAngleAndAmp(GroundIntakeConstants.INTAKE_CORAL_ANGLE + 100, 0, 0)
             .onlyIf(IS_L2),
         Commands.parallel(
                 Commands.runOnce(
