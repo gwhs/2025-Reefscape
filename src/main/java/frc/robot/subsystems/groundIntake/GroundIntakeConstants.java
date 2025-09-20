@@ -24,7 +24,7 @@ public class GroundIntakeConstants {
 
   public static final double INTAKE_CORAL_AMP = 55;
   public static final double INTAKE_CORAL_DUTYCYCLE = 0.75;
-  public static final double HOLD_CORAL_AMP = 31.1;
+  public static final double HOLD_CORAL_AMP = 30;
   public static final double HOLD_CORAL_DUTYCYCLE = 0.1;
   public static final double SCORE_CORAL_AMP = -80;
   public static final double SCORE_CORAL_DUTYCYCLE = 0.9;
