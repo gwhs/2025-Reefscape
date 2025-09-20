@@ -600,7 +600,7 @@ public class RobotContainer {
     autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
     autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
     autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
-    autoChooser.addOption("Push_One_Cycle", new PushOneCycle(this));
+    autoChooser.addOption("Push_One_Cycle", new PushOneCycle(this, groundIntake, climb));
     autoChooser.addOption(
         "Wheel_Radius_Chracterizaton",
         WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
@@ -823,6 +823,7 @@ public class RobotContainer {
     Command prepClimb =
         Commands.sequence(
                 Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE)),
+                endEffector.stopMotor(),
                 groundIntake.setAngleAndAmp(GroundIntakeConstants.CLIMB_ANGLE, 0, 0).withTimeout(1),
                 arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
                 elevator.setHeight(0).withTimeout(1),
@@ -842,6 +843,7 @@ public class RobotContainer {
               driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL);
               coralLevel = CoralLevel.L1;
             }),
+        endEffector.stopMotor(),
         groundIntake
             .setAngleAndAmp(
                 GroundIntakeConstants.INTAKE_CORAL_ANGLE,
