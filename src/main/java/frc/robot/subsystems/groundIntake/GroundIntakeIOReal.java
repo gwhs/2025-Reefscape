@@ -5,24 +5,26 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularAcceleration;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 public class GroundIntakeIOReal implements GroundIntakeIO {
 
   private final TalonFX spinMotor = new TalonFX(GroundIntakeConstants.SPIN_MOTOR_ID, "rio");
   private final TalonFX pivotMotor = new TalonFX(GroundIntakeConstants.PIVOT_MOTOR_ID, "rio");
-  private final DutyCycleEncoder pivotEncoder =
-      new DutyCycleEncoder(GroundIntakeConstants.PIVOT_ENCODER_ID);
+  private final CANcoder pivotEncoder = new CANcoder(GroundIntakeConstants.PIVOT_ENCODER_ID, "rio");
 
   private final Alert spinMotorConnected =
       new Alert("ground intake spin motor not connected", AlertType.kError);
@@ -41,8 +43,14 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
   private final StatusSignal<Current> pivotMotorStatorCurrent = pivotMotor.getStatorCurrent();
   private final StatusSignal<Angle> pivotMotorPosition = pivotMotor.getPosition();
   private final StatusSignal<Double> groundIntakePIDGoal = pivotMotor.getClosedLoopReference();
+  private final StatusSignal<Angle> pivotEncoderPosition = pivotEncoder.getPosition();
+  private final StatusSignal<AngularVelocity> spinMotorVelocity = spinMotor.getVelocity();
+  private final StatusSignal<AngularAcceleration> spinMotorAcceleration =
+      spinMotor.getAcceleration();
 
   private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
+
+  private TorqueCurrentFOC currentControl = new TorqueCurrentFOC(0);
 
   public GroundIntakeIOReal() {
     // configuration for the pivot motor
@@ -57,8 +65,11 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     m_request.EnableFOC = true; // add FOC
 
     slot0Configs.kS = 0.18205; // Add 0.25 V output to overcome static friction
-    slot0Configs.kG = 0.09885; // Add 0 V to overcome gravity
-    slot0Configs.kV = 7.2427; // A velocity target of 1 rps results in 0.12 V output
+    slot0Configs.kG = 0; // Add 0 V to overcome gravity
+    slot0Configs.kV =
+        0.1125
+            * GroundIntakeConstants
+                .PIVOT_GEAR_RATIO; // A velocity target of 1 rps results in 0.12 V output
     slot0Configs.kA = 0.086264; // An acceleration of 1 rps/s requires 0.01 V output
     slot0Configs.kP = 30; // A position error of 2.5 rotations results in 12 V output
     slot0Configs.kI = 0; // no output for integrated error
@@ -66,21 +77,22 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     slot0Configs.withGravityType(GravityTypeValue.Arm_Cosine);
 
     feedbackConfigs.FeedbackRotorOffset = 0;
-    feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-    feedbackConfigs.RotorToSensorRatio = 1;
-    feedbackConfigs.SensorToMechanismRatio = GroundIntakeConstants.PIVOT_GEAR_RATIO;
+    feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+    feedbackConfigs.FeedbackRemoteSensorID = GroundIntakeConstants.PIVOT_ENCODER_ID;
+    feedbackConfigs.SensorToMechanismRatio = 2;
+    feedbackConfigs.RotorToSensorRatio = GroundIntakeConstants.PIVOT_GEAR_RATIO / 2;
 
     motionMagicConfigs.MotionMagicCruiseVelocity = GroundIntakeConstants.MAX_VELOCITY;
     motionMagicConfigs.MotionMagicAcceleration = GroundIntakeConstants.MAX_ACCELERATION;
     motionMagicConfigs.MotionMagicJerk = 0; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
     motorOutput.NeutralMode = NeutralModeValue.Brake;
-    motorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    motorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-    softwareLimitSwitch.ForwardSoftLimitEnable = false;
+    softwareLimitSwitch.ForwardSoftLimitEnable = true;
     softwareLimitSwitch.ForwardSoftLimitThreshold =
         Units.degreesToRotations(GroundIntakeConstants.GROUND_INTAKE_UPPER_BOUND);
-    softwareLimitSwitch.ReverseSoftLimitEnable = false;
+    softwareLimitSwitch.ReverseSoftLimitEnable = true;
     softwareLimitSwitch.ReverseSoftLimitThreshold =
         Units.degreesToRotations(GroundIntakeConstants.GROUND_INTAKE_LOWER_BOUND);
 
@@ -106,7 +118,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     motorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     currentConfig.withStatorCurrentLimitEnable(true);
-    currentConfig.withStatorCurrentLimit(40);
+    currentConfig.withStatorCurrentLimit(80);
 
     status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; i++) {
@@ -122,7 +134,22 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
         spinMotorStatorCurrent,
         pivotMotorPosition,
         pivotMotorStatorCurrent,
-        groundIntakePIDGoal);
+        groundIntakePIDGoal,
+        pivotEncoderPosition,
+        spinMotorVelocity,
+        spinMotorAcceleration);
+
+    CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
+    cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5; // TODO
+    cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    cc_cfg.MagnetSensor.withMagnetOffset(GroundIntakeConstants.MAGNET_OFFSET_ROTATIONS); // TODO
+    for (int i = 0; i < 5; i++) {
+      status = pivotEncoder.getConfigurator().apply(cc_cfg);
+      if (status.isOK()) break;
+    }
+    if (!status.isOK()) {
+      System.out.println("Could not configure device. Error: " + status.toString());
+    }
   }
 
   @Override
@@ -137,7 +164,7 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
 
   @Override
   public double getPivotAngle() {
-    return (Units.rotationsToDegrees(pivotEncoder.get()) - GroundIntakeConstants.ENCODER_OFFSET);
+    return Units.rotationsToDegrees(pivotEncoderPosition.getValueAsDouble() / 2);
   }
 
   @Override
@@ -155,7 +182,10 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
         pivotMotorStatorCurrent,
         spinMotorStatorCurrent,
         groundIntakePIDGoal,
-        pivotMotorPosition);
+        pivotMotorPosition,
+        pivotEncoderPosition,
+        spinMotorVelocity,
+        spinMotorAcceleration);
 
     DogLog.log("groundIntake/Spin/voltage", spinMotorVoltage.getValueAsDouble());
     DogLog.log("groundIntake/Pivot/voltage", pivotMotorVoltage.getValueAsDouble());
@@ -168,6 +198,8 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     DogLog.log("groundIntake/Spin/Motor Connected", spinMotor.isConnected());
     DogLog.log("groundIntake/Pivot/Motor Connected", pivotMotor.isConnected());
     DogLog.log("groundIntake/Pivot/Encoder Connected", pivotEncoder.isConnected());
+    DogLog.log("groundIntake/Spin/velocity", spinMotorVelocity.getValueAsDouble());
+    DogLog.log("groundIntake/Spin/acceleration", spinMotorAcceleration.getValueAsDouble());
 
     spinMotorConnected.set(!spinMotor.isConnected());
     pivotMotorConnected.set(!pivotMotor.isConnected());
@@ -175,11 +207,10 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
   }
 
   @Override
-  public void resetPivotEncoder() {
-    if (pivotEncoder.isConnected()) {
-      double encoderAngle =
-          (pivotEncoder.get()) - (Units.degreesToRotations(GroundIntakeConstants.ENCODER_OFFSET));
-      pivotMotor.setPosition(encoderAngle);
-    }
+  public void resetPivotEncoder() {}
+
+  @Override
+  public void runAmp(double amp, double dutyCycle) {
+    spinMotor.setControl(currentControl.withOutput(amp).withMaxAbsDutyCycle(dutyCycle));
   }
 }

@@ -18,14 +18,14 @@ public class ElevatorConstants {
   public static final double TOP_METER = .75;
 
   // Position constants:
-  public static final double L1_PREP_POSITION = 0;
+  public static final double L1_PREP_POSITION = 0.11;
   public static final double L2_PREP_POSITION = 0;
   public static final double L3_PREP_POSITION = 0.2;
   public static final double L4_PREP_POSITION = .75;
 
-  public static final double INTAKE_METER = .29639;
+  public static final double INTAKE_METER = .26439;
   public static final double INTAKE_METER_AUTON = .26439;
-  public static final double INTAKE_METER_BACKUP = .22633;
+  public static final double INTAKE_METER_BACKUP = .1734; // 0.1734
   public static final double DEALGAE_LOW_POSITION = 0;
   public static final double DEALGAE_HIGH_POSITION = .4424;
   public static final double DEALGAE_STOW_POSITION = 0;

@@ -65,7 +65,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   public ProfiledPIDController PID_X = new ProfiledPIDController(3.0, 0, 0, constraints);
   public ProfiledPIDController PID_Y = new ProfiledPIDController(3.0, 0, 0, constraints);
 
-  public PIDController PID_Rotation = new PIDController(0.1, 0, 0);
+  public PIDController PID_Rotation = new PIDController(0.05, 0, 0);
   public Trigger IS_AT_TARGET_POSE =
       new Trigger(() -> PID_X.atSetpoint() && PID_Y.atSetpoint() && PID_Rotation.atSetpoint());
 
@@ -94,7 +94,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
   /** Swerve request to apply during robot-centric path following */
   private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds =
-      new SwerveRequest.ApplyRobotSpeeds();
+      new SwerveRequest.ApplyRobotSpeeds().withDriveRequestType(DriveRequestType.Velocity);
 
   private final SwerveRequest.RobotCentric robotCentricDrive =
       new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -166,8 +166,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     ChassisSpeeds currentSpeed =
         ChassisSpeeds.fromRobotRelativeSpeeds(getState().Speeds, getRotation());
 
-    double predicted_X = (targetPose.getX() - getPose().getX()) * 0.4 + getPose().getX();
-    double predicted_Y = (targetPose.getY() - getPose().getY()) * 0.4 + getPose().getY();
+    double predicted_X = (targetPose.getX() - getPose().getX()) * 0.3 + getPose().getX();
+    double predicted_Y = (targetPose.getY() - getPose().getY()) * 0.3 + getPose().getY();
 
     PID_X.reset(predicted_X, currentSpeed.vxMetersPerSecond * 0.4);
     PID_Y.reset(predicted_Y, currentSpeed.vyMetersPerSecond * 0.4);
@@ -277,11 +277,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                         : kBlueAlliancePerspectiveRotation);
                 m_hasAppliedOperatorPerspective = true;
               });
-
-      DogLog.log(
-          "Command Swerve DriveTrain/is Aligning to pose", IS_ALIGNING_TO_POSE.getAsBoolean());
-      DogLog.log("Command Swerve DriveTrain/is at target pose", IS_AT_TARGET_POSE.getAsBoolean());
     }
+    DogLog.log("Command Swerve DriveTrain/is Aligning to pose", IS_ALIGNING_TO_POSE.getAsBoolean());
+    DogLog.log("Command Swerve DriveTrain/is at target pose", IS_AT_TARGET_POSE.getAsBoolean());
 
     DogLog.log("Swerve/current X setpoint", PID_X.getSetpoint().position);
     DogLog.log("Swerve/current Y setpoint", PID_Y.getSetpoint().position);

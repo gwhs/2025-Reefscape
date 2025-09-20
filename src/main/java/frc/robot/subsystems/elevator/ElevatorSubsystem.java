@@ -17,11 +17,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import java.util.function.DoubleSupplier;
 
 public class ElevatorSubsystem extends SubsystemBase {
   private ElevatorIO elevatorIO;
+
+  private double elevatorGoal;
 
   private final SysIdRoutine m_sysIdRoutine =
       new SysIdRoutine(
@@ -43,6 +46,11 @@ public class ElevatorSubsystem extends SubsystemBase {
       elevatorIO = new ElevatorIOReal();
     }
   }
+
+  public Trigger AT_GOAL_HEIGHT =
+      new Trigger(
+          () ->
+              MathUtil.isNear(0, elevatorIO.getRotation() - metersToRotations(elevatorGoal), 0.9));
 
   @Override
   public void periodic() {
@@ -70,6 +78,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     return this.runOnce(
             () -> {
               elevatorIO.setRotation(metersToRotations(clampedMeters));
+              elevatorGoal = clampedMeters;
             })
         .andThen(
             Commands.waitUntil(
@@ -84,6 +93,7 @@ public class ElevatorSubsystem extends SubsystemBase {
               double clampedMeters =
                   MathUtil.clamp(meters.getAsDouble(), 0, ElevatorConstants.TOP_METER);
               elevatorIO.setRotation(metersToRotations(clampedMeters));
+              elevatorGoal = clampedMeters;
             })
         .andThen(
             Commands.waitUntil(
@@ -125,7 +135,7 @@ public class ElevatorSubsystem extends SubsystemBase {
               elevatorIO.setPosition(0);
             });
 
-    return whenNotAtBottom;
+    return Commands.either(whenNotAtBottom, whenAtBottom, () -> !elevatorIO.getReverseLimit());
   }
 
   /**

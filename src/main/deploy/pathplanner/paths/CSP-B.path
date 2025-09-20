@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.474487704918033,
-        "y": 0.6144979508196718
+        "x": 1.58,
+        "y": 0.66
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8186416272535235,
-        "y": 1.257371656010547
+        "x": 1.9241539223354907,
+        "y": 1.3028737051908752
       },
       "isLocked": false,
       "linkedName": "CSP"
@@ -55,7 +55,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 4.8,
+    "maxAcceleration": 4.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 9.0,

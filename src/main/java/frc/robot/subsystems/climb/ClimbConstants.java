@@ -7,7 +7,7 @@ public class ClimbConstants {
   public static final double MAX_ACCELERATION = 1.8;
   public static final double MAX_VELOCITY = 1.4;
 
-  public static final double CLIMB_CLIMB_POSITION = 2.7; // 2.77
-  public static final double STOW_CLIMB_POSITION = 0;
-  public static final double LATCH_CLIMB_POSITION = 1.4;
+  public static final double CLIMB_CLIMB_POSITION = 2.67; // 2.77
+  public static final double STOW_CLIMB_POSITION = 0.1;
+  public static final double LATCH_CLIMB_POSITION = 1.25;
 }

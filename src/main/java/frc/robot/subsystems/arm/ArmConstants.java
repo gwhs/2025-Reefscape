@@ -9,16 +9,16 @@ public class ArmConstants {
   public static final double ARM_GEAR_RATIO = 68.0 / 12 * 84 / 20 * 48 / 18; // 64
 
   // Position constants: in degrees
-  public static final double L1_PREP_POSITION = 133;
-  public static final double L2_PREP_POSITION = 135;
+  public static final double L1_PREP_POSITION = -80.320;
+  public static final double L2_PREP_POSITION = 133;
   public static final double L3_PREP_POSITION = 124.565;
   public static final double L4_PREP_POSITION = 120;
 
   public static final double ARM_UPPER_BOUND = 270;
   public static final double ARM_LOWER_BOUND = -170;
 
-  public static final double ARM_INTAKE_ANGLE = -75.6738;
-  public static final double ARM_INTAKE_ANGLE_BACKUP = -67.0605;
+  public static final double ARM_INTAKE_ANGLE = -72;
+  public static final double ARM_INTAKE_ANGLE_BACKUP = -65;
   public static final double ARM_STOW_ANGLE = -90.0;
 
   public static final double PRE_DEALGAE_ANGLE = 155;

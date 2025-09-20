@@ -29,6 +29,7 @@ public class DriveCommand extends Command {
   private boolean isSlow = false;
   private final double DEAD_BAND = 0.1;
   private boolean resetLimiter = true;
+  private boolean isInverted = false;
 
   private double maxSpeed = CommandSwerveDrivetrain.kSpeedAt12Volts.in(MetersPerSecond);
   private double maxAngularRate = 2.5 * Math.PI;
@@ -68,6 +69,7 @@ public class DriveCommand extends Command {
     CORAL_STATION,
     REEF,
     CAGE,
+    REEF_FACES,
     PROCESSOR
   }
 
@@ -131,14 +133,11 @@ public class DriveCommand extends Command {
 
     } else if (mode == TargetMode.REEF) {
       if (reefMode == ReefPositions.FRONT_REEF) {
-        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
-        return nearest.getRotation().getDegrees();
+        return EagleUtil.getRotationCenterReef(currentRobotPose);
       } else if (reefMode == ReefPositions.RIGHT_SIDE_REEF) {
-        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
-        return nearest.getRotation().getDegrees() + 90;
+        return EagleUtil.getRotationCenterReef(currentRobotPose) + 90;
       } else if (reefMode == ReefPositions.BACK_REEF) {
-        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
-        return nearest.getRotation().getDegrees() + 180;
+        return EagleUtil.getRotationCenterReef(currentRobotPose) + 180;
       } else {
         return 0;
       }
@@ -155,6 +154,19 @@ public class DriveCommand extends Command {
         return 90;
       } else {
         return -90;
+      }
+    } else if (mode == TargetMode.REEF_FACES) {
+      if (reefMode == ReefPositions.FRONT_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees();
+      } else if (reefMode == ReefPositions.RIGHT_SIDE_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees() + 90;
+      } else if (reefMode == ReefPositions.BACK_REEF) {
+        Pose2d nearest = EagleUtil.getCachedReefPose(currentRobotPose);
+        return nearest.getRotation().getDegrees() + 180;
+      } else {
+        return 0;
       }
     } else {
       return 0;
@@ -202,8 +214,15 @@ public class DriveCommand extends Command {
     Pose2d currentRobotPose = drivetrain.getState().Pose;
     double currentRotation = currentRobotPose.getRotation().getDegrees();
 
-    double xVelocity = MathUtil.applyDeadband(-driverController.getLeftY(), 0.1);
-    double yVelocity = MathUtil.applyDeadband(-driverController.getLeftX(), 0.1);
+    double X = -driverController.getLeftY();
+    double Y = -driverController.getLeftX();
+    if (isInverted && driveMode == DriveMode.ROBOT_CENTRIC) {
+      X *= -1;
+      Y *= -1;
+    }
+
+    double xVelocity = MathUtil.applyDeadband(X, 0.1);
+    double yVelocity = MathUtil.applyDeadband(Y, 0.1);
     double angularVelocity = MathUtil.applyDeadband(-driverController.getRightX(), 0.1);
 
     if (isSlow) {
@@ -276,5 +295,9 @@ public class DriveCommand extends Command {
   public void stopDrivetrain() {
     drivetrain.setControl(
         robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0));
+  }
+
+  public void setInverted(boolean inverted) {
+    this.isInverted = inverted;
   }
 }

@@ -15,7 +15,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.EagleUtil;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorConstants;
+import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
+import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 
 public class FiveCycle extends PathPlannerAuto {
 
@@ -23,7 +26,11 @@ public class FiveCycle extends PathPlannerAuto {
 
   private double waitTime = 0;
 
-  public FiveCycle(RobotContainer robotContainer, boolean nonProcessorSide) {
+  public FiveCycle(
+      RobotContainer robotContainer,
+      GroundIntakeSubsystem groundIntakeSubsystem,
+      ClimbSubsystem climbSubsystem,
+      boolean nonProcessorSide) {
     super(Commands.run(() -> {}));
 
     this.robotContainer = robotContainer;
@@ -59,10 +66,13 @@ public class FiveCycle extends PathPlannerAuto {
       isRunning()
           .onTrue(
               Commands.sequence(
+                  groundIntakeSubsystem.setAngleAndAmp(
+                      GroundIntakeConstants.INTAKE_CORAL_ANGLE, 0, 0),
                   AutoBuilder.resetOdom(startingPose).onlyIf(() -> RobotBase.isSimulation()),
                   AutoBuilder.followPath(SC_F)
                       .deadlineFor(
                           Commands.sequence(
+                              climbSubsystem.stow(),
                               robotContainer.zeroElevator().onlyIf(() -> RobotBase.isReal()),
                               robotContainer.prepScoreCoral(
                                   ElevatorConstants.L4_PREP_POSITION,
@@ -75,6 +85,8 @@ public class FiveCycle extends PathPlannerAuto {
                       .deadlineFor(
                           robotContainer.alignToPose(
                               () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
+                  groundIntakeSubsystem.setAngleAndAmp(
+                      GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0),
                   AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntakeAuton()),
                   autoHelper(CSP_D, D_CSP),
                   autoHelper(CSP_C, C_CSP),
@@ -100,7 +112,7 @@ public class FiveCycle extends PathPlannerAuto {
                         .prepScoreCoral(
                             ElevatorConstants.INTAKE_METER, ArmConstants.L4_PREP_POSITION)
                         .withTimeout(0.02),
-                    Commands.waitSeconds(0.5),
+                    Commands.waitSeconds(0.4),
                     robotContainer.prepScoreCoral(
                         ElevatorConstants.L4_PREP_POSITION, ArmConstants.L4_PREP_POSITION)))
             .raceWith(
@@ -126,7 +138,7 @@ public class FiveCycle extends PathPlannerAuto {
                                 ArmConstants.L4_PREP_POSITION))))
             .onlyIf(robotContainer.IS_CORAL_LOADED.negate()),
         Commands.sequence(
-                Commands.waitSeconds(.1)
+                Commands.waitSeconds(.05)
                     .deadlineFor(robotContainer.prepScoreCoral(RobotContainer.CoralLevel.L4)),
                 robotContainer.autonScoreCoral())
             .deadlineFor(

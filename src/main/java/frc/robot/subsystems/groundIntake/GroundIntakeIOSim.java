@@ -68,4 +68,11 @@ public class GroundIntakeIOSim implements GroundIntakeIO {
 
   @Override
   public void resetPivotEncoder() {}
+
+  @Override
+  public void runAmp(double amp, double dutyCycle) {
+    double resistance = DCMotor.getFalcon500(1).rOhms;
+    double voltage = amp * resistance;
+    spinMotorSim.setInputVoltage(voltage);
+  }
 }
