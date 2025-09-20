@@ -36,16 +36,16 @@ public class FiveCycle extends PathPlannerAuto {
     this.robotContainer = robotContainer;
 
     try {
-      PathPlannerPath SC_F = PathPlannerPath.fromChoreoTrajectory("SC-F");
-      PathPlannerPath F_CSP = PathPlannerPath.fromChoreoTrajectory("F-CSP");
+      PathPlannerPath SC_F = PathPlannerPath.fromPathFile("SC-F");
+      PathPlannerPath F_CSP = PathPlannerPath.fromPathFile("F-CSP");
       PathPlannerPath CSP_E = PathPlannerPath.fromPathFile("CSP-E");
-      PathPlannerPath E_CSP = PathPlannerPath.fromChoreoTrajectory("E-CSP");
-      PathPlannerPath CSP_D = PathPlannerPath.fromChoreoTrajectory("CSP-D");
-      PathPlannerPath D_CSP = PathPlannerPath.fromChoreoTrajectory("D-CSP");
-      PathPlannerPath CSP_C = PathPlannerPath.fromChoreoTrajectory("CSP-C");
-      PathPlannerPath C_CSP = PathPlannerPath.fromChoreoTrajectory("C-CSP");
-      PathPlannerPath CSP_B = PathPlannerPath.fromChoreoTrajectory("CSP-B");
-      PathPlannerPath B_CSP = PathPlannerPath.fromChoreoTrajectory("B-CSP");
+      PathPlannerPath E_CSP = PathPlannerPath.fromPathFile("E-CSP");
+      PathPlannerPath CSP_D = PathPlannerPath.fromPathFile("CSP-D");
+      PathPlannerPath D_CSP = PathPlannerPath.fromPathFile("D-CSP");
+      PathPlannerPath CSP_C = PathPlannerPath.fromPathFile("CSP-C");
+      PathPlannerPath C_CSP = PathPlannerPath.fromPathFile("C-CSP");
+      PathPlannerPath CSP_B = PathPlannerPath.fromPathFile("CSP-B");
+      PathPlannerPath B_CSP = PathPlannerPath.fromPathFile("B-CSP");
 
       if (nonProcessorSide) {
         SC_F = SC_F.mirrorPath();
