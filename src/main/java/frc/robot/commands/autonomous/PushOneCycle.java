@@ -37,6 +37,8 @@ public class PushOneCycle extends PathPlannerAuto {
                               robotContainer.alignToPose(
                                   () ->
                                       EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
+                                      groundIntakeSubsystem.setAngleAndAmp(
+                      GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0),
                       robotContainer.scoreCoral())
                   .withName("Leave Startline (Push) and score L1 at H"));
 
