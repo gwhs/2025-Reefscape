@@ -21,8 +21,8 @@
    "ReefAcc":{
     "dimension":"LinAcc",
     "var":{
-     "exp":"2.1 m / s / s",
-     "val":2.1
+     "exp":"2 m / s / s",
+     "val":2.0
     }
    }
   },
