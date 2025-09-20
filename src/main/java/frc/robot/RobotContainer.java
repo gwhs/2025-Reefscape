@@ -671,11 +671,18 @@ public class RobotContainer {
    * @return run the command
    */
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
-    return Commands.parallel(
-            endEffector.holdCoral(),
-            elevator.setHeight(elevatorHeight).withTimeout(1.5),
-            arm.setAngle(armAngle).withTimeout(1.5),
-            Commands.runOnce(() -> robotState = RobotState.PREPSCORE))
+    return Commands.sequence(
+            groundIntake
+                .setAngleAndAmp(GroundIntakeConstants.INTAKE_CORAL_ANGLE, 0, 0)
+                .onlyIf(IS_L2),
+            Commands.parallel(
+                endEffector.holdCoral(),
+                elevator.setHeight(elevatorHeight).withTimeout(1.5),
+                arm.setAngle(armAngle).withTimeout(1.5),
+                Commands.runOnce(() -> robotState = RobotState.PREPSCORE)),
+            groundIntake
+                .setAngleAndAmp(GroundIntakeConstants.INTAKE_CORAL_ANGLE, 0, 0)
+                .onlyIf(IS_L2))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
