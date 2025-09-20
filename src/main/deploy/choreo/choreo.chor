@@ -14,8 +14,8 @@
    "GlobalAcc":{
     "dimension":"LinAcc",
     "var":{
-     "exp":"4.5 m / s / s",
-     "val":4.5
+     "exp":"4 m / s / s",
+     "val":4.0
     }
    },
    "ReefAcc":{
