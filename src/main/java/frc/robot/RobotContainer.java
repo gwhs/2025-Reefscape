@@ -803,7 +803,7 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.CLIMB_ANGLE).withTimeout(1),
             Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
             climb.stow().withTimeout(5),
-            elevator.setHeight(ElevatorConstants.STOW_METER + 0.5).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER + 0.1).withTimeout(1),
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE))
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
         .withName("unPrepClimb");
@@ -874,7 +874,7 @@ public class RobotContainer {
             GroundIntakeConstants.HOLD_CORAL_AMP,
             GroundIntakeConstants.HOLD_CORAL_DUTYCYCLE),
         Commands.waitUntil(m_driverController.rightTrigger().negate()),
-        Commands.waitSeconds(0.2),
+        Commands.waitSeconds(0.3),
         groundIntake.setAngleAndAmp(
             GroundIntakeConstants.SCORE_CORAL_ANGLE,
             GroundIntakeConstants.SCORE_CORAL_AMP,
