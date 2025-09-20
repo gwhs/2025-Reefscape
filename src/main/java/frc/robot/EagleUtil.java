@@ -518,6 +518,53 @@ public class EagleUtil {
     return targetPose;
   }
 
+  public static Pose2d getClosestRightReefBack(Pose2d pose) {
+    int closestReef = findClosestReefIndex(pose);
+    if (closestReef % 2 == 0) {
+      closestReef += 1;
+    }
+
+    Pose2d targetPose;
+    if (isRedAlliance()) {
+      calculateRedReefSetPoints();
+      targetPose = redPoses[closestReef];
+    } else {
+      calculateBlueReefSetPoints();
+      targetPose = bluePoses[closestReef];
+    }
+    Rotation2d targetRotation = new Rotation2d(targetPose.getRotation().getRadians() + Math.PI);
+    targetPose = new Pose2d(targetPose.getX(), targetPose.getY(), targetRotation);
+    return targetPose;
+  }
+
+  public static Pose2d getClosestCoralStation(Pose2d pose) {
+    return pose.nearest(coralStationPoints);
+  }
+
+  public static double getRotationCenterReef(Pose2d pose) {
+    Pose2d reef;
+
+    if (isRedAlliance()) {
+      reef = RED_REEF;
+    } else {
+      reef = BLUE_REEF;
+    }
+
+    return reef.getTranslation().minus(pose.getTranslation()).getAngle().getDegrees();
+  }
+
+  public static Pose2d aligntobarge(Pose2d pose) {
+    if (FieldConstants.HALF_THE_FIELD > pose.getX()) {
+      Pose2d poseBlue =
+          new Pose2d(
+              FieldConstants.SCORE_NET_BLUE_SIDE_X, pose.getY(), Rotation2d.fromDegrees(-44));
+      return poseBlue;
+    }
+    Pose2d poseRed =
+        new Pose2d(FieldConstants.SCORE_NET_RED_SIDE_X, pose.getY(), Rotation2d.fromDegrees(44));
+    return poseRed;
+  }
+
   public static Pose2d getClosestRightReef(Pose2d pose) {
     int closestReef = findClosestReefIndex(pose);
     if (closestReef % 2 == 0) {
