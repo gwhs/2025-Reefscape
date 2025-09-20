@@ -22,9 +22,9 @@ public class GroundIntakeConstants {
 
   public static final double CLIMB_ANGLE = -15; // TODO
 
-  public static final double INTAKE_CORAL_AMP = 60;
-  public static final double INTAKE_CORAL_DUTYCYCLE = 1;
-  public static final double HOLD_CORAL_AMP = 40;
+  public static final double INTAKE_CORAL_AMP = 55;
+  public static final double INTAKE_CORAL_DUTYCYCLE = 0.75;
+  public static final double HOLD_CORAL_AMP = 35;
   public static final double HOLD_CORAL_DUTYCYCLE = 0.1;
   public static final double SCORE_CORAL_AMP = -80;
   public static final double SCORE_CORAL_DUTYCYCLE = 0.9;
