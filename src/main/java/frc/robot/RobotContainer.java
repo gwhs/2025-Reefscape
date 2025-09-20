@@ -803,7 +803,7 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.CLIMB_ANGLE).withTimeout(1),
             Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
             climb.stow().withTimeout(5),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER + 0.5).withTimeout(1),
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE))
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
         .withName("unPrepClimb");
