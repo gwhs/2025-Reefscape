@@ -25,12 +25,12 @@ public class ElevatorConstants {
 
   public static final double INTAKE_METER = .26439;
   public static final double INTAKE_METER_AUTON = .26439;
-  public static final double INTAKE_METER_BACKUP = .1734;
+  public static final double INTAKE_METER_BACKUP = .2034; // 0.1734
   public static final double DEALGAE_LOW_POSITION = 0;
   public static final double DEALGAE_HIGH_POSITION = .4424;
   public static final double DEALGAE_STOW_POSITION = 0;
 
-  public static final double STOW_METER = Units.inchesToMeters(10.5);
+  public static final double STOW_METER = 0.20;
 
   public static final double MAX_VELOCITY = 80; // rps
   public static final double MAX_ACCELERATION = 330; // rps
