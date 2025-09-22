@@ -310,15 +310,27 @@ public class RobotContainer {
         .and(m_driverController.a().or(m_driverController.b()).or(m_driverController.y()))
         .onTrue(alignToPose(() -> EagleUtil.getClosestLeftReef(drivetrain.getPose(0.25))));
 
+    IS_CONTROLLER_LEFT
+        .and(m_driverController.rightTrigger())
+        .and(IS_L1)
+        .onTrue(alignToPose(() -> EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
+
     m_driverController
         .a()
         .or(m_driverController.b())
         .or(m_driverController.y())
         .onFalse(driveCommand);
 
+    m_driverController.rightTrigger().onFalse(driveCommand);
+
     IS_CONTROLLER_RIGHT
         .and(m_driverController.a().or(m_driverController.b()).or(m_driverController.y()))
         .onTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
+
+    IS_CONTROLLER_RIGHT
+        .and(m_driverController.rightTrigger())
+        .and(IS_L1)
+        .onTrue(alignToPose(() -> EagleUtil.getClosestRightReefBack(drivetrain.getPose(0.25))));
 
     m_driverController
         .x()
@@ -456,6 +468,10 @@ public class RobotContainer {
         .or(m_driverController.y())
         .or(m_driverController.a())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
+
+    IS_L1
+        .and(m_driverController.rightTrigger())
+        .whileTrue(alignToPose(() -> EagleUtil.getClosestLeftReefBack(drivetrain.getPose(0.25))));
 
     // IS_L4
     //     .or(IS_L3)
