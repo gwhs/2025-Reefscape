@@ -40,8 +40,8 @@ public class AlignToPose extends Command {
 
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
-          .withDeadband(maxSpeed * 0.05)
-          .withRotationalDeadband(maxAngularRate * 0.05)
+          .withDeadband(maxSpeed * 0.01)
+          .withRotationalDeadband(maxAngularRate * 0.01)
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
   public AlignToPose(

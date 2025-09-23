@@ -12,8 +12,8 @@ public class GroundIntakeConstants {
   public static final double GROUND_INTAKE_LOWER_BOUND = -128.0;
   public static final double GROUND_INTAKE_UPPER_BOUND = 0.0;
 
-  public static final double MAX_VELOCITY = 1.2;
-  public static final double MAX_ACCELERATION = 10;
+  public static final double MAX_VELOCITY = 1.6;
+  public static final double MAX_ACCELERATION = 12;
 
   public static final double INTAKE_CORAL_ANGLE = -128; // TODO
   public static final double CORAL_STOW_ANGLE = 0; // TODO
