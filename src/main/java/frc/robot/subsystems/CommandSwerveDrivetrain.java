@@ -367,10 +367,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
   }
 
-  public Command driveToPose(Pose2d target) {
-    return new AlignToPose(() -> target, this, elevatorHeight);
-  }
-
   public Command driveToPose(Supplier<Pose2d> target) {
     return new AlignToPose(target, this, elevatorHeight);
   }
