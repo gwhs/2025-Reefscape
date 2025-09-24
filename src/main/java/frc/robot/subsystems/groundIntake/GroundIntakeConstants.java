@@ -13,7 +13,7 @@ public class GroundIntakeConstants {
   public static final double GROUND_INTAKE_UPPER_BOUND = 0.0;
 
   public static final double MAX_VELOCITY = 1.6;
-  public static final double MAX_ACCELERATION = 12;
+  public static final double MAX_ACCELERATION = 10;
 
   public static final double INTAKE_CORAL_ANGLE = -128; // TODO
   public static final double CORAL_STOW_ANGLE = 0; // TODO
@@ -22,9 +22,9 @@ public class GroundIntakeConstants {
 
   public static final double CLIMB_ANGLE = -15; // TODO
 
-  public static final double INTAKE_CORAL_AMP = 55;
+  public static final double INTAKE_CORAL_AMP = 60;
   public static final double INTAKE_CORAL_DUTYCYCLE = 0.75;
-  public static final double HOLD_CORAL_AMP = 20;
+  public static final double HOLD_CORAL_AMP = 25;
   public static final double HOLD_CORAL_DUTYCYCLE = 0.1;
   public static final double SCORE_CORAL_AMP = -90;
   public static final double SCORE_CORAL_DUTYCYCLE = 0.9;
