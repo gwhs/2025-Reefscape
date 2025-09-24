@@ -13,11 +13,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommand;
 import frc.robot.generated.TunerConstants_Comp;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.arm.ArmSubsystem;
-import frc.robot.subsystems.climb.ClimbSubsystem;
-import frc.robot.subsystems.elevator.ElevatorSubsystem;
-import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
-import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 import java.util.function.BiConsumer;
 
 public class RobotContainer {
@@ -27,27 +22,9 @@ public class RobotContainer {
   private final Telemetry logger =
       new Telemetry(TunerConstants_Comp.kSpeedAt12Volts.in(MetersPerSecond));
 
-  private final ElevatorSubsystem elevator = new ElevatorSubsystem();
-  private final CommandSwerveDrivetrain drivetrain =
-      TunerConstants_Comp.createDrivetrain(elevator::getHeightMeters);
-  private final ArmSubsystem arm = new ArmSubsystem();
-  private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
-  // private final LedSubsystem led = new LedSubsystem();
-  private final GroundIntakeSubsystem groundIntake = new GroundIntakeSubsystem();
-  private final ClimbSubsystem climb = new ClimbSubsystem();
-  private final DriveCommand driveCommand =
-      new DriveCommand(controller, drivetrain, elevator::getHeightMeters);
-
-  private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm, groundIntake);
-
   public RobotContainer(BiConsumer<Runnable, Double> addPeriodic) {
     configureAutonomous();
     configureBindings();
-
-    // Default Commands
-    drivetrain.setDefaultCommand(driveCommand);
-
-    drivetrain.registerTelemetry(logger::telemeterize);
 
     PathfindingCommand.warmupCommand().schedule();
 
@@ -64,11 +41,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    RobotModeTriggers.disabled().onTrue(Commands.parallel(drivetrain.stopDrivetrain()));
   }
 
   public void periodic() {
-    robotVisualizer.update();
   }
 
   /**
