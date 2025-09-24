@@ -28,8 +28,8 @@
    "VelocityCap":{
     "dimension":"LinVel",
     "var":{
-     "exp":"3 m / s",
-     "val":3.0
+     "exp":"2.5 m / s",
+     "val":2.5
     }
    }
   },

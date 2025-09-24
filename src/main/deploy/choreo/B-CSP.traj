@@ -25,7 +25,7 @@
     {"from":"first", "to":"last", "data":{"type":"KeepInRectangle", "props":{"x":{"exp":"0 m", "val":0.0}, "y":{"exp":"0 m", "val":0.0}, "w":{"exp":"17.548 m", "val":17.548}, "h":{"exp":"8.052 m", "val":8.052}}}, "enabled":false},
     {"from":"first", "to":"last", "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"GlobalAcc", "val":4.0}}}, "enabled":true},
     {"from":1, "to":"last", "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"CoralStationAcc", "val":3.2}}}, "enabled":true},
-    {"from":"first", "to":"last", "data":{"type":"MaxVelocity", "props":{"max":{"exp":"VelocityCap", "val":3.0}}}, "enabled":true}],
+    {"from":"first", "to":"last", "data":{"type":"MaxVelocity", "props":{"max":{"exp":"VelocityCap", "val":2.5}}}, "enabled":true}],
   "targetDt":{
    "exp":"0.05 s",
    "val":0.05
