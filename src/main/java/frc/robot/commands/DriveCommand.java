@@ -248,7 +248,7 @@ public class DriveCommand extends Command {
       }
       xVelocity = MathUtil.clamp(xVelocity, -0.2, 0.2);
       yVelocity = MathUtil.clamp(yVelocity, -0.2, 0.2);
-      angularVelocity = MathUtil.clamp(angularVelocity, -0.2, 0.2);
+      angularVelocity = MathUtil.clamp(angularVelocity, -0.2, 0.5);
 
       xVelocity = xVelocityLimiter.calculate(xVelocity);
       yVelocity = yVelocityLimiter.calculate(yVelocity);
