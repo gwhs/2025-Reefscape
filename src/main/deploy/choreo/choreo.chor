@@ -24,6 +24,13 @@
      "exp":"2 m / s / s",
      "val":2.0
     }
+   },
+   "VelocityCap":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"2.5 m / s",
+     "val":2.5
+    }
    }
   },
   "poses":{
@@ -161,8 +168,8 @@
    "val":6.746031746
   },
   "radius":{
-   "exp":"2 in",
-   "val":0.0508
+   "exp":"2.05 in",
+   "val":0.05206999999999999
   },
   "vmax":{
    "exp":"5800 * 0.8 RPM",
