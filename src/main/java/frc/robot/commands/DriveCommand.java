@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.EagleUtil;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
+
 import java.util.function.DoubleSupplier;
 
 public class DriveCommand extends Command {
@@ -53,6 +55,7 @@ public class DriveCommand extends Command {
   private ReefPositions reefMode = ReefPositions.FRONT_REEF;
 
   private final DoubleSupplier elevatorHeight;
+  private final DoubleSupplier groundintakeAngle;
 
   public enum DriveMode {
     ROBOT_CENTRIC,
@@ -89,7 +92,7 @@ public class DriveCommand extends Command {
   public DriveCommand(
       CommandXboxController driverController,
       CommandSwerveDrivetrain drivetrain,
-      DoubleSupplier elevatorHeight) {
+      DoubleSupplier elevatorHeight, DoubleSupplier groundintakeAngle) {
     this.driverController = driverController;
     this.drivetrain = drivetrain;
 
@@ -102,6 +105,7 @@ public class DriveCommand extends Command {
     yVelocityLimiter = new SlewRateLimiter(ELEVATOR_UP_SLEW_RATE);
 
     this.elevatorHeight = elevatorHeight;
+    this.groundintakeAngle = groundintakeAngle;
 
     addRequirements(drivetrain);
   }
@@ -238,7 +242,9 @@ public class DriveCommand extends Command {
       angularVelocity = pidOutput;
       DogLog.log("Drive Command/CoralTrackingPIDOutput", pidOutput);
     }
-
+    if (groundintakeAngle.getAsDouble() < GroundIntakeConstants.INTAKE_CORAL_ANGLE + -90) (
+      if()
+    )
     if (elevatorHeight.getAsDouble() > 0.4) {
       if (resetLimiter) {
         resetLimiter = false;
