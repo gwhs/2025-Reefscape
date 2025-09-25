@@ -454,8 +454,14 @@ public class RobotContainer {
     m_driverController
         .b()
         .or(m_driverController.y())
-        .or(m_driverController.a())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
+
+    m_driverController
+        .a()
+        .whileTrue(
+            Commands.waitSeconds(0.5)
+                .andThen(
+                    alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25)))));
 
     // IS_L4
     //     .or(IS_L3)

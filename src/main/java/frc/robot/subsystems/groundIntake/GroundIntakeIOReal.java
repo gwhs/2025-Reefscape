@@ -48,6 +48,10 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
   private final StatusSignal<AngularAcceleration> spinMotorAcceleration =
       spinMotor.getAcceleration();
 
+  private final StatusSignal<AngularVelocity> pivotMotorVelocity = pivotMotor.getVelocity();
+  private final StatusSignal<AngularAcceleration> pivotMotorAcceleration =
+      pivotMotor.getAcceleration();
+
   private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
 
   private TorqueCurrentFOC currentControl = new TorqueCurrentFOC(0);
@@ -185,7 +189,9 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
         pivotMotorPosition,
         pivotEncoderPosition,
         spinMotorVelocity,
-        spinMotorAcceleration);
+        spinMotorAcceleration,
+        pivotMotorVelocity,
+        pivotMotorAcceleration);
 
     DogLog.log("groundIntake/Spin/voltage", spinMotorVoltage.getValueAsDouble());
     DogLog.log("groundIntake/Pivot/voltage", pivotMotorVoltage.getValueAsDouble());
@@ -200,6 +206,8 @@ public class GroundIntakeIOReal implements GroundIntakeIO {
     DogLog.log("groundIntake/Pivot/Encoder Connected", pivotEncoder.isConnected());
     DogLog.log("groundIntake/Spin/velocity", spinMotorVelocity.getValueAsDouble());
     DogLog.log("groundIntake/Spin/acceleration", spinMotorAcceleration.getValueAsDouble());
+    DogLog.log("groundIntake/Pivot/velocity", pivotMotorVelocity.getValueAsDouble());
+    DogLog.log("groundIntake/Pivot/acceleration", pivotMotorAcceleration.getValueAsDouble());
 
     spinMotorConnected.set(!spinMotor.isConnected());
     pivotMotorConnected.set(!pivotMotor.isConnected());
