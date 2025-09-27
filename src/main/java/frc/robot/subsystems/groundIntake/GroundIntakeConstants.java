@@ -18,7 +18,7 @@ public class GroundIntakeConstants {
   public static final double INTAKE_CORAL_ANGLE = -128; // TODO
   public static final double CORAL_STOW_ANGLE = 0; // TODO
 
-  public static final double SCORE_CORAL_ANGLE = -12.25; // TOD2
+  public static final double SCORE_CORAL_ANGLE = -13.0; // TOD2
 
   public static final double CLIMB_ANGLE = -15; // TODO
 
@@ -26,7 +26,7 @@ public class GroundIntakeConstants {
   public static final double INTAKE_CORAL_DUTYCYCLE = 1.00;
   public static final double HOLD_CORAL_AMP = 27;
   public static final double HOLD_CORAL_DUTYCYCLE = 0.1;
-  public static final double SCORE_CORAL_AMP = -74;
+  public static final double SCORE_CORAL_AMP = -70;
   public static final double SCORE_CORAL_DUTYCYCLE = 0.9;
 
   public static final double MAGNET_OFFSET_ROTATIONS = 0.30916;
