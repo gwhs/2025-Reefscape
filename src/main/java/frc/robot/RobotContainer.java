@@ -609,9 +609,6 @@ public class RobotContainer {
         "Five_Cycle_Non_Processor", new FiveCycle(this, groundIntake, climb, true));
     autoChooser.addOption(
         "Choreo_Five_Cycle_Non_Processor", new ChoreoFiveCycle(this, groundIntake, climb, true));
-    autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
-    autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
-    autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
     autoChooser.addOption("Push_One_Cycle", new PushOneCycle(this, groundIntake, climb));
     autoChooser.addOption(
         "Wheel_Radius_Chracterizaton",

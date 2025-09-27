@@ -30,7 +30,8 @@ public class PushOneCycle extends PathPlannerAuto {
       isRunning()
           .onTrue(
               Commands.sequence(
-                      climbSubsystem.stow(),
+                      climbSubsystem.stow().withTimeout(0.5),
+                      Commands.waitSeconds(3),
                       groundIntakeSubsystem.setAngleAndAmp(
                           GroundIntakeConstants.INTAKE_CORAL_ANGLE, 0, 0),
                       AutoBuilder.resetOdom(startingPose),

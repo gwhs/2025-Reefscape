@@ -10,7 +10,7 @@ import edu.wpi.first.math.util.Units;
 
 public class AprilTagCamConstants {
   public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.0, 1.0, 8);
-  public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.2, 0.2, 1);
+  public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
   public static final String FRONT_LEFT_CAMERA_COMP_NAME = "leftcam";
   public static final String FRONT_RIGHT_CAMERA_COMP_NAME = "rightcam";
@@ -74,8 +74,8 @@ public class AprilTagCamConstants {
   public static final double XY_TOLERANCE = 2.00;
   public static final double MAX_X_VALUE = 690.87;
   public static final double MAX_Y_VALUE = 317.00;
-  public static final double SINGLE_APRILTAG_MAX_DISTANCE = 4.5;
-  public static final double MULTI_APRILTAG_MAX_DISTANCE = 5.3;
+  public static final double SINGLE_APRILTAG_MAX_DISTANCE = 3.0;
+  public static final double MULTI_APRILTAG_MAX_DISTANCE = 4.5;
   public static final double MAX_VELOCITY = 4;
   public static final double MAX_ROTATION = Math.PI;
 }
