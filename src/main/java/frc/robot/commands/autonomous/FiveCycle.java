@@ -39,7 +39,7 @@ public class FiveCycle extends PathPlannerAuto {
       PathPlannerPath SC_F = PathPlannerPath.fromChoreoTrajectory("SC-F");
       PathPlannerPath F_CSP = PathPlannerPath.fromChoreoTrajectory("F-CSP");
       PathPlannerPath CSP_E = PathPlannerPath.fromPathFile("CSP-E");
-      PathPlannerPath E_CSP = PathPlannerPath.fromPathFile("E-CSP");+
+      PathPlannerPath E_CSP = PathPlannerPath.fromPathFile("E-CSP");
       PathPlannerPath CSP_D = PathPlannerPath.fromPathFile("CSP-D");
       PathPlannerPath D_CSP = PathPlannerPath.fromPathFile("D-CSP");
       PathPlannerPath CSP_C = PathPlannerPath.fromPathFile("CSP-C");
