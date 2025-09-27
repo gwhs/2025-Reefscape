@@ -20,7 +20,7 @@ public class GroundIntakeConstants {
 
   public static final double SCORE_CORAL_ANGLE = -15.0; // TOD2
 
-  public static final double CLIMB_ANGLE = -15; // TODO
+  public static final double CLIMB_ANGLE = -18; // TODO
 
   public static final double INTAKE_CORAL_AMP = 80;
   public static final double INTAKE_CORAL_DUTYCYCLE = 1.00;
