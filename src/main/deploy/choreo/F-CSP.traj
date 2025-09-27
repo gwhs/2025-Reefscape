@@ -24,8 +24,8 @@
   "constraints":[
     {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":"last", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
-    {"from":"first", "to":"last", "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"GlobalAcc", "val":4.3}}}, "enabled":true},
-    {"from":2, "to":"last", "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"CoralStationAcc", "val":3.4}}}, "enabled":true},
+    {"from":"first", "to":"last", "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"GlobalAcc", "val":4.2}}}, "enabled":true},
+    {"from":2, "to":"last", "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"CoralStationAcc", "val":3.2}}}, "enabled":true},
     {"from":"first", "to":"last", "data":{"type":"MaxVelocity", "props":{"max":{"exp":"VelocityCap", "val":2.8}}}, "enabled":true}],
   "targetDt":{
    "exp":"0.05 s",
