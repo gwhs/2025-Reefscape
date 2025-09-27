@@ -36,8 +36,8 @@ public class FiveCycle extends PathPlannerAuto {
     this.robotContainer = robotContainer;
 
     try {
-      PathPlannerPath SC_F = PathPlannerPath.fromPathFile("SC-F");
-      PathPlannerPath F_CSP = PathPlannerPath.fromPathFile("F-CSP");
+      PathPlannerPath SC_F = PathPlannerPath.fromChoreoTrajectory("SC-F");
+      PathPlannerPath F_CSP = PathPlannerPath.fromChoreoTrajectory("F-CSP");
       PathPlannerPath CSP_E = PathPlannerPath.fromPathFile("CSP-E");
       PathPlannerPath E_CSP = PathPlannerPath.fromPathFile("E-CSP");
       PathPlannerPath CSP_D = PathPlannerPath.fromPathFile("CSP-D");
