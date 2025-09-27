@@ -14,8 +14,8 @@
    "GlobalAcc":{
     "dimension":"LinAcc",
     "var":{
-     "exp":"4 m / s / s",
-     "val":4.0
+     "exp":"4.2 m / s / s",
+     "val":4.2
     }
    },
    "ReefAcc":{
@@ -28,8 +28,8 @@
    "VelocityCap":{
     "dimension":"LinVel",
     "var":{
-     "exp":"2.5 m / s",
-     "val":2.5
+     "exp":"2.8 m / s",
+     "val":2.8
     }
    }
   },
