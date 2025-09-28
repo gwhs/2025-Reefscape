@@ -8,7 +8,6 @@ import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -35,8 +34,6 @@ public class ArmSubsystem extends SubsystemBase {
           new SysIdRoutine.Mechanism((volts) -> armIO.setVoltage(volts.in(Volts)), null, this));
 
   public ArmSubsystem() {
-    SmartDashboard.putData("Arm/Enable Arm Emergency Mode", engageEmergencyMode());
-    SmartDashboard.putData("Arm/Exit Arm Emergency Mode", exitEmergencyMode());
     if (RobotBase.isSimulation()) {
       armIO = new ArmIOSim();
     } else {
@@ -128,12 +125,10 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public Command engageEmergencyMode() {
-    SmartDashboard.putBoolean("Arm/Emergency Mode", true);
     return Commands.runOnce(() -> armIO.setEmergencyMode(true));
   }
 
   public Command exitEmergencyMode() {
-    SmartDashboard.putBoolean("Arm/Emergency Mode", false);
     return Commands.runOnce(() -> armIO.setEmergencyMode(false));
   }
 }

@@ -13,7 +13,6 @@ import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -38,8 +37,6 @@ public class ElevatorSubsystem extends SubsystemBase {
               (volts) -> elevatorIO.setVoltage(volts.in(Volts)), null, this));
 
   public ElevatorSubsystem() {
-    SmartDashboard.putData("Elevator/Enable Elevator Emergency Mode", engageEmergencyMode());
-    SmartDashboard.putData("Elevator/Exit Elevator Emergency Mode", exitEmergencyMode());
     if (RobotBase.isSimulation()) {
       elevatorIO = new ElevatorIOSim();
     } else {
