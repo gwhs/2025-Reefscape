@@ -32,6 +32,8 @@ public class RobotContainerExercise {
 
   public RobotContainerExercise() {
     configureBindings();
+
+    SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
   }
 
   public void configureBindings() {
@@ -65,8 +67,9 @@ public class RobotContainerExercise {
         // TODO:
         // Command 1: In parallel: (Commands.parallel())
         Commands.parallel(
-            elevator.setHeight(ElevatorConstants.L4_PREP_POSITION),
-            arm.setAngle(ArmConstants.L4_PREP_POSITION)),
+            elevator.setHeight(ElevatorConstants.L4_PREP_POSITION).withTimeout(2),
+            arm.setAngle(ArmConstants.L4_PREP_POSITION).withTimeout(2)
+            ),
         //     Command 1a: extend elevator to ElevatorConstants.L4_PREP_POSITION
         //     Command 1b: rotate arm to ArmConstants.L4_PREP_POSITION
         // Command 2: Spin endeffector at EndEffectorConstants.VOLTAGE_L4
@@ -75,12 +78,12 @@ public class RobotContainerExercise {
         Commands.waitSeconds(0.05),
         // Command 4: In parallel:
         Commands.parallel(
-            arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
-            elevator.setHeight(ElevatorConstants.STOW_METER),
-            endEffector.setVoltage(0))
+            arm.setAngle(ArmConstants.ARM_STOW_ANGLE).withTimeout(0.01),
+            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(0.01),
+            endEffector.setVoltage(0).withTimeout(0.01))
         //     Command 4a: retract elevator to ElevatorConstants.STOW_METER
         //     Command 4b: rotate arm to ArmConstants.ARM_STOW_ANGLE
         //     Command 4c: spin endeffector at 0 volts
-        );
+        ).withName("Score L4 Coral");
   }
 }
