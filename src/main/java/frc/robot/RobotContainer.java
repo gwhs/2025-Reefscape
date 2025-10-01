@@ -13,9 +13,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommand;
 import frc.robot.generated.TunerConstants_Comp;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.endEffector.EndEffectorConstants;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 import java.util.function.BiConsumer;
@@ -65,6 +68,36 @@ public class RobotContainer {
    */
   private void configureBindings() {
     RobotModeTriggers.disabled().onTrue(Commands.parallel(drivetrain.stopDrivetrain()));
+
+    // L1
+    controller.a().onTrue(elevator.setHeight(ElevatorConstants.L1_PREP_POSITION));
+
+    // L3
+    controller.b().onTrue(elevator.setHeight(ElevatorConstants.L3_PREP_POSITION));
+    // L2
+    controller.x().onTrue(elevator.setHeight(ElevatorConstants.L2_PREP_POSITION));
+    // L4 
+    controller.y().onTrue(elevator.setHeight(ElevatorConstants.L4_PREP_POSITION));
+    // score (arm) 
+
+
+  }
+
+  public Command scoreL4() {
+      return 
+      Commands.sequence(
+      Commands.parallel(
+      elevator.setHeight(ElevatorConstants.L4_PREP_POSITION),
+      arm.setAngle(ArmConstants.L4_PREP_POSITION)
+    ),
+    endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L4),
+    
+    Commands.waitSeconds(0.05),
+    Commands.parallel(
+      elevator.setHeight(ElevatorConstants.STOW_METER),
+      arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
+      endEffector.setVoltage(0)
+    ));
   }
 
   public void periodic() {
@@ -81,4 +114,6 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {}
+
+
 }
