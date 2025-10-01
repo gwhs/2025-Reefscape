@@ -55,9 +55,18 @@ public class ObjectDetectionCam {
   public void initSim() {
     visionSim = new VisionSystemSim("main");
     simTargetModel = new TargetModel(0.2);
+
     simTargetPose =
-        new Pose3d(16, 4, 0, new Rotation3d(0, 0, Math.PI)); // placeholder, change later
+        new Pose3d(15, 4, 0, new Rotation3d(0, 0, Math.PI)); // placeholder, change later
     visionTarget = new VisionTargetSim(simTargetPose, simTargetModel);
+    visionSim.addVisionTargets(visionTarget);
+
+
+    simTargetPose =
+        new Pose3d(14, 6, 0, new Rotation3d(0, 0, Math.PI)); // placeholder, change later
+    visionTarget = new VisionTargetSim(simTargetPose, simTargetModel);
+    //second piece maybe
+
     visionSim.addVisionTargets(visionTarget);
     cameraProp = new SimCameraProperties();
     cameraProp.setCalibration(1280, 800, Rotation2d.fromDegrees(90));
@@ -82,8 +91,8 @@ public class ObjectDetectionCam {
 
     counter++;
     List<PhotonPipelineResult> results = cam.getAllUnreadResults();
-    DogLog.log(ntKey + "Number of Results/", results.size()); 
-    DogLog.log(ntKey + "counter", counter); 
+    DogLog.log(ntKey + "Number of Results/", results.size());
+    DogLog.log(ntKey + "counter", counter);
 
     Pose2d robotPose = this.robotPose.get();
     Pose3d robotPose3d = new Pose3d(robotPose);
@@ -99,29 +108,27 @@ public class ObjectDetectionCam {
       if (targets == null) {
         continue;
       }
-      
-        // Calculate the target's position in the field
-        Pose3d targetPose;
-        if (RobotBase.isSimulation()) {
-          double targetYaw = -targets.getYaw();
-          double targetPitch = targets.getPitch();
-          Translation2d targetLocationToCamera = this.getCameraToTarget(targetYaw, targetPitch);
-          Transform2d cameraToTargetTransform2d =
-              new Transform2d(targetLocationToCamera, new Rotation2d());
-          targetPose =
-              new Pose3d(cameraPose3d.toPose2d().plus(cameraToTargetTransform2d.inverse()));
-        } else {
-          Transform3d targetLocationToCamera = targets.getBestCameraToTarget();
-          targetPose = cameraPose3d.transformBy(targetLocationToCamera.inverse());
-        }
-        if (filterResults(targetPose)) {
-          targetPoses.add(targetPose);
-        } 
+
+      // Calculate the target's position in the field
+      Pose3d targetPose;
+      if (RobotBase.isSimulation()) {
+        double targetYaw = -targets.getYaw();
+        double targetPitch = targets.getPitch();
+        Translation2d targetLocationToCamera = this.getCameraToTarget(targetYaw, targetPitch);
+        Transform2d cameraToTargetTransform2d =
+            new Transform2d(targetLocationToCamera, new Rotation2d());
+        targetPose = new Pose3d(cameraPose3d.toPose2d().plus(cameraToTargetTransform2d.inverse()));
+      } else {
+        Transform3d targetLocationToCamera = targets.getBestCameraToTarget();
+        targetPose = cameraPose3d.transformBy(targetLocationToCamera.inverse());
+      }
+      if (filterResults(targetPose)) {
+        targetPoses.add(targetPose);
+      }
     }
-      DogLog.log(ntKey + "Target Pose Array/", targetPoses.toArray(new Pose3d[0]));
-      targetPoses.clear();
-    }
-  
+    DogLog.log(ntKey + "Target Pose Array/", targetPoses.toArray(new Pose3d[0]));
+    targetPoses.clear();
+  }
 
   private Translation2d getCameraToTarget(double targetYaw, double targetPitch) {
     // Define the vector
