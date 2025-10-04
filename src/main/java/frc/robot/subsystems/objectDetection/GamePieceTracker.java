@@ -38,6 +38,10 @@ public class GamePieceTracker {
     double currentTime = Timer.getFPGATimestamp(); // gets the current time
 
     // Remove targets that are older than the threshold
+    if(targets.isEmpty()){
+      return Optional.empty();
+    }
+    
     while (currentTime - targets.peek().timestamp() >= TIMESTAMP_THRESHOLD) {
       targets.pollFirst();
     }
