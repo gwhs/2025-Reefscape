@@ -125,6 +125,7 @@ public class ObjectDetectionCam {
       if (filterResults(targetPose)) {
         targetPoses.add(targetPose);
       }
+      // add in game piece tracker then log in the same file (game piece tracker file maybe)
     }
     DogLog.log(ntKey + "Target Pose Array/", targetPoses.toArray(new Pose3d[0]));
     targetPoses.clear();
