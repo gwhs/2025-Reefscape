@@ -61,11 +61,10 @@ public class ObjectDetectionCam {
     visionTarget = new VisionTargetSim(simTargetPose, simTargetModel);
     visionSim.addVisionTargets(visionTarget);
 
-
     simTargetPose =
         new Pose3d(14, 6, 0, new Rotation3d(0, 0, Math.PI)); // placeholder, change later
     visionTarget = new VisionTargetSim(simTargetPose, simTargetModel);
-    //second piece maybe
+    // second piece maybe
 
     visionSim.addVisionTargets(visionTarget);
     cameraProp = new SimCameraProperties();
@@ -109,6 +108,10 @@ public class ObjectDetectionCam {
         continue;
       }
 
+      // for(int i = 0; i < results.size(); i++) {
+      //   var result = results.get(i);
+      // }
+
       // Calculate the target's position in the field
       Pose3d targetPose;
       if (RobotBase.isSimulation()) {
@@ -123,10 +126,12 @@ public class ObjectDetectionCam {
         targetPose = cameraPose3d.transformBy(targetLocationToCamera.inverse());
       }
       if (filterResults(targetPose)) {
+        GamePieceTracker.addTarget(result.getTimestampSeconds(), targetPose.toPose2d());
         targetPoses.add(targetPose);
       }
       // add in game piece tracker then log in the same file (game piece tracker file maybe)
     }
+
     DogLog.log(ntKey + "Target Pose Array/", targetPoses.toArray(new Pose3d[0]));
     targetPoses.clear();
   }

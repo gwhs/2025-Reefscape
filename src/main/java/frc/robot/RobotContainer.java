@@ -39,8 +39,10 @@ import frc.robot.subsystems.endEffector.EndEffectorConstants;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
+import frc.robot.subsystems.objectDetection.GamePieceTracker;
 import frc.robot.subsystems.objectDetection.ObjectDetectionCam;
 import frc.robot.subsystems.objectDetection.ObjectDetectionConstants;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -587,6 +589,15 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Prepscore", IS_PREPSCORE.getAsBoolean());
 
     DogLog.log("Match Timer", DriverStation.getMatchTime());
+
+    // log object
+    Optional<Pose2d> obj = GamePieceTracker.getGamePiece();
+
+    if (obj.isPresent()) {
+      DogLog.log("Object Detection/Coral Pose", new Pose2d[] {obj.get()}); // ill forget it tommorow
+    } else {
+      DogLog.log("Object Detection/Coral Pose", new Pose2d[0]); // ill forget it tommorow
+    }
   }
 
   /**
