@@ -3,6 +3,7 @@ package frc.robot.commands;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.jni.SwerveJNI.DriveState;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
@@ -14,6 +15,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.EagleUtil;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.objectDetection.GamePieceTracker;
+
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 public class DriveCommand extends Command {
@@ -70,7 +74,8 @@ public class DriveCommand extends Command {
     REEF,
     CAGE,
     REEF_FACES,
-    PROCESSOR
+    PROCESSOR,
+    OBJECT
   }
 
   private TargetMode mode = TargetMode.NORMAL;
@@ -168,7 +173,8 @@ public class DriveCommand extends Command {
       } else {
         return 0;
       }
-    } else {
+    } 
+    else {
       return 0;
     }
   }
@@ -212,6 +218,7 @@ public class DriveCommand extends Command {
   @Override
   public void execute() {
     Pose2d currentRobotPose = drivetrain.getState().Pose;
+    Optional<Pose2d> currentGamePiecePose = GamePieceTracker.getGamePiece();
     double currentRotation = currentRobotPose.getRotation().getDegrees();
 
     double X = -driverController.getLeftY();
@@ -255,8 +262,23 @@ public class DriveCommand extends Command {
       angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
     } else {
       resetLimiter = true;
-    }
 
+
+    //ToP
+    if (driverController.povRight().getAsBoolean() && currentGamePiecePose.isPresent()) {
+  
+      double currentDistance = currentRobotPose.getTranslation().getDistance(currentGamePiecePose.get().getTranslation());
+      double lastDistance = Double.MAX_VALUE;
+  
+      if (currentDistance < lastDistance) {
+
+//move y coordinate on robot centric
+      }
+      else
+//do noth??
+      }
+    }
+  
     xVelocity *= maxSpeed;
     yVelocity *= maxSpeed;
     angularVelocity *= maxAngularRate;
