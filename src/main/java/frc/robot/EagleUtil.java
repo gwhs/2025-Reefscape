@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.RobotContainer.CoralLevel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -454,33 +453,6 @@ public class EagleUtil {
       return getNonProcessorForAlliance();
     }
     return getProcessorForAlliance();
-  }
-
-  public static double getOffsetArmAngle(CoralLevel level, Pose2d robotPose) {
-    double armAngle = level.armAngle;
-
-    if (level != CoralLevel.L4) {
-      return armAngle;
-    }
-
-    int reefIndex = findClosestReefIndex(robotPose);
-    if (isRedAlliance()) {
-      return armAngle + redAngleReefOffsets[reefIndex];
-    }
-    return armAngle + blueAngleReefOffsets[reefIndex];
-  }
-
-  public static double getOffsetElevatorHeight(CoralLevel level, Pose2d robotPose) {
-    double elevatorHeight = level.elevatorHeight;
-    if (level != CoralLevel.L4) {
-      return elevatorHeight;
-    }
-    int reefIndex = findClosestReefIndex(robotPose);
-
-    if (isRedAlliance()) {
-      return elevatorHeight + redHeightReefOffsets[reefIndex];
-    }
-    return elevatorHeight + blueHeightReefOffsets[reefIndex];
   }
 
   public static Pose2d getClosestLeftReef(Pose2d pose) {

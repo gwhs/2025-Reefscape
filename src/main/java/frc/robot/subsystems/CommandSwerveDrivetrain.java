@@ -16,6 +16,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -35,8 +36,10 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.AlignToPose;
 import frc.robot.generated.TunerSwerveDrivetrain;
 import frc.robot.subsystems.aprilTagCam.AprilTagHelp;
 import java.util.function.Supplier;
@@ -50,6 +53,30 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   private final TalonFX[] steerMotors = new TalonFX[4];
   private final CANcoder[] encoders = new CANcoder[4];
   private final Pigeon2 gyro;
+
+  private final Supplier<Double> elevatorHeight;
+
+  public enum DriveMode {
+    ROBOT_CENTRIC,
+    FIELD_CENTRIC
+  }
+
+  public enum FaceTarget {
+    NONE,
+    CORAL_STATION,
+    BACK_REEF,
+    FRONT_REEF,
+    CAGE,
+    FRONT_REEF_FACES,
+    BACK_REEF_FACES,
+    PROCESSOR
+  }
+
+  private FaceTarget faceTarget = FaceTarget.NONE;
+  private DriveMode driveMode = DriveMode.FIELD_CENTRIC;
+  private double slowFactor = 0.25;
+  private boolean isSlow = false;
+  private boolean isInverted = false;
 
   public Trigger IS_ALIGNING_TO_POSE =
       new Trigger(
@@ -109,7 +136,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    * @param modules Constants for each specific module
    */
   public CommandSwerveDrivetrain(
-      SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules) {
+      Supplier<Double> elevatorHeight,
+      SwerveDrivetrainConstants drivetrainConstants,
+      SwerveModuleConstants<?, ?, ?>... modules) {
     super(drivetrainConstants, modules);
     if (Utils.isSimulation()) {
       startSimThread();
@@ -127,36 +156,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
       encoders[i] = module.getEncoder();
     }
     gyro = getPigeon2();
-  }
-
-  /**
-   * Constructs a CTRE SwerveDrivetrain using the specified constants.
-   *
-   * <p>This constructs the underlying hardware devices, so users should not construct the devices
-   * themselves. If they need the devices, they can access them through getters in the classes.
-   *
-   * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
-   * @param odometryUpdateFrequency The frequency to run the odometry loop. If unspecified or set to
-   *     0 Hz, this is 250 Hz on CAN FD, and 100 Hz on CAN 2.0.
-   * @param modules Constants for each specific module
-   */
-  public CommandSwerveDrivetrain(
-      SwerveDrivetrainConstants drivetrainConstants,
-      double odometryUpdateFrequency,
-      SwerveModuleConstants<?, ?, ?>... modules) {
-    super(drivetrainConstants, odometryUpdateFrequency, modules);
-    if (Utils.isSimulation()) {
-      startSimThread();
-    }
-    configureAutoBuilder();
-
-    for (int i = 0; i < 4; i++) {
-      SwerveModule<TalonFX, TalonFX, CANcoder> module = getModule(i);
-      driveMotors[i] = module.getDriveMotor();
-      steerMotors[i] = module.getSteerMotor();
-      encoders[i] = module.getEncoder();
-    }
-    gyro = getPigeon2();
+    this.elevatorHeight = elevatorHeight;
   }
 
   /**
@@ -174,47 +174,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     PID_X.setGoal(targetPose.getX());
     PID_Y.setGoal(targetPose.getY());
     PID_Rotation.setSetpoint(targetPose.getRotation().getDegrees());
-  }
-
-  /**
-   * Constructs a CTRE SwerveDrivetrain using the specified constants.
-   *
-   * <p>This constructs the underlying hardware devices, so users should not construct the devices
-   * themselves. If they need the devices, they can access them through getters in the classes.
-   *
-   * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
-   * @param odometryUpdateFrequency The frequency to run the odometry loop. If unspecified or set to
-   *     0 Hz, this is 250 Hz on CAN FD, and 100 Hz on CAN 2.0.
-   * @param odometryStandardDeviation The standard deviation for odometry calculation in the form
-   *     [x, y, theta]ᵀ, with units in meters and radians
-   * @param visionStandardDeviation The standard deviation for vision calculation in the form [x, y,
-   *     theta]ᵀ, with units in meters and radians
-   * @param modules Constants for each specific module
-   */
-  public CommandSwerveDrivetrain(
-      SwerveDrivetrainConstants drivetrainConstants,
-      double odometryUpdateFrequency,
-      Matrix<N3, N1> odometryStandardDeviation,
-      Matrix<N3, N1> visionStandardDeviation,
-      SwerveModuleConstants<?, ?, ?>... modules) {
-    super(
-        drivetrainConstants,
-        odometryUpdateFrequency,
-        odometryStandardDeviation,
-        visionStandardDeviation,
-        modules);
-    if (Utils.isSimulation()) {
-      startSimThread();
-    }
-    configureAutoBuilder();
-
-    for (int i = 0; i < 4; i++) {
-      SwerveModule<TalonFX, TalonFX, CANcoder> module = getModule(i);
-      driveMotors[i] = module.getDriveMotor();
-      steerMotors[i] = module.getSteerMotor();
-      encoders[i] = module.getEncoder();
-    }
-    gyro = getPigeon2();
   }
 
   private void configureAutoBuilder() {
@@ -406,5 +365,56 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             () ->
                 this.setControl(
                     robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
+  }
+
+  public Command driveToPose(Supplier<Pose2d> target) {
+    return new AlignToPose(target, this, elevatorHeight);
+  }
+
+  public Command stopDrivetrain() {
+    return this.runOnce(
+        () ->
+            this.setControl(
+                robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
+  }
+
+  public DriveMode getDriveMode() {
+    return driveMode;
+  }
+
+  public Command setDriveMode(DriveMode mode) {
+    return Commands.runOnce(() -> driveMode = mode);
+  }
+
+  public FaceTarget getFaceTarget() {
+    return faceTarget;
+  }
+
+  public Command setFaceTarget(FaceTarget target) {
+    return Commands.runOnce(() -> faceTarget = target);
+  }
+
+  public Command setSlowMode(boolean isSlow, double factor) {
+    return Commands.runOnce(
+        () -> {
+          this.isSlow = isSlow;
+          slowFactor = MathUtil.clamp(factor, 0, 1);
+        });
+  }
+
+  public boolean isSlow() {
+    return isSlow;
+  }
+
+  public double getSlowFactor() {
+    return slowFactor;
+  }
+
+  public Command setInvert(boolean invert) {
+    return Commands.runOnce(() -> isInverted = invert);
+  }
+
+  public boolean isInverted() {
+    return isInverted;
   }
 }
