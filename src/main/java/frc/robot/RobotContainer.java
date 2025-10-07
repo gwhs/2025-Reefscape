@@ -41,7 +41,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-<<<<<<< HEAD
     // BATTERY_BROWN_OUT.onTrue(drivetrain.setDriveMotorCurrentLimit());
 
     // drivetrain
@@ -284,8 +283,6 @@ public class RobotContainer {
                 }));
 
     m_driverController.start().onTrue(climb());
-=======
->>>>>>> 7ab2572f88b749f0699843b53a20d3749e7fbd8a
   }
 
   public void periodic() {
@@ -297,7 +294,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-<<<<<<< HEAD
     return autoChooser.getSelected();
   }
 
@@ -479,8 +475,8 @@ public class RobotContainer {
                 Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF))
                     .deadlineFor(
                         alignToPose(() -> EagleUtil.getNearestAlgaePoint(drivetrain.getPose()))),
-                dealgae())
-            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
+                dealgae());
+//	            	.withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
 
     return Commands.sequence(
         Commands.either(deAlgae, scoreCoral, m_driverController.leftTrigger())
@@ -612,8 +608,6 @@ public class RobotContainer {
   }
 
   public Command scoreAlgeaNet() {
-=======
->>>>>>> 7ab2572f88b749f0699843b53a20d3749e7fbd8a
     return Commands.none();
   }
 
