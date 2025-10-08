@@ -54,7 +54,7 @@ public class DriveCommand extends Command {
           .withDeadband(maxSpeed * 0.0)
           .withRotationalDeadband(maxAngularRate * 0.0)
           .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-          
+
   private final SwerveRequest.RobotCentric robotCentricDrive =
       new SwerveRequest.RobotCentric()
           .withDeadband(maxSpeed * 0.0)

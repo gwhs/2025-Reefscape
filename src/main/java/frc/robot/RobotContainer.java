@@ -8,11 +8,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.DriveCommand;
 import frc.robot.generated.TunerConstants_Comp;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.BiConsumer;
 
 public class RobotContainer {
@@ -40,11 +37,9 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {
-  }
+  private void configureBindings() {}
 
-  public void periodic() {
-  }
+  public void periodic() {}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
