@@ -10,10 +10,14 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.EagleUtil;
+import frc.robot.RobotContainer.Robot;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.objectDetection.GamePieceTracker;
 
@@ -264,11 +268,27 @@ public class DriveCommand extends Command {
       resetLimiter = true;
 
 
-    //ToP
-    if (driverController.povRight().getAsBoolean() && currentGamePiecePose.isPresent()) {
+    // //ToP
+    // if (driverController.povRight().getAsBoolean() && currentGamePiecePose.isPresent()) {
   
-      double currentDistance = currentRobotPose.getTranslation().getDistance(currentGamePiecePose.get().getTranslation());
+    //   double currentDistance = currentRobotPose.relativeTo(currentRobotPose);
+
       double lastDistance = Double.MAX_VALUE;
+
+
+
+
+
+     if (driverController.povRight().getAsBoolean() && currentGamePiecePose.isPresent()) {
+       Pose2d coralRelativeToRobot = currentGamePiecePose.get().relativeTo(currentRobotPose);
+       double errorY = coralRelativeToRobot.getY();
+
+       double kP = 1.0;    
+       double i = ChassisSpeeds.fromRobotRelativeSpeeds(0, errorY, 0, 0);
+
+
+
+
   
       if (currentDistance < lastDistance) {
 
