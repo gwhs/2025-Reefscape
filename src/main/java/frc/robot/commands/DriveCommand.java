@@ -281,10 +281,17 @@ public class DriveCommand extends Command {
 
      if (driverController.povRight().getAsBoolean() && currentGamePiecePose.isPresent()) {
        Pose2d coralRelativeToRobot = currentGamePiecePose.get().relativeTo(currentRobotPose);
+
        double errorY = coralRelativeToRobot.getY();
+       //double errorX = coralRelativeToRobot.getX();
+
 
        double kP = 1.0;    
-       double i = ChassisSpeeds.fromRobotRelativeSpeeds(0, errorY, 0, 0);
+       //ChassisSpeeds i = ChassisSpeeds.fromRobotRelativeSpeeds(0, errorY, 0, 0);
+       //double assistY = MathUtil.clamp(kP * errorY, -0.3, 0.3);
+
+       ChassisSpeeds assistField = ChassisSpeeds.fromRobotRelativeSpeeds(
+    0, errorY, 0, currentRobotPose.getRotation());
 
 
 
