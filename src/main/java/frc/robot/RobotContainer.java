@@ -103,22 +103,26 @@ public class RobotContainer {
 
   public Command scoreL2() {
     return Commands.sequence(
-        Commands.parallel(
-            elevator.setHeight(ElevatorConstants.L2_PREP_POSITION),
-            arm.setAngle(ArmConstants.L2_PREP_POSITION)),
+      Commands.parallel(
+        elevator.setHeight(ElevatorConstants.L2_PREP_POSITION),
+        arm.setAngle(ArmConstants.L2_PREP_POSITION)),
         endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L2),
-        Commands.waitSeconds(0.05),
-        Commands.parallel(
-            elevator.setHeight(ElevatorConstants.STOW_METER),
-            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
-            endEffector.setVoltage(0)));
+      Commands.waitSeconds(0.05),
+      Commands.parallel(
+        elevator.setHeight(ElevatorConstants.STOW_METER),
+        arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
+        endEffector.setVoltage(0)));
   }
 
   public Command loadArmCoral() {
-    return Commands.parallel(
+    return Commands.sequence(
+      Commands.parallel(
+        endEffector.intake(),
         arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
-        elevator.setHeight(ElevatorConstants.INTAKE_METER));
-  }
+        elevator.setHeight(ElevatorConstants.INTAKE_METER)),
+      Commands.waitSeconds(1),
+        endEffector.holdCoral());
+      }
 
   public void periodic() {
     robotVisualizer.update();
