@@ -14,22 +14,22 @@
    "GlobalAcc":{
     "dimension":"LinAcc",
     "var":{
-     "exp":"4 m / s / s",
-     "val":4.0
+     "exp":"4.2 m / s / s",
+     "val":4.2
     }
    },
    "ReefAcc":{
     "dimension":"LinAcc",
     "var":{
-     "exp":"2 m / s / s",
-     "val":2.0
+     "exp":"1.6 m / s / s",
+     "val":1.6
     }
    },
    "VelocityCap":{
     "dimension":"LinVel",
     "var":{
-     "exp":"2.5 m / s",
-     "val":2.5
+     "exp":"2.8 m / s",
+     "val":2.8
     }
    }
   },
@@ -64,12 +64,12 @@
    },
    "CoralStation":{
     "x":{
-     "exp":"1.47 m",
-     "val":1.47
+     "exp":"1.58 m",
+     "val":1.58
     },
     "y":{
-     "exp":"0.61 m",
-     "val":0.61
+     "exp":"0.66 m",
+     "val":0.66
     },
     "heading":{
      "exp":"54 deg",

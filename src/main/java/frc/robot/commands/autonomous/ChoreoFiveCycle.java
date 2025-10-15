@@ -38,7 +38,7 @@ public class ChoreoFiveCycle extends PathPlannerAuto {
     try {
       PathPlannerPath SC_F = PathPlannerPath.fromChoreoTrajectory("SC-F");
       PathPlannerPath F_CSP = PathPlannerPath.fromChoreoTrajectory("F-CSP");
-      PathPlannerPath CSP_E = PathPlannerPath.fromChoreoTrajectory("CSP-E");
+      PathPlannerPath CSP_E = PathPlannerPath.fromPathFile("CSP-E");
       PathPlannerPath E_CSP = PathPlannerPath.fromChoreoTrajectory("E-CSP");
       PathPlannerPath CSP_D = PathPlannerPath.fromChoreoTrajectory("CSP-D");
       PathPlannerPath D_CSP = PathPlannerPath.fromChoreoTrajectory("D-CSP");
@@ -78,13 +78,13 @@ public class ChoreoFiveCycle extends PathPlannerAuto {
                                   ElevatorConstants.L4_PREP_POSITION,
                                   ArmConstants.L4_PREP_POSITION))),
                   Commands.sequence(
-                          Commands.waitSeconds(.1)
-                              .deadlineFor(
-                                  robotContainer.prepScoreCoral(RobotContainer.CoralLevel.L4)),
-                          robotContainer.autonScoreCoral())
-                      .deadlineFor(
-                          robotContainer.alignToPose(
-                              () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
+                      Commands.waitSeconds(.1)
+                          .deadlineFor(robotContainer.prepScoreCoral(RobotContainer.CoralLevel.L4)),
+                      robotContainer.autonScoreCoral())
+                  //   .deadlineFor(
+                  //       robotContainer.alignToPose(
+                  //           () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose())))
+                  ,
                   groundIntakeSubsystem.setAngleAndAmp(
                       GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0),
                   AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntakeAuton()),

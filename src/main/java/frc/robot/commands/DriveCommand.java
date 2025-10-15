@@ -17,7 +17,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import java.util.function.DoubleSupplier;
 
 public class DriveCommand extends Command {
-  private static final double PID_MAX = 0.70;
+  private static final double PID_MAX = 0.60;
 
   private final CommandSwerveDrivetrain drivetrain;
   private final CommandXboxController driverController;
