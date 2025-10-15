@@ -282,7 +282,7 @@ public class DriveCommand extends Command {
      if (driverController.povRight().getAsBoolean() && currentGamePiecePose.isPresent()) {
        Pose2d coralRelativeToRobot = currentGamePiecePose.get().relativeTo(currentRobotPose);
 
-       double errorY = coralRelativeToRobot.getY();
+       double errorX = coralRelativeToRobot.getX();
        //double errorX = coralRelativeToRobot.getX();
 
 
@@ -291,20 +291,23 @@ public class DriveCommand extends Command {
        //double assistY = MathUtil.clamp(kP * errorY, -0.3, 0.3);
 
        ChassisSpeeds assistField = ChassisSpeeds.fromRobotRelativeSpeeds(
-    0, errorY, 0, currentRobotPose.getRotation());
+        errorX, 0, 0, currentRobotPose.getRotation());
+
+    xVelocity += MathUtil.clamp(assistField.vxMetersPerSecond / maxSpeed, -0.3, 0.3);
+    //xVelocity += assistField.vxMetersPerSecond;
 
 
 
 
   
-      if (currentDistance < lastDistance) {
+//       if (currentDistance < lastDistance) {
 
-//move y coordinate on robot centric
-      }
-      else
-//do noth??
-      }
-    }
+// //move y coordinate on robot centric
+//       }
+//       else
+// //do noth??
+//       }
+//     }
   
     xVelocity *= maxSpeed;
     yVelocity *= maxSpeed;
@@ -331,6 +334,7 @@ public class DriveCommand extends Command {
               .withVelocityY(yVelocity)
               .withRotationalRate(angularVelocity));
     }
+    
   }
 
   @Override
