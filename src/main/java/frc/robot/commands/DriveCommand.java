@@ -281,9 +281,8 @@ public class DriveCommand extends Command {
       xVelocity += -assistedVectorFieldOriented.vxMetersPerSecond;
       yVelocity += -assistedVectorFieldOriented.vyMetersPerSecond;
       angularVelocity += assistedVectorFieldOriented.omegaRadiansPerSecond;
-
     }
-
+    // get current robot orient
 
     xVelocity *= maxSpeed;
     yVelocity *= maxSpeed;
