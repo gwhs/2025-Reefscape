@@ -3,7 +3,6 @@ package frc.robot.commands;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.swerve.jni.SwerveJNI.DriveState;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
@@ -12,15 +11,11 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.EagleUtil;
-import frc.robot.RobotContainer.Robot;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.objectDetection.GamePieceTracker;
-
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
@@ -177,8 +172,7 @@ public class DriveCommand extends Command {
       } else {
         return 0;
       }
-    } 
-    else {
+    } else {
       return 0;
     }
   }
@@ -266,49 +260,31 @@ public class DriveCommand extends Command {
       angularVelocity = angularVelocityLimiter.calculate(angularVelocity);
     } else {
       resetLimiter = true;
+    }
+
+    if (driverController.back().getAsBoolean() && currentGamePiecePose.isPresent()) {
+      Pose2d coralRelativeToRobot = currentGamePiecePose.get().relativeTo(currentRobotPose);
+
+      double errorY = coralRelativeToRobot.getY();
+
+      double kP = 1.0;
+      // ChassisSpeeds i = ChassisSpeeds.fromRobotRelativeSpeeds(0, errorY, 0, 0);
+
+      ChassisSpeeds assistedVectorRobotOriented = new ChassisSpeeds(0, errorY * kP, 0);
+      DogLog.log("Intake Drive Assist/Assisted Robot Relative Vector", assistedVectorRobotOriented);
+
+      ChassisSpeeds assistedVectorFieldOriented =
+          ChassisSpeeds.fromRobotRelativeSpeeds(
+              assistedVectorRobotOriented, currentRobotPose.getRotation());
+      DogLog.log("Intake Drive Assist/Assisted Field Relative Vector", assistedVectorFieldOriented);
+
+      xVelocity += -assistedVectorFieldOriented.vxMetersPerSecond;
+      yVelocity += -assistedVectorFieldOriented.vyMetersPerSecond;
+      angularVelocity += assistedVectorFieldOriented.omegaRadiansPerSecond;
+
+    }
 
 
-    // //ToP
-    // if (driverController.povRight().getAsBoolean() && currentGamePiecePose.isPresent()) {
-  
-    //   double currentDistance = currentRobotPose.relativeTo(currentRobotPose);
-
-      double lastDistance = Double.MAX_VALUE;
-
-
-
-
-
-     if (driverController.povRight().getAsBoolean() && currentGamePiecePose.isPresent()) {
-       Pose2d coralRelativeToRobot = currentGamePiecePose.get().relativeTo(currentRobotPose);
-
-       double errorX = coralRelativeToRobot.getX();
-       //double errorX = coralRelativeToRobot.getX();
-
-
-       double kP = 1.0;    
-       //ChassisSpeeds i = ChassisSpeeds.fromRobotRelativeSpeeds(0, errorY, 0, 0);
-       //double assistY = MathUtil.clamp(kP * errorY, -0.3, 0.3);
-
-       ChassisSpeeds assistField = ChassisSpeeds.fromRobotRelativeSpeeds(
-        errorX, 0, 0, currentRobotPose.getRotation());
-
-    xVelocity += MathUtil.clamp(assistField.vxMetersPerSecond / maxSpeed, -0.3, 0.3);
-    //xVelocity += assistField.vxMetersPerSecond;
-
-
-
-
-  
-//       if (currentDistance < lastDistance) {
-
-// //move y coordinate on robot centric
-//       }
-//       else
-// //do noth??
-//       }
-//     }
-  
     xVelocity *= maxSpeed;
     yVelocity *= maxSpeed;
     angularVelocity *= maxAngularRate;
@@ -321,6 +297,7 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/targetMode", mode);
     DogLog.log("Drive Command/Drive Mode", driveMode);
     DogLog.log("Drive Command/slowFactor", slowFactor);
+
     if (driveMode == DriveMode.ROBOT_CENTRIC) {
       drivetrain.setControl(
           robotCentricDrive
@@ -334,7 +311,6 @@ public class DriveCommand extends Command {
               .withVelocityY(yVelocity)
               .withRotationalRate(angularVelocity));
     }
-    
   }
 
   @Override
