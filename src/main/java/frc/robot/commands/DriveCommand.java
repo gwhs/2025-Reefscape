@@ -262,13 +262,14 @@ public class DriveCommand extends Command {
       resetLimiter = true;
     }
 
-    if (driverController.back().getAsBoolean() && currentGamePiecePose.isPresent()) {
+    if (drivetrain.isDrivingToCoral()
+        && driverController.povDown().getAsBoolean()
+        && currentGamePiecePose.isPresent()) {
       Pose2d coralRelativeToRobot = currentGamePiecePose.get().relativeTo(currentRobotPose);
 
       double errorY = coralRelativeToRobot.getY();
 
       double kP = 1.0;
-      // ChassisSpeeds i = ChassisSpeeds.fromRobotRelativeSpeeds(0, errorY, 0, 0);
 
       ChassisSpeeds assistedVectorRobotOriented = new ChassisSpeeds(0, errorY * kP, 0);
       DogLog.log("Intake Drive Assist/Assisted Robot Relative Vector", assistedVectorRobotOriented);
@@ -282,7 +283,6 @@ public class DriveCommand extends Command {
       yVelocity += -assistedVectorFieldOriented.vyMetersPerSecond;
       angularVelocity += assistedVectorFieldOriented.omegaRadiansPerSecond;
     }
-    // get current robot orient
 
     xVelocity *= maxSpeed;
     yVelocity *= maxSpeed;

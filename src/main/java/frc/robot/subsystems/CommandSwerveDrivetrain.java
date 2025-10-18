@@ -308,6 +308,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     DogLog.log("Swerve/Back Right CANcoder Connected", encoders[3].isConnected());
 
     DogLog.log("Swerve/Pigeon Connected", gyro.isConnected());
+
+    DogLog.log("Intake Drive Assist/Is Driving Toward Coral", isDrivingToCoral());
   }
 
   private void startSimThread() {
@@ -406,5 +408,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             () ->
                 this.setControl(
                     robotCentricDrive.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
+  }
+
+  public boolean isDrivingToCoral() {
+    // get current robot orient velocity
+    return false;
   }
 }
