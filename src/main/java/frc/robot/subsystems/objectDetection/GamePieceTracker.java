@@ -14,12 +14,11 @@ public class GamePieceTracker {
   private static final LinkedList<Target> targets = new LinkedList<>();
 
   public static void addTarget(double timestamp, Pose2d pose) {
-    targets.add(new Target(timestamp, pose));
-
     Optional<Pose2d> currentFocusedGamePiece = getGamePiece();
 
     if (currentFocusedGamePiece.isEmpty()) {
       targets.add(new Target(timestamp, pose));
+      return;
     }
 
     Pose2d currentFocusedGamePiecePosition = currentFocusedGamePiece.get();
