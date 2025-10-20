@@ -78,51 +78,52 @@ public class RobotContainer {
   public Command scoreL4() {
     return Commands.sequence(
         Commands.parallel(
-          elevator.setHeight(ElevatorConstants.L4_PREP_POSITION),
-          arm.setAngle(ArmConstants.L4_PREP_POSITION).withTimeout(2)),
-          endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L4),
+            elevator.setHeight(ElevatorConstants.L4_PREP_POSITION),
+            arm.setAngle(ArmConstants.L4_PREP_POSITION).withTimeout(2)),
+        endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L4),
         Commands.waitSeconds(0.05),
         Commands.parallel(
-          elevator.setHeight(ElevatorConstants.STOW_METER),
-          arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
-          endEffector.setVoltage(0)));
+            elevator.setHeight(ElevatorConstants.STOW_METER),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
+            endEffector.setVoltage(0)));
   }
 
   public Command scoreL3() {
     return Commands.sequence(
         Commands.parallel(
-          elevator.setHeight(ElevatorConstants.L3_PREP_POSITION),
-          arm.setAngle(ArmConstants.L3_PREP_POSITION)).withTimeout(2),
-          endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L3),
+                elevator.setHeight(ElevatorConstants.L3_PREP_POSITION),
+                arm.setAngle(ArmConstants.L3_PREP_POSITION))
+            .withTimeout(2),
+        endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L3),
         Commands.waitSeconds(0.05),
         Commands.parallel(
-          elevator.setHeight(ElevatorConstants.STOW_METER),
-           arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
-           endEffector.setVoltage(0)));
+            elevator.setHeight(ElevatorConstants.STOW_METER),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
+            endEffector.setVoltage(0)));
   }
 
   public Command scoreL2() {
     return Commands.sequence(
-      Commands.parallel(
-        elevator.setHeight(ElevatorConstants.L2_PREP_POSITION),
-        arm.setAngle(ArmConstants.L2_PREP_POSITION).withTimeout(2)),
+        Commands.parallel(
+            elevator.setHeight(ElevatorConstants.L2_PREP_POSITION),
+            arm.setAngle(ArmConstants.L2_PREP_POSITION).withTimeout(2)),
         endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L2),
-      Commands.waitSeconds(0.05),
-      Commands.parallel(
-        elevator.setHeight(ElevatorConstants.STOW_METER),
-        arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
-        endEffector.setVoltage(0)));
+        Commands.waitSeconds(0.05),
+        Commands.parallel(
+            elevator.setHeight(ElevatorConstants.STOW_METER),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
+            endEffector.setVoltage(0)));
   }
 
   public Command loadArmCoral() {
     return Commands.sequence(
-      Commands.parallel(
-        endEffector.intake(),
-        arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
-        elevator.setHeight(ElevatorConstants.INTAKE_METER)),
-      Commands.waitSeconds(1),
+        Commands.parallel(
+            endEffector.intake(),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
+            elevator.setHeight(ElevatorConstants.INTAKE_METER)),
+        Commands.waitSeconds(1),
         endEffector.holdCoral());
-      }
+  }
 
   public void periodic() {
     robotVisualizer.update();
