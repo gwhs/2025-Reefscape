@@ -81,7 +81,7 @@ public class RobotContainer {
             elevator.setHeight(ElevatorConstants.L4_PREP_POSITION),
             arm.setAngle(ArmConstants.L4_PREP_POSITION).withTimeout(2)),
         endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L4),
-        Commands.waitSeconds(0.05),
+        Commands.waitSeconds(0.5),
         Commands.parallel(
             elevator.setHeight(ElevatorConstants.STOW_METER),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
@@ -95,7 +95,7 @@ public class RobotContainer {
                 arm.setAngle(ArmConstants.L3_PREP_POSITION))
             .withTimeout(2),
         endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L3),
-        Commands.waitSeconds(0.05),
+        Commands.waitSeconds(0.5),
         Commands.parallel(
             elevator.setHeight(ElevatorConstants.STOW_METER),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
@@ -108,7 +108,7 @@ public class RobotContainer {
             elevator.setHeight(ElevatorConstants.L2_PREP_POSITION),
             arm.setAngle(ArmConstants.L2_PREP_POSITION).withTimeout(2)),
         endEffector.setVoltage(EndEffectorConstants.VOLTAGE_L2),
-        Commands.waitSeconds(0.05),
+        Commands.waitSeconds(0.5),
         Commands.parallel(
             elevator.setHeight(ElevatorConstants.STOW_METER),
             arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
