@@ -3,6 +3,8 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.pathplanner.lib.commands.PathfindingCommand;
+
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -17,6 +19,7 @@ import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
+import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 import java.util.function.BiConsumer;
 
@@ -65,6 +68,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
     RobotModeTriggers.disabled().onTrue(Commands.parallel(drivetrain.stopDrivetrain()));
+    controller.leftBumper().onTrue(collectGroundCoral()).onFalse(resetGroundIntake());
+    controller.rightBumper().onTrue(scoreL1()).onFalse(resetGroundIntake());
+    // keybind
   }
 
   public void periodic() {
@@ -81,4 +87,18 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {}
+
+  public Command collectGroundCoral() {
+    return groundIntake.setAngleAndAmp(
+        GroundIntakeConstants.INTAKE_CORAL_ANGLE, GroundIntakeConstants.INTAKE_CORAL_AMP, 0.35);
+  }
+
+  public Command scoreL1() {
+    return groundIntake.setAngleAndAmp(
+        GroundIntakeConstants.SCORE_CORAL_ANGLE, GroundIntakeConstants.SCORE_CORAL_AMP, 0.7);
+  }
+
+  public Command resetGroundIntake() {
+    return groundIntake.setAngleAndAmp(0, 0, 0);
+  }
 }
