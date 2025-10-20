@@ -88,12 +88,16 @@ public class RobotContainer {
 
   public Command collectGroundCoral() {
     return groundIntake.setAngleAndAmp(
-        GroundIntakeConstants.INTAKE_CORAL_ANGLE, GroundIntakeConstants.INTAKE_CORAL_AMP, GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE);
+        GroundIntakeConstants.INTAKE_CORAL_ANGLE,
+        GroundIntakeConstants.INTAKE_CORAL_AMP,
+        GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE);
   }
 
   public Command scoreL1() {
     return groundIntake.setAngleAndAmp(
-        GroundIntakeConstants.SCORE_CORAL_ANGLE, GroundIntakeConstants.SCORE_CORAL_AMP, GroundIntakeConstants.SCORE_CORAL_DUTYCYCLE);
+        GroundIntakeConstants.SCORE_CORAL_ANGLE,
+        GroundIntakeConstants.SCORE_CORAL_AMP,
+        GroundIntakeConstants.SCORE_CORAL_DUTYCYCLE);
   }
 
   public Command resetGroundIntake() {
