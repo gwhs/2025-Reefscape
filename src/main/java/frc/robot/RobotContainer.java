@@ -5,18 +5,25 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+
 import frc.robot.commands.DriveCommand;
+//import frc.robot.commands.DriveCommand.TargetMode;
 import frc.robot.generated.TunerConstants_Comp;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
+import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 import java.util.function.BiConsumer;
 
@@ -39,6 +46,8 @@ public class RobotContainer {
       new DriveCommand(controller, drivetrain, elevator::getHeightMeters);
 
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm, groundIntake);
+
+  private boolean isPreppedClimb = false;
 
   public RobotContainer(BiConsumer<Runnable, Double> addPeriodic) {
     configureAutonomous();
@@ -76,6 +85,35 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+
+   public Command climb() {
+    Command climbCommand =
+        Commands.parallel(
+                climb.climb(),
+                elevator.setHeight(0),
+                arm.setAngle(ArmConstants.CLIMB_ANGLE)
+                //Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL))
+                )
+            .withTimeout(0.5)
+            .andThen(Commands.runOnce(() -> isPreppedClimb = false))
+            .withName("Climb");
+
+    Command prepClimb =
+        Commands.sequence(
+                //Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE)),
+                endEffector.stopMotor(),
+                groundIntake.setAngleAndAmp(GroundIntakeConstants.CLIMB_ANGLE, 0, 0).withTimeout(1),
+                arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
+                elevator.setHeight(0).withTimeout(1),
+                climb.latch().withTimeout(1),
+                Commands.runOnce(() -> isPreppedClimb = true))
+            .withName("Prep Climb");
+
+    return Commands.either(climbCommand, prepClimb, () -> isPreppedClimb)
+        .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
+        .withName("Climb Sequence");
+  }
+  
   public Command getAutonomousCommand() {
     return Commands.none();
   }
