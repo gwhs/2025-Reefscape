@@ -70,6 +70,7 @@ public class RobotContainer {
     RobotModeTriggers.disabled().onTrue(Commands.parallel(drivetrain.stopDrivetrain()));
 
     controller.a().onTrue(loadArmCoral());
+    controller.a().onFalse(holdArmCoral());
     controller.b().onTrue(scoreL4());
     controller.x().onTrue(scoreL2());
     controller.y().onTrue(scoreL3());
@@ -119,10 +120,11 @@ public class RobotContainer {
       Commands.parallel(
         endEffector.intake(),
         arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
-        elevator.setHeight(ElevatorConstants.INTAKE_METER)),
-      Commands.waitSeconds(1),
-        endEffector.holdCoral());
+        elevator.setHeight(ElevatorConstants.INTAKE_METER)));
       }
+  public Command holdArmCoral() {
+    return endEffector.holdCoral();
+  }
 
   public void periodic() {
     robotVisualizer.update();
