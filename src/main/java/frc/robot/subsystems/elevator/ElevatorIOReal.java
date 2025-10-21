@@ -37,7 +37,8 @@ public class ElevatorIOReal implements ElevatorIO {
 
   @Override
   public void update() {
-
+    FrontMotorPos = FrontMotor.getRotorPosition().getValueAsDouble();
+    BackMotorPos = BackMotor.getRotorPosition().getValueAsDouble();
     DogLog.log("Elevator/FrontMotorPos", FrontMotorPos);
     DogLog.log("Elevator/BackMotorPos", BackMotorPos);
   }
