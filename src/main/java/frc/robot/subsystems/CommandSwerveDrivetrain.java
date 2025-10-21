@@ -415,12 +415,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     //get robot pos and orient
     //get coral pose
     ChassisSpeeds currRobotSpeed = getState().Speeds;
-    Pose2d currPoseX = currentRobotPose.getX();
-    Pose2d currPoseY = 
-
-
-    
-    GamePieceTracker.currentFocusedGamePiecePosition
-    return false;
+    return currRobotSpeed.vxMetersPerSecond < 0;
   }
 }
