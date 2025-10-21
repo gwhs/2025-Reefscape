@@ -10,22 +10,22 @@ import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 public class ElevatorIOSim implements ElevatorIO {
   private boolean EmergencyMode;
 
-  private ElevatorSim elevatorSim =
+  private ElevatorSim ElevatorSim =
       new ElevatorSim(0.12, 0.01, DCMotor.getFalcon500Foc(2), 0, 1.7, true, 0);
-  private Constraints constraints =
+  private Constraints Constraints =
       new Constraints(ElevatorConstants.MAX_VELOCITY, ElevatorConstants.MAX_ACCELERATION);
-  private ProfiledPIDController pidController = new ProfiledPIDController(.1, 0, 0, constraints);
+  private ProfiledPIDController PIDController = new ProfiledPIDController(.1, 0, 0, Constraints);
 
   public ElevatorIOSim() {}
 
   @Override
   public double getRotation() {
-    return ElevatorSubsystem.metersToRotations(elevatorSim.getPositionMeters());
+    return ElevatorSubsystem.metersToRotations(ElevatorSim.getPositionMeters());
   }
 
   @Override
   public void setRotation(double rotation) {
-    pidController.setGoal(rotation);
+    PIDController.setGoal(rotation);
   }
 
   @Override
@@ -43,32 +43,36 @@ public class ElevatorIOSim implements ElevatorIO {
 
   @Override
   public void setPosition(double newValue) {
-    if (EmergencyMode == false) {
-      elevatorSim.setState(newValue, 0);
+    if (!EmergencyMode) {
+      ElevatorSim.setState(newValue, 0);
     }
   }
 
   @Override
   public void setVoltage(double voltage) {
     if (!EmergencyMode) {
-      elevatorSim.setInputVoltage(voltage);
+      ElevatorSim.setInputVoltage(voltage);
     } else {
-      elevatorSim.setInputVoltage(voltage);
+      ElevatorSim.setInputVoltage(voltage);
     }
   }
 
+  @Override
   public boolean getReverseLimit() {
-    return elevatorSim.getPositionMeters() == 0;
+    return ElevatorSim.getPositionMeters() == 0;
   }
 
+  @Override
   public boolean getForwardLimit() {
-    return elevatorSim.getPositionMeters() >= ElevatorConstants.TOP_METER;
+    return ElevatorSim.getPositionMeters() >= ElevatorConstants.TOP_METER;
   }
 
+  @Override
   public double getPIDGoalRotation() {
-    return this.pidController.getGoal().position;
+    return PIDController.getGoal().position;
   }
 
+  @Override
   public void setNeutralMode(NeutralModeValue mode) {
     DogLog.log("Elevator/Simulation/NeutralMode", mode);
   }

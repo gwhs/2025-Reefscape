@@ -10,16 +10,17 @@ public class ElevatorSubsystem {
   public ElevatorSubsystem() {
     if (RobotBase.isSimulation()) {
       elevatorIO = new ElevatorIOReal();
+    } else {
+      elevatorIO = new ElevatorIOSim();
     }
-    elevatorIO = new ElevatorIOSim();
   }
 
   public Command setRotation(double rotation) {
     return Commands.run(() -> elevatorIO.setRotation(rotation));
   }
 
-  public Command getRotation() {
-    return Commands.run(() -> elevatorIO.getRotation());
+  public double getRotation() {
+    return elevatorIO.getRotation();
   }
 
   public static double rotationsToMeters(double rotations) {

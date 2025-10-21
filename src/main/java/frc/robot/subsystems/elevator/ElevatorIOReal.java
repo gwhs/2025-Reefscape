@@ -10,16 +10,18 @@ import dev.doglog.DogLog;
 public class ElevatorIOReal implements ElevatorIO {
 
   private boolean EmergencyMode;
-  private TalonFX m_FrontMotor =
-      new TalonFX(ElevatorConstants.FrontElevatorMotorID, ElevatorConstants.ElevatorMotorCanBus);
-  private TalonFX m_BackMotor =
-      new TalonFX(ElevatorConstants.BackElevatorMotorID, ElevatorConstants.ElevatorMotorCanBus);
-  private double FrontMotorPos = m_FrontMotor.getRotorPosition().getValueAsDouble();
-  private double BackMotorPos = m_FrontMotor.getRotorPosition().getValueAsDouble();
-  private final StatusSignal<ForwardLimitValue> forwardLimit = m_FrontMotor.getForwardLimit();
-  private final StatusSignal<ReverseLimitValue> reverseLimit = m_FrontMotor.getReverseLimit();
-  private final StatusSignal<Double> frontElevatorMotorPIDGoal =
-      m_FrontMotor.getClosedLoopReference();
+  private final TalonFX FrontMotor =
+      new TalonFX(
+          ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, ElevatorConstants.ELEVATOR_MOTOR_CAN_BUS);
+  private final TalonFX BackMotor =
+      new TalonFX(
+          ElevatorConstants.BACK_ELEVATOR_MOTOR_ID, ElevatorConstants.ELEVATOR_MOTOR_CAN_BUS);
+  private final StatusSignal<ForwardLimitValue> ForwardLimit = FrontMotor.getForwardLimit();
+  private final StatusSignal<ReverseLimitValue> ReverseLimit = FrontMotor.getReverseLimit();
+  private final StatusSignal<Double> FrontElevatorMotorPIDGoal =
+      FrontMotor.getClosedLoopReference();
+  private double BackMotorPos = FrontMotor.getRotorPosition().getValueAsDouble();
+  private double FrontMotorPos = FrontMotor.getRotorPosition().getValueAsDouble();
 
   public ElevatorIOReal() {}
 
@@ -30,11 +32,12 @@ public class ElevatorIOReal implements ElevatorIO {
 
   @Override
   public void setRotation(double rotation) {
-    m_FrontMotor.set(rotation);
+    FrontMotor.set(rotation);
   }
 
   @Override
   public void update() {
+
     DogLog.log("Elevator/FrontMotorPos", FrontMotorPos);
     DogLog.log("Elevator/BackMotorPos", BackMotorPos);
   }
@@ -49,41 +52,46 @@ public class ElevatorIOReal implements ElevatorIO {
     return EmergencyMode;
   }
 
+  @Override
   public void setPosition(double newValue) {
-    if (EmergencyMode == false) {
-      m_FrontMotor.setPosition(newValue);
-      m_BackMotor.setPosition(newValue);
+    if (!EmergencyMode) {
+      FrontMotor.setPosition(newValue);
+      BackMotor.setPosition(newValue);
     } else {
-      m_FrontMotor.stopMotor();
-      m_FrontMotor.stopMotor();
+      FrontMotor.stopMotor();
+      BackMotor.stopMotor();
     }
   }
 
   @Override
   public void setVoltage(double voltage) {
     if (!EmergencyMode) {
-      m_FrontMotor.setVoltage(voltage);
-      m_BackMotor.setVoltage(voltage);
+      FrontMotor.setVoltage(voltage);
+      BackMotor.setVoltage(voltage);
     } else {
-      m_FrontMotor.stopMotor();
-      m_BackMotor.stopMotor();
+      FrontMotor.stopMotor();
+      BackMotor.stopMotor();
     }
   }
 
+  @Override
   public boolean getForwardLimit() {
-    return forwardLimit.getValue().value == 0;
+    return ForwardLimit.getValue().value == 0;
   }
 
+  @Override
   public boolean getReverseLimit() {
-    return reverseLimit.getValue().value == 0;
+    return ReverseLimit.getValue().value == 0;
   }
 
+  @Override
   public void setNeutralMode(NeutralModeValue mode) {
-    m_FrontMotor.setNeutralMode(mode);
-    m_BackMotor.setNeutralMode(mode);
+    FrontMotor.setNeutralMode(mode);
+    BackMotor.setNeutralMode(mode);
   }
 
+  @Override
   public double getPIDGoalRotation() {
-    return frontElevatorMotorPIDGoal.getValueAsDouble();
+    return FrontElevatorMotorPIDGoal.getValueAsDouble();
   }
 }
