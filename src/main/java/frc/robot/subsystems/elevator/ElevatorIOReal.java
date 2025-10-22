@@ -31,7 +31,7 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   @Override
-  public void setRotation(double rotation) {
+  public void runRotation(double rotation) {
     FrontMotor.set(rotation);
   }
 
@@ -54,7 +54,7 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   @Override
-  public void setPosition(double newValue) {
+  public void runPosition(double newValue) {
     if (!EmergencyMode) {
       FrontMotor.setPosition(newValue);
       BackMotor.setPosition(newValue);

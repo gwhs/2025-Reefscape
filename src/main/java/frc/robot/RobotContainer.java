@@ -10,12 +10,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.generated.TunerConstants_Comp;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import java.util.function.BiConsumer;
 
 public class RobotContainer {
 
   private final CommandXboxController controller = new CommandXboxController(0);
-
+  private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final Telemetry logger =
       new Telemetry(TunerConstants_Comp.kSpeedAt12Volts.in(MetersPerSecond));
 

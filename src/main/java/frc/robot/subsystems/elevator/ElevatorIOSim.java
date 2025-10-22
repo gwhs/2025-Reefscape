@@ -10,26 +10,29 @@ import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 public class ElevatorIOSim implements ElevatorIO {
   private boolean EmergencyMode;
 
-  private ElevatorSim ElevatorSim =
+  private ElevatorSim elevatorSim =
       new ElevatorSim(0.12, 0.01, DCMotor.getFalcon500Foc(2), 0, 1.7, true, 0);
   private Constraints Constraints =
       new Constraints(ElevatorConstants.MAX_VELOCITY, ElevatorConstants.MAX_ACCELERATION);
   private ProfiledPIDController PIDController = new ProfiledPIDController(.1, 0, 0, Constraints);
+  private double FrontMotorPos = elevatorSim.getPositionMeters();
 
   public ElevatorIOSim() {}
 
   @Override
   public double getRotation() {
-    return ElevatorSubsystem.metersToRotations(ElevatorSim.getPositionMeters());
+    return ElevatorSubsystem.metersToRotations(elevatorSim.getPositionMeters());
   }
 
   @Override
-  public void setRotation(double rotation) {
+  public void runRotation(double rotation) {
     PIDController.setGoal(rotation);
   }
 
   @Override
-  public void update() {}
+  public void update() {
+    FrontMotorPos = elevatorSim.getPositionMeters();
+  }
 
   @Override
   public void setEmergencyMode(boolean emergency) {
@@ -42,29 +45,29 @@ public class ElevatorIOSim implements ElevatorIO {
   }
 
   @Override
-  public void setPosition(double newValue) {
+  public void runPosition(double newValue) {
     if (!EmergencyMode) {
-      ElevatorSim.setState(newValue, 0);
+      elevatorSim.setState(newValue, 0);
     }
   }
 
   @Override
   public void setVoltage(double voltage) {
     if (!EmergencyMode) {
-      ElevatorSim.setInputVoltage(voltage);
+      elevatorSim.setInputVoltage(voltage);
     } else {
-      ElevatorSim.setInputVoltage(voltage);
+      elevatorSim.setInputVoltage(voltage);
     }
   }
 
   @Override
   public boolean getReverseLimit() {
-    return ElevatorSim.getPositionMeters() == 0;
+    return elevatorSim.getPositionMeters() == 0;
   }
 
   @Override
   public boolean getForwardLimit() {
-    return ElevatorSim.getPositionMeters() >= ElevatorConstants.TOP_METER;
+    return elevatorSim.getPositionMeters() >= ElevatorConstants.TOP_METER;
   }
 
   @Override

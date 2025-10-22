@@ -1,10 +1,13 @@
 package frc.robot.subsystems.elevator;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ElevatorSubsystem {
+public class ElevatorSubsystem extends SubsystemBase {
   private ElevatorIO elevatorIO;
 
   public ElevatorSubsystem() {
@@ -13,10 +16,15 @@ public class ElevatorSubsystem {
     } else {
       elevatorIO = new ElevatorIOSim();
     }
+
+    SmartDashboard.putData("runHeight 40", runHeight(1));
   }
 
-  public Command setRotation(double rotation) {
-    return Commands.run(() -> elevatorIO.setRotation(rotation));
+  public Command runHeight(double meters) {
+    return Commands.sequence(
+        this.runOnce(() -> elevatorIO.runRotation(metersToRotations(meters))),
+        Commands.waitUntil(
+            () -> MathUtil.isNear(elevatorIO.getPIDGoalRotation(), elevatorIO.getRotation(), 0.5)));
   }
 
   public double getRotation() {
@@ -35,5 +43,10 @@ public class ElevatorSubsystem {
         / (ElevatorConstants.SPROCKET_DIAMETER * Math.PI)
         * ElevatorConstants.GEAR_RATIO
         / 1;
+  }
+
+  @Override
+  public void periodic() {
+    elevatorIO.update();
   }
 }

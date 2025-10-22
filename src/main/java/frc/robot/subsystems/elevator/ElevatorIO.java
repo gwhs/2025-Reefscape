@@ -3,9 +3,9 @@ package frc.robot.subsystems.elevator;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public interface ElevatorIO {
-  public void setPosition(double newValue);
+  public void runPosition(double newValue);
 
-  public void setRotation(double rotation);
+  public void runRotation(double rotation);
 
   public double getRotation();
 
