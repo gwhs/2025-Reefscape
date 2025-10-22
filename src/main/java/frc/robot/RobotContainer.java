@@ -388,6 +388,14 @@ public class RobotContainer {
 
     m_driverController.leftTrigger().onFalse(dealgae());
 
+    m_driverController
+        .leftBumper()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL);
+                }));
+
     IS_L4
         .and(m_driverController.y())
         .whileTrue(prepScoreCoral(CoralLevel.L4))
@@ -413,7 +421,7 @@ public class RobotContainer {
                 }));
 
     m_driverController
-        .back()
+        .rightBumper()
         .whileTrue(
             Commands.startEnd(
                     () -> {
@@ -448,10 +456,6 @@ public class RobotContainer {
         .debounce(0.33)
         .onTrue(scoreCoral());
 
-    IS_L1
-        .and(m_driverController.a())
-        .whileTrue(alignToPose(() -> EagleUtil.getClosestL1Back(drivetrain.getPose(0.25))));
-
     // IS_L2
     //     .and(m_driverController.a())
     //     .whileTrue(alignToPose(() ->
@@ -460,8 +464,14 @@ public class RobotContainer {
     m_driverController
         .b()
         .or(m_driverController.y())
-        .or(m_driverController.a())
         .whileTrue(alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25))));
+
+    m_driverController
+        .a()
+        .whileTrue(
+            Commands.waitSeconds(0.5)
+                .andThen(
+                    alignToPose(() -> EagleUtil.getClosestRightReef(drivetrain.getPose(0.25)))));
 
     // IS_L4
     //     .or(IS_L3)
@@ -499,7 +509,15 @@ public class RobotContainer {
                 () -> {
                   coralLevel = CoralLevel.L2;
                   driveCommand.setInverted(false);
+                  coralLevel = CoralLevel.L2;
                 }));
+
+    m_driverController
+        .a()
+        .onFalse(
+            groundIntake
+                .setAngleAndAmp(GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0)
+                .onlyIf(IS_L2));
 
     m_driverController
         .b()
@@ -610,12 +628,11 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    autoChooser.setDefaultOption("Five_Cycle_Processor", new FiveCycle(this, false));
-    autoChooser.addOption("Five_Cycle_Non_Processor", new FiveCycle(this, true));
-    autoChooser.addOption("Score_Preload_One_Cycle", new ScorePreloadOneCycle(this));
-    autoChooser.addOption("Leave_Non_Processor", new LeaveNonProcessor(this));
-    autoChooser.addOption("Leave_Processor", new LeaveProcessor(this));
-    autoChooser.addOption("Push_One_Cycle", new PushOneCycle(this));
+    autoChooser.setDefaultOption(
+        "Five_Cycle_Processor", new FiveCycle(this, groundIntake, climb, false));
+    autoChooser.addOption(
+        "Five_Cycle_Non_Processor", new FiveCycle(this, groundIntake, climb, true));
+    autoChooser.addOption("Push_One_Cycle", new PushOneCycle(this, groundIntake, climb));
     autoChooser.addOption(
         "Wheel_Radius_Chracterizaton",
         WheelRadiusCharacterization.wheelRadiusCharacterization(drivetrain));
@@ -686,24 +703,37 @@ public class RobotContainer {
    * @return run the command
    */
   public Command prepScoreCoral(double elevatorHeight, double armAngle) {
-    return Commands.parallel(
-            endEffector.holdCoral(),
-            elevator.setHeight(elevatorHeight).withTimeout(1.5),
-            arm.setAngle(armAngle).withTimeout(1.5),
-            Commands.runOnce(() -> robotState = RobotState.PREPSCORE))
+    return Commands.sequence(
+            groundIntake
+                .setAngleAndAmp(GroundIntakeConstants.INTAKE_CORAL_ANGLE, 0, 0)
+                .onlyIf(IS_L2),
+            Commands.parallel(
+                endEffector.holdCoral(),
+                elevator.setHeight(elevatorHeight).withTimeout(1.5),
+                arm.setAngle(armAngle).withTimeout(1.5),
+                Commands.runOnce(() -> robotState = RobotState.PREPSCORE)),
+            groundIntake.setAngleAndAmp(GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0).onlyIf(IS_L2))
         .withName(
             "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
   }
 
   public Command prepScoreCoral(DoubleSupplier elevatorHeight, DoubleSupplier armAngle) {
-    return Commands.parallel(
-            Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES)),
-            endEffector.holdCoral(),
-            elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
-            arm.setAngleSupplier(armAngle).withTimeout(.5),
-            Commands.runOnce(() -> robotState = RobotState.PREPSCORE))
-        .withName(
-            "Prepare Score Coral; Elevator Height: " + elevatorHeight + " Arm Angle: " + armAngle);
+    return Commands.sequence(
+        groundIntake
+            .setAngleAndAmp(GroundIntakeConstants.INTAKE_CORAL_ANGLE + 100, 0, 0)
+            .onlyIf(IS_L2),
+        Commands.parallel(
+                Commands.runOnce(
+                    () -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF_FACES)),
+                endEffector.holdCoral(),
+                elevator.setHeightSupplier(elevatorHeight).withTimeout(.5),
+                arm.setAngleSupplier(armAngle).withTimeout(.5),
+                Commands.runOnce(() -> robotState = RobotState.PREPSCORE))
+            .withName(
+                "Prepare Score Coral; Elevator Height: "
+                    + elevatorHeight
+                    + " Arm Angle: "
+                    + armAngle));
   }
 
   public Command stowArmAndElevator() {
@@ -818,7 +848,7 @@ public class RobotContainer {
             arm.setAngle(ArmConstants.CLIMB_ANGLE).withTimeout(1),
             Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.REEF)),
             climb.stow().withTimeout(5),
-            elevator.setHeight(ElevatorConstants.STOW_METER).withTimeout(1),
+            elevator.setHeight(ElevatorConstants.STOW_METER + 0.1).withTimeout(1),
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE))
         .withInterruptBehavior(InterruptionBehavior.kCancelIncoming)
         .withName("unPrepClimb");
@@ -838,6 +868,7 @@ public class RobotContainer {
     Command prepClimb =
         Commands.sequence(
                 Commands.runOnce(() -> driveCommand.setTargetMode(DriveCommand.TargetMode.CAGE)),
+                endEffector.stopMotor(),
                 groundIntake.setAngleAndAmp(GroundIntakeConstants.CLIMB_ANGLE, 0, 0).withTimeout(1),
                 arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE).withTimeout(1),
                 elevator.setHeight(0).withTimeout(1),
@@ -857,6 +888,7 @@ public class RobotContainer {
               driveCommand.setTargetMode(DriveCommand.TargetMode.NORMAL);
               coralLevel = CoralLevel.L1;
             }),
+        endEffector.stopMotor(),
         groundIntake
             .setAngleAndAmp(
                 GroundIntakeConstants.INTAKE_CORAL_ANGLE,
@@ -887,6 +919,7 @@ public class RobotContainer {
             GroundIntakeConstants.HOLD_CORAL_AMP,
             GroundIntakeConstants.HOLD_CORAL_DUTYCYCLE),
         Commands.waitUntil(m_driverController.rightTrigger().negate()),
+        Commands.waitSeconds(0.3),
         groundIntake.setAngleAndAmp(
             GroundIntakeConstants.SCORE_CORAL_ANGLE,
             GroundIntakeConstants.SCORE_CORAL_AMP,

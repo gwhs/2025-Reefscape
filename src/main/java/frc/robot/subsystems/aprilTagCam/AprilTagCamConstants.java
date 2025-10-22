@@ -9,7 +9,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 public class AprilTagCamConstants {
-  public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1, 1, 8);
+  public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.0, 1.0, 8);
   public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
   public static final String FRONT_LEFT_CAMERA_COMP_NAME = "leftcam";
@@ -54,11 +54,13 @@ public class AprilTagCamConstants {
 
   public static final Transform3d BACK_RIGHT_CAMERA_LOCATION_COMP =
       new Transform3d(
-          Units.inchesToMeters(-5.401),
-          Units.inchesToMeters(-11.908),
-          Units.inchesToMeters(7.033),
+          Units.inchesToMeters(-8.752),
+          Units.inchesToMeters(-10.953),
+          Units.inchesToMeters(8.079),
           new Rotation3d(
-              Units.degreesToRadians(0), Units.degreesToRadians(-20), Units.degreesToRadians(162)));
+              Units.degreesToRadians(0),
+              Units.degreesToRadians(-15),
+              Units.degreesToRadians(146.8)));
 
   public static final Transform3d ELEVATOR_CAMERA_LOCATION_COMP =
       new Transform3d(
@@ -72,8 +74,8 @@ public class AprilTagCamConstants {
   public static final double XY_TOLERANCE = 2.00;
   public static final double MAX_X_VALUE = 690.87;
   public static final double MAX_Y_VALUE = 317.00;
-  public static final double SINGLE_APRILTAG_MAX_DISTANCE = 3;
-  public static final double MULTI_APRILTAG_MAX_DISTANCE = 4.3;
+  public static final double SINGLE_APRILTAG_MAX_DISTANCE = 3.0;
+  public static final double MULTI_APRILTAG_MAX_DISTANCE = 4.5;
   public static final double MAX_VELOCITY = 4;
   public static final double MAX_ROTATION = Math.PI;
 }

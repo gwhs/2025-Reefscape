@@ -20,13 +20,13 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 
-public class FiveCycle extends PathPlannerAuto {
+public class ChoreoFiveCycle extends PathPlannerAuto {
 
   private RobotContainer robotContainer;
 
   private double waitTime = 0;
 
-  public FiveCycle(
+  public ChoreoFiveCycle(
       RobotContainer robotContainer,
       GroundIntakeSubsystem groundIntakeSubsystem,
       ClimbSubsystem climbSubsystem,
@@ -78,13 +78,13 @@ public class FiveCycle extends PathPlannerAuto {
                                   ElevatorConstants.L4_PREP_POSITION,
                                   ArmConstants.L4_PREP_POSITION))),
                   Commands.sequence(
-                          Commands.waitSeconds(.1)
-                              .deadlineFor(
-                                  robotContainer.prepScoreCoral(RobotContainer.CoralLevel.L4)),
-                          robotContainer.autonScoreCoral())
-                      .deadlineFor(
-                          robotContainer.alignToPose(
-                              () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose()))),
+                      Commands.waitSeconds(.1)
+                          .deadlineFor(robotContainer.prepScoreCoral(RobotContainer.CoralLevel.L4)),
+                      robotContainer.autonScoreCoral())
+                  //   .deadlineFor(
+                  //       robotContainer.alignToPose(
+                  //           () -> EagleUtil.getCachedReefPose(robotContainer.getRobotPose())))
+                  ,
                   groundIntakeSubsystem.setAngleAndAmp(
                       GroundIntakeConstants.CORAL_STOW_ANGLE, 0, 0),
                   AutoBuilder.followPath(F_CSP).alongWith(robotContainer.prepCoralIntakeAuton()),
