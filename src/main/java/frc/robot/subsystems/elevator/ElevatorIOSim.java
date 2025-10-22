@@ -31,7 +31,9 @@ public class ElevatorIOSim implements ElevatorIO {
 
   @Override
   public void update() {
+    System.out.println("UPDATE ELEVATOR");
     FrontMotorPos = elevatorSim.getPositionMeters();
+    DogLog.log("FrontMotorPos", FrontMotorPos);
   }
 
   @Override
