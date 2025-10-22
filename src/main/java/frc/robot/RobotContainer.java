@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommand;
 import frc.robot.generated.TunerConstants_Comp;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CommandSwerveDrivetrain.FaceTarget;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
@@ -121,10 +122,14 @@ public class RobotContainer {
       Commands.parallel(
         endEffector.intake(),
         arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
-        elevator.setHeight(ElevatorConstants.INTAKE_METER)));
+        elevator.setHeight(ElevatorConstants.INTAKE_METER),
+        drivetrain.setFaceTarget(FaceTarget.CORAL_STATION)));
       }
   public Command holdArmCoral() {
-    return endEffector.holdCoral();
+    return Commands.sequence(
+      Commands.parallel(
+        endEffector.holdCoral(),
+        drivetrain.setFaceTarget(FaceTarget.FRONT_REEF)));
   }
 
   public void periodic() {
