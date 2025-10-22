@@ -83,6 +83,7 @@ public class RobotContainer {
             elevator.setHeight(ElevatorConstants.L4_PREP_POSITION),
             arm.setAngle(ArmConstants.L4_PREP_POSITION).withTimeout(2)),
         endEffector.shoot(EndEffectorConstants.VOLTAGE_L4),
+        drivetrain.setFaceTarget(FaceTarget.FRONT_REEF_FACES),
         Commands.waitSeconds(0.5),
         Commands.parallel(
             elevator.setHeight(ElevatorConstants.STOW_METER),
@@ -97,6 +98,7 @@ public class RobotContainer {
                 arm.setAngle(ArmConstants.L3_PREP_POSITION))
             .withTimeout(2),
         endEffector.shoot(EndEffectorConstants.VOLTAGE_L3),
+        drivetrain.setFaceTarget(FaceTarget.FRONT_REEF_FACES),
         Commands.waitSeconds(0.5),
         Commands.parallel(
             elevator.setHeight(ElevatorConstants.STOW_METER),
@@ -109,7 +111,8 @@ public class RobotContainer {
         Commands.parallel(
             elevator.setHeight(ElevatorConstants.L2_PREP_POSITION),
             arm.setAngle(ArmConstants.L2_PREP_POSITION).withTimeout(2)),
-        endEffector.shoot(EndEffectorConstants.VOLTAGE_L2),
+            endEffector.shoot(EndEffectorConstants.VOLTAGE_L2),
+            drivetrain.setFaceTarget(FaceTarget.FRONT_REEF_FACES),
         Commands.waitSeconds(0.5),
         Commands.parallel(
             elevator.setHeight(ElevatorConstants.STOW_METER),
@@ -119,17 +122,18 @@ public class RobotContainer {
 
   public Command loadArmCoral() {
     return Commands.sequence(
-      Commands.parallel(
-        endEffector.intake(),
-        arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
-        elevator.setHeight(ElevatorConstants.INTAKE_METER),
-        drivetrain.setFaceTarget(FaceTarget.CORAL_STATION)));
-      }
+        Commands.parallel(
+            endEffector.intake(),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
+            elevator.setHeight(ElevatorConstants.INTAKE_METER),
+            drivetrain.setFaceTarget(FaceTarget.CORAL_STATION)));
+  }
+
   public Command holdArmCoral() {
     return Commands.sequence(
-      Commands.parallel(
-        endEffector.holdCoral(),
-        drivetrain.setFaceTarget(FaceTarget.FRONT_REEF)));
+        Commands.parallel(
+            endEffector.holdCoral(), 
+            drivetrain.setFaceTarget(FaceTarget.FRONT_REEF)));
   }
 
   public void periodic() {
