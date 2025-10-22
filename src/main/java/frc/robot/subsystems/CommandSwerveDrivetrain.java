@@ -411,9 +411,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   }
 
   public boolean isDrivingToCoral() {
-    // get current  robot orient velocity
-    //get robot pos and orient
-    //get coral pose
     ChassisSpeeds currRobotSpeed = getState().Speeds;
     return currRobotSpeed.vxMetersPerSecond < 0;
   }
