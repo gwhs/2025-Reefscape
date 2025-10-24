@@ -12,9 +12,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public ElevatorSubsystem() {
     if (RobotBase.isSimulation()) {
-      elevatorIO = new ElevatorIOReal();
-    } else {
       elevatorIO = new ElevatorIOSim();
+    } else {
+      elevatorIO = new ElevatorIOReal();
     }
 
     SmartDashboard.putData("runHeight 1 meter", runHeight(1));

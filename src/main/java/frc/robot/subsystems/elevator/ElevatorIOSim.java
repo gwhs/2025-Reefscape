@@ -8,15 +8,14 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 
 public class ElevatorIOSim implements ElevatorIO {
-  private double PIDOut;
-  private boolean EmergencyMode;
+
+  private boolean EmergencyMode = false;
 
   private ElevatorSim elevatorSim =
       new ElevatorSim(0.12, 0.01, DCMotor.getFalcon500Foc(2), 0, 1.7, true, 0);
-  private Constraints Constraints =
+  private Constraints constraints =
       new Constraints(ElevatorConstants.MAX_VELOCITY, ElevatorConstants.MAX_ACCELERATION);
-  private ProfiledPIDController PIDController = new ProfiledPIDController(.1, 0, 0, Constraints);
-  private double FrontMotorPos = elevatorSim.getPositionMeters();
+  private ProfiledPIDController pidController = new ProfiledPIDController(.1, 0, 0, constraints);
 
   public ElevatorIOSim() {}
 
@@ -27,19 +26,22 @@ public class ElevatorIOSim implements ElevatorIO {
 
   @Override
   public void runRotation(double rotation) {
-    PIDController.setGoal(rotation);
+    pidController.setGoal(rotation);
   }
 
   @Override
   public void update() {
-    double PIDGoal = getPIDGoalRotation();
-    PIDOut = PIDController.calculate(elevatorSim.getPositionMeters());
-    elevatorSim.setInputVoltage(PIDOut);
-    elevatorSim.update(0.20);
-    FrontMotorPos = elevatorSim.getPositionMeters();
-    DogLog.log("FrontMotorPos", FrontMotorPos);
-    DogLog.log("Current PID", PIDOut);
-    DogLog.log("PIDGoal", PIDGoal);
+
+    elevatorSim.update(.020);
+
+    double pidOutput = pidController.calculate(4);
+
+    DogLog.log("Elevator/Simulation/PID Output", pidOutput);
+    DogLog.log("Elevator/Simulation/PIDGoal", getPIDGoalRotation());
+
+    if (EmergencyMode == false) {
+      elevatorSim.setInputVoltage(pidOutput);
+    }
   }
 
   @Override
@@ -64,7 +66,7 @@ public class ElevatorIOSim implements ElevatorIO {
     if (!EmergencyMode) {
       elevatorSim.setInputVoltage(voltage);
     } else {
-      elevatorSim.setInputVoltage(voltage);
+      elevatorSim.setInputVoltage(0);
     }
   }
 
@@ -80,7 +82,7 @@ public class ElevatorIOSim implements ElevatorIO {
 
   @Override
   public double getPIDGoalRotation() {
-    return PIDController.getGoal().position;
+    return pidController.getGoal().position;
   }
 
   @Override
