@@ -8,6 +8,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 
 public class ElevatorIOSim implements ElevatorIO {
+  private double PIDOut;
   private boolean EmergencyMode;
 
   private ElevatorSim elevatorSim =
@@ -31,9 +32,14 @@ public class ElevatorIOSim implements ElevatorIO {
 
   @Override
   public void update() {
-    System.out.println("UPDATE ELEVATOR");
+    double PIDGoal = getPIDGoalRotation();
+    PIDOut = PIDController.calculate(elevatorSim.getPositionMeters());
+    elevatorSim.setInputVoltage(PIDOut);
+    elevatorSim.update(0.20);
     FrontMotorPos = elevatorSim.getPositionMeters();
     DogLog.log("FrontMotorPos", FrontMotorPos);
+    DogLog.log("Current PID", PIDOut);
+    DogLog.log("PIDGoal", PIDGoal);
   }
 
   @Override

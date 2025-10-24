@@ -17,7 +17,7 @@ public class ElevatorSubsystem extends SubsystemBase {
       elevatorIO = new ElevatorIOSim();
     }
 
-    SmartDashboard.putData("runHeight 40", runHeight(1));
+    SmartDashboard.putData("runHeight 1 meter", runHeight(1));
   }
 
   public Command runHeight(double meters) {
