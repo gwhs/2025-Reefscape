@@ -34,10 +34,12 @@ public class ElevatorIOSim implements ElevatorIO {
 
     elevatorSim.update(.020);
 
-    double pidOutput = pidController.calculate(4);
+    double pidOutput = pidController.calculate(getRotation());
 
     DogLog.log("Elevator/Simulation/PID Output", pidOutput);
-    DogLog.log("Elevator/Simulation/PIDGoal", getPIDGoalRotation());
+    DogLog.log(
+        "Elevator/Simulation/PIDGoal", ElevatorSubsystem.rotationsToMeters(getPIDGoalRotation()));
+    DogLog.log("Elevator/Simulation/Height", elevatorSim.getPositionMeters());
 
     if (EmergencyMode == false) {
       elevatorSim.setInputVoltage(pidOutput);
