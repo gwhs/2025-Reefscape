@@ -345,7 +345,14 @@ public class RobotContainer {
 
     // make this force release
 
-    m_driverController.povDown().whileTrue(deployGroundIntake()).onFalse(retractGroundIntake());
+    m_driverController
+        .povDown()
+        .whileTrue(
+            Commands.parallel(
+                deployGroundIntake(), Commands.runOnce(() -> driveCommand.setDriveAssist(true))))
+        .onFalse(
+            Commands.parallel(
+                retractGroundIntake(), Commands.runOnce(() -> driveCommand.setDriveAssist(false))));
 
     IS_L1.and(m_driverController.rightTrigger()).onTrue(scoreGroundIntake());
 

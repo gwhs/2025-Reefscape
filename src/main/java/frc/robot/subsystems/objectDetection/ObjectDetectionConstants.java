@@ -9,11 +9,11 @@ public class ObjectDetectionConstants {
   private final double minConfindence = 0.75;
   public static final Transform3d robotToCam = // placeholder values, change later
       new Transform3d(
-          Units.inchesToMeters(9.6),
-          Units.inchesToMeters(11.2),
-          Units.inchesToMeters(8),
+          Units.inchesToMeters(-4.702),
+          Units.inchesToMeters(6.142),
+          Units.inchesToMeters(32.922),
           new Rotation3d(
-              Units.degreesToRadians(0), Units.degreesToRadians(-20), Units.degreesToRadians(-5)));
+              Units.degreesToRadians(2), Units.degreesToRadians(50), Units.degreesToRadians(180)));
 
   public static final double UPPER_Z_TOLERANCE = 100;
   public static final double LOWER_Z_TOLERANCE = -2.00;

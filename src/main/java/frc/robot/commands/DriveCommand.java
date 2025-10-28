@@ -63,6 +63,7 @@ public class DriveCommand extends Command {
   }
 
   private DriveMode driveMode = DriveMode.FIELD_CENTRIC;
+  private boolean driveAssist = false;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
@@ -213,6 +214,14 @@ public class DriveCommand extends Command {
     return this.mode;
   }
 
+  public boolean getDriveAssist() {
+    return driveAssist;
+  }
+
+  public void setDriveAssist(boolean newDriveAssist) {
+    driveAssist = newDriveAssist;
+  }
+
   @Override
   public void execute() {
     Pose2d currentRobotPose = drivetrain.getState().Pose;
@@ -262,9 +271,7 @@ public class DriveCommand extends Command {
       resetLimiter = true;
     }
 
-    if (drivetrain.isDrivingToCoral()
-        && driverController.povDown().getAsBoolean()
-        && currentGamePiecePose.isPresent()) {
+    if (drivetrain.isDrivingToCoral() && driveAssist && currentGamePiecePose.isPresent()) {
       Pose2d coralRelativeToRobot = currentGamePiecePose.get().relativeTo(currentRobotPose);
 
       double errorY = coralRelativeToRobot.getY();
