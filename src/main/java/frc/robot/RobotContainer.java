@@ -67,7 +67,10 @@ public class RobotContainer {
   private void configureBindings() {
     RobotModeTriggers.disabled().onTrue(Commands.parallel(drivetrain.stopDrivetrain()));
     controller.leftBumper().onTrue(collectGroundCoral()).onFalse(resetGroundIntake());
-    controller.rightBumper().onTrue(scoreL1()).onFalse(resetGroundIntake());
+    controller
+        .rightBumper()
+        .onTrue(Commands.sequence(scoreL1A(), scoreL1B()))
+        .onFalse(resetGroundIntake());
     // keybind
   }
 
@@ -80,9 +83,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    return Commands.none();
-  }
+  public Command getAutonomousCommand() {}
 
   private void configureAutonomous() {}
 
@@ -93,14 +94,21 @@ public class RobotContainer {
         GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE);
   }
 
-  public Command scoreL1() {
+  public Command scoreL1A() {
+    return Commands.groundIntake.setAngleAndAmp(
+        GroundIntakeConstants.SCORE_CORAL_ANGLE,
+        GroundIntakeConstants.SCORE_CORAL_AMP,
+        0); // needs update
+  }
+
+  public Command scoreL1B() {
     return groundIntake.setAngleAndAmp(
         GroundIntakeConstants.SCORE_CORAL_ANGLE,
         GroundIntakeConstants.SCORE_CORAL_AMP,
-        GroundIntakeConstants.SCORE_CORAL_DUTYCYCLE);
+        GroundIntakeConstants.SCORE_CORAL_DUTYCYCLE); // part A
   }
 
   public Command resetGroundIntake() {
-    return groundIntake.setAngleAndAmp(0, 0, 0);
+    return groundIntake.setAngleAndAmp(0, 0, 0); // part B
   }
 }
