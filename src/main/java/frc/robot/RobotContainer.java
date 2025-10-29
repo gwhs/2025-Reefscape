@@ -97,8 +97,8 @@ public class RobotContainer {
     return Commands.sequence(
         groundIntake.setAngleAndAmp(
             GroundIntakeConstants.SCORE_CORAL_ANGLE,
-            GroundIntakeConstants.SCORE_CORAL_AMP,
-            GroundIntakeConstants.SCORE_CORAL_DUTYCYCLE));
+            0,
+            0), groundIntake.setAngleAndAmp(GroundIntakeConstants.SCORE_CORAL_ANGLE, GroundIntakeConstants.SCORE_CORAL_AMP, GroundIntakeConstants.SCORE_CORAL_DUTYCYCLE));
   }
 
   public Command resetGroundIntake() {
