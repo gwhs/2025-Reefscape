@@ -95,7 +95,9 @@ public class RobotContainer {
 
   public Command scoreL1() {
     return Commands.sequence(
-        groundIntake.setAngleAndAmp(GroundIntakeConstants.SCORE_CORAL_ANGLE, 0, 0), Commands.waitSeconds(0.5),        groundIntake.setAngleAndAmp(
+        groundIntake.setAngleAndAmp(GroundIntakeConstants.SCORE_CORAL_ANGLE, 0, 0),
+        Commands.waitSeconds(0.25),
+        groundIntake.setAngleAndAmp(
             GroundIntakeConstants.SCORE_CORAL_ANGLE,
             GroundIntakeConstants.SCORE_CORAL_AMP,
             GroundIntakeConstants.SCORE_CORAL_DUTYCYCLE));
