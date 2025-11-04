@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommand;
 import frc.robot.generated.TunerConstants_Comp;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CommandSwerveDrivetrain.FaceTarget;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
@@ -86,14 +87,18 @@ public class RobotContainer {
 
   private void configureAutonomous() {}
 
-  public Command collectGroundCoral() {
-    return groundIntake.setAngleAndAmp(
-        GroundIntakeConstants.INTAKE_CORAL_ANGLE,
-        GroundIntakeConstants.INTAKE_CORAL_AMP,
-        GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE);
+  public Command collectGroundCoral() //collectGroundCoral
+  {
+    return Commands.sequence(
+        drivetrain.setFaceTarget(FaceTarget.NONE),
+        groundIntake.setAngleAndAmp(
+            GroundIntakeConstants.INTAKE_CORAL_ANGLE,
+            GroundIntakeConstants.INTAKE_CORAL_AMP,
+            GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE)); 
   }
 
-  public Command scoreL1() {
+  public Command scoreL1() //score L1
+  {
     return Commands.sequence(
         groundIntake.setAngleAndAmp(GroundIntakeConstants.SCORE_CORAL_ANGLE, 0, 0),
         Commands.waitSeconds(0.25),
@@ -103,7 +108,10 @@ public class RobotContainer {
             GroundIntakeConstants.SCORE_CORAL_DUTYCYCLE));
   }
 
-  public Command resetGroundIntake() {
-    return groundIntake.setAngleAndAmp(0, 0, 0);
+  public Command resetGroundIntake() //reset ground intake to defult position 
+  {
+    return Commands.sequence(
+        groundIntake.setAngleAndAmp(0, 0, 0),
+        drivetrain.setFaceTarget(FaceTarget.BACK_REEF_FACES));
   }
 }
