@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommand;
 import frc.robot.generated.TunerConstants_Comp;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CommandSwerveDrivetrain.DriveMode;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
@@ -70,6 +71,8 @@ public class RobotContainer {
     RobotModeTriggers.disabled().onTrue(Commands.parallel(drivetrain.stopDrivetrain()));
     controller.leftBumper().onTrue(collectGroundCoral()).onFalse(resetGroundIntake());
     controller.rightBumper().onTrue(scoreL1()).onFalse(resetGroundIntake());
+    controller.povLeft().onTrue(slowForClimb());
+    controller.povRight().onTrue(undoClimbSlow());
     controller.povDown().onTrue(prepClimb());
     controller.povUp().onTrue(climb());
     // keybindings
@@ -111,7 +114,15 @@ public class RobotContainer {
     return groundIntake.setAngleAndAmp(0, 0, 0);
   }
 
-  
+  public Command slowForClimb() {
+    return drivetrain.setSlowMode(true, 0);
+  }
+
+  public Command undoClimbSlow() {
+    return drivetrain.setSlowMode(false, 0);
+  }
+
+
   public Command prepClimb() {
     return Commands.sequence(
         elevator.setHeight(ElevatorConstants.STOW_METER),
