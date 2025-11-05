@@ -2,6 +2,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,6 +15,7 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.generated.TunerConstants_Comp;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CommandSwerveDrivetrain.DriveMode;
+import frc.robot.subsystems.CommandSwerveDrivetrain.FaceTarget;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
@@ -22,6 +24,8 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
+
+import java.lang.annotation.Target;
 import java.util.function.BiConsumer;
 
 public class RobotContainer {
@@ -71,8 +75,7 @@ public class RobotContainer {
     RobotModeTriggers.disabled().onTrue(Commands.parallel(drivetrain.stopDrivetrain()));
     controller.leftBumper().onTrue(collectGroundCoral()).onFalse(resetGroundIntake());
     controller.rightBumper().onTrue(scoreL1()).onFalse(resetGroundIntake());
-    controller.povLeft().onTrue(slowForClimb());
-    controller.povRight().onTrue(undoClimbSlow());
+    controller.povLeft().onTrue(toggleSlow());
     controller.povDown().onTrue(prepClimb());
     controller.povUp().onTrue(climb());
     // keybindings
@@ -114,19 +117,24 @@ public class RobotContainer {
     return groundIntake.setAngleAndAmp(0, 0, 0);
   }
 
-  public Command slowForClimb() {
+  public Command alignRobot() {//needs work probably.
+    return Commands.sequence(
+      drivetrain.setFaceTarget(FaceTarget.FRONT_REEF_FACES));
+  }
+
+  public Command toggleSlow() {
+    if (drivetrain.isSlow())
+    {
+      return drivetrain.setSlowMode(false, 0);
+    }
     return drivetrain.setSlowMode(true, 0);
   }
-
-  public Command undoClimbSlow() {
-    return drivetrain.setSlowMode(false, 0);
-  }
-
 
   public Command prepClimb() {
     return Commands.sequence(
         elevator.setHeight(ElevatorConstants.STOW_METER),
         arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE),
+        drivetrain.setFaceTarget(FaceTarget.CAGE),
         climb.latch(),
         Commands.waitSeconds(0.25));
   }
