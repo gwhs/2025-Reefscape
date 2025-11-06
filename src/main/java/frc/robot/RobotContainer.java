@@ -132,8 +132,8 @@ public class RobotContainer {
 
   public Command prepClimb() {
     return Commands.sequence(
-        elevator.setHeight(ElevatorConstants.STOW_METER),
         arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE),
+        elevator.setHeight(ElevatorConstants.STOW_METER),
         drivetrain.setFaceTarget(FaceTarget.CAGE),
         climb.latch(),
         Commands.waitSeconds(0.25));
