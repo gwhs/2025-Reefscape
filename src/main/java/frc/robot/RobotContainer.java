@@ -2,7 +2,6 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
-import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommand;
 import frc.robot.generated.TunerConstants_Comp;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.CommandSwerveDrivetrain.DriveMode;
 import frc.robot.subsystems.CommandSwerveDrivetrain.FaceTarget;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
@@ -24,8 +22,6 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
-
-import java.lang.annotation.Target;
 import java.util.function.BiConsumer;
 
 public class RobotContainer {
@@ -77,7 +73,7 @@ public class RobotContainer {
     controller.rightBumper().onTrue(scoreL1()).onFalse(resetGroundIntake());
     controller.povLeft().onTrue(toggleSlow());
     controller.povDown().onTrue(prepClimb());
-    controller.povUp().onTrue(climb());
+    //controller.povUp().onTrue(climb());
     // keybindings
   }
 
@@ -117,14 +113,12 @@ public class RobotContainer {
     return groundIntake.setAngleAndAmp(0, 0, 0);
   }
 
-  public Command alignRobot() {//needs work probably.
-    return Commands.sequence(
-      drivetrain.setFaceTarget(FaceTarget.FRONT_REEF_FACES));
+  public Command alignRobot() { // needs work probably.
+    return Commands.sequence(drivetrain.setFaceTarget(FaceTarget.FRONT_REEF_FACES));
   }
 
   public Command toggleSlow() {
-    if (drivetrain.isSlow())
-    {
+    if (drivetrain.isSlow()) {
       return drivetrain.setSlowMode(false, 0);
     }
     return drivetrain.setSlowMode(true, 0);
@@ -133,12 +127,15 @@ public class RobotContainer {
   public Command prepClimb() {
     return Commands.sequence(
         arm.setAngle(ArmConstants.PREP_CLIMB_ANGLE),
-        elevator.setHeight(ElevatorConstants.STOW_METER),
+        elevator.setHeight(0),
         drivetrain.setFaceTarget(FaceTarget.CAGE),
         climb.latch(),
-        Commands.waitSeconds(0.25));
+        Commands.waitUntil(controller.povUp()),
+        arm.setAngle(ArmConstants.CLIMB_ANGLE),
+        groundIntake.setAngleAndAmp(GroundIntakeConstants.CLIMB_ANGLE, 0, 0),
+        Commands.waitSeconds(0.25),
+        climb.climb());
   }
-  
 
   public Command climb() {
     return Commands.sequence(
