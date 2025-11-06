@@ -14,6 +14,7 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorConstants;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
+import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 
 public class RobotContainerExercise {
@@ -97,6 +98,6 @@ public class RobotContainerExercise {
       arm.setAngle(30),
       elevator.setHeight(0) //,
 //      climb.setAngle(30)
-    )
+    );
     }
 }
