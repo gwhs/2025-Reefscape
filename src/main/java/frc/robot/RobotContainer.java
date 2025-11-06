@@ -90,11 +90,11 @@ public class RobotContainer {
   public Command collectGroundCoral() //collectGroundCoral
   {
     return Commands.sequence(
-        drivetrain.setFaceTarget(FaceTarget.NONE),
+        drivetrain.setFaceTarget(FaceTarget.NONE), //pause auto allign
         groundIntake.setAngleAndAmp(
             GroundIntakeConstants.INTAKE_CORAL_ANGLE,
             GroundIntakeConstants.INTAKE_CORAL_AMP,
-            GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE)); 
+            GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE));
   }
 
   public Command scoreL1() //score L1
@@ -112,6 +112,6 @@ public class RobotContainer {
   {
     return Commands.sequence(
         groundIntake.setAngleAndAmp(0, 0, 0),
-        drivetrain.setFaceTarget(FaceTarget.BACK_REEF_FACES));
+        drivetrain.setFaceTarget(FaceTarget.BACK_REEF_FACES)); //set auto rotate
   }
 }
