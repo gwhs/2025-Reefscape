@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.arm.ArmConstants;
@@ -13,7 +14,7 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorConstants;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
-import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
+import frc.robot.subsystems.climb.ClimbSubsystem;
 
 public class RobotContainerExercise {
 
@@ -68,7 +69,6 @@ public class RobotContainerExercise {
         // Command 1: In parallel: (Commands.parallel())
         //     Command 1a: extend elevator to ElevatorConstants.L4_PREP_POSITION
         //     Command 1b: rotate arm to ArmConstants.L4_PREP_POSITION
-
         Commands.parallel(
                 elevator.setHeight(ElevatorConstants.L4_PREP_POSITION),
                 arm.setAngle(ArmConstants.L4_PREP_POSITION))
@@ -84,6 +84,19 @@ public class RobotContainerExercise {
         Commands.parallel(
             elevator.setHeight(ElevatorConstants.STOW_METER),
             arm.setAngle(ArmConstants.ARM_STOW_ANGLE),
-            endEffector.setVoltage(0)));
+            endEffector.setVoltage(0))).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
   }
+
+  public Command PrepScore() {
+    return Commands.parallel(arm.setAngle(90),
+    elevator.setHeight(0.5));
+  }
+
+  public Command Climb() {
+    return Commands.parallel(
+      arm.setAngle(30),
+      elevator.setHeight(0) //,
+//      climb.setAngle(30)
+    )
+    }
 }
