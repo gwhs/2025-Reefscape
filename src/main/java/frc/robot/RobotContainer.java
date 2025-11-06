@@ -138,6 +138,7 @@ public class RobotContainer {
         climb.latch(),
         Commands.waitSeconds(0.25));
   }
+  
 
   public Command climb() {
     return Commands.sequence(
