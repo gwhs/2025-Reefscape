@@ -225,7 +225,7 @@ public class RobotContainer {
 
     objDecCam =
         new ObjectDetectionCam(
-            "test", ObjectDetectionConstants.robotToCam, () -> drivetrain.getPose());
+            "cam2026_01", ObjectDetectionConstants.robotToCam, () -> drivetrain.getPose());
 
     driveCommand =
         new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
