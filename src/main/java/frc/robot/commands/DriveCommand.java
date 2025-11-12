@@ -287,7 +287,7 @@ public class DriveCommand extends Command {
       DogLog.log("Intake Drive Assist/Assisted Field Relative Vector", assistedVectorFieldOriented);
 
       xVelocity += -assistedVectorFieldOriented.vxMetersPerSecond;
-      yVelocity += -assistedVectorFieldOriented.vyMetersPerSecond;
+      yVelocity += assistedVectorFieldOriented.vyMetersPerSecond;
       angularVelocity += assistedVectorFieldOriented.omegaRadiansPerSecond;
     }
 
