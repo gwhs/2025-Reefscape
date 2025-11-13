@@ -281,7 +281,6 @@ public class DriveCommand extends Command {
       ChassisSpeeds assistedVectorRobotOriented = new ChassisSpeeds(0, errorY * kP, 0);
       DogLog.log("Intake Drive Assist/Assisted Robot Relative Vector", assistedVectorRobotOriented);
 
-
       ChassisSpeeds assistedVectorFieldOriented =
           ChassisSpeeds.fromRobotRelativeSpeeds(
               assistedVectorRobotOriented, currentRobotPose.getRotation());
