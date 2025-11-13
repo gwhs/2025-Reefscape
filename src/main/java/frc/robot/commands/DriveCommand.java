@@ -276,7 +276,7 @@ public class DriveCommand extends Command {
 
       double errorY = coralRelativeToRobot.getY();
 
-      double kP = 0.5; // Change
+      double kP = 1.5; // Change
 
       ChassisSpeeds assistedVectorRobotOriented = new ChassisSpeeds(0, errorY * kP, 0);
       DogLog.log("Intake Drive Assist/Assisted Robot Relative Vector", assistedVectorRobotOriented);
