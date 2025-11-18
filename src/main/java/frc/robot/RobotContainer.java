@@ -21,6 +21,7 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorConstants;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
+import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 import java.util.function.BiConsumer;
 
@@ -134,6 +135,9 @@ public class RobotContainer {
         Commands.parallel(
             endEffector.holdCoral(), 
             drivetrain.setFaceTarget(FaceTarget.FRONT_REEF)));
+    controller.leftBumper().onTrue(collectGroundCoral()).onFalse(resetGroundIntake());
+    controller.rightBumper().onTrue(scoreL1()).onFalse(resetGroundIntake());
+    // keybindings
   }
 
   public void periodic() {
@@ -150,4 +154,32 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {}
+
+  public Command collectGroundCoral() //collectGroundCoral
+  {
+    return Commands.sequence(
+        drivetrain.setFaceTarget(FaceTarget.NONE), //pause auto allign
+        groundIntake.setAngleAndAmp(
+            GroundIntakeConstants.INTAKE_CORAL_ANGLE,
+            GroundIntakeConstants.INTAKE_CORAL_AMP,
+            GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE));
+  }
+
+  public Command scoreL1() //score L1
+  {
+    return Commands.sequence(
+        groundIntake.setAngleAndAmp(GroundIntakeConstants.SCORE_CORAL_ANGLE, 0, 0),
+        Commands.waitSeconds(0.25),
+        groundIntake.setAngleAndAmp(
+            GroundIntakeConstants.SCORE_CORAL_ANGLE,
+            GroundIntakeConstants.SCORE_CORAL_AMP,
+            GroundIntakeConstants.SCORE_CORAL_DUTYCYCLE));
+  }
+
+  public Command resetGroundIntake() //reset ground intake to defult position 
+  {
+    return Commands.sequence(
+        groundIntake.setAngleAndAmp(0, 0, 0),
+        drivetrain.setFaceTarget(FaceTarget.BACK_REEF_FACES)); //set auto rotate
+  }
 }
