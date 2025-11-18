@@ -13,10 +13,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommand;
 import frc.robot.generated.TunerConstants_Comp;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CommandSwerveDrivetrain.FaceTarget;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
+import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 import java.util.function.BiConsumer;
 
@@ -65,6 +67,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
     RobotModeTriggers.disabled().onTrue(Commands.parallel(drivetrain.stopDrivetrain()));
+    controller.leftBumper().onTrue(collectGroundCoral()).onFalse(resetGroundIntake());
+    controller.rightBumper().onTrue(scoreL1()).onFalse(resetGroundIntake());
+    // keybindings
   }
 
   public void periodic() {
@@ -81,4 +86,32 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {}
+
+  public Command collectGroundCoral() //collectGroundCoral
+  {
+    return Commands.sequence(
+        drivetrain.setFaceTarget(FaceTarget.NONE), //pause auto allign
+        groundIntake.setAngleAndAmp(
+            GroundIntakeConstants.INTAKE_CORAL_ANGLE,
+            GroundIntakeConstants.INTAKE_CORAL_AMP,
+            GroundIntakeConstants.INTAKE_CORAL_DUTYCYCLE));
+  }
+
+  public Command scoreL1() //score L1
+  {
+    return Commands.sequence(
+        groundIntake.setAngleAndAmp(GroundIntakeConstants.SCORE_CORAL_ANGLE, 0, 0),
+        Commands.waitSeconds(0.25),
+        groundIntake.setAngleAndAmp(
+            GroundIntakeConstants.SCORE_CORAL_ANGLE,
+            GroundIntakeConstants.SCORE_CORAL_AMP,
+            GroundIntakeConstants.SCORE_CORAL_DUTYCYCLE));
+  }
+
+  public Command resetGroundIntake() //reset ground intake to defult position 
+  {
+    return Commands.sequence(
+        groundIntake.setAngleAndAmp(0, 0, 0),
+        drivetrain.setFaceTarget(FaceTarget.BACK_REEF_FACES)); //set auto rotate
+  }
 }
