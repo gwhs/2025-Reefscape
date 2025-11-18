@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -17,7 +18,6 @@ import frc.robot.subsystems.CommandSwerveDrivetrain.FaceTarget;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
-import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
@@ -73,7 +73,7 @@ public class RobotContainer {
     controller.rightBumper().onTrue(scoreL1()).onFalse(resetGroundIntake());
     controller.povLeft().onTrue(toggleSlow());
     controller.povDown().onTrue(prepClimb());
-    //controller.povUp().onTrue(climb());
+    // controller.povUp().onTrue(climb());
     // keybindings
   }
 
@@ -142,6 +142,6 @@ public class RobotContainer {
         arm.setAngle(ArmConstants.CLIMB_ANGLE),
         groundIntake.setAngleAndAmp(GroundIntakeConstants.CLIMB_ANGLE, 0, 0),
         Commands.waitSeconds(0.25),
-        climb.climb());
+        climb.climb()).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
   }
 }
