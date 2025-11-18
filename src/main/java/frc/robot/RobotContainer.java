@@ -14,9 +14,12 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.generated.TunerConstants_Comp;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CommandSwerveDrivetrain.FaceTarget;
+import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmSubsystem;
 import frc.robot.subsystems.climb.ClimbSubsystem;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.endEffector.EndEffectorConstants;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
@@ -67,6 +70,71 @@ public class RobotContainer {
    */
   private void configureBindings() {
     RobotModeTriggers.disabled().onTrue(Commands.parallel(drivetrain.stopDrivetrain()));
+
+    controller.a().onTrue(loadArmCoral());
+    controller.a().onFalse(holdArmCoral());
+    controller.b().onTrue(scoreL4());
+    controller.x().onTrue(scoreL2());
+    controller.y().onTrue(scoreL3());
+  }
+
+  public Command scoreL4() {
+    return Commands.sequence(
+        Commands.parallel(
+            elevator.setHeight(ElevatorConstants.L4_PREP_POSITION),
+            arm.setAngle(ArmConstants.L4_PREP_POSITION).withTimeout(2)),
+        endEffector.shoot(EndEffectorConstants.VOLTAGE_L4),
+        drivetrain.setFaceTarget(FaceTarget.FRONT_REEF_FACES),
+        Commands.waitSeconds(0.5),
+        Commands.parallel(
+            elevator.setHeight(ElevatorConstants.STOW_METER),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
+            endEffector.setVoltage(0)));
+  }
+
+  public Command scoreL3() {
+    return Commands.sequence(
+        Commands.parallel(
+                elevator.setHeight(ElevatorConstants.L3_PREP_POSITION),
+                arm.setAngle(ArmConstants.L3_PREP_POSITION))
+            .withTimeout(2),
+        endEffector.shoot(EndEffectorConstants.VOLTAGE_L3),
+        drivetrain.setFaceTarget(FaceTarget.FRONT_REEF_FACES),
+        Commands.waitSeconds(0.5),
+        Commands.parallel(
+            elevator.setHeight(ElevatorConstants.STOW_METER),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
+            endEffector.setVoltage(0)));
+  }
+
+  public Command scoreL2() {
+    return Commands.sequence(
+        Commands.parallel(
+            elevator.setHeight(ElevatorConstants.L2_PREP_POSITION),
+            arm.setAngle(ArmConstants.L2_PREP_POSITION).withTimeout(2)),
+            endEffector.shoot(EndEffectorConstants.VOLTAGE_L2),
+            drivetrain.setFaceTarget(FaceTarget.FRONT_REEF_FACES),
+        Commands.waitSeconds(0.5),
+        Commands.parallel(
+            elevator.setHeight(ElevatorConstants.STOW_METER),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
+            endEffector.setVoltage(0)));
+  }
+
+  public Command loadArmCoral() {
+    return Commands.sequence(
+        Commands.parallel(
+            endEffector.intake(),
+            arm.setAngle(ArmConstants.ARM_INTAKE_ANGLE),
+            elevator.setHeight(ElevatorConstants.INTAKE_METER),
+            drivetrain.setFaceTarget(FaceTarget.CORAL_STATION)));
+  }
+
+  public Command holdArmCoral() {
+    return Commands.sequence(
+        Commands.parallel(
+            endEffector.holdCoral(), 
+            drivetrain.setFaceTarget(FaceTarget.FRONT_REEF)));
     controller.leftBumper().onTrue(collectGroundCoral()).onFalse(resetGroundIntake());
     controller.rightBumper().onTrue(scoreL1()).onFalse(resetGroundIntake());
     // keybindings
