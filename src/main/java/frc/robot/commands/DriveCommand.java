@@ -286,20 +286,16 @@ public class DriveCommand extends Command {
               assistedVectorRobotOriented, currentRobotPose.getRotation());
       DogLog.log("Intake Drive Assist/Assisted Field Relative Vector", assistedVectorFieldOriented);
 
-
       if (DriverStation.getAlliance().isPresent()
-      && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
         yVelocity += -assistedVectorFieldOriented.vyMetersPerSecond;
-      }
-      else {
+      } else {
         yVelocity += assistedVectorFieldOriented.vyMetersPerSecond;
-
       }
       xVelocity += -assistedVectorFieldOriented.vxMetersPerSecond;
-      yVelocity += assistedVectorFieldOriented.vyMetersPerSecond;
       angularVelocity += assistedVectorFieldOriented.omegaRadiansPerSecond;
     }
-  
+
     xVelocity *= maxSpeed;
     yVelocity *= maxSpeed;
     angularVelocity *= maxAngularRate;
