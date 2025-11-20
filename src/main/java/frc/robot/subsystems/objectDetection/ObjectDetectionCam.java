@@ -141,6 +141,9 @@ public class ObjectDetectionCam {
     double x = 1.0 * Math.tan(Units.degreesToRadians(targetYaw));
     double y = 1.0 * Math.tan(Units.degreesToRadians(targetPitch));
     double z = 1.0;
+
+    //DogLog.log(ntKey + "Target Pose Array/", );
+
     double norm = Math.sqrt(x * x + y * y + z * z);
     x /= norm;
     y /= norm;
