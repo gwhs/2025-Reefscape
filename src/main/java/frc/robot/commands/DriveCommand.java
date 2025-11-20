@@ -288,9 +288,9 @@ public class DriveCommand extends Command {
 
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-        yVelocity += -assistedVectorFieldOriented.vyMetersPerSecond;
-      } else {
         yVelocity += assistedVectorFieldOriented.vyMetersPerSecond;
+      } else {
+        yVelocity += -assistedVectorFieldOriented.vyMetersPerSecond;
       }
       xVelocity += -assistedVectorFieldOriented.vxMetersPerSecond;
       angularVelocity += assistedVectorFieldOriented.omegaRadiansPerSecond;
