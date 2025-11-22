@@ -122,8 +122,12 @@ public class ObjectDetectionCam {
             new Transform2d(targetLocationToCamera, new Rotation2d());
         targetPose = new Pose3d(cameraPose3d.toPose2d().plus(cameraToTargetTransform2d.inverse()));
       } else {
-        Transform3d targetLocationToCamera = targets.getBestCameraToTarget();
-        targetPose = cameraPose3d.transformBy(targetLocationToCamera.inverse());
+        double targetYaw = -targets.getYaw();
+        double targetPitch = targets.getPitch();
+        Translation2d targetLocationToCamera = this.getCameraToTarget(targetYaw, targetPitch);
+        Transform2d cameraToTargetTransform2d =
+            new Transform2d(targetLocationToCamera, new Rotation2d());
+        targetPose = new Pose3d(cameraPose3d.toPose2d().plus(cameraToTargetTransform2d.inverse()));
       }
       if (filterResults(targetPose)) {
         GamePieceTracker.addTarget(result.getTimestampSeconds(), targetPose.toPose2d());
