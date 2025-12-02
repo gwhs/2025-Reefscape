@@ -64,9 +64,9 @@ public class AprilTagCamConstants {
 
   public static final Transform3d ELEVATOR_CAMERA_LOCATION_COMP =
       new Transform3d(
-          Units.inchesToMeters(-4.702),
-          Units.inchesToMeters(6.142),
-          Units.inchesToMeters(32.922),
+          Units.inchesToMeters(-4.767),
+          Units.inchesToMeters(6.418),
+          Units.inchesToMeters(32.325),
           new Rotation3d(
               Units.degreesToRadians(2), Units.degreesToRadians(50), Units.degreesToRadians(180)));
 

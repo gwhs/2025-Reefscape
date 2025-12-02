@@ -9,11 +9,14 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.EagleUtil;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.objectDetection.GamePieceTracker;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 public class DriveCommand extends Command {
@@ -60,6 +63,7 @@ public class DriveCommand extends Command {
   }
 
   private DriveMode driveMode = DriveMode.FIELD_CENTRIC;
+  private boolean driveAssist = false;
 
   // Unit is meters
   private static final double halfWidthField = 4.0359;
@@ -70,7 +74,8 @@ public class DriveCommand extends Command {
     REEF,
     CAGE,
     REEF_FACES,
-    PROCESSOR
+    PROCESSOR,
+    OBJECT
   }
 
   private TargetMode mode = TargetMode.NORMAL;
@@ -209,9 +214,18 @@ public class DriveCommand extends Command {
     return this.mode;
   }
 
+  public boolean getDriveAssist() {
+    return driveAssist;
+  }
+
+  public void setDriveAssist(boolean newDriveAssist) {
+    driveAssist = newDriveAssist;
+  }
+
   @Override
   public void execute() {
     Pose2d currentRobotPose = drivetrain.getState().Pose;
+    Optional<Pose2d> currentGamePiecePose = GamePieceTracker.getGamePiece();
     double currentRotation = currentRobotPose.getRotation().getDegrees();
 
     double X = -driverController.getLeftY();
@@ -257,6 +271,31 @@ public class DriveCommand extends Command {
       resetLimiter = true;
     }
 
+    if (drivetrain.isDrivingToCoral() && driveAssist && currentGamePiecePose.isPresent()) {
+      Pose2d coralRelativeToRobot = currentGamePiecePose.get().relativeTo(currentRobotPose);
+
+      double errorY = coralRelativeToRobot.getY();
+
+      double kP = 0.5507; // Change
+
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        kP *= -1;
+      }
+
+      ChassisSpeeds assistedVectorRobotOriented = new ChassisSpeeds(0, errorY * kP, 0);
+      DogLog.log("Intake Drive Assist/Assisted Robot Relative Vector", assistedVectorRobotOriented);
+
+      ChassisSpeeds assistedVectorFieldOriented =
+          ChassisSpeeds.fromRobotRelativeSpeeds(
+              assistedVectorRobotOriented, currentRobotPose.getRotation());
+      DogLog.log("Intake Drive Assist/Assisted Field Relative Vector", assistedVectorFieldOriented);
+
+      yVelocity += -assistedVectorFieldOriented.vyMetersPerSecond;
+      xVelocity += -assistedVectorFieldOriented.vxMetersPerSecond;
+      angularVelocity += assistedVectorFieldOriented.omegaRadiansPerSecond;
+    }
+
     xVelocity *= maxSpeed;
     yVelocity *= maxSpeed;
     angularVelocity *= maxAngularRate;
@@ -269,6 +308,8 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/targetMode", mode);
     DogLog.log("Drive Command/Drive Mode", driveMode);
     DogLog.log("Drive Command/slowFactor", slowFactor);
+    DogLog.log("Drive Command/driveAssist", driveAssist);
+
     if (driveMode == DriveMode.ROBOT_CENTRIC) {
       drivetrain.setControl(
           robotCentricDrive

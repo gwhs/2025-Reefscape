@@ -39,6 +39,10 @@ import frc.robot.subsystems.endEffector.EndEffectorConstants;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
+import frc.robot.subsystems.objectDetection.GamePieceTracker;
+import frc.robot.subsystems.objectDetection.ObjectDetectionCam;
+import frc.robot.subsystems.objectDetection.ObjectDetectionConstants;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -147,6 +151,8 @@ public class RobotContainer {
 
   private AprilTagCam elevatorCam;
 
+  private ObjectDetectionCam objDecCam;
+
   private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm, groundIntake);
 
   private final BiConsumer<Runnable, Double> addPeriodic;
@@ -216,6 +222,10 @@ public class RobotContainer {
         drivetrain = TunerConstants_Comp.createDrivetrain(); // Fallback
         break;
     }
+
+    objDecCam =
+        new ObjectDetectionCam(
+            "cam2026_01", ObjectDetectionConstants.robotToCam, () -> drivetrain.getPose());
 
     driveCommand =
         new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());
@@ -335,7 +345,14 @@ public class RobotContainer {
 
     // make this force release
 
-    m_driverController.povDown().whileTrue(deployGroundIntake()).onFalse(retractGroundIntake());
+    m_driverController
+        .povDown()
+        .whileTrue(
+            Commands.parallel(
+                deployGroundIntake(), Commands.runOnce(() -> driveCommand.setDriveAssist(true))))
+        .onFalse(
+            Commands.parallel(
+                retractGroundIntake(), Commands.runOnce(() -> driveCommand.setDriveAssist(false))));
 
     IS_L1.and(m_driverController.rightTrigger()).onTrue(scoreGroundIntake());
 
@@ -567,6 +584,12 @@ public class RobotContainer {
       elevatorCam.updatePoseEstim();
     }
 
+    if (objDecCam != null) {
+      objDecCam.updateDetection();
+    }
+    // 4
+    DogLog.log("Loop Time/Robot Container/Cam4", (HALUtil.getFPGATime() - startTime) / 1000);
+
     startTime = HALUtil.getFPGATime();
 
     DogLog.log("Desired Reef", coralLevel);
@@ -591,6 +614,15 @@ public class RobotContainer {
     DogLog.log("Trigger/Is Prepscore", IS_PREPSCORE.getAsBoolean());
 
     DogLog.log("Match Timer", DriverStation.getMatchTime());
+
+    // log object
+    Optional<Pose2d> obj = GamePieceTracker.getGamePiece();
+
+    if (obj.isPresent()) {
+      DogLog.log("Object Detection/Coral Pose", new Pose2d[] {obj.get()}); // ill forget it tommorow
+    } else {
+      DogLog.log("Object Detection/Coral Pose", new Pose2d[0]); // ill forget it tommorow
+    }
   }
 
   /**
