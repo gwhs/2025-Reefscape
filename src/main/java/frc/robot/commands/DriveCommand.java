@@ -286,12 +286,7 @@ public class DriveCommand extends Command {
               assistedVectorRobotOriented, currentRobotPose.getRotation());
       DogLog.log("Intake Drive Assist/Assisted Field Relative Vector", assistedVectorFieldOriented);
 
-      if (DriverStation.getAlliance().isPresent()
-          && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-        yVelocity += assistedVectorFieldOriented.vyMetersPerSecond;
-      } else {
-        yVelocity += -assistedVectorFieldOriented.vyMetersPerSecond;
-      }
+      yVelocity += -assistedVectorFieldOriented.vyMetersPerSecond;
       xVelocity += -assistedVectorFieldOriented.vxMetersPerSecond;
       angularVelocity += assistedVectorFieldOriented.omegaRadiansPerSecond;
     }
@@ -309,7 +304,6 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/Drive Mode", driveMode);
     DogLog.log("Drive Command/slowFactor", slowFactor);
     DogLog.log("Drive Command/driveAssist", driveAssist);
-
 
     if (driveMode == DriveMode.ROBOT_CENTRIC) {
       drivetrain.setControl(
