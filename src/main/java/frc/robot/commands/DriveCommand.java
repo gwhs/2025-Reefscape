@@ -308,6 +308,8 @@ public class DriveCommand extends Command {
     DogLog.log("Drive Command/targetMode", mode);
     DogLog.log("Drive Command/Drive Mode", driveMode);
     DogLog.log("Drive Command/slowFactor", slowFactor);
+    DogLog.log("Drive Command/driveAssist", driveAssist);
+
 
     if (driveMode == DriveMode.ROBOT_CENTRIC) {
       drivetrain.setControl(
