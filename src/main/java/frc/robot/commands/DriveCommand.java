@@ -278,15 +278,13 @@ public class DriveCommand extends Command {
 
       double kP = 0.5507; // Change
 
-      ChassisSpeeds assistedVectorRobotOriented = new ChassisSpeeds(0, errorY * kP, 0);
-      DogLog.log("Intake Drive Assist/Assisted Robot Relative Vector", assistedVectorRobotOriented);
-
       if (DriverStation.getAlliance().isPresent()
       && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-    yVelocity += assistedVectorRobotOriented.vyMetersPerSecond;
-  } else {
-    yVelocity += -assistedVectorRobotOriented.vyMetersPerSecond;
+      kP *= -1;
   }
+
+      ChassisSpeeds assistedVectorRobotOriented = new ChassisSpeeds(0, errorY * kP, 0);
+      DogLog.log("Intake Drive Assist/Assisted Robot Relative Vector", assistedVectorRobotOriented);
 
       ChassisSpeeds assistedVectorFieldOriented =
           ChassisSpeeds.fromRobotRelativeSpeeds(
