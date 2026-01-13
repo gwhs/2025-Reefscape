@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,6 +39,10 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.endEffector.EndEffectorConstants;
 import frc.robot.subsystems.endEffector.EndEffectorSubsystem;
 import frc.robot.subsystems.groundIntake.GroundIntakeConstants;
+import frc.robot.subsystems.groundIntake.GroundIntakeIO;
+import frc.robot.subsystems.groundIntake.GroundIntakeIODisabled;
+import frc.robot.subsystems.groundIntake.GroundIntakeIOReal;
+import frc.robot.subsystems.groundIntake.GroundIntakeIOSim;
 import frc.robot.subsystems.groundIntake.GroundIntakeSubsystem;
 import java.util.function.BiConsumer;
 import java.util.function.DoubleSupplier;
@@ -70,16 +75,17 @@ public class RobotContainer {
   public static final Trigger IS_INTAKE = new Trigger(() -> robotState == RobotState.INTAKE);
   public static final Trigger IS_PREPSCORE = new Trigger(() -> robotState == RobotState.PREPSCORE);
 
-  public static Robot getRobot() {
-    if (RobotController.getSerialNumber().equals("032414F0")) {
-      return Robot.COMP;
-    } else if (RobotController.getSerialNumber().equals("0323CA18")) {
-      return Robot.DEV;
-    } else if (RobotController.getSerialNumber().equals("03223849")) {
-      return Robot.WALLE;
-    } else {
-      roborioError.set(true);
-      return Robot.COMP;
+  private static Robot getRobot() {
+    switch (RobotController.getSerialNumber()) {
+      case "032414F0":
+        return Robot.COMP;
+      case "0323CA18":
+        return Robot.DEV;
+      case "03223849":
+        return Robot.WALLE;
+      default:
+        roborioError.set(true);
+        return Robot.COMP;
     }
   }
 
@@ -94,7 +100,7 @@ public class RobotContainer {
   private final ArmSubsystem arm = new ArmSubsystem();
   private final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
   // private final LedSubsystem led = new LedSubsystem();
-  private final GroundIntakeSubsystem groundIntake = new GroundIntakeSubsystem();
+  private final GroundIntakeSubsystem groundIntake;
   private final ClimbSubsystem climb = new ClimbSubsystem();
   private final DriveCommand driveCommand;
 
@@ -147,7 +153,7 @@ public class RobotContainer {
 
   private AprilTagCam elevatorCam;
 
-  private final RobotVisualizer robotVisualizer = new RobotVisualizer(elevator, arm, groundIntake);
+  private final RobotVisualizer robotVisualizer;
 
   private final BiConsumer<Runnable, Double> addPeriodic;
 
@@ -155,67 +161,80 @@ public class RobotContainer {
 
     this.addPeriodic = addPeriodic;
 
-    switch (getRobot()) {
-      case COMP:
-        drivetrain = TunerConstants_Comp.createDrivetrain();
-        frontLeftCam =
-            new AprilTagCam(
-                AprilTagCamConstants.FRONT_LEFT_CAMERA_COMP_NAME,
-                AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
-                drivetrain::addVisionMeasurent,
-                () -> drivetrain.getPose(),
-                () -> drivetrain.getState().Speeds);
+    final GroundIntakeIO groundIntakeIO;
+    if (RobotBase.isSimulation()) {
+      groundIntakeIO = new GroundIntakeIOSim();
+      drivetrain = TunerConstants_Comp.createDrivetrain();
+    } else
+      switch (getRobot()) {
+        case COMP:
+          drivetrain = TunerConstants_Comp.createDrivetrain();
+          groundIntakeIO = new GroundIntakeIOReal();
+          // and all the other ones need to be created based on there or not.
+          frontLeftCam =
+              new AprilTagCam(
+                  AprilTagCamConstants.FRONT_LEFT_CAMERA_COMP_NAME,
+                  AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
+                  drivetrain::addVisionMeasurent,
+                  () -> drivetrain.getPose(),
+                  () -> drivetrain.getState().Speeds);
 
-        frontRightCam =
-            new AprilTagCam(
-                AprilTagCamConstants.FRONT_RIGHT_CAMERA_COMP_NAME,
-                AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
-                drivetrain::addVisionMeasurent,
-                () -> drivetrain.getPose(),
-                () -> drivetrain.getState().Speeds);
+          frontRightCam =
+              new AprilTagCam(
+                  AprilTagCamConstants.FRONT_RIGHT_CAMERA_COMP_NAME,
+                  AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
+                  drivetrain::addVisionMeasurent,
+                  () -> drivetrain.getPose(),
+                  () -> drivetrain.getState().Speeds);
 
-        backRightCam =
-            new AprilTagCam(
-                AprilTagCamConstants.BACK_RIGHT_CAMERA_COMP_NAME,
-                AprilTagCamConstants.BACK_RIGHT_CAMERA_LOCATION_COMP,
-                drivetrain::addVisionMeasurent,
-                () -> drivetrain.getPose(),
-                () -> drivetrain.getState().Speeds);
+          backRightCam =
+              new AprilTagCam(
+                  AprilTagCamConstants.BACK_RIGHT_CAMERA_COMP_NAME,
+                  AprilTagCamConstants.BACK_RIGHT_CAMERA_LOCATION_COMP,
+                  drivetrain::addVisionMeasurent,
+                  () -> drivetrain.getPose(),
+                  () -> drivetrain.getState().Speeds);
 
-        // elevatorCam =
-        //     new AprilTagCam(
-        //         AprilTagCamConstants.ELEVATOR_CAMERA_COMP_NAME,
-        //         AprilTagCamConstants.ELEVATOR_CAMERA_LOCATION_COMP,
-        //         drivetrain::addVisionMeasurent,
-        //         () -> drivetrain.getPose(),
-        //         () -> drivetrain.getState().Speeds);
+          // elevatorCam =
+          //     new AprilTagCam(
+          //         AprilTagCamConstants.ELEVATOR_CAMERA_COMP_NAME,
+          //         AprilTagCamConstants.ELEVATOR_CAMERA_LOCATION_COMP,
+          //         drivetrain::addVisionMeasurent,
+          //         () -> drivetrain.getPose(),
+          //         () -> drivetrain.getState().Speeds);
 
-        break;
-      case DEV:
-        drivetrain = TunerConstants_practiceDrivetrain.createDrivetrain();
-        frontLeftCam =
-            new AprilTagCam(
-                AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
-                AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_DEV,
-                drivetrain::addVisionMeasurent,
-                () -> drivetrain.getPose(),
-                () -> drivetrain.getState().Speeds);
+          break;
+        case DEV:
+          drivetrain = TunerConstants_practiceDrivetrain.createDrivetrain();
+          groundIntakeIO = new GroundIntakeIOReal();
+          frontLeftCam =
+              new AprilTagCam(
+                  AprilTagCamConstants.FRONT_LEFT_CAMERA_DEV_NAME,
+                  AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_DEV,
+                  drivetrain::addVisionMeasurent,
+                  () -> drivetrain.getPose(),
+                  () -> drivetrain.getState().Speeds);
 
-        frontRightCam =
-            new AprilTagCam(
-                AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
-                AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_DEV,
-                drivetrain::addVisionMeasurent,
-                () -> drivetrain.getPose(),
-                () -> drivetrain.getState().Speeds);
-        break;
-      case WALLE:
-        drivetrain = TunerConstants_WALLE.createDrivetrain();
-        break;
-      default:
-        drivetrain = TunerConstants_Comp.createDrivetrain(); // Fallback
-        break;
-    }
+          frontRightCam =
+              new AprilTagCam(
+                  AprilTagCamConstants.FRONT_RIGHT_CAMERA_DEV_NAME,
+                  AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_DEV,
+                  drivetrain::addVisionMeasurent,
+                  () -> drivetrain.getPose(),
+                  () -> drivetrain.getState().Speeds);
+          break;
+        case WALLE:
+          drivetrain = TunerConstants_WALLE.createDrivetrain();
+          groundIntakeIO = new GroundIntakeIODisabled();
+          break;
+        default:
+          drivetrain = TunerConstants_Comp.createDrivetrain(); // Fallback
+          groundIntakeIO = new GroundIntakeIODisabled();
+          break;
+      }
+    // and the same for all the other subsystems
+    groundIntake = new GroundIntakeSubsystem(groundIntakeIO);
+    robotVisualizer = new RobotVisualizer(elevator, arm, groundIntake);
 
     driveCommand =
         new DriveCommand(m_driverController, drivetrain, () -> elevator.getHeightMeters());

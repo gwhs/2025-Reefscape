@@ -1,7 +1,6 @@
 package frc.robot.subsystems.groundIntake;
 
 import dev.doglog.DogLog;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -10,12 +9,8 @@ public class GroundIntakeSubsystem extends SubsystemBase {
 
   private final GroundIntakeIO groundintakeIO;
 
-  public GroundIntakeSubsystem() {
-    if (RobotBase.isSimulation()) {
-      groundintakeIO = new GroundIntakeIOSim();
-    } else {
-      groundintakeIO = new GroundIntakeIOReal();
-    }
+  public GroundIntakeSubsystem(GroundIntakeIO groundIntakeIO) {
+    this.groundintakeIO = groundIntakeIO;
   }
 
   public Command setAngleAndAmp(double pivotAngle, double amp, double dutyCycle) {
