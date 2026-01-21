@@ -17,12 +17,13 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import frc.robot.RobotContainer;
 
 class EndEffectorIOTalon implements EndEffectorIO {
 
   private TOFSensor m_coral_detector = new TOFSensor(EndEffectorConstants.CORAL_DETECTOR_ID);
 
-  private TalonFX motor = new TalonFX(EndEffectorConstants.deviceID, "rio");
+  private TalonFX motor = new TalonFX(EndEffectorConstants.deviceID, RobotContainer.rioCAN);
   private final StatusSignal<Voltage> volts = motor.getMotorVoltage();
   private final StatusSignal<AngularVelocity> velocity = motor.getVelocity();
   private final StatusSignal<Temperature> temperature = motor.getDeviceTemp();

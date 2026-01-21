@@ -23,9 +23,10 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import frc.robot.RobotContainer;
 
 public class ClimbIOReal implements ClimbIO {
-  private final TalonFX climbMotor = new TalonFX(ClimbConstants.CLIMB_ID, "rio");
+  private final TalonFX climbMotor = new TalonFX(ClimbConstants.CLIMB_ID, RobotContainer.rioCAN);
 
   private final MotionMagicVoltage m_request = new MotionMagicVoltage(0).withEnableFOC(true);
 
