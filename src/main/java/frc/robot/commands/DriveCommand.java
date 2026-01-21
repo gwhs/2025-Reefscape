@@ -26,7 +26,7 @@ public class DriveCommand extends Command {
   private final SlewRateLimiter yVelocityLimiter;
   private final PIDController PID;
   private double slowFactor = 0.25;
-  private boolean isSlow = false;
+  private boolean isSlow = true;
   private final double DEAD_BAND = 0.1;
   private boolean resetLimiter = true;
   private boolean isInverted = false;
@@ -177,11 +177,9 @@ public class DriveCommand extends Command {
    * @param mode what mode should it set to?
    */
   public void setTargetMode(TargetMode mode) {
-    this.mode = mode;
   }
 
   public void setReefMode(ReefPositions mode) {
-    reefMode = mode;
   }
 
   /**
@@ -190,9 +188,8 @@ public class DriveCommand extends Command {
    *     <p>NOTE: the value is clamped between 0 and 1
    */
   public void setSlowMode(boolean isSlow, double factor) {
-    this.isSlow = isSlow;
-    factor = MathUtil.clamp(factor, 0, 1);
-    slowFactor = factor;
+    this.isSlow = true;
+    factor = 0.25;
   }
 
   /**

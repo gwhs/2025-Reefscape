@@ -10,10 +10,8 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DifferentialMotionMagicVoltage;
-import com.ctre.phoenix6.controls.DifferentialVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.mechanisms.SimpleDifferentialMechanism;
 import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
 import com.ctre.phoenix6.signals.ForwardLimitTypeValue;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
@@ -29,21 +27,15 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.RobotContainer;
 
 public class ElevatorIOReal implements ElevatorIO {
 
   private TalonFX m_frontElevatorMotor =
-      new TalonFX(ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, "rio");
-  public TalonFX m_backElevatorMotor = new TalonFX(ElevatorConstants.BACK_ELEVATOR_MOTOR_ID, "rio");
-  public DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.LIMIT_SWITCH_CHANNEL);
+      new TalonFX(ElevatorConstants.FRONT_ELEVATOR_MOTOR_ID, RobotContainer.rioCAN);
+  public TalonFX m_backElevatorMotor = new TalonFX(ElevatorConstants.BACK_ELEVATOR_MOTOR_ID, RobotContainer.rioCAN);
 
-  private final DifferentialMotionMagicVoltage m_request =
-      new DifferentialMotionMagicVoltage(0, 0).withEnableFOC(true);
-  private final SimpleDifferentialMechanism differentialMechanism =
-      new SimpleDifferentialMechanism(m_frontElevatorMotor, m_backElevatorMotor, false);
-
-  private final DifferentialVoltage m_requestVoltage = new DifferentialVoltage(0, 0);
+  private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
 
   private final StatusSignal<Double> frontElevatorMotorPIDGoal =
       m_frontElevatorMotor.getClosedLoopReference();
@@ -148,7 +140,8 @@ public class ElevatorIOReal implements ElevatorIO {
   }
 
   public void setRotation(double rotation) {
-    differentialMechanism.setControl(m_request.withTargetPosition(rotation));
+    m_frontElevatorMotor.setControl(m_request.withPosition(rotation));
+    m_backElevatorMotor.setControl(m_request.withPosition(rotation));
   }
 
   public double getRotation() {
@@ -165,9 +158,11 @@ public class ElevatorIOReal implements ElevatorIO {
 
   public void setVoltage(double voltage) {
     if (m_emergencyMode == true) {
-      differentialMechanism.setControl(m_requestVoltage.withTargetOutput(0));
+      m_frontElevatorMotor.setVoltage(0);
+      m_backElevatorMotor.setVoltage(0);
     } else {
-      differentialMechanism.setControl(m_requestVoltage.withTargetOutput(voltage));
+      m_frontElevatorMotor.setVoltage(voltage);
+      m_backElevatorMotor.setVoltage(voltage);
     }
   }
 
@@ -204,7 +199,6 @@ public class ElevatorIOReal implements ElevatorIO {
         backElevatorMotorVoltage,
         backElevatorMotorStatorCurrent,
         backElevatorMotorPosition);
-    DogLog.log("Elevator/Limit Switch/enabled", limitSwitch.get());
     DogLog.log("Elevator/Front Motor/pid goal", frontElevatorMotorPIDGoal.getValueAsDouble());
     DogLog.log("Elevator/Front Motor/motor voltage", frontElevatorMotorVoltage.getValueAsDouble());
     DogLog.log(
@@ -225,7 +219,6 @@ public class ElevatorIOReal implements ElevatorIO {
 
     if (m_emergencyMode == true) {
       setVoltage(0);
-      differentialMechanism.setStaticBrake();
     }
   }
 }

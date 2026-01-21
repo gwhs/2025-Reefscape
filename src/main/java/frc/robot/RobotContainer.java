@@ -2,6 +2,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import dev.doglog.DogLog;
@@ -69,6 +70,8 @@ public class RobotContainer {
   public static final Trigger IS_IDLE = new Trigger(() -> robotState == RobotState.IDLE);
   public static final Trigger IS_INTAKE = new Trigger(() -> robotState == RobotState.INTAKE);
   public static final Trigger IS_PREPSCORE = new Trigger(() -> robotState == RobotState.PREPSCORE);
+
+  public static final CANBus rioCAN = new CANBus("rio");
 
   public static Robot getRobot() {
     if (RobotController.getSerialNumber().equals("032414F0")) {
@@ -158,29 +161,29 @@ public class RobotContainer {
     switch (getRobot()) {
       case COMP:
         drivetrain = TunerConstants_Comp.createDrivetrain();
-        frontLeftCam =
-            new AprilTagCam(
-                AprilTagCamConstants.FRONT_LEFT_CAMERA_COMP_NAME,
-                AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
-                drivetrain::addVisionMeasurent,
-                () -> drivetrain.getPose(),
-                () -> drivetrain.getState().Speeds);
+        // frontLeftCam =
+        //     new AprilTagCam(
+        //         AprilTagCamConstants.FRONT_LEFT_CAMERA_COMP_NAME,
+        //         AprilTagCamConstants.FRONT_LEFT_CAMERA_LOCATION_COMP,
+        //         drivetrain::addVisionMeasurent,
+        //         () -> drivetrain.getPose(),
+        //         () -> drivetrain.getState().Speeds);
 
-        frontRightCam =
-            new AprilTagCam(
-                AprilTagCamConstants.FRONT_RIGHT_CAMERA_COMP_NAME,
-                AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
-                drivetrain::addVisionMeasurent,
-                () -> drivetrain.getPose(),
-                () -> drivetrain.getState().Speeds);
+        // frontRightCam =
+        //     new AprilTagCam(
+        //         AprilTagCamConstants.FRONT_RIGHT_CAMERA_COMP_NAME,
+        //         AprilTagCamConstants.FRONT_RIGHT_CAMERA_LOCATION_COMP,
+        //         drivetrain::addVisionMeasurent,
+        //         () -> drivetrain.getPose(),
+        //         () -> drivetrain.getState().Speeds);
 
-        backRightCam =
-            new AprilTagCam(
-                AprilTagCamConstants.BACK_RIGHT_CAMERA_COMP_NAME,
-                AprilTagCamConstants.BACK_RIGHT_CAMERA_LOCATION_COMP,
-                drivetrain::addVisionMeasurent,
-                () -> drivetrain.getPose(),
-                () -> drivetrain.getState().Speeds);
+        // backRightCam =
+        //     new AprilTagCam(
+        //         AprilTagCamConstants.BACK_RIGHT_CAMERA_COMP_NAME,
+        //         AprilTagCamConstants.BACK_RIGHT_CAMERA_LOCATION_COMP,
+        //         drivetrain::addVisionMeasurent,
+        //         () -> drivetrain.getPose(),
+        //         () -> drivetrain.getState().Speeds);
 
         // elevatorCam =
         //     new AprilTagCam(
@@ -251,7 +254,7 @@ public class RobotContainer {
 
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    PathfindingCommand.warmupCommand().schedule();
+    CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
 
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     SmartDashboard.putData("Unprep Climb", unPrepClimbCommand());

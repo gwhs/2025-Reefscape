@@ -19,12 +19,13 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import frc.robot.RobotContainer;
 
 public class GroundIntakeIOReal implements GroundIntakeIO {
 
-  private final TalonFX spinMotor = new TalonFX(GroundIntakeConstants.SPIN_MOTOR_ID, "rio");
-  private final TalonFX pivotMotor = new TalonFX(GroundIntakeConstants.PIVOT_MOTOR_ID, "rio");
-  private final CANcoder pivotEncoder = new CANcoder(GroundIntakeConstants.PIVOT_ENCODER_ID, "rio");
+  private final TalonFX spinMotor = new TalonFX(GroundIntakeConstants.SPIN_MOTOR_ID, RobotContainer.rioCAN);
+  private final TalonFX pivotMotor = new TalonFX(GroundIntakeConstants.PIVOT_MOTOR_ID, RobotContainer.rioCAN);
+  private final CANcoder pivotEncoder = new CANcoder(GroundIntakeConstants.PIVOT_ENCODER_ID, RobotContainer.rioCAN);
 
   private final Alert spinMotorConnected =
       new Alert("ground intake spin motor not connected", AlertType.kError);

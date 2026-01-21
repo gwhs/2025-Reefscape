@@ -28,10 +28,11 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import frc.robot.RobotContainer;
 
 public class ArmIOReal implements ArmIO {
-  private TalonFX armMotor = new TalonFX(ArmConstants.ARM_MOTOR_ID, "rio");
-  private CANcoder armEncoder = new CANcoder(ArmConstants.ARM_ENCODER_ID, "rio");
+  private TalonFX armMotor = new TalonFX(ArmConstants.ARM_MOTOR_ID, RobotContainer.rioCAN);
+  private CANcoder armEncoder = new CANcoder(ArmConstants.ARM_ENCODER_ID, RobotContainer.rioCAN);
   private final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
   private final VoltageOut m_voltReq = new VoltageOut(0.0);
 

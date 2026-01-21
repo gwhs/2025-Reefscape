@@ -79,7 +79,6 @@ public class AprilTagCam {
     photonEstimator =
         new PhotonPoseEstimator(
             aprilTagFieldLayout,
-            PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
             robotToCam);
 
     ntKey = "/Vision/" + str + "/";
@@ -114,7 +113,7 @@ public class AprilTagCam {
     }
 
     for (PhotonPipelineResult targetPose : results) {
-      optionalEstimPose = photonEstimator.update(targetPose);
+      optionalEstimPose = photonEstimator.estimateCoprocMultiTagPose(targetPose);
 
       if (optionalEstimPose.isEmpty()) {
         continue;
@@ -164,7 +163,7 @@ public class AprilTagCam {
   public boolean filterResults(
       Pose3d estimPose3d, EstimatedRobotPose optionalEstimPose, ChassisSpeeds speed) {
 
-    // If vision’s pose estimation is above/below the ground
+    // If vision's pose estimation is above/below the ground
     double upperZBound = AprilTagCamConstants.Z_TOLERANCE;
     double lowerZBound = -(AprilTagCamConstants.Z_TOLERANCE);
     if (estimPose3d.getZ() > upperZBound

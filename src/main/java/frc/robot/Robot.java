@@ -37,19 +37,6 @@ public class Robot extends TimedRobot {
     LiveWindow.disableAllTelemetry();
 
     DriverStation.silenceJoystickConnectionWarning(true);
-
-    NetworkTableInstance.getDefault()
-        .getStringTopic("/Metadata/Branch")
-        .publish()
-        .set(BuildConstants.GIT_BRANCH);
-    NetworkTableInstance.getDefault()
-        .getStringTopic("/Metadata/SHA")
-        .publish()
-        .set(BuildConstants.GIT_SHA);
-    NetworkTableInstance.getDefault()
-        .getStringTopic("/Metadata/DIRTY")
-        .publish()
-        .set("" + BuildConstants.DIRTY);
   }
 
   @Override
@@ -95,7 +82,7 @@ public class Robot extends TimedRobot {
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+      CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
   }
 
